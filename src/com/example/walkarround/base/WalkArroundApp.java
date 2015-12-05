@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014-2015 CMCC All rights reserved
+ * Copyright (C) 2014-2015 Richard All rights reserved
  */
 package com.example.walkarround.base;
 
@@ -11,7 +11,7 @@ import com.example.walkarround.util.AppConstant;
  * TODO: description
  * Date: 2015-11-26
  *
- * @author Administrator
+ * @author Richard
  */
 public class WalkArroundApp extends Application {
     private static WalkArroundApp mWorkArroundApp = null;
