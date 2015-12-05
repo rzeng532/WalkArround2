@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 通讯录名字缩写颜色 -->
+    <array name="logo_name_color">
+        <item>#ebca59</item>
+        <item>#91ba39</item>
+        <item>#4bbde7</item>
+        <item>#f88567</item>
+    </array>
+
+    <!-- 通话记录更多按钮选项 -->
+    <array name="msg_support_image">
+        <item>jpg</item>
+        <item>jpeg</item>
+        <item>png</item>
+        <item>gif</item>
+        <item>bmp</item>
+    </array>
+
+</resources>

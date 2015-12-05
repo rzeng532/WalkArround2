@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">走走</string>
+    <string name="app_test">This is a test string.</string>
+
+    <!-- Strings for common & util -->
+    <string name="common_next">下一步</string>
+    <string name="common_copy_to_clipboard">复制到剪贴板</string>
+    <string name="common_i_know">我知道了</string>
+    <string name="common_second">秒</string>
+    <string name="common_ok">确认</string>
+    <string name="common_cancel">取消</string>
+    <string name="common_please_wait_for_a_moment">请稍等...</string>
+
+    <string name="err_account_already_exist">该账户已存在</string>
+    <string name="err_connection_failed">无法连接服务器</string>
+    <string name="err_username_password_mismatch">用户名密码不匹配</string>
+    <string name="err_username_donot_exist">该手机号未注册</string>
+    <string name="err_unknow">未知错误</string>
+    <string name="err_login_infor_cannot_empty">用户名和密码不能为空</string>
+    <string name="err_login_infor_is_illegal">用户名不合法</string>
+
+    <!-- Strings for dialog -->
+    <string name="dialog_title_default">操作确认</string>
+    <string name="dialog_msg_default">您确定进行此操作吗?</string>
+    <string name="dialog_not_show_this_again">不再显示此提示</string>
+
+    <!-- Strings for register & login -->
+    <string name="register_registe">注册</string>
+    <string name="register_input_youraccount">请输入手机号</string>
+    <string name="register_set_yournick">请设置昵称</string>
+    <string name="register_input_checkcode">验证码</string>
+    <string name="register_hint_input_checkcode">请输入验证码</string>
+    <string name="register_finish">完成</string>
+    <string name="register_time_next_reget">后重新获取验证码</string>
+    <string name="register_user_exist">该用户已存在,请直接登录</string>
+    <string name="register_sure_give_up_register">验证码短信可能稍有延迟，确定取消并重新开始？</string>
+    <string name="register_reget_check_code">点击重新获取验证码</string>
+    <string name="register_do_signup">注册中...</string>
+    <string name="register_signup_success">注册成功</string>
+
+    <string name="login_hint_input_phone_num">请输入注册时的手机号</string>
+    <string name="login_hint_input_password">请输入密码</string>
+    <string name="login_dologin">登录</string>
+    <string name="login_forgot_password">忘记密码</string>
+    <string name="login_set_yourpassword">忘记密码</string>
+    <string name="login_nick_cannot_be_null">昵称不能为空</string>
+    <string name="login_nick_beyond_length_limit">昵称过长</string>
+    <string name="login_nick_cannot_contain_space">昵称不能包含空格</string>
+    <string name="login_tel_cannot_be_null">手机号码不能为空</string>
+    <string name="login_tel_are_illegal">手机号码不符合规则</string>
+    <string name="login_password_cannot_be_null">密码不能为空</string>
+    <string name="login_password_are_illegal">密码不符合规则</string>
+    <string name="login_hint_logouting">正在退出当前账户</string>
+    <string name="login_do_login_success">登录成功</string>
+</resources>

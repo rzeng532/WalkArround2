@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/qq.sdk.1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/avoscloud-push-v3.10.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/avoscloud-sdk-v3.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/Java-WebSocket-1.2.0-leancloud.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/avoscloud-sns-v3.10.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/avoscloud-statistics-v3.10.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/httpmime-4.2.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/okhttp-2.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/weibo.sdk.android.sso.3.0.1-leancloud.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/okio-1.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/fastjson.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

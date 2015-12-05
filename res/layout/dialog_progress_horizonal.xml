@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/public_corner_bg_white">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/title"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="30dp"
+            android:textColor="@color/fontcor1"
+            android:textSize="@dimen/font_size3_dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/indicator"
+            android:layout_toRightOf="@id/title"
+            android:layout_alignBottom="@id/title"
+            android:textColor="@color/fontcor1"
+            android:textSize="@dimen/font_size3_dp"/>
+
+    <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="27dp"
+            android:layout_marginLeft="@dimen/public_padding_16"
+            android:layout_marginRight="@dimen/public_padding_16"
+            android:thumbOffset="4dp"
+            android:progressDrawable="@drawable/seekbar_horizontal_progress_drawable"
+            android:thumb="@drawable/contacts_guage"
+            style="?android:progressBarStyleHorizontal"
+            />
+    <!--style="@style/Theme.CustomDialog.ProcessHorizontal"-->
+
+    <TextView
+            android:id="@+id/hint_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/seekbar"
+            android:layout_marginBottom="27dp"
+            android:layout_marginRight="44dp"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/fontcor4"
+            android:textSize="@dimen/font_size5"
+            android:shadowDx="1"
+            android:shadowDy="1"/>
+</RelativeLayout>
