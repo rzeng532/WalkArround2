@@ -16,12 +16,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.LoginConstant;
 import com.example.walkarround.login.manager.LoginManager;
-import com.example.walkarround.login.manager.RegAndLoginListener;
+import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
 
@@ -43,20 +44,23 @@ public class LoginActivity extends Activity implements View.OnClickListener{
 
     private final int LOGIN_OK = 0;
     private final int LOGIN_FAIL = 1;
+    private final int HANDLER_MSG_DELAY = 1000; //1 second
 
     private Handler mLoginHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == LOGIN_OK) {
+                //Test updating user data.
+                updateUserData();
                 //Goto target page.
                 finish();
             } else if (msg.what == LOGIN_FAIL) {
-
+                Toast.makeText(getApplicationContext(), (String)msg.obj, Toast.LENGTH_SHORT).show();
             }
         }
     };
 
-    RegAndLoginListener mLoginListener = new RegAndLoginListener() {
+    AsyncTaskListener mLoginListener = new AsyncTaskListener() {
         @Override
         public void onSuccess() {
             Toast.makeText(getApplicationContext(), getString(R.string.login_do_login_success), Toast.LENGTH_SHORT).show();
@@ -73,7 +77,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
 
             dismissDialog();
             msg.what = LOGIN_OK;
-            mLoginHandler.sendMessage(msg);
+            mLoginHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
         }
 
         @Override
@@ -83,7 +87,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
             Message msg = Message.obtain();
             msg.what = LOGIN_FAIL;
             msg.obj = LoginManager.getInstance().getErrStringViaErrorCode(getApplicationContext(), e.getCode());
-            mLoginHandler.sendMessage(msg);
+            mLoginHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
         }
     };
 
@@ -177,5 +181,17 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         }
 
         return true;
+    }
+
+    private void updateUserData() {
+        AVUser user = AVUser.getCurrentUser();
+
+        user.put(LoginConstant.REG_KEY_AGE, 25);
+        user.saveInBackground();
+        /*
+        AVObject post = AVObject.createWithoutData("Post", "5590cdfde4b00f7adb5860c8");
+        post.put("content","每个Java程序员必备的8个开发工具 —— http://itindex.net/detail/52950-java-%E5%BC%80%E5%8F%91-%E5%B7%A5%E5%85%B7");
+        post.saveInBackground();
+        */
     }
 }

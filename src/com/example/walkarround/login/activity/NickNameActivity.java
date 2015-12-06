@@ -72,7 +72,7 @@ public class NickNameActivity extends Activity implements View.OnClickListener{
     }
 
     private void initNickName() {
-        String strNick = LoginManager.getInstance().getNickName();
+        String strNick = LoginManager.getInstance().getUserName();
         if (!TextUtils.isEmpty(strNick) && mEtNickName != null) {
             mEtNickName.setText(strNick);
         }

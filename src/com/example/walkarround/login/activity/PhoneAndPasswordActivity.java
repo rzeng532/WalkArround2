@@ -16,7 +16,7 @@ import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.manager.LoginManager;
-import com.example.walkarround.login.manager.RegAndLoginListener;
+import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
 
@@ -56,7 +56,7 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
         }
     };
 
-    RegAndLoginListener mAccountManagerListener = new RegAndLoginListener() {
+    AsyncTaskListener mAccountManagerListener = new AsyncTaskListener() {
         @Override
         public void onSuccess() {
             //dismissDialog();

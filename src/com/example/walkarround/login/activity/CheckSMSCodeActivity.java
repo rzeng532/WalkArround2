@@ -20,7 +20,7 @@ import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.manager.LoginManager;
-import com.example.walkarround.login.manager.RegAndLoginListener;
+import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
 
 import java.util.Timer;
@@ -56,6 +56,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
     public static final int FINISHTHIS = 3;
 
     private final int COUNTDOWN_TIME = 120;
+    private final int HANDLER_MSG_DELAY = 1000; //1 second
 
     private Handler mHandler = new Handler() {
         @Override
@@ -84,7 +85,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
         }
     };
 
-    RegAndLoginListener mGetSMSCodeListener = new RegAndLoginListener() {
+    AsyncTaskListener mGetSMSCodeListener = new AsyncTaskListener() {
         @Override
         public void onSuccess() {
             Toast.makeText(getApplicationContext(), getString(R.string.register_signup_success), Toast.LENGTH_SHORT).show();
@@ -93,7 +94,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
             myLogger.d("Get SMS code success.");
             dismissDialog();
             msg.what = REGISTERSUCCESS;
-            mHandler.sendMessage(msg);
+            mHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
         }
 
         @Override
@@ -103,7 +104,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
             Message msg = Message.obtain();
             msg.what = ERROR;
             msg.obj = LoginManager.getInstance().getErrStringViaErrorCode(getApplicationContext(), e.getCode());
-            mHandler.sendMessage(msg);
+            mHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
         }
     };
 
@@ -127,7 +128,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
             finish();
         }
 
-        mStrNickName = LoginManager.getInstance().getNickName();
+        mStrNickName = LoginManager.getInstance().getUserName();
         if (TextUtils.isEmpty(mStrNickName)) {
             mStrNickName = mStrPhoneNum;
         }

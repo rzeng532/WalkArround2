@@ -5,39 +5,42 @@ import android.text.TextUtils;
 
 import com.avos.avoscloud.*;
 import com.example.walkarround.R;
-import com.example.walkarround.login.LoginConstant;
 import com.example.walkarround.util.AppSharedPreference;
+import com.example.walkarround.util.AsyncTaskListener;
+import com.example.walkarround.util.CommonUtils;
 
 /**
  * Created by Richard on 2015/11/25.
- * <p/>
+ * <p>
  * This class work for register and login on "login" package.
  */
-public class LoginManager extends LoginManagerAbstract {
+public class LoginManager {
 
     /* Class values */
 
     private String mStrNickName = null;
     private String mStrPhoneNum = null;
     private String mStrPassword = null;
+    private static LoginApiAbstract mLoginApi = null;
 
     //Get instance
-    private static LoginManager mLoginInstance = null;
+    private static LoginManager mLoginManager = null;
 
     public static LoginManager getInstance() {
-        if (mLoginInstance == null) {
+        if (mLoginManager == null) {
             synchronized (LoginManager.class) {
-                if (mLoginInstance == null) {
-                    mLoginInstance = new LoginManager();
+                if (mLoginManager == null) {
+                    mLoginManager = new LoginManager();
+                    mLoginApi = new CleanCloudLoginApiImpl();
                 }
             }
         }
 
-        return mLoginInstance;
+        return mLoginManager;
     }
 
     /* Get & set method for local fields */
-    public String getNickName() {
+    public String getUserName() {
         return mStrNickName;
     }
 
@@ -61,120 +64,18 @@ public class LoginManager extends LoginManagerAbstract {
         this.mStrPassword = mStrPassword;
     }
 
-    public void doRegister(final RegAndLoginListener listener) {
+    public void doRegister(final AsyncTaskListener listener) {
         //Get user information from manager. Email is empty now.
-        doRegister(LoginManager.getInstance().getPhoneNum(),
-                LoginManager.getInstance().getPassword(),
-                LoginManager.getInstance().getNickName(),
-                "",
-                listener);
-    }
-
-    /* Implement abstract methods */
-    @Override
-    public void init() throws Exception {
-
-    }
-
-    @Override
-    public void onDestroy() throws Exception {
-
-    }
-
-    @Override
-    public void doLogin(final String phone, final String password, final RegAndLoginListener listener) throws Exception {
-
-        AVUser.loginByMobilePhoneNumberInBackground(phone, password, new LogInCallback() {
-            public void done(AVUser user, AVException e) {
-                if (user != null) {
-                    listener.onSuccess();
-
-                    //TODO: we should get current user here.
-                    setCurrentAccount(null, phone, password);
-                } else {
-                    listener.onFailed(e);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void doLogout() throws Exception {
-
-    }
-
-    @Override
-    public void doRegister(final String phoneNum, final String  password, final String userName, String email, final RegAndLoginListener listener) {
-
-        AVUser user = new AVUser();
-        user.setUsername(userName);
-        user.setPassword(password);
-        //user.setEmail(email);
-        user.setMobilePhoneNumber(phoneNum);
-        //user.put(LoginConstant.REG_KEY_NICK_NAME, userName);
-
-        user.signUpInBackground(new SignUpCallback() {
-            public void done(AVException e) {
-                if (e == null) {
-                    listener.onSuccess();
-                    setCurrentAccount(userName, phoneNum,  password);
-                } else {
-                    listener.onFailed(e);
-                }
-            }
-        });
-    }
-
-    @Override
-    public int getLoginState() {
-        return 0;
-    }
-
-    @Override
-    protected void setLoginState(int newValue) throws Exception {
-
-    }
-
-    @Override
-    public String getCurrentUserName() {
-        String strUserName = null;
-        AVUser currentUser = AVUser.getCurrentUser();
-        if (currentUser != null) {
-            strUserName = currentUser.getMobilePhoneNumber();
-        } else {
-            strUserName = AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PHONE, "");
+        if (mLoginApi != null) {
+            mLoginApi.doRegister(LoginManager.getInstance().getPhoneNum(),
+                    LoginManager.getInstance().getPassword(),
+                    LoginManager.getInstance().getUserName(),
+                    "", //We don't need email address now.
+                    listener);
+            setCurrentAccount(LoginManager.getInstance().getUserName(),
+                    LoginManager.getInstance().getPhoneNum(),
+                    LoginManager.getInstance().getPassword());
         }
-
-        return strUserName;
-    }
-
-    @Override
-    public void setCurrentUser() {
-
-    }
-
-    @Override
-    public void createAccountWithCode(String code, final RegAndLoginListener listener) {
-        AVUser.verifyMobilePhoneInBackground(code, new AVMobilePhoneVerifyCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e == null) {
-                    listener.onSuccess();
-                } else {
-                    listener.onFailed(e);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void findPasswordViaSMS(String strPhoneNum, RegAndLoginListener findPwdListener) throws Exception {
-
-    }
-
-    @Override
-    public void changePassword(String oldPassword, String newPassword) throws Exception {
-
     }
 
     /*
@@ -206,28 +107,65 @@ public class LoginManager extends LoginManagerAbstract {
      */
     private void setCurrentAccount(String username, String mobile, String password) {
 
-        if(username != null) {
+        if (username != null) {
             AppSharedPreference.putString(AppSharedPreference.ACCOUNT_USERNAME, username);
         }
-        if(mobile != null) {
+        if (mobile != null) {
             AppSharedPreference.putString(AppSharedPreference.ACCOUNT_PHONE, mobile);
         }
-        if(password != null) {
+        if (password != null) {
             AppSharedPreference.putString(AppSharedPreference.ACCOUNT_PASSWORD, password);
         }
     }
 
-    public void doLogin(RegAndLoginListener listener) {
+    /*
+     * We will user phone to do login step. And it will do in background.
+     * This API designed for login via SP data. Like auto login.
+     */
+    public void doLogin(AsyncTaskListener listener) {
         //TODO: We should encode user name and password !!
-        String strName = AppSharedPreference.getString(AppSharedPreference.ACCOUNT_USERNAME, "");
+        String strPhone = AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PHONE, "");
         String strPsd = AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PASSWORD, "");
 
-        if(!TextUtils.isEmpty(strName) && !TextUtils.isEmpty(strPsd)) {
+        if (!TextUtils.isEmpty(strPhone) && !TextUtils.isEmpty(strPsd) && CommonUtils.validatePhoneNum(strPhone)) {
+            doLogin(strPhone, strPsd, listener);
+        }
+    }
+
+    /*
+    * We will user phone to do login step. And it will do in background.
+    * This API is designed for manual login.
+    */
+    public void doLogin(String phone, String password, AsyncTaskListener listener) {
+
+        //TODO: We should check password valid or NOT.
+        if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(password) && CommonUtils.validatePhoneNum(phone)) {
             try {
-                doLogin(strName, strPsd, listener);
+                if (mLoginApi != null) {
+                    mLoginApi.doLogin(phone, password, listener);
+                    setCurrentAccount(null, phone, password);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String getCurrentUserName() {
+        if (mLoginApi != null) {
+            return mLoginApi.getCurrentUserName();
+        }
+
+        return null;
+    }
+
+    public void createAccountWithCode(String code, final AsyncTaskListener listener) {
+        if (mLoginApi != null) {
+            mLoginApi.createAccountWithCode(code, listener);
+        }
+    }
+
+    public void setCurrentUser() {
+
     }
 }

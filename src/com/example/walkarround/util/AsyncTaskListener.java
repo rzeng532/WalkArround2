@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2014-2015 Richard All rights reserved
  */
-package com.example.walkarround.login.manager;
+package com.example.walkarround.util;
 
 import com.avos.avoscloud.AVException;
 
@@ -12,7 +12,7 @@ import com.avos.avoscloud.AVException;
  *
  * A listener for login manager to get SUC or FAIL result.
  */
-public interface RegAndLoginListener {
+public interface AsyncTaskListener {
         public abstract void onSuccess();
 
         public abstract void onFailed(AVException e);
