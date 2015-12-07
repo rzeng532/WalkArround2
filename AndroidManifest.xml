@@ -26,5 +26,6 @@
         <activity android:name=".login.activity.PhoneAndPasswordActivity" />
         <activity android:name=".login.activity.CheckSMSCodeActivity" />
         <activity android:name=".login.activity.LoginActivity" />
+        <activity android:name=".setting.activity.AppSettingActivity" />
     </application>
 </manifest>

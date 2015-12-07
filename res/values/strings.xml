@@ -53,4 +53,16 @@
     <string name="login_password_are_illegal">密码不符合规则</string>
     <string name="login_hint_logouting">正在退出当前账户</string>
     <string name="login_do_login_success">登录成功</string>
+
+    <!-- Strings for setting -->
+    <string name="setting_title">设置</string>
+    <string name="setting_modify_password">修改密码</string>
+    <string name="setting_check_update">检查更新</string>
+    <string name="setting_about_app">关于走走</string>
+    <string name="setting_do_logout">退出</string>
+    <string name="setting_logout_or_not">退出当前账号？</string>
+
+
+    <!-- Strings for myself -->
+
 </resources>
