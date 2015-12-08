@@ -24,7 +24,7 @@ import com.example.walkarround.util.ImageLoaderManager;
  *
  * @author Administrator
  */
-public class PhotoView extends LinearLayout implements View.OnClickListener{
+public class PortraitView extends LinearLayout implements View.OnClickListener{
 
     private ImageView mImageView;
     private TextView mTextView;
@@ -34,17 +34,17 @@ public class PhotoView extends LinearLayout implements View.OnClickListener{
     private View.OnClickListener mCheckBoxOnClickListener;
     private View.OnClickListener mPhotoOnClickListener;
 
-    public PhotoView(Context context) {
+    public PortraitView(Context context) {
         super(context);
         initView();
     }
 
-    public PhotoView(Context context, AttributeSet attrs) {
+    public PortraitView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
 
-    public PhotoView(Context context, AttributeSet attrs, int defStyle) {
+    public PortraitView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView();
     }

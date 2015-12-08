@@ -10,7 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import com.example.walkarround.R;
-import com.example.walkarround.base.view.PhotoView;
+import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.setting.activity.AppSettingActivity;
 import com.example.walkarround.util.AppSharedPreference;
 
@@ -24,7 +24,7 @@ public class MyselfActivity extends Activity implements View.OnClickListener {
 
     private TextView mTvTitle = null;
     private View self_info = null;
-    private PhotoView mSelfInfoPortrait;
+    private PortraitView mSelfInfoPortrait;
     private TextView mSelfInfoName;
     private TextView mSelfInfoMobile;
 
@@ -64,7 +64,7 @@ public class MyselfActivity extends Activity implements View.OnClickListener {
         self_info = findViewById(R.id.self_info);
         self_info.setOnClickListener(this);
 
-        mSelfInfoPortrait = (PhotoView) self_info.findViewById(R.id.self_portrait);
+        mSelfInfoPortrait = (PortraitView) self_info.findViewById(R.id.self_portrait);
         mSelfInfoName = (TextView) self_info.findViewById(R.id.self_info_name);
         mSelfInfoMobile = (TextView) self_info.findViewById(R.id.self_info_mobile);
     }

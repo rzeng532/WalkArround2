@@ -8,6 +8,7 @@ import com.example.walkarround.R;
 import com.example.walkarround.util.AppSharedPreference;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
+import com.example.walkarround.util.Logger;
 
 /**
  * Created by Richard on 2015/11/25.
@@ -22,7 +23,7 @@ public class LoginManager {
     private String mStrPhoneNum = null;
     private String mStrPassword = null;
     private static LoginApiAbstract mLoginApi = null;
-
+    private Logger logger = null;
     //Get instance
     private static LoginManager mLoginManager = null;
 
@@ -37,6 +38,10 @@ public class LoginManager {
         }
 
         return mLoginManager;
+    }
+
+    private LoginManager() {
+        logger = Logger.getLogger(LoginManager.class.getSimpleName());
     }
 
     /* Get & set method for local fields */
@@ -166,6 +171,16 @@ public class LoginManager {
     }
 
     public void setCurrentUser() {
+        AVUser currentUser = AVUser.getCurrentUser();
 
+        if (currentUser != null) {
+            String username = currentUser.getUsername();
+            if (!TextUtils.isEmpty(username)) {
+                AppSharedPreference.putString(AppSharedPreference.ACCOUNT_USERNAME, username);
+
+                logger.d("current user name: " + username);
+                logger.d("current user mobile: " + currentUser.getMobilePhoneNumber());
+            }
+        }
     }
 }

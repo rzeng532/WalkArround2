@@ -12,6 +12,7 @@
     <string name="common_cancel">取消</string>
     <string name="common_please_wait_for_a_moment">请稍等...</string>
 
+    <!-- Strings for dialog -->
     <string name="err_account_already_exist">该账户已存在</string>
     <string name="err_connection_failed">无法连接服务器</string>
     <string name="err_username_password_mismatch">用户名密码不匹配</string>
@@ -19,6 +20,7 @@
     <string name="err_unknow">未知错误</string>
     <string name="err_login_infor_cannot_empty">用户名和密码不能为空</string>
     <string name="err_login_infor_is_illegal">用户名不合法</string>
+    <string name="warning_hint_memory_short">内存不足</string>
 
     <!-- Strings for dialog -->
     <string name="dialog_title_default">操作确认</string>

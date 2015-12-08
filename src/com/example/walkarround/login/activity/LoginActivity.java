@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
@@ -56,7 +57,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 startMainActivity();
                 finish();
             } else if (msg.what == LOGIN_FAIL) {
-                Toast.makeText(getApplicationContext(), (String)msg.obj, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), (String) msg.obj, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -69,12 +70,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             Message msg = Message.obtain();
             loginLogger.d("Do login success.");
 
-            //Test log for verify.
-            AVUser currentUser = AVUser.getCurrentUser();
-            if(currentUser != null ) {
-                loginLogger.d("Do login. User name: " + currentUser.getUsername());
-                loginLogger.d("Do login. Mobile number: " + currentUser.getMobilePhoneNumber());
-            }
+            LoginManager.getInstance().setCurrentUser();
 
             dismissDialog();
             msg.what = LOGIN_OK;
@@ -126,7 +122,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.signin_loginin) {
             //Start login process
-            if(!isLoginParamsValid()) {
+            if (!isLoginParamsValid()) {
                 return;
             }
             showDialog();
@@ -137,10 +133,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if(v.getId() == R.id.signin_register) {
+        } else if (v.getId() == R.id.signin_register) {
             Intent intent = new Intent(LoginActivity.this, NickNameActivity.class);
             startActivity(intent);
-        } else if(v.getId() == R.id.signin_forgot_password) {
+        } else if (v.getId() == R.id.signin_forgot_password) {
             //TODO: add forgot password step.
         }
     }

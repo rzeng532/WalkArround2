@@ -36,7 +36,7 @@
             android:paddingRight="16dp">
 
         <!-- Myself information -->
-        <com.cmri.prcs.base.view.PhotoView
+        <com.example.walkarround.base.view.PortraitView
                 android:id="@+id/self_portrait"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -85,6 +85,11 @@
 
     <!-- Divide line -->
     <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/linecor1"/>
+    <View
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -103,4 +108,10 @@
             android:textColor="@color/fontcor1"
             android:gravity="center_vertical"
             android:text="@string/setting_title"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/linecor1"/>
+
 </LinearLayout>

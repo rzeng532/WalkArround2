@@ -21,7 +21,7 @@ public class AppSharedPreference {
 
     private final static String WALKARROUND_PREFERENCES = "walkarround_preferences";
 
-    private final static SharedPreferences sp = (SharedPreferences) WalkArroundApp.getAppInstance().getSharedPreferences(
+    private final static SharedPreferences sp = (SharedPreferences) WalkArroundApp.getInstance().getSharedPreferences(
             WALKARROUND_PREFERENCES, Context.MODE_PRIVATE);
 
     // >>>>>>>>>>>>>>>>>define keys start>>>>>>>>>>>>>>>>>

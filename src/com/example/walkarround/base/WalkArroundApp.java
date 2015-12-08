@@ -36,7 +36,7 @@ public class WalkArroundApp extends Application {
         AVOSCloud.initialize(this, AppConstant.LEANCLOUD_APP_ID, AppConstant.LEANCLOUD_APP_KEY);
     }
 
-    public static WalkArroundApp getAppInstance() {
+    public static WalkArroundApp getInstance() {
         return mWorkArroundApp;
     }
 
