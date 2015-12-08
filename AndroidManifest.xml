@@ -27,5 +27,6 @@
         <activity android:name=".login.activity.CheckSMSCodeActivity" />
         <activity android:name=".login.activity.LoginActivity" />
         <activity android:name=".setting.activity.AppSettingActivity" />
+        <activity android:name=".myself.activity.MyselfActivity" />
     </application>
 </manifest>

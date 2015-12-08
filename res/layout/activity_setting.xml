@@ -48,7 +48,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/new_msg_notify_receive"
                         />
-                <com.cmri.prcs.publicaccount.util.CheckSwitchButton
+                <com.cmri.prcs.publicaccount.ProfileUtil.CheckSwitchButton
                         android:id="@+id/csb_new_msg_notify_receive"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -16,12 +16,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
-import com.example.walkarround.login.LoginConstant;
+import com.example.walkarround.login.util.LoginConstant;
 import com.example.walkarround.login.manager.LoginManager;
+import com.example.walkarround.myself.activity.MyselfActivity;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
@@ -32,7 +32,7 @@ import com.example.walkarround.util.Logger;
  *
  * @author Richard
  */
-public class LoginActivity extends Activity implements View.OnClickListener{
+public class LoginActivity extends Activity implements View.OnClickListener {
 
     private EditText edUserName = null;
     private EditText edPassWord = null;
@@ -53,6 +53,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 //Test updating user data.
                 updateUserData();
                 //Goto target page.
+                startMainActivity();
                 finish();
             } else if (msg.what == LOGIN_FAIL) {
                 Toast.makeText(getApplicationContext(), (String)msg.obj, Toast.LENGTH_SHORT).show();
@@ -188,10 +189,9 @@ public class LoginActivity extends Activity implements View.OnClickListener{
 
         user.put(LoginConstant.REG_KEY_AGE, 25);
         user.saveInBackground();
-        /*
-        AVObject post = AVObject.createWithoutData("Post", "5590cdfde4b00f7adb5860c8");
-        post.put("content","每个Java程序员必备的8个开发工具 —— http://itindex.net/detail/52950-java-%E5%BC%80%E5%8F%91-%E5%B7%A5%E5%85%B7");
-        post.saveInBackground();
-        */
+    }
+
+    private void startMainActivity() {
+        startActivity(new Intent(LoginActivity.this, MyselfActivity.class));
     }
 }

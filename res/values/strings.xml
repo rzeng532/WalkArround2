@@ -3,7 +3,7 @@
     <string name="app_name">走走</string>
     <string name="app_test">This is a test string.</string>
 
-    <!-- Strings for common & util -->
+    <!-- Strings for common & ProfileUtil -->
     <string name="common_next">下一步</string>
     <string name="common_copy_to_clipboard">复制到剪贴板</string>
     <string name="common_i_know">我知道了</string>
@@ -62,7 +62,11 @@
     <string name="setting_do_logout">退出</string>
     <string name="setting_logout_or_not">退出当前账号？</string>
 
-
     <!-- Strings for myself -->
+    <string name="profile_activity_title">个人信息</string>
+    <string name="profile_infor_gendle">性别</string>
+    <string name="profile_infor_age">年龄</string>
+    <string name="profile_infor_signature">签名</string>
+    <string name="profile_infor_phone">签名</string>
 
 </resources>

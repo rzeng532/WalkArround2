@@ -28,6 +28,7 @@ public class AppSharedPreference {
     public static final String ACCOUNT_USERNAME = "account_username";
     public static final String ACCOUNT_PHONE = "account_phone";
     public static final String ACCOUNT_PASSWORD = "account_password";
+    public static final String ACCOUNT_PORTRAIT = "account_portrait_path";
     // <<<<<<<<<<<<<<<<<define keys end<<<<<<<<<<<<<<<<<
 
     public static int getInt(String key, int defValue) {

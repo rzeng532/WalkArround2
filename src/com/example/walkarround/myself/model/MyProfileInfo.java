@@ -1,4 +1,4 @@
-package com.example.walkarround.setting.model;
+package com.example.walkarround.myself.model;
 
 /**
  * Created by Richard on 2015/12/7.

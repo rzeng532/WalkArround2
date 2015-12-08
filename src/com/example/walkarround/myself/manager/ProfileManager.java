@@ -1,4 +1,4 @@
-package com.example.walkarround.setting.manager;
+package com.example.walkarround.myself.manager;
 
 import com.example.walkarround.login.manager.LoginManager;
 
@@ -6,13 +6,15 @@ import com.example.walkarround.login.manager.LoginManager;
  * Created by Richard on 2015/12/7.
  */
 public class ProfileManager {
-    private static ProfileManager mProfileManager = new ProfileManager();
+    private static ProfileManager mProfileManager;
+    private static ProfileApiAbstract mProfileApi;
 
     public static ProfileManager getInstance() {
         if (mProfileManager == null) {
             synchronized (LoginManager.class) {
                 if (mProfileManager == null) {
                     mProfileManager = new ProfileManager();
+                    mProfileApi = new ProfileApiImpl();
                 }
             }
         }
@@ -24,7 +26,11 @@ public class ProfileManager {
 
     }
 
-    private void updateProfileIcon() {
-
+    private void updatePortrait(String path) {
+        try {
+            mProfileApi.updatePortrait(path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
