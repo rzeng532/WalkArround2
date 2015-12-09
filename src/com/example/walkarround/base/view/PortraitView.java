@@ -100,18 +100,20 @@ public class PortraitView extends LinearLayout implements View.OnClickListener{
                 mImageView.clearColorFilter();
             }
             ImageLoaderManager.displayImage(cachPhotoKey, resId, mImageView);
-        } else if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(namePinyin)) {
-            // 显示名字最后一个字
-            mTextView.setVisibility(VISIBLE);
-            mImageView.setVisibility(GONE);
-            GradientDrawable myGrad = (GradientDrawable) mTextView.getBackground();
-            if (toGray) {
-                myGrad.setColor(getResources().getColor(R.color.fontcor5));
-            } else {
-                myGrad.setColor(CommonUtils.switchNameToColor(getContext(), namePinyin));
-            }
-            mTextView.setText(getNameLogo(name, cachPhotoKey));
-        } else {
+        }
+//        else if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(namePinyin)) {
+//            // 显示名字最后一个字
+//            mTextView.setVisibility(VISIBLE);
+//            mImageView.setVisibility(GONE);
+//            GradientDrawable myGrad = (GradientDrawable) mTextView.getBackground();
+//            if (toGray) {
+//                myGrad.setColor(getResources().getColor(R.color.fontcor5));
+//            } else {
+//                myGrad.setColor(CommonUtils.switchNameToColor(getContext(), namePinyin));
+//            }
+//            mTextView.setText(getNameLogo(name, cachPhotoKey));
+//        }
+        else {
             mTextView.setVisibility(GONE);
             mImageView.setVisibility(VISIBLE);
             if (toGray) {

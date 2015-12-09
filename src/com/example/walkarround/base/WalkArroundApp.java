@@ -34,6 +34,11 @@ public class WalkArroundApp extends Application {
         //Init lean cloud
         AVOSCloud.setDebugLogEnabled(true);
         AVOSCloud.initialize(this, AppConstant.LEANCLOUD_APP_ID, AppConstant.LEANCLOUD_APP_KEY);
+        try {
+            initImageLoader(AppConstant.MAX_IMAGE_LOADER_CACHE_SIZE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static WalkArroundApp getInstance() {

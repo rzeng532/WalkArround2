@@ -1,0 +1,253 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/bgcor4">
+
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@drawable/header_title_bg"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/title_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/btn_pre_bg_light"
+            android:drawableLeft="@drawable/public_icon_titlebar_back"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="15dp"
+            android:text="@string/profile_activity_title"
+            android:textColor="#ffffff"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/detail_portrait"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:background="@drawable/list_item_bg"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <!-- Myself information -->
+        <TextView
+            android:id="@+id/tv_portrait"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/font_size3"
+            android:background="@drawable/list_item_bg"
+            android:textColor="@color/fontcor1"
+            android:gravity="center_vertical"
+            android:text="@string/profile_infor_portrait"/>
+
+        <com.example.walkarround.base.view.PortraitView
+            android:id="@+id/iv_portrait"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/default_profile_portrait"/>
+    </RelativeLayout>
+
+    <!-- Divide line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/linecor1"/>
+
+    <RelativeLayout
+        android:id="@+id/detail_nick_name"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/list_item_bg"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <!-- Detail information -->
+        <TextView
+            android:id="@+id/tv_nick_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/font_size3"
+            android:background="@drawable/list_item_bg"
+            android:textColor="@color/fontcor1"
+            android:gravity="center_vertical"
+            android:text="@string/profile_infor_nick_name"/>
+
+        <TextView
+            android:id="@+id/tv_nick_name_infor"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/font_size3"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/list_item_bg"
+            android:textColor="@color/fontcor1"
+            android:gravity="center_vertical"/>
+    </RelativeLayout>
+
+    <!-- Divide line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/linecor1"/>
+
+    <RelativeLayout
+        android:id="@+id/detail_mobile"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/list_item_bg"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <!-- Detail information -->
+        <TextView
+            android:id="@+id/tv_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/font_size3"
+            android:background="@drawable/list_item_bg"
+            android:textColor="@color/fontcor1"
+            android:gravity="center_vertical"
+            android:text="@string/profile_infor_phone"/>
+
+        <TextView
+            android:id="@+id/tv_mobile_infor"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/font_size3"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/list_item_bg"
+            android:textColor="@color/fontcor1"
+            android:gravity="center_vertical"/>
+    </RelativeLayout>
+
+    <!-- Divide line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/linecor1"/>
+
+    <RelativeLayout
+        android:id="@+id/detail_gendle"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/list_item_bg"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <!-- Detail information -->
+        <TextView
+            android:id="@+id/tv_gendle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/font_size3"
+            android:background="@drawable/list_item_bg"
+            android:textColor="@color/fontcor1"
+            android:gravity="center_vertical"
+            android:text="@string/profile_infor_gendle"/>
+
+        <TextView
+            android:id="@+id/tv_gendle_infor"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/font_size3"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/list_item_bg"
+            android:textColor="@color/fontcor1"
+            android:gravity="center_vertical"/>
+    </RelativeLayout>
+
+    <!-- Divide line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/linecor1"/>
+
+    <RelativeLayout
+        android:id="@+id/detail_birth"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/list_item_bg"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <!-- Detail information -->
+        <TextView
+            android:id="@+id/tv_birth"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/font_size3"
+            android:background="@drawable/list_item_bg"
+            android:textColor="@color/fontcor1"
+            android:gravity="center_vertical"
+            android:text="@string/profile_infor_birth"/>
+
+        <TextView
+            android:id="@+id/tv_birth_infor"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/font_size3"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/list_item_bg"
+            android:textColor="@color/fontcor1"
+            android:gravity="center_vertical"/>
+    </RelativeLayout>
+
+    <!-- Divide line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/linecor1"/>
+
+    <RelativeLayout
+        android:id="@+id/detail_signature"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/list_item_bg"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <!-- Detail information -->
+        <TextView
+            android:id="@+id/tv_signature"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/font_size3"
+            android:background="@drawable/list_item_bg"
+            android:textColor="@color/fontcor1"
+            android:gravity="center_vertical"
+            android:text="@string/profile_infor_signature"/>
+
+        <TextView
+            android:id="@+id/tv_signature_infor"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/font_size3"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/list_item_bg"
+            android:textColor="@color/fontcor1"
+            android:gravity="center_vertical"/>
+    </RelativeLayout>
+
+
+
+
+    <!-- Divide line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/linecor1"/>
+
+</LinearLayout>

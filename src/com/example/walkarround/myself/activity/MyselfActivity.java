@@ -23,6 +23,8 @@ import com.example.walkarround.util.AppSharedPreference;
 public class MyselfActivity extends Activity implements View.OnClickListener {
 
     private TextView mTvTitle = null;
+    private TextView mTvSetting = null;
+
     private View self_info = null;
     private PortraitView mSelfInfoPortrait;
     private TextView mSelfInfoName;
@@ -67,6 +69,9 @@ public class MyselfActivity extends Activity implements View.OnClickListener {
         mSelfInfoPortrait = (PortraitView) self_info.findViewById(R.id.self_portrait);
         mSelfInfoName = (TextView) self_info.findViewById(R.id.self_info_name);
         mSelfInfoMobile = (TextView) self_info.findViewById(R.id.self_info_mobile);
+
+        mTvSetting = (TextView) findViewById(R.id.tv_setting);
+        mTvSetting.setOnClickListener(this);
     }
 
     private void initData() {
@@ -101,6 +106,6 @@ public class MyselfActivity extends Activity implements View.OnClickListener {
     }
 
     private void startMyProfileActivity() {
-
+        startActivity(new Intent(MyselfActivity.this, DetailInformationActivity.class));
     }
 }

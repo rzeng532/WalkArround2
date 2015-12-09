@@ -28,5 +28,6 @@
         <activity android:name=".login.activity.LoginActivity" />
         <activity android:name=".setting.activity.AppSettingActivity" />
         <activity android:name=".myself.activity.MyselfActivity" />
+        <activity android:name=".myself.activity.DetailInformationActivity" />
     </application>
 </manifest>

@@ -196,6 +196,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
     }
 
     @Override
+
     public final RectF getDisplayRect() {
         checkMatrixBounds();
         return getDisplayRect(getDisplayMatrix());

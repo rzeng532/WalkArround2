@@ -66,9 +66,11 @@
 
     <!-- Strings for myself -->
     <string name="profile_activity_title">个人信息</string>
+    <string name="profile_infor_nick_name">昵称</string>
+    <string name="profile_infor_portrait">头像</string>
     <string name="profile_infor_gendle">性别</string>
-    <string name="profile_infor_age">年龄</string>
+    <string name="profile_infor_birth">出生年月</string>
     <string name="profile_infor_signature">签名</string>
-    <string name="profile_infor_phone">签名</string>
+    <string name="profile_infor_phone">手机号码</string>
 
 </resources>
