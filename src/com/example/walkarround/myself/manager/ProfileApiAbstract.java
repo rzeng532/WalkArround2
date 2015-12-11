@@ -16,7 +16,7 @@ public abstract class ProfileApiAbstract {
 
     public abstract void updateBirthday(String birth)throws Exception;
 
-    public abstract void updateUsername(String birth)throws Exception;
+    public abstract void updateUsername(String username)throws Exception;
 
     public abstract void updatePortrait(String path)throws Exception;
 }

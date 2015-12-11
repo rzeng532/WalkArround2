@@ -72,5 +72,5 @@
     <string name="profile_infor_birth">出生年月</string>
     <string name="profile_infor_signature">签名</string>
     <string name="profile_infor_phone">手机号码</string>
-
+    <string name="profile_infor_update">完成</string>
 </resources>

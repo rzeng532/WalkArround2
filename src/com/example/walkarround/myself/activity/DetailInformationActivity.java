@@ -27,6 +27,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     private View mVUserName;
 
     private Logger logger = Logger.getLogger(DetailInformationActivity.class.getSimpleName());
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +50,15 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
         mTvMobile = (TextView) findViewById(R.id.tv_mobile_infor);
         mTvMobile.setOnClickListener(this);
+
+        mTvBirth = (TextView) findViewById(R.id.tv_birth_infor);
+        mTvBirth.setOnClickListener(this);
+
+        mTvGendle = (TextView) findViewById(R.id.tv_gendle_infor);
+        mTvGendle.setOnClickListener(this);
+
+        mTvSignature = (TextView) findViewById(R.id.tv_signature_infor);
+        mTvSignature.setOnClickListener(this);
     }
 
     public void initData() {

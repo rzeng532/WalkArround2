@@ -52,7 +52,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         public void handleMessage(Message msg) {
             if (msg.what == LOGIN_OK) {
                 //Test updating user data.
-                updateUserData();
+                //updateUserData();
+
                 //Goto target page.
                 startMainActivity();
                 finish();
@@ -181,10 +182,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     private void updateUserData() {
-        AVUser user = AVUser.getCurrentUser();
 
-        user.put(LoginConstant.REG_KEY_AGE, 25);
-        user.saveInBackground();
     }
 
     private void startMainActivity() {
