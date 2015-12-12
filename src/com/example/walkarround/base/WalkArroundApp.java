@@ -4,8 +4,10 @@
 package com.example.walkarround.base;
 
 import android.app.Application;
-import android.graphics.Bitmap;
+import android.content.Context;
 import android.graphics.Bitmap.Config;
+import android.os.Environment;
+
 import com.avos.avoscloud.AVOSCloud;
 import com.example.walkarround.R;
 import com.example.walkarround.util.AppConstant;
@@ -25,11 +27,15 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 public class WalkArroundApp extends Application {
     private static WalkArroundApp mWorkArroundApp = null;
     private static Logger logger = Logger.getLogger(WalkArroundApp.class.getSimpleName());
+    public static String MTC_DATA_PATH = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         mWorkArroundApp = this;
+
+        MTC_DATA_PATH = getDataDir(this) + AppConstant.APP_DATA_ROOT_PATH;
 
         //Init lean cloud
         AVOSCloud.setDebugLogEnabled(true);
@@ -58,11 +64,11 @@ public class WalkArroundApp extends Application {
                             new DisplayImageOptions.Builder()
                                     // =============下面三项先暂时配置ic_lanucher
                                     .showImageOnLoading(R.drawable.default_image)
-                                    // 加载时候显示
+                                            // 加载时候显示
                                     .showImageForEmptyUri(R.drawable.default_image)
-                                    // 地址为空显示
+                                            // 地址为空显示
                                     .showImageOnFail(R.drawable.default_image)
-                                    // 加载失败显示
+                                            // 加载失败显示
                                     .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                                     .bitmapConfig(Config.RGB_565).build()).build();
 
@@ -72,6 +78,18 @@ public class WalkArroundApp extends Application {
             e.printStackTrace();
             throw e;
         }
+    }
+
+
+    public static String getDataDir(Context context) {
+        String state = Environment.getExternalStorageState();
+        String dir = null;
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            dir = Environment.getExternalStorageDirectory().getAbsolutePath();
+        } else {
+            dir = context.getFilesDir().getAbsolutePath();
+        }
+        return dir;
     }
 
 }

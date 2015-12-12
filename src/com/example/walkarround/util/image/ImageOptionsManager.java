@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2014-2015 Richard All rights reserved
  */
-package com.example.walkarround.util;
+package com.example.walkarround.util.image;
 
 import android.graphics.Bitmap;
 import com.example.walkarround.R;

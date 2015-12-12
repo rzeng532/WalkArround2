@@ -6,7 +6,6 @@ package com.example.walkarround.base.view;
 import android.content.Context;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -15,8 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.walkarround.R;
-import com.example.walkarround.util.CommonUtils;
-import com.example.walkarround.util.ImageLoaderManager;
+import com.example.walkarround.util.image.ImageLoaderManager;
 
 /**
  * TODO: description

@@ -14,6 +14,7 @@ public class ProfileUtil {
         FEMALE  //1
     };
 
+    public static final String EDIT_ACTIVITY_START_TYPE = "edit_activity_start_type";
     //Profile field
     public static final int REG_TYPE_USER_NAME = 0; //string
     public static final int REG_TYPE_SIGNATURE = 1; //string

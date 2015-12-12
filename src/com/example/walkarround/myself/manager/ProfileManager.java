@@ -4,6 +4,7 @@ import com.avos.avoscloud.AVUser;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
+import com.example.walkarround.util.AsyncTaskListener;
 
 /**
  * Created by Richard on 2015/12/7.
@@ -77,9 +78,9 @@ public class ProfileManager {
     /*
      * 更新签名
      */
-    public void updateSignature(String signature) {
+    public void updateSignature(String signature, AsyncTaskListener listener) {
         try {
-            mProfileApi.updateSignature(signature);
+            mProfileApi.updateSignature(signature, listener);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,9 +89,9 @@ public class ProfileManager {
     /*
      * 更改用户名
      */
-    public void updateUsername(String username) {
+    public void updateUsername(String username, AsyncTaskListener listener) {
         try {
-            mProfileApi.updateUsername(username);
+            mProfileApi.updateUsername(username, listener);
         } catch (Exception e) {
             e.printStackTrace();
         }

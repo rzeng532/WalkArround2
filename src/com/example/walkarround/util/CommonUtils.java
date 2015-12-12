@@ -9,9 +9,12 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import com.example.walkarround.R;
+import com.example.walkarround.base.WalkArroundApp;
+
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -453,5 +456,26 @@ public class CommonUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * 获取拍照图片路径
+     *
+     * @return
+     */
+    public static String createCameraTakePicFile() {
+        StringBuilder fileName = new StringBuilder();
+        fileName.append(WalkArroundApp.MTC_DATA_PATH);
+        fileName.append(AppConstant.CAMERA_TAKE_PIC_PATH);
+        File folder = new File(fileName.toString());
+        if (!folder.exists()) {
+            if (!folder.mkdirs()) {
+                return null;
+            }
+        }
+        // 指定照片路径
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        fileName.append("IMG_").append(timeStamp).append(".jpg");
+        return fileName.toString();
     }
 }

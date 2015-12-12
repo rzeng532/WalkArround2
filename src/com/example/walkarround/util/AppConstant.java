@@ -21,4 +21,7 @@ public class AppConstant {
 //    public static String LEANCLOUD_APP_KEY = "qke60ogn5d7vpr4k3he9ykm9sibq6buifwxxrjkl2qytm480"; //release;
 
     public static final int MAX_IMAGE_LOADER_CACHE_SIZE = 50 * 1024 * 1024; //50MB
+
+    public static final String CAMERA_TAKE_PIC_PATH = "/msg/picture/";
+    public static final String APP_DATA_ROOT_PATH = "/com.example.prcs";
 }

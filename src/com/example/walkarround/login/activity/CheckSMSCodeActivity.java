@@ -191,8 +191,8 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
     public void onClick(View v) {
         if (v.getId() == R.id.btn_nextstep) {
             String code = mCodeView.getText().toString();
-            if (code == null || code.equals("")) {
-                Toast.makeText(this, "请输入验证码", Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(code)) {
+                Toast.makeText(this, getString(R.string.login_hint_please_input_SMS_code), Toast.LENGTH_SHORT).show();
                 return;
             }
             showDialog();

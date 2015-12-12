@@ -11,6 +11,7 @@
     <string name="common_ok">确认</string>
     <string name="common_cancel">取消</string>
     <string name="common_please_wait_for_a_moment">请稍等...</string>
+    <string name="com_select">选择</string>
 
     <!-- Strings for dialog -->
     <string name="err_account_already_exist">该账户已存在</string>
@@ -55,6 +56,7 @@
     <string name="login_password_are_illegal">密码不符合规则</string>
     <string name="login_hint_logouting">正在退出当前账户</string>
     <string name="login_do_login_success">登录成功</string>
+    <string name="login_hint_please_input_SMS_code">请输入验证码</string>
 
     <!-- Strings for setting -->
     <string name="setting_title">设置</string>
@@ -73,4 +75,22 @@
     <string name="profile_infor_signature">签名</string>
     <string name="profile_infor_phone">手机号码</string>
     <string name="profile_infor_update">完成</string>
+    <string name="profile_infor_update_ok">个人信息成功更新</string>
+    <string name="profile_infor_update_fail">人信息更新失败</string>
+
+    <!-- image utils string -->
+    <string name="img_select_at_most_pic">您最多只能选择%1$d张照片</string>
+    <string name="img_select_at_least_1_pic">请至少选择一张图片发送</string>
+    <string name="img_pic_total_count">共%1$s张</string>
+    <string name="img_select_pics_preview">预览</string>
+    <string name="img_select_pics_preview_multi">预览(%1$d)</string>
+    <string name="img_select_pics_finish_multi">完成(%1$d&#047;%2$d)</string>
+    <string name="img_select_pics_send_multi">发送(%1$d&#047;%2$d)</string>
+    <string name="img_open_camera_fail">打开相机失败</string>
+    <string name="img_hint_please_select_pic">请先选择图片</string>
+    <string name="img_pic_full_size">原图</string>
+    <string name="img_pic_complete">完成</string>
+    <string name="img_select_picture">选择图片</string>
+    <string name="img_select_pics_all">所有图片</string>
+    <string name="img_select_pics_choose_directory">目录选择</string>
 </resources>
