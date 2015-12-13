@@ -7,6 +7,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.text.TextUtils;
 import com.example.walkarround.R;
 import com.example.walkarround.base.WalkArroundApp;
@@ -477,5 +478,13 @@ public class CommonUtils {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         fileName.append("IMG_").append(timeStamp).append(".jpg");
         return fileName.toString();
+    }
+
+    public static boolean hasSdcard() {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

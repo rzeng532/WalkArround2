@@ -4,14 +4,17 @@ import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.walkarround.myself.model.MyProfileInfo;
 import org.w3c.dom.Text;
@@ -21,6 +24,7 @@ import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppSharedPreference;
+import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.image.ImageBrowserActivity;
 import com.example.walkarround.util.image.ImageChooseActivity;
@@ -50,21 +54,26 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
     private Logger logger = Logger.getLogger(DetailInformationActivity.class.getSimpleName());
     private MyProfileInfo myProfileInfo = null;
-    Uri headUri;
-    protected File profileheadTemp;
+
+    private Uri headUri;
+    private File profileheadTemp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_information);
         initView();
-        //initData();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         initData();
+
+        if (CommonUtils.hasSdcard()) {
+            profileheadTemp = new File(Environment.getExternalStorageDirectory(), "/portrait.jpg");
+            headUri = Uri.fromFile(profileheadTemp);
+        }
     }
 
     public void initView() {
@@ -179,6 +188,8 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == REQUEST_CODE_PICTURE_CHOOSE) {
             if (resultCode != RESULT_OK) {
                 return;
@@ -192,13 +203,30 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 imagePath = pathList.get(0);
                 if(!TextUtils.isEmpty(imagePath)) {
                     //TODO: should add listener on update portrait method!!!
-                    //crop(Uri.parse(imagePath));
-                    ProfileManager.getInstance().updatePortrait(imagePath);
-                    mMyPortrait.setBaseData(null, imagePath, null, -1);
+                    File fPic = new File(imagePath);
+                    if(fPic != null && fPic.exists()) {
+                        crop(Uri.fromFile(fPic));
+                    } else {
+                        Toast.makeText(this, getString(R.string.err_file_donot_exist), Toast.LENGTH_LONG).show();
+                    }
+
+
                 }
             }
         } else if(requestCode == REQUEST_CODE_PICTURE_CUT) {
+            if (headUri == null || TextUtils.isEmpty(headUri.toString())) {
+                return;
+            }
 
+            Bitmap temp = getBitmapFromUri(headUri, this);
+            if(temp != null) {
+                ProfileManager.getInstance().updatePortrait(headUri.getPath());
+                mMyPortrait.setBaseData(null, headUri.getPath(), null, -1);
+            }
+            if(profileheadTemp!=null&&profileheadTemp.exists()){
+                profileheadTemp.delete();
+                headUri =null;
+            }
         }
     }
 
@@ -244,4 +272,18 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
         startActivityForResult(intent, REQUEST_CODE_PICTURE_CUT);
     }
+
+    /**
+     * 读取URI所在的图片
+     */
+    public static Bitmap getBitmapFromUri(Uri uri, Context mContext) {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
+            return bitmap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
