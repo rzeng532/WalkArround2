@@ -10,7 +10,16 @@ public class MyProfileInfo {
     String mPortraitPath = null; //portrait file path
     String mBirthday = null;
     String mSignature = null;
+    String mMobileNum = null;
     int mGendle = 0; //0: men, 1: female
+
+    public String getMobileNum() {
+        return mMobileNum;
+    }
+
+    public void setMobileNum(String mobile) {
+        this.mMobileNum = mobile;
+    }
 
     public int getGendle() {
         return mGendle;

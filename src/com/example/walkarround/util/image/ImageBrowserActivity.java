@@ -39,6 +39,7 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
     public static final String INTENT_IMAGE_FULLSIZED = "map_isFull";
     public static final String INTENT_IMAGE_IS_FULL_SIZE_OPTION = "image_is_full_size_option";
     public static final String INTENT_IMAGE_MAX_NUM = "image_max_num";
+    public static final String INTENT_DISABLE_OK_BTN = "image_disable_ok_btn";
 
     public static final int _TYPE_FROM_MSG = 100;
     public static final int _TYPE_FROM_CAMERA = 102;
@@ -48,6 +49,7 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
     private int mViewType = _TYPE_FROM_MSG;
     private boolean mIsFullSizeOption = false;
     private int mMaxNum = 0;
+    private boolean mIsDisableOKBtn = false;
 
     private TextView mBackHintView;
     /*可展示的所有图片*/
@@ -90,6 +92,7 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
             mViewType = intent.getIntExtra(INTENT_IMAGE_FROM_TYPE, _TYPE_FROM_MSG);
             mIsFullSizeOption = intent.getBooleanExtra(INTENT_IMAGE_IS_FULL_SIZE_OPTION, false);
             mMaxNum = intent.getIntExtra(INTENT_IMAGE_MAX_NUM, 0);
+            mIsDisableOKBtn = intent.getBooleanExtra(INTENT_DISABLE_OK_BTN, false);
         }
         if (choseList != null) {
             for (String choseItem : choseList) {
@@ -102,22 +105,28 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
     private void initView() {
         mBackHintView = (TextView) findViewById(R.id.browser_tv_back);
         mBtnSend = (Button) findViewById(R.id.ok_btn);
+        if(mIsDisableOKBtn) {
+            mBtnSend.setVisibility(View.GONE);
+        }
         mPicFullSizeCb = (CheckBox) findViewById(R.id.pic_full_size_btn);
         if (!mIsFullSizeOption) {
             mPicFullSizeCb.setVisibility(View.GONE);
         } else {
             mPicFullSizeCb.setVisibility(View.VISIBLE);
         }
-        mPicSelectCb = (CheckBox) findViewById(R.id.pic_select_check);
-        mBackHintView.setOnClickListener(this);
-        mBtnSend.setOnClickListener(this);
 
-        int sendingCount = mDisplayImageList.size();
-        mBackHintView.setText((mCurrentImagePosition + 1) + "/" + sendingCount);
+        //Set the select check box as gone now.
+        mPicSelectCb = (CheckBox) findViewById(R.id.pic_select_check);
+        mPicSelectCb.setVisibility(View.GONE);
+        mBackHintView.setOnClickListener(this);
+        //mBtnSend.setOnClickListener(this);
+
+        //int sendingCount = mDisplayImageList.size();
+        //mBackHintView.setText((mCurrentImagePosition + 1) + "/" + sendingCount);
         if (!mIsFullSizeOption) {
-            mBtnSend.setText(getResources().getString(R.string.img_select_pics_finish_multi, sendingCount, mMaxNum));
+            mBtnSend.setText(getResources().getString(R.string.img_select_pics_finish_multi));
         } else {
-            mBtnSend.setText(getResources().getString(R.string.img_select_pics_send_multi, sendingCount, mMaxNum));
+            mBtnSend.setText(getResources().getString(R.string.img_select_pics_send_multi));
         }
         SamplePagerAdapter samplePagerAdapter = new SamplePagerAdapter(this);
         HackyViewPager mViewPager = (HackyViewPager) findViewById(R.id.xx_browser);
@@ -143,7 +152,7 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
                     default:
                         break;
                 }
-                mBackHintView.setText((mCurrentImagePosition + 1) + "/" + mDisplayImageList.size());
+                //mBackHintView.setText((mCurrentImagePosition + 1) + "/" + mDisplayImageList.size());
             }
 
             @Override
@@ -164,7 +173,11 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
                 break;
             case _TYPE_FROM_CAMERA:
             case _TYPE_FROM_PIC_SELECT:
-                mBtnSend.setVisibility(View.VISIBLE);
+                if(mIsDisableOKBtn) {
+                    mBtnSend.setVisibility(View.GONE);
+                } else {
+                    mBtnSend.setVisibility(View.VISIBLE);
+                }
                 break;
             default:
                 break;
@@ -290,14 +303,14 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
                     if (!mIsFullSizeOption) {
                         mBtnSend.setText(getResources().getString(R.string.img_select_pics_finish_multi, mChoseImageList.size(), mMaxNum));
                     } else {
-                        mBtnSend.setText(getResources().getString(R.string.img_select_pics_send_multi, mChoseImageList.size(), mMaxNum));
+                        mBtnSend.setText(getResources().getString(R.string.img_select_pics_send_multi));
                     }
                 } else {
                     mChoseImageList.put(mDisplayImageList.get(mCurrentImagePosition), true);
                     if (!mIsFullSizeOption) {
                         mBtnSend.setText(getResources().getString(R.string.img_select_pics_finish_multi, mChoseImageList.size(), mMaxNum));
                     } else {
-                        mBtnSend.setText(getResources().getString(R.string.img_select_pics_send_multi, mChoseImageList.size(), mMaxNum));
+                        mBtnSend.setText(getResources().getString(R.string.img_select_pics_send_multi));
                     }
                 }
                 break;

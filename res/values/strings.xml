@@ -83,9 +83,9 @@
     <string name="img_select_at_least_1_pic">请至少选择一张图片发送</string>
     <string name="img_pic_total_count">共%1$s张</string>
     <string name="img_select_pics_preview">预览</string>
-    <string name="img_select_pics_preview_multi">预览(%1$d)</string>
-    <string name="img_select_pics_finish_multi">完成(%1$d&#047;%2$d)</string>
-    <string name="img_select_pics_send_multi">发送(%1$d&#047;%2$d)</string>
+    <string name="img_select_pics_preview_multi">预览</string>
+    <string name="img_select_pics_finish_multi">完成</string>
+    <string name="img_select_pics_send_multi">发送</string>
     <string name="img_open_camera_fail">打开相机失败</string>
     <string name="img_hint_please_select_pic">请先选择图片</string>
     <string name="img_pic_full_size">原图</string>
@@ -93,4 +93,5 @@
     <string name="img_select_picture">选择图片</string>
     <string name="img_select_pics_all">所有图片</string>
     <string name="img_select_pics_choose_directory">目录选择</string>
+    <string name="img_pic_browser">图片浏览</string>
 </resources>

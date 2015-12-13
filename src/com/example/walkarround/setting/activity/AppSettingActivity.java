@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
+import com.example.walkarround.login.manager.LoginManager;
+import com.example.walkarround.setting.manager.SettingManager;
 import com.example.walkarround.util.Logger;
 
 /**
@@ -55,16 +57,21 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
         }
     };
 
-    private BroadcastReceiver mContactReceiver = null;
-    private boolean isContactRegister = false;
-
     private void assignViews() {
         titleName = (TextView) findViewById(R.id.title_name);
-        //csbNewMsgNotifyReceive = (CheckSwitchButton) findViewById(R.id.csb_new_msg_notify_receive);
+        titleName.setOnClickListener(this);
+
         tvResetPasswordApp = (TextView) findViewById(R.id.tv_reset_password);
+        tvResetPasswordApp.setOnClickListener(this);
+
         tvAboutApp = (TextView) findViewById(R.id.tv_about_app);
+        tvAboutApp.setOnClickListener(this);
+
         tvLogout = (TextView) findViewById(R.id.tv_logout);
+        tvLogout.setOnClickListener(this);
+
         tvUpdate = (TextView) findViewById(R.id.tv_update);
+        tvUpdate.setOnClickListener(this);
     }
 
     @Override
@@ -117,7 +124,7 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
                         finish();
                         try {
                             //TODO: logout step
-
+                            SettingManager.getInstance().doLogout();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.TextView;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.PortraitView;
+import com.example.walkarround.myself.manager.ProfileManager;
+import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.setting.activity.AppSettingActivity;
 import com.example.walkarround.util.AppSharedPreference;
 
@@ -29,6 +31,7 @@ public class MyselfActivity extends Activity implements View.OnClickListener {
     private PortraitView mSelfInfoPortrait;
     private TextView mSelfInfoName;
     private TextView mSelfInfoMobile;
+    private MyProfileInfo myProfileInfo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +78,13 @@ public class MyselfActivity extends Activity implements View.OnClickListener {
     }
 
     private void initData() {
-        String userName = AppSharedPreference.getString(AppSharedPreference.ACCOUNT_USERNAME, "");
-        String phoneNum = AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PHONE, "");
-        String portraitPath = AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PORTRAIT, "");
+        myProfileInfo = ProfileManager.getInstance().getMyProfile();
 
-        if(!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(phoneNum)) {
-            mSelfInfoPortrait.setBaseData(userName, portraitPath,
-                    userName.substring(0, 1), -1);
-            mSelfInfoName.setText(userName);
-            mSelfInfoMobile.setText(phoneNum);
+        if(!TextUtils.isEmpty(myProfileInfo.getUsrName()) && !TextUtils.isEmpty(myProfileInfo.getMobileNum())) {
+            mSelfInfoPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
+                    myProfileInfo.getUsrName().substring(0, 1), -1);
+            mSelfInfoName.setText(myProfileInfo.getUsrName());
+            mSelfInfoMobile.setText(myProfileInfo.getMobileNum());
         } else {
             mSelfInfoName.setText("");
         }

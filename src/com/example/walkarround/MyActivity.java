@@ -3,11 +3,10 @@ package com.example.walkarround;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
-
+import com.avos.avoscloud.AVUser;
 import com.example.walkarround.login.activity.LoginActivity;
-import com.example.walkarround.login.activity.NickNameActivity;
+import com.example.walkarround.login.manager.LoginManager;
+import com.example.walkarround.myself.activity.MyselfActivity;
 
 public class MyActivity extends Activity {
 
@@ -19,8 +18,13 @@ public class MyActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        boolean isLogined = LoginManager.getInstance().isLogined();
+        if (isLogined) {
+            startActivity(new Intent(this, MyselfActivity.class));
+        } else {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
 
-        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 }

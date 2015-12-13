@@ -191,7 +191,7 @@ public class ImageListAdapter extends BaseAdapter implements View.OnClickListene
             }
         } else {
             //gridview中第一个item设为点击拍照的入口
-            String imagePath = "drawable://" + R.drawable.default_picture_icon;
+            String imagePath = "drawable://" + R.drawable.image_cam;
             ImageLoader.getInstance().displayImage(imagePath, holder.imgView, defaultOptions);
             int paddingTop = CommonUtils.dip2px(convertView.getContext(), 40);
             holder.imgView.setPadding(paddingTop, paddingTop, paddingTop,

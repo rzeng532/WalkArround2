@@ -319,14 +319,13 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
             mChoseOkBtn.setText(R.string.com_select);
         } else {
             mPreviewBtn.setEnabled(true);
-            mPreviewBtn.setText(String.format(getResources().getString(R.string.img_select_pics_preview_multi),
-                    choseCount));
+            mPreviewBtn.setText(String.format(getResources().getString(R.string.img_select_pics_preview_multi)));
             if (!mIsFullSizeOption) {
                 mChoseOkBtn.setText(String
-                        .format(getResources().getString(R.string.img_select_pics_finish_multi), choseCount, mMaxNum));
+                        .format(getResources().getString(R.string.img_select_pics_finish_multi)));
             } else {
                 mChoseOkBtn.setText(String
-                        .format(getResources().getString(R.string.img_select_pics_send_multi), choseCount, mMaxNum));
+                        .format(getResources().getString(R.string.img_select_pics_send_multi)));
             }
         }
     }

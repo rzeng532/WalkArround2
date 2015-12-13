@@ -1,10 +1,13 @@
 package com.example.walkarround.login.manager;
 
+import android.widget.EditText;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.SignUpCallback;
+import com.example.walkarround.R;
+import com.example.walkarround.login.util.LoginConstant;
 import com.example.walkarround.util.AppSharedPreference;
 import com.example.walkarround.util.AsyncTaskListener;
 
@@ -52,7 +55,8 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
 
     @Override
     public void doLogout() throws Exception {
-
+        AVUser avUser = AVUser.getCurrentUser();
+        avUser.logOut();
     }
 
     @Override
@@ -79,7 +83,19 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
 
     @Override
     public int getLoginState() {
-        return 0;
+        AVUser currentUser = AVUser.getCurrentUser();
+        if(currentUser != null) {
+            //Login again via current account
+            try {
+                currentUser.logIn(AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PHONE, ""),
+                        AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PASSWORD, ""));
+            } catch (AVException e) {
+                e.printStackTrace();
+            }
+            return LoginConstant.LOGIN_STATE;
+        } else {
+            return LoginConstant.LOGOUT_STATE;
+        }
     }
 
     @Override

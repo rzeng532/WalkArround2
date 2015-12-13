@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.avos.avoscloud.*;
 import com.example.walkarround.R;
+import com.example.walkarround.login.util.LoginConstant;
 import com.example.walkarround.util.AppSharedPreference;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
@@ -181,6 +182,18 @@ public class LoginManager {
                 logger.d("current user name: " + username);
                 logger.d("current user mobile: " + currentUser.getMobilePhoneNumber());
             }
+        }
+    }
+
+    public boolean isLogined() {
+        return (mLoginApi.getLoginState() == LoginConstant.LOGIN_STATE ? true : false);
+    }
+
+    public void doLogout() {
+        try {
+            mLoginApi.doLogout();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -13,14 +13,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
-import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
-import com.example.walkarround.util.AppSharedPreference;
 import com.example.walkarround.util.AsyncTaskListener;
 
 /**
@@ -161,7 +158,7 @@ public class EditStrProfileInfoActivity extends Activity implements View.OnClick
     private void updateData(int editType) {
         String data = mEtInput.getText().toString();
 
-        if(TextUtils.isEmpty(data)) {
+        if (TextUtils.isEmpty(data)) {
             //Toast.makeText()
             return;
         }

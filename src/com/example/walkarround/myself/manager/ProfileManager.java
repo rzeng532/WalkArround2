@@ -1,5 +1,7 @@
 package com.example.walkarround.myself.manager;
 
+import android.text.TextUtils;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
@@ -33,8 +35,22 @@ public class ProfileManager {
         MyProfileInfo myProfileInfo = new MyProfileInfo();
         AVUser avUser = AVUser.getCurrentUser();
 
-        myProfileInfo.setUsrName(avUser.getUsername());
-        myProfileInfo.setPortraitPath(avUser.getString(ProfileUtil.REG_KEY_PORTRAIT));
+        //Set the mobile number as user name while user name is empty
+        if(TextUtils.isEmpty(avUser.getUsername())) {
+            myProfileInfo.setUsrName(avUser.getMobilePhoneNumber());
+        } else {
+            myProfileInfo.setUsrName(avUser.getUsername());
+        }
+
+        myProfileInfo.setMobileNum(avUser.getMobilePhoneNumber());
+
+        AVFile portraitURL = avUser.getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
+        if(portraitURL != null && !TextUtils.isEmpty(portraitURL.getUrl())) {
+            myProfileInfo.setPortraitPath(portraitURL.getUrl());
+        } else {
+            myProfileInfo.setPortraitPath(""); //Set portrait path as empty.
+        }
+
         myProfileInfo.setGendle(avUser.getInt(ProfileUtil.REG_KEY_GENDER));
         myProfileInfo.setBirthday(avUser.getString(ProfileUtil.REG_KEY_BIRTH_DAY));
         myProfileInfo.setSignature(avUser.getString(ProfileUtil.REG_KEY_SIGNATURE));

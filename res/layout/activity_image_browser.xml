@@ -31,8 +31,8 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:textColor="@color/fontcor3"
+            android:text="@string/img_pic_browser"
             android:textSize="@dimen/font_size2" />
-
         <Button
             android:id="@+id/ok_btn"
             android:layout_width="wrap_content"

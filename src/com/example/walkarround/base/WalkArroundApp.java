@@ -37,10 +37,10 @@ public class WalkArroundApp extends Application {
 
         MTC_DATA_PATH = getDataDir(this) + AppConstant.APP_DATA_ROOT_PATH;
 
-        //Init lean cloud
-        AVOSCloud.setDebugLogEnabled(true);
-        AVOSCloud.initialize(this, AppConstant.LEANCLOUD_APP_ID, AppConstant.LEANCLOUD_APP_KEY);
+        //Init lean cloud & image loader manager
         try {
+            AVOSCloud.setDebugLogEnabled(true);
+            AVOSCloud.initialize(this, AppConstant.LEANCLOUD_APP_ID, AppConstant.LEANCLOUD_APP_KEY);
             initImageLoader(AppConstant.MAX_IMAGE_LOADER_CACHE_SIZE);
         } catch (Exception e) {
             e.printStackTrace();

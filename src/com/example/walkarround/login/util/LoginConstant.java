@@ -11,5 +11,6 @@ package com.example.walkarround.login.util;
  */
 public class LoginConstant {
 
-
+    public static final int LOGIN_STATE = 0;
+    public static final int LOGOUT_STATE = 1;
 }
