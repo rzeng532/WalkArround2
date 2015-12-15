@@ -12,6 +12,10 @@
       <root url="jar://$PROJECT_DIR$/libs/weibo.sdk.android.sso.3.0.1-leancloud.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/okio-1.6.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/fastjson.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/universal-image-loader-1.9.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/AMAP_2D_V2_7_0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/AMap_Services_V2_7_0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

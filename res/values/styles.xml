@@ -39,8 +39,10 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@color/transparent</item>
-    　　<item name="android:windowIsTranslucent">true</item>
-    　　<item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+        　　
+        <item name="android:windowIsTranslucent">true</item>
+        　　
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
     </style>
 
     <style name="PopupWindowAnimation" parent="android:Animation">
@@ -92,5 +94,12 @@
     <style name="Theme.CustomDialog.ProcessHorizontal" parent="@android:style/Widget.SeekBar">
         <item name="android:progressDrawable">@drawable/seekbar_horizontal_progress_drawable</item>
         <item name="android:thumb">@drawable/contacts_guage</item>
+    </style>
+
+    <style name="entranceTransparent">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
     </style>
 </resources>

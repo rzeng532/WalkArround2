@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.walkarround"
-          android:versionCode="1"
-          android:versionName="1.0">
+    <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+              package="com.example.walkarround"
+              android:versionCode="1"
+              android:versionName="1.0">
+
+    <!-- Min SDK version -->
+    <uses-sdk android:minSdkVersion="19"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,23 +13,42 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
+    <!-- Map permission -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
-    <uses-sdk android:minSdkVersion="19"/>
     <application
         android:name=".base.WalkArroundApp"
         android:label="@string/app_name"
         android:icon="@drawable/ic_launcher"
-		android:theme="@style/ActivityNoAnimation">
+        android:theme="@style/ActivityNoAnimation">
+
+        <!-- For map -->
+        <meta-data
+                android:name="com.amap.api.v2.apikey"
+                android:value="86:11:15:84:10:D8:50:00:FC:36:B9:EE:D1:45:F6:B4:56:09:B6:A6"/>
+
+        <!-- Activity list -->
         <activity
-            android:name=".MyActivity"
-            android:label="@string/app_name">
+            android:name=".EntranceActivity"
+            android:label="@string/app_name"
+            android:theme="@style/entranceTransparent"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".login.activity.NickNameActivity" />
+        <activity android:name=".login.activity.NickNameActivity"/>
         <activity android:name=".login.activity.PhoneAndPasswordActivity" />
         <activity android:name=".login.activity.CheckSMSCodeActivity" />
         <activity android:name=".login.activity.LoginActivity" />

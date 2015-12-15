@@ -5,7 +5,9 @@ package com.example.walkarround.myself.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -15,6 +17,9 @@ import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.setting.activity.AppSettingActivity;
 import com.example.walkarround.util.AppSharedPreference;
+import com.example.walkarround.util.CommonUtils;
+
+import java.io.File;
 
 /**
  * TODO: description
@@ -38,6 +43,11 @@ public class MyselfActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myself);
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initData();
     }
 

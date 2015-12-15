@@ -35,7 +35,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
 
             @Override
             public void done(AVException e) {
-                if(e == null) {
+                if (e == null) {
                     listener.onSuccess();
                 } else {
                     listener.onFailed(e);
@@ -76,12 +76,41 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     }
 
     @Override
-    public void updatePortrait(String path) throws Exception {
+    public void updatePortrait(String path, AsyncTaskListener listener) throws Exception {
         AVUser user = AVUser.getCurrentUser();
+        if (null == user) {
+            return;
+        }
+
+        final AVFile orignalFile = user.getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
 
         AVFile file = AVFile.withAbsoluteLocalPath(user.getMobilePhoneNumber(), path);
         user.put(REG_KEY_PORTRAIT, file);
         //TODO: maybe we need a callback here.
-        user.saveInBackground();
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    //If new portrait file update success, we will delete old one.
+                    if (orignalFile != null) {
+                        Runnable deleteRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    orignalFile.delete();
+                                } catch (AVException e1) {
+                                    e1.printStackTrace();
+                                }
+                            }
+                        };
+                        Thread deleteTask = new Thread(deleteRunnable);
+                        deleteTask.start();
+                    }
+                    listener.onSuccess();
+                } else {
+                    listener.onFailed(e);
+                }
+            }
+        });
     }
 }

@@ -1,33 +1,36 @@
 package com.example.walkarround.myself.activity;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.walkarround.myself.model.MyProfileInfo;
-import org.w3c.dom.Text;
-
+import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
+import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.myself.manager.ProfileManager;
+import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
-import com.example.walkarround.util.AppSharedPreference;
+import com.example.walkarround.util.AppConstant;
+import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.image.ImageBrowserActivity;
 import com.example.walkarround.util.image.ImageChooseActivity;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Richard on 2015/12/9.
@@ -57,6 +60,40 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
     private Uri headUri;
     private File profileheadTemp;
+
+    private final int UPDATE_PORTRAIT_OK = 0;
+    private final int UPDATE_PORTRAIT_FAIL = 1;
+    private final int HANDLER_MSG_DELAY = 1000; //1 second
+
+    private Dialog mLoadingDialog;
+    private Handler mUpdateHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == UPDATE_PORTRAIT_OK) {
+                dismissDialog();
+                initData();
+            } else if (msg.what == UPDATE_PORTRAIT_FAIL) {
+                dismissDialog();
+                Toast.makeText(getApplicationContext(), getString(R.string.err_img_update_fail), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+    private AsyncTaskListener mUpdateListener = new AsyncTaskListener() {
+        @Override
+        public void onSuccess() {
+            Message msg = Message.obtain();
+            msg.what = UPDATE_PORTRAIT_OK;
+            mUpdateHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
+        }
+
+        @Override
+        public void onFailed(AVException e) {
+            Message msg = Message.obtain();
+            msg.what = UPDATE_PORTRAIT_FAIL;
+            mUpdateHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +147,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         //TODO: we need a API to get all current user data.
         myProfileInfo = ProfileManager.getInstance().getMyProfile();
 
-        if(myProfileInfo != null) {
+        if (myProfileInfo != null) {
             mMyPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(), myProfileInfo.getUsrName().substring(0, 1), -1);
             mTvUserName.setText(myProfileInfo.getUsrName());
             mTvMobile.setText(myProfileInfo.getMobileNum());
@@ -122,17 +159,18 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.title_name://back
+                setResult(AppConstant.ACTIVITY_RETURN_CODE_CANCEL);
                 finish();
                 break;
 
             case R.id.detail_portrait:
-                logger.d("onClick, portrait");
+                logger.d("onClick, portrait, select pic.");
                 startImageSelectActivity();
                 break;
 
             case R.id.iv_portrait:
-                logger.d("onClick, portrait");
-                if(myProfileInfo != null) {
+                logger.d("onClick, portrait, browser pic.");
+                if (myProfileInfo != null) {
                     startImageBrowserActivity(myProfileInfo.getPortraitPath());
                 }
                 break;
@@ -201,31 +239,27 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
             if (pathList != null && pathList.size() > 0) {
                 imagePath = pathList.get(0);
-                if(!TextUtils.isEmpty(imagePath)) {
-                    //TODO: should add listener on update portrait method!!!
+                if (!TextUtils.isEmpty(imagePath)) {
                     File fPic = new File(imagePath);
-                    if(fPic != null && fPic.exists()) {
+                    if (fPic != null && fPic.exists()) {
                         crop(Uri.fromFile(fPic));
                     } else {
                         Toast.makeText(this, getString(R.string.err_file_donot_exist), Toast.LENGTH_LONG).show();
                     }
-
-
                 }
             }
-        } else if(requestCode == REQUEST_CODE_PICTURE_CUT) {
-            if (headUri == null || TextUtils.isEmpty(headUri.toString())) {
+        } else if (requestCode == REQUEST_CODE_PICTURE_CUT) {
+            //if user select cancel, the resule will be 0;
+            if (resultCode == 0 || headUri == null || TextUtils.isEmpty(headUri.toString())) {
                 return;
             }
+            //TODO: should add listener on update portrait method!!!
+            showDialog();
+            ProfileManager.getInstance().updatePortrait(headUri.getPath(), mUpdateListener);
 
-            Bitmap temp = getBitmapFromUri(headUri, this);
-            if(temp != null) {
-                ProfileManager.getInstance().updatePortrait(headUri.getPath());
-                mMyPortrait.setBaseData(null, headUri.getPath(), null, -1);
-            }
-            if(profileheadTemp!=null&&profileheadTemp.exists()){
+            if (profileheadTemp != null && profileheadTemp.exists()) {
                 profileheadTemp.delete();
-                headUri =null;
+                headUri = null;
             }
         }
     }
@@ -243,8 +277,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     }
 
     /**
-     * @param uri
-     *            图片路径(裁剪头像以后如果回传data某些机型会内存溢出，通过URI回传)
+     * @param uri 图片路径(裁剪头像以后如果回传data某些机型会内存溢出，通过URI回传)
      * @方法名：crop
      * @描述：剪切图片
      * @输出：void
@@ -286,4 +319,18 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         }
     }
 
+    private void showDialog() {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = DialogFactory.getLoadingDialog(this, getString(R.string.common_please_wait_for_a_moment),
+                    true, null);
+            mLoadingDialog.show();
+        }
+    }
+
+    private void dismissDialog() {
+        if (mLoadingDialog != null) {
+            mLoadingDialog.dismiss();
+            mLoadingDialog = null;
+        }
+    }
 }

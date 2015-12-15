@@ -22,6 +22,14 @@ public class AppConstant {
 
     public static final int MAX_IMAGE_LOADER_CACHE_SIZE = 50 * 1024 * 1024; //50MB
 
-    public static final String CAMERA_TAKE_PIC_PATH = "/msg/picture/";
+    public static final String CAMERA_TAKE_PIC_PATH = "/picture/";
     public static final String APP_DATA_ROOT_PATH = "/com.example.prcs";
+
+    //Entrance activity start target, int value start from 1000
+    public static final String KEY_START_TARGET_ACTIVITY = "key_start_target_activity";
+    public static final int START_INVALID_VALUE = -1;
+    public static final int START_LOGIN_ACTIVITY = 1000;
+
+    public static final int ACTIVITY_RETURN_CODE_CANCEL = 100;
+    public static final int ACTIVITY_RETURN_CODE_OK = 101;
 }

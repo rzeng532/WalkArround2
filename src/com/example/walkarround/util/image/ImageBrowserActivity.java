@@ -105,8 +105,11 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
     private void initView() {
         mBackHintView = (TextView) findViewById(R.id.browser_tv_back);
         mBtnSend = (Button) findViewById(R.id.ok_btn);
+        mBtnSend.setOnClickListener(this);
         if(mIsDisableOKBtn) {
             mBtnSend.setVisibility(View.GONE);
+        } else {
+            mBtnSend.setVisibility(View.VISIBLE);
         }
         mPicFullSizeCb = (CheckBox) findViewById(R.id.pic_full_size_btn);
         if (!mIsFullSizeOption) {

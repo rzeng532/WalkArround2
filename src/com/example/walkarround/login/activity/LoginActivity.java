@@ -15,14 +15,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
-import com.example.walkarround.login.util.LoginConstant;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.myself.activity.MyselfActivity;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
@@ -51,11 +49,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == LOGIN_OK) {
-                //Test updating user data.
-                //updateUserData();
-
                 //Goto target page.
                 startMainActivity();
+                setResult(AppConstant.ACTIVITY_RETURN_CODE_OK);
                 finish();
             } else if (msg.what == LOGIN_FAIL) {
                 Toast.makeText(getApplicationContext(), (String) msg.obj, Toast.LENGTH_SHORT).show();

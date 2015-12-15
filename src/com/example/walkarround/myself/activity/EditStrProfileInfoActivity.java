@@ -4,6 +4,7 @@
 package com.example.walkarround.myself.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
+import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
@@ -37,18 +39,21 @@ public class EditStrProfileInfoActivity extends Activity implements View.OnClick
     private final int UPDATE_OK = 0;
     private final int UPDATE_FAIL = 0;
 
+    private Dialog mLoadingDialog;
+
     private Handler mUpdateProfileHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == UPDATE_OK) {
+                dismissDialog();
                 Toast.makeText(getApplicationContext(), getString(R.string.profile_infor_update_ok), Toast.LENGTH_SHORT).show();
                 finish();
             } else if (msg.what == UPDATE_FAIL) {
+                dismissDialog();
                 Toast.makeText(getApplicationContext(), getString(R.string.profile_infor_update_fail), Toast.LENGTH_SHORT).show();
             }
         }
     };
-
 
     private AsyncTaskListener updateProfileListener = new AsyncTaskListener() {
         @Override
@@ -138,18 +143,18 @@ public class EditStrProfileInfoActivity extends Activity implements View.OnClick
             case ProfileUtil.REG_TYPE_BIRTH_DAY:
 
                 break;
-
             case ProfileUtil.REG_TYPE_SIGNATURE:
                 mTvTitle.setText(getString(R.string.profile_infor_signature));
                 if (!TextUtils.isEmpty(profileInfo.getSignature())) {
                     mEtInput.setText(profileInfo.getSignature());
                 }
                 break;
-
             default:
 
                 break;
         }
+
+        mEtInput.setSelection(mEtInput.getText().length());
     }
 
     /*
@@ -162,7 +167,7 @@ public class EditStrProfileInfoActivity extends Activity implements View.OnClick
             //Toast.makeText()
             return;
         }
-
+        showDialog();
         switch (editType) {
             case ProfileUtil.REG_TYPE_USER_NAME:
                 ProfileManager.getInstance().updateUsername(data, updateProfileListener);
@@ -175,6 +180,21 @@ public class EditStrProfileInfoActivity extends Activity implements View.OnClick
             default:
 
                 break;
+        }
+    }
+
+    private void showDialog() {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = DialogFactory.getLoadingDialog(this, getString(R.string.common_please_wait_for_a_moment),
+                    true, null);
+            mLoadingDialog.show();
+        }
+    }
+
+    private void dismissDialog() {
+        if (mLoadingDialog != null) {
+            mLoadingDialog.dismiss();
+            mLoadingDialog = null;
         }
     }
 }

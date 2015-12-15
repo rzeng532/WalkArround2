@@ -20,5 +20,5 @@ public abstract class ProfileApiAbstract {
 
     public abstract void updateUsername(String username, AsyncTaskListener listener)throws Exception;
 
-    public abstract void updatePortrait(String path)throws Exception;
+    public abstract void updatePortrait(String path, AsyncTaskListener listener)throws Exception;
 }

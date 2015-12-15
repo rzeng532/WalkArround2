@@ -61,9 +61,9 @@ public class ProfileManager {
     /*
      * 更新头像
      */
-    public void updatePortrait(String path) {
+    public void updatePortrait(String path, AsyncTaskListener listener) {
         try {
-            mProfileApi.updatePortrait(path);
+            mProfileApi.updatePortrait(path, listener);
         } catch (Exception e) {
             e.printStackTrace();
         }

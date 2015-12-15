@@ -17,10 +17,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.example.walkarround.EntranceActivity;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
+import com.example.walkarround.login.activity.LoginActivity;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.setting.manager.SettingManager;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 
 /**
@@ -121,13 +124,18 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
 
                     @Override
                     public void onNoticeDialogConfirmClick(boolean isChecked, Object value) {
-                        finish();
                         try {
                             //TODO: logout step
                             SettingManager.getInstance().doLogout();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        //finish();
+
+                        Intent intent = new Intent(AppSettingActivity.this, EntranceActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra(AppConstant.KEY_START_TARGET_ACTIVITY, AppConstant.START_LOGIN_ACTIVITY);
+                        startActivity(intent);
                     }
                 }, null);
         noticeDialog.show();
