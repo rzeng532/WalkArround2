@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.avos.avoscloud.AVException;
+import com.example.walkarround.location.activity.LocationActivity;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
@@ -44,6 +45,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     private TextView mTvBirth;
     private TextView mTvGendle;
     private TextView mTvSignature;
+    private TextView mTvLocation;
 
     private View mVPortrait;
     private View mVUserName;
@@ -51,9 +53,12 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     private View mVBirthday;
     private View mVGendle;
     private View mVSignature;
+    private View mVLocation;
 
     private final int REQUEST_CODE_PICTURE_CHOOSE = 100;
     private final int REQUEST_CODE_PICTURE_CUT = 101;
+    private final int REQUEST_CODE_LOCATION = 102;
+    private final int REQUEST_CODE_EDIT_STR = 103;
 
     private Logger logger = Logger.getLogger(DetailInformationActivity.class.getSimpleName());
     private MyProfileInfo myProfileInfo = null;
@@ -141,6 +146,10 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         mVSignature = (View) findViewById(R.id.detail_signature);
         mVSignature.setOnClickListener(this);
         mTvSignature = (TextView) findViewById(R.id.tv_signature_infor);
+
+        mVLocation = (View) findViewById(R.id.detail_location);
+        mVLocation.setOnClickListener(this);
+        mTvLocation = (TextView) findViewById(R.id.tv_location_infor);
     }
 
     public void initData() {
@@ -198,6 +207,12 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 logger.d("onClick, signature.");
                 startEditActivity(ProfileUtil.REG_TYPE_SIGNATURE);
                 break;
+
+            case R.id.detail_location:
+                logger.d("onClick, signature.");
+                startLocationActivity();
+                break;
+
             default:
 
                 break;
@@ -207,7 +222,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     private void startEditActivity(int editType) {
         Intent intent = new Intent(DetailInformationActivity.this, EditStrProfileInfoActivity.class);
         intent.putExtra(ProfileUtil.EDIT_ACTIVITY_START_TYPE, editType);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_EDIT_STR);
     }
 
     private void startImageSelectActivity() {
@@ -260,6 +275,19 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             if (profileheadTemp != null && profileheadTemp.exists()) {
                 profileheadTemp.delete();
                 headUri = null;
+            }
+        } else if(requestCode == REQUEST_CODE_LOCATION) {
+            if (resultCode != RESULT_OK) {
+                return;
+            }
+
+            double latitude = data.getDoubleExtra(LocationActivity.LATITUDE, 0);
+            double longitude = data.getDoubleExtra(LocationActivity.LONGITUDE, 0);
+            String address = data.getStringExtra(LocationActivity.ADDRESS);
+            String imagePath = data.getStringExtra(LocationActivity.IMAGE_PATH);
+        } else if(requestCode == REQUEST_CODE_EDIT_STR) {
+            if (resultCode != RESULT_OK) {
+                return;
             }
         }
     }
@@ -332,5 +360,11 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             mLoadingDialog.dismiss();
             mLoadingDialog = null;
         }
+    }
+
+    private void startLocationActivity() {
+        Intent intent = new Intent(this, LocationActivity.class);
+
+        startActivityForResult(intent, REQUEST_CODE_LOCATION);
     }
 }

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+            android:id="@+id/location_title_panel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_bar_height"
+            android:background="@drawable/header_title_bg">
+
+        <TextView android:id="@+id/back_tv"
+                  android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:gravity="center_vertical"
+                  android:drawableLeft="@drawable/public_icon_titlebar_back"
+                  android:drawablePadding="10dp"
+                  android:paddingLeft="16dp"
+                  android:text="@string/map_select_pos_title"
+                  android:textColor="@color/fontcor3"
+                  android:textSize="@dimen/font_size2_dp"/>
+
+        <TextView
+                android:id="@+id/location_send_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="@string/map_control_send"
+                android:textColor="@color/fontcor3"
+                android:textSize="@dimen/font_size2_dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:id="@+id/location_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/bgcor1"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+        <EditText
+                android:id="@+id/location_search_editText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/cancel_location_search_imageView"
+                android:paddingLeft="16dp"
+                android:drawableLeft="@drawable/public_icon_searchbar_search"
+                android:drawablePadding="8dp"
+                android:background="@null"
+                android:maxEms="10"
+                android:maxLength="40"
+                android:singleLine="true"
+                android:textColor="@color/fontcor1"
+                android:textColorHint="@color/fontcor4"
+                android:textSize="@dimen/font_size3"/>
+
+        <ImageView
+                android:id="@+id/cancel_location_search_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/search_button"
+                android:background="@null"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:src="@drawable/public_search_clear_slt"
+                android:visibility="invisible"/>
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/linecor1"/>
+        <Button
+                android:id="@+id/search_button"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:background="@null"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/fontcor1"
+                android:textSize="@dimen/font_size3"
+                android:text="@string/common_search"
+                android:paddingLeft="3dp"
+                android:paddingRight="16dp"
+                android:enabled="false"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+            android:id="@+id/normal_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+        <com.amap.api.maps2d.MapView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/map"
+                android:layout_width="fill_parent"
+                android:layout_height="260dp"/>
+
+        <ListView
+                android:id="@+id/location_listView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:listSelector="@drawable/item_select_bg"
+                android:divider="@null"/>
+    </LinearLayout>
+
+    <ListView
+            android:id="@+id/search_result_listView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:listSelector="@drawable/item_select_bg"
+            android:divider="@null"
+            android:visibility="gone">
+    </ListView>
+
+</LinearLayout>

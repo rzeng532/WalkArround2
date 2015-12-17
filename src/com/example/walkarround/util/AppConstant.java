@@ -23,7 +23,11 @@ public class AppConstant {
     public static final int MAX_IMAGE_LOADER_CACHE_SIZE = 50 * 1024 * 1024; //50MB
 
     public static final String CAMERA_TAKE_PIC_PATH = "/picture/";
+    public static final String LOCATION_PIC_PATH = CAMERA_TAKE_PIC_PATH;
     public static final String APP_DATA_ROOT_PATH = "/com.example.prcs";
+
+    // A switcher to enable message method sending map picture
+    public static final boolean IS_ENABLE_MSG_LOCATION_PIC = true;
 
     //Entrance activity start target, int value start from 1000
     public static final String KEY_START_TARGET_ACTIVITY = "key_start_target_activity";

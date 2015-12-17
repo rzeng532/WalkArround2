@@ -60,7 +60,7 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
     }
 
     @Override
-    public void doRegister(final String phoneNum, final String  password, final String userName, String email, final AsyncTaskListener listener) {
+    public void doRegister(final String phoneNum, final String password, final String userName, String email, final AsyncTaskListener listener) {
 
         AVUser user = new AVUser();
         user.setUsername(userName);
@@ -84,14 +84,11 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
     @Override
     public int getLoginState() {
         AVUser currentUser = AVUser.getCurrentUser();
-        if(currentUser != null) {
+        if (currentUser != null) {
             //Login again via current account
-            try {
-                currentUser.logIn(AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PHONE, ""),
-                        AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PASSWORD, ""));
-            } catch (AVException e) {
-                e.printStackTrace();
-            }
+            currentUser.loginByMobilePhoneNumberInBackground(AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PHONE, ""),
+                    AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PASSWORD, ""), null);
+
             return LoginConstant.LOGIN_STATE;
         } else {
             return LoginConstant.LOGOUT_STATE;

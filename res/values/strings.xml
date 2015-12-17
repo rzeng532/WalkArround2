@@ -12,6 +12,7 @@
     <string name="common_cancel">取消</string>
     <string name="common_please_wait_for_a_moment">请稍等...</string>
     <string name="com_select">选择</string>
+    <string name="common_search">搜索</string>
 
     <!-- Strings for dialog -->
     <string name="err_account_already_exist">该账户已存在</string>
@@ -79,6 +80,7 @@
     <string name="profile_infor_update">完成</string>
     <string name="profile_infor_update_ok">个人信息成功更新</string>
     <string name="profile_infor_update_fail">人信息更新失败</string>
+    <string name="profile_infor_location">位置</string>
 
     <!-- image utils string -->
     <string name="img_select_at_most_pic">您最多只能选择%1$d张照片</string>
@@ -96,4 +98,13 @@
     <string name="img_select_pics_all">所有图片</string>
     <string name="img_select_pics_choose_directory">目录选择</string>
     <string name="img_pic_browser">图片浏览</string>
+
+    <!-- Strings for location & map -->
+    <string name="map_select_pos_title">位置</string>
+    <string name="map_control_send">发送</string>
+    <string name="map_posotion_nearby">附近</string>
+    <string name="map_position_error_code">错误号：%1$d</string>
+    <string name="map_position_overlay1">覆盖物1</string>
+    <string name="map_position_requesting">获取中...</string>
+    <string name="requesting_address">正在获取地址，暂时无法发送。</string>
 </resources>

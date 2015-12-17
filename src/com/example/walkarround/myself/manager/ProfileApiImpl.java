@@ -53,15 +53,15 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     }
 
     @Override
-    public void updateUsername(String birth, AsyncTaskListener listener) throws Exception {
+    public void updateUsername(final String username, AsyncTaskListener listener) throws Exception {
         AVUser user = AVUser.getCurrentUser();
 
-        user.put(REG_KEY_USER_NAME, birth);
+        user.put(REG_KEY_USER_NAME, username);
         user.saveInBackground(new SaveCallback() {
-
             @Override
             public void done(AVException e) {
                 if (e == null) {
+                    user.setUsername(username);
                     listener.onSuccess();
                 } else {
                     int code = e.getCode();

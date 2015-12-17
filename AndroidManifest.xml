@@ -15,7 +15,6 @@
 
     <!-- Map permission -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -34,7 +33,8 @@
         <!-- For map -->
         <meta-data
                 android:name="com.amap.api.v2.apikey"
-                android:value="86:11:15:84:10:D8:50:00:FC:36:B9:EE:D1:45:F6:B4:56:09:B6:A6"/>
+                android:value="9d6c7cac79d49a10ca2cb9640347b44b"/>
+        <service android:name="com.amap.api.location.APSService"></service>
 
         <!-- Activity list -->
         <activity
@@ -58,5 +58,6 @@
         <activity android:name=".myself.activity.EditStrProfileInfoActivity" />
         <activity android:name=".util.image.ImageBrowserActivity" />
         <activity android:name=".util.image.ImageChooseActivity" />
+        <activity android:name=".location.activity.LocationActivity"/>
     </application>
 </manifest>

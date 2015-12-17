@@ -16,6 +16,7 @@
       <root url="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/AMAP_2D_V2_7_0.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/AMap_Services_V2_7_0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/AMap_Location_v2_1_02.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
