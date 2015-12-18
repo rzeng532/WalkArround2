@@ -3,6 +3,7 @@
  */
 package com.example.walkarround.myself.manager;
 
+import com.example.walkarround.location.model.GeoData;
 import com.example.walkarround.util.AsyncTaskListener;
 
 /**
@@ -21,4 +22,6 @@ public abstract class ProfileApiAbstract {
     public abstract void updateUsername(String username, AsyncTaskListener listener)throws Exception;
 
     public abstract void updatePortrait(String path, AsyncTaskListener listener)throws Exception;
+
+    public abstract void updateLocation(GeoData location, AsyncTaskListener listener)throws Exception;
 }

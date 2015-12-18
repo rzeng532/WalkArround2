@@ -13,6 +13,9 @@ public class AppConstant {
     // Logger switcher. true == output, false == NOT output.
     public static boolean LOG_OUTPUT = true;
 
+    //Server table name
+    public static String TABLE_LOCATION_INFOR = "Location";
+
     //APP LeanCloud values
     public static String LEANCLOUD_APP_ID = "emXwzWMkKKW0SsSFdunvKr9K"; //test
     public static String LEANCLOUD_APP_KEY = "WmSToMtVx4ijfo58VDEvBiDJ";//test

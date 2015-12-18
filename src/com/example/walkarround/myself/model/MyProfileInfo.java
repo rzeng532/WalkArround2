@@ -1,5 +1,7 @@
 package com.example.walkarround.myself.model;
 
+import com.example.walkarround.location.model.GeoData;
+
 /**
  * Created by Richard on 2015/12/7.
  * This class defined what will be saved for my profile information
@@ -12,6 +14,7 @@ public class MyProfileInfo {
     String mSignature = null;
     String mMobileNum = null;
     int mGendle = 0; //0: men, 1: female
+    GeoData mLocation = null;
 
     public String getMobileNum() {
         return mMobileNum;
@@ -61,4 +64,13 @@ public class MyProfileInfo {
     public void setPortraitPath(String mPortraitPath) {
         this.mPortraitPath = mPortraitPath;
     }
+
+    public GeoData getLocation() {
+        return mLocation;
+    }
+
+    public void setLocation(GeoData mLocation) {
+        this.mLocation = mLocation;
+    }
+
 }

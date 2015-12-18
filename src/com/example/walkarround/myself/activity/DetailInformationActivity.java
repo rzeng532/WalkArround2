@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.example.walkarround.location.activity.LocationActivity;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
+import com.example.walkarround.location.model.GeoData;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
@@ -161,6 +163,10 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             mTvUserName.setText(myProfileInfo.getUsrName());
             mTvMobile.setText(myProfileInfo.getMobileNum());
             mTvSignature.setText(myProfileInfo.getSignature());
+
+            if(myProfileInfo.getLocation() != null){
+                mTvLocation.setText(myProfileInfo.getLocation().getAddrInfor());
+            }
         }
     }
 
@@ -277,14 +283,15 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 headUri = null;
             }
         } else if(requestCode == REQUEST_CODE_LOCATION) {
-            if (resultCode != RESULT_OK) {
+            if (resultCode != RESULT_OK || data == null) {
                 return;
             }
 
-            double latitude = data.getDoubleExtra(LocationActivity.LATITUDE, 0);
-            double longitude = data.getDoubleExtra(LocationActivity.LONGITUDE, 0);
-            String address = data.getStringExtra(LocationActivity.ADDRESS);
-            String imagePath = data.getStringExtra(LocationActivity.IMAGE_PATH);
+            GeoData location = new GeoData(data.getDoubleExtra(LocationActivity.LATITUDE, 0),
+                    data.getDoubleExtra(LocationActivity.LONGITUDE, 0),
+                    data.getStringExtra(LocationActivity.ADDRESS));
+
+            ProfileManager.getInstance().updateUserLocation(location, mUpdateListener);
         } else if(requestCode == REQUEST_CODE_EDIT_STR) {
             if (resultCode != RESULT_OK) {
                 return;
