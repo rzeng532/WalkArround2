@@ -3,13 +3,12 @@ package com.example.walkarround.login.manager;
 import android.content.Context;
 import android.text.TextUtils;
 
+import android.util.Log;
 import com.avos.avoscloud.*;
 import com.example.walkarround.R;
 import com.example.walkarround.login.util.LoginConstant;
-import com.example.walkarround.util.AppSharedPreference;
-import com.example.walkarround.util.AsyncTaskListener;
-import com.example.walkarround.util.CommonUtils;
-import com.example.walkarround.util.Logger;
+import com.example.walkarround.myself.util.ProfileUtil;
+import com.example.walkarround.util.*;
 
 /**
  * Created by Richard on 2015/11/25.
@@ -195,5 +194,37 @@ public class LoginManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void getLocationData() {
+        AVUser user = AVUser.getCurrentUser();
+        if(user == null) {
+            return;
+        }
+        AVObject origObj = user.getAVObject(ProfileUtil.REG_KEY_LOCATION_EX);
+        if(origObj == null) {
+            return;
+        }
+
+        AVQuery query = new AVQuery(AppConstant.TABLE_LOCATION_INFOR);
+        query.getInBackground(origObj.getObjectId(), new GetCallback() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                Log.v("GeoData", "done ");
+            }
+
+            @Override
+            protected void internalDone0(Object o, AVException e) {
+                if(e != null) {
+                    //Return if resule is not success.
+                    return;
+                }
+
+                if (o != null) {
+                    AVUser user = AVUser.getCurrentUser();
+                    user.put(ProfileUtil.REG_KEY_LOCATION_EX, (AVObject)o);
+                }
+            }
+        });
     }
 }

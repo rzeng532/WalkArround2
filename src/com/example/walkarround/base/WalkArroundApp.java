@@ -36,6 +36,7 @@ public class WalkArroundApp extends Application {
         mWorkArroundApp = this;
 
         MTC_DATA_PATH = getDataDir(this) + AppConstant.APP_DATA_ROOT_PATH;
+        //TODO: make dir for above path.
 
         //Init lean cloud & image loader manager
         try {

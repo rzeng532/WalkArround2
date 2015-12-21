@@ -24,6 +24,7 @@
     <string name="err_login_infor_is_illegal">用户名不合法</string>
     <string name="err_file_donot_exist">文件不存在</string>
     <string name="err_img_update_fail">上传头像失败</string>
+    <string name="err_location_update_fail">上传位置失败</string>
     <string name="warning_hint_memory_short">内存不足</string>
 
     <!-- Strings for dialog -->
@@ -107,4 +108,13 @@
     <string name="map_position_overlay1">覆盖物1</string>
     <string name="map_position_requesting">获取中...</string>
     <string name="requesting_address">正在获取地址，暂时无法发送。</string>
+
+    <!-- Main activity strings -->
+    <string name="main_title">走走</string>
+
+    <!-- Test strings  -->
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
 </resources>

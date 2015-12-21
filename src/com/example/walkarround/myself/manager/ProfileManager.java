@@ -65,7 +65,7 @@ public class ProfileManager {
         //Set signature
         myProfileInfo.setSignature(avUser.getString(ProfileUtil.REG_KEY_SIGNATURE));
 
-        //myProfileInfo.setLocation(new GeoData((AVObject) avUser.get(ProfileUtil.REG_KEY_LOCATION)));
+        myProfileInfo.setLocation(new GeoData((AVObject) avUser.get(ProfileUtil.REG_KEY_LOCATION_EX)));
 
         return myProfileInfo;
     }

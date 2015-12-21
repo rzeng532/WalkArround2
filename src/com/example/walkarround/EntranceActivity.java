@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.example.walkarround.login.activity.LoginActivity;
 import com.example.walkarround.login.manager.LoginManager;
+import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.myself.activity.MyselfActivity;
 import com.example.walkarround.util.AppConstant;
 
@@ -22,7 +23,7 @@ public class EntranceActivity extends Activity {
         super.onCreate(savedInstanceState);
         boolean isLogined = LoginManager.getInstance().isLogined();
         if (isLogined) {
-            startActivityForResult(new Intent(this, MyselfActivity.class), REQ_CODE_LOGIN);
+            startActivityForResult(new Intent(this, AppMainActivity.class), REQ_CODE_LOGIN);
         } else {
             startActivityForResult(new Intent(this, LoginActivity.class), REQ_CODE_MAIN);
         }

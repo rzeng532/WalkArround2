@@ -19,7 +19,7 @@ import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.manager.LoginManager;
-import com.example.walkarround.myself.activity.MyselfActivity;
+import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
@@ -182,6 +182,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     private void startMainActivity() {
-        startActivity(new Intent(LoginActivity.this, MyselfActivity.class));
+        startActivity(new Intent(LoginActivity.this, AppMainActivity.class));
     }
 }

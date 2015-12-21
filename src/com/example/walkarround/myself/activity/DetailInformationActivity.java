@@ -81,7 +81,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 initData();
             } else if (msg.what == UPDATE_PORTRAIT_FAIL) {
                 dismissDialog();
-                Toast.makeText(getApplicationContext(), getString(R.string.err_img_update_fail), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.err_location_update_fail), Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -116,7 +116,9 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
         if (CommonUtils.hasSdcard()) {
             profileheadTemp = new File(Environment.getExternalStorageDirectory(), "/portrait.jpg");
-            headUri = Uri.fromFile(profileheadTemp);
+            if(!profileheadTemp.exists()) {
+                headUri = Uri.fromFile(profileheadTemp);
+            }
         }
     }
 

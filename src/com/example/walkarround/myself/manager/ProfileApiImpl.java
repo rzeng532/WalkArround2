@@ -154,26 +154,41 @@ public class ProfileApiImpl extends ProfileApiAbstract {
 
                 @Override
                 protected void internalDone0(Object o, AVException e) {
-
+                    if(e == null) {
+                        AVObject post = (AVObject) o;
+                        if (post != null) {
+                            post.put(REG_KEY_LOCATION, new AVGeoPoint(input.getLatitude(), input.getLongitude()));
+                            post.put(REG_KEY_LOCATION_ADDR, input.getAddrInfor());
+                            post.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(AVException e) {
+                                    if (e == null) {
+                                        user.setFetchWhenSave(true);
+                                        user.put(REG_KEY_LOCATION_EX, post);
+                                        user.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(AVException e) {
+                                                if (e == null) {
+                                                    listener.onSuccess();
+                                                } else {
+                                                    listener.onFailed(e);
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        listener.onFailed(e);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        listener.onFailed(e);
+                    }
                 }
 
                 @Override
                 public void done(AVObject avObject, AVException e) {
-                    AVObject post = avObject;
-                    if (post != null) {
-                        post.put(REG_KEY_LOCATION, new AVGeoPoint(input.getLatitude(), input.getLongitude()));
-                        post.put(REG_KEY_LOCATION_ADDR, input.getAddrInfor());
-                        post.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if (e == null) {
-                                    listener.onSuccess();
-                                } else {
-                                    listener.onFailed(e);
-                                }
-                            }
-                        });
-                    }
+
                 }
             });
         }
@@ -201,6 +216,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
             public void done(AVException e) {
                 if (e == null) {
                     //Update user location information.
+                    user.setFetchWhenSave(true);
                     user.put(REG_KEY_LOCATION_EX, objLocation);
                     user.saveInBackground(new SaveCallback() {
                         @Override
