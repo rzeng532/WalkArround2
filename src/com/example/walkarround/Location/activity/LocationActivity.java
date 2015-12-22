@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2014-2015 Richard All rights reserved
  */
-package com.example.walkarround.location.activity;
+package com.example.walkarround.Location.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -28,8 +28,8 @@ import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.geocoder.*;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
-import com.example.walkarround.location.adapter.LocationAdapter;
-import com.example.walkarround.location.model.LocationItem;
+import com.example.walkarround.Location.adapter.LocationAdapter;
+import com.example.walkarround.Location.model.LocationItem;
 import com.example.walkarround.R;
 import com.example.walkarround.base.WalkArroundApp;
 import com.example.walkarround.base.view.DialogFactory;
@@ -155,7 +155,7 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
                 }
             }
         };
-        mLocationClient.setLocationListener(mLocationListener);
+
         //Set location listener.
         mLocationClient.setLocationListener(mLocationListener);
     }

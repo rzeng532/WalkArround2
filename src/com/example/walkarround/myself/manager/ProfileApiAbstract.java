@@ -3,7 +3,7 @@
  */
 package com.example.walkarround.myself.manager;
 
-import com.example.walkarround.location.model.GeoData;
+import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.util.AsyncTaskListener;
 
 /**

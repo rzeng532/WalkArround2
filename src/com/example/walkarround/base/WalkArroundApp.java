@@ -10,6 +10,7 @@ import android.os.Environment;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.example.walkarround.R;
+import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -46,7 +47,11 @@ public class WalkArroundApp extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //Init location manager.
+        LocationManager.getInstance(getApplicationContext());
     }
+
 
     public static WalkArroundApp getInstance() {
         return mWorkArroundApp;

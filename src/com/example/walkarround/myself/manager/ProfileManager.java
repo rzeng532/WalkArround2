@@ -4,11 +4,10 @@ import android.text.TextUtils;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
-import com.example.walkarround.location.model.GeoData;
+import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
-import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 
 /**

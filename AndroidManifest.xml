@@ -58,7 +58,7 @@
         <activity android:name=".myself.activity.EditStrProfileInfoActivity" />
         <activity android:name=".util.image.ImageBrowserActivity" />
         <activity android:name=".util.image.ImageChooseActivity" />
-        <activity android:name=".location.activity.LocationActivity"/>
+        <activity android:name=".Location.activity.LocationActivity"/>
         <activity android:name=".main.activity.AppMainActivity"/>
     </application>
 </manifest>

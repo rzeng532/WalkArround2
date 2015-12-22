@@ -3,10 +3,8 @@
  */
 package com.example.walkarround.myself.manager;
 
-import android.os.Environment;
-
 import com.avos.avoscloud.*;
-import com.example.walkarround.location.model.GeoData;
+import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
@@ -106,7 +104,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
         final AVFile orignalFile = user.getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
 
         AVFile file = AVFile.withAbsoluteLocalPath(user.getMobilePhoneNumber(), path);
-        user.setFetchWhenSave(true);
+        //user.setFetchWhenSave(true);
         user.put(REG_KEY_PORTRAIT, file);
         //TODO: maybe we need a callback here.
         user.saveInBackground(new SaveCallback() {
@@ -115,19 +113,9 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                 if (e == null) {
                     //If new portrait file update success, we will delete old one.
                     if (orignalFile != null) {
-                        Runnable deleteRunnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    orignalFile.delete();
-                                } catch (AVException e1) {
-                                    e1.printStackTrace();
-                                }
-                            }
-                        };
-                        Thread deleteTask = new Thread(deleteRunnable);
-                        deleteTask.start();
+                        orignalFile.deleteInBackground();
                     }
+
                     listener.onSuccess();
                 } else {
                     listener.onFailed(e);

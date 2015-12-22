@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2014-2015 Richard All rights reserved
  */
-package com.example.walkarround.location.model;
+package com.example.walkarround.Location.model;
 
 import java.io.Serializable;
 

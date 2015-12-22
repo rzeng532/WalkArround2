@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2014-2015 CMCC All rights reserved
  */
-package com.example.walkarround.location.adapter;
+package com.example.walkarround.Location.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.example.walkarround.location.activity.LocationActivity;
-import com.example.walkarround.location.model.LocationItem;
+import com.example.walkarround.Location.activity.LocationActivity;
+import com.example.walkarround.Location.model.LocationItem;
 import com.example.walkarround.R;
 
 import java.util.List;

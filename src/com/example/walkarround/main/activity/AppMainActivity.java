@@ -26,18 +26,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.maps2d.model.Text;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.PortraitView;
+import com.example.walkarround.Location.manager.LocationManager;
+import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.myself.activity.DetailInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.setting.activity.AppSettingActivity;
+import com.example.walkarround.util.Logger;
 
 /**
  * Created by Richard on 2015/12/20.
  */
 public class AppMainActivity extends Activity implements View.OnClickListener {
+
+    private static final Logger amLogger = Logger.getLogger(AppMainActivity.class.getSimpleName());
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -57,10 +61,14 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private MyProfileInfo myProfileInfo = null;
 
+    private GeoData mMyGeo = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
+
+        LocationManager.getInstance(getApplicationContext());
 
         initView();
 
@@ -80,7 +88,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
+                R.drawable.main_ic_drawer,  /* nav drawer image to replace 'Up' caret */
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
@@ -102,12 +110,18 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             selectItem(0);
         }
 
-        initData();
+        mMyGeo = LocationManager.getInstance(getApplicationContext()).getCurrentLoc();
+        if (mMyGeo != null) {
+            amLogger.d("latitude: " + mMyGeo.getLatitude());
+            amLogger.d("longitude: " + mMyGeo.getLongitude());
+            amLogger.d("Addr: " + mMyGeo.getAddrInfor());
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        initData();
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
             mDrawerLayout.closeDrawers();
         }
@@ -229,10 +243,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.title_name://back
-                finish();
-                break;
-
             case R.id.rl_slide_setting://goto setting activity
                 startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
                 break;
@@ -251,10 +261,16 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocationManager.getInstance(getApplicationContext()).onDestroy();
+    }
+
     /**
      * Fragment that appears in the "content_frame", shows a planet
      */
-    public static class PlanetFragment extends Fragment implements View.OnClickListener{
+    public static class PlanetFragment extends Fragment implements View.OnClickListener {
         public static final String ARG_PLANET_NUMBER = "planet_number";
         private View mViewRoot;
         private View mTvTitle;
@@ -284,7 +300,11 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.title:
-                    getActivity().finish();
+                    //TODO: we should use handler for communication between activty and fragment later.
+                    DrawerLayout slideMenu = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+                    LinearLayout mViewLeftMenu = (LinearLayout) getActivity().findViewById(R.id.left_drawer);
+                    slideMenu.openDrawer(mViewLeftMenu);
+                    //getActivity().finish();
                     break;
 
                 default:

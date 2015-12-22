@@ -1,6 +1,6 @@
 package com.example.walkarround.myself.model;
 
-import com.example.walkarround.location.model.GeoData;
+import com.example.walkarround.Location.model.GeoData;
 
 /**
  * Created by Richard on 2015/12/7.
