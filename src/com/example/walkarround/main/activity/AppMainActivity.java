@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.Location.manager.LocationManager;
@@ -34,6 +35,8 @@ import com.example.walkarround.myself.activity.DetailInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.setting.activity.AppSettingActivity;
+import com.example.walkarround.util.AppConstant;
+import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
 
 /**
@@ -63,12 +66,27 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private GeoData mMyGeo = null;
 
+    AsyncTaskListener mLocListener = new AsyncTaskListener() {
+        @Override
+        public void onSuccess() {
+            mMyGeo = LocationManager.getInstance(getApplicationContext()).getCurrentLoc();
+            if (mMyGeo != null) {
+                amLogger.d("latitude: " + mMyGeo.getLatitude());
+                amLogger.d("longitude: " + mMyGeo.getLongitude());
+                amLogger.d("Addr: " + mMyGeo.getAddrInfor());
+            }
+        }
+
+        @Override
+        public void onFailed(AVException e) {
+            //TODO:
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
-
-        LocationManager.getInstance(getApplicationContext());
 
         initView();
 
@@ -110,12 +128,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             selectItem(0);
         }
 
-        mMyGeo = LocationManager.getInstance(getApplicationContext()).getCurrentLoc();
-        if (mMyGeo != null) {
-            amLogger.d("latitude: " + mMyGeo.getLatitude());
-            amLogger.d("longitude: " + mMyGeo.getLongitude());
-            amLogger.d("Addr: " + mMyGeo.getAddrInfor());
-        }
+        LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mLocListener);
     }
 
     @Override
@@ -225,7 +238,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
      * When using the ActionBarDrawerToggle, you must call it during
      * onPostCreate() and onConfigurationChanged()...
      */
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);

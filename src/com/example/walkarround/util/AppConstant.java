@@ -39,4 +39,9 @@ public class AppConstant {
 
     public static final int ACTIVITY_RETURN_CODE_CANCEL = 100;
     public static final int ACTIVITY_RETURN_CODE_OK = 101;
+
+    /*
+     * Key value for map location listener.
+     */
+    public static final String KEY_MAP_ASYNC_LISTERNER_MAIN = "main_activity_get_key";
 }
