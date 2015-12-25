@@ -1,9 +1,10 @@
 /**
- * Copyright (C) 2014-2015 CMCC All rights reserved
+ * Copyright (C) 2014-2015 Richard All rights reserved
  */
 package com.example.walkarround.myself.manager;
 
 import com.example.walkarround.Location.model.GeoData;
+import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.util.AsyncTaskListener;
 
 /**
@@ -24,4 +25,6 @@ public abstract class ProfileApiAbstract {
     public abstract void updatePortrait(String path, AsyncTaskListener listener)throws Exception;
 
     public abstract void updateLocation(GeoData location, AsyncTaskListener listener)throws Exception;
+
+    public abstract void updateDynamicData(MyDynamicInfo dynamicInfo, AsyncTaskListener listener)throws Exception;
 }

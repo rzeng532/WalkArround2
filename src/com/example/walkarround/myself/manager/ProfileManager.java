@@ -6,6 +6,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.login.manager.LoginManager;
+import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AsyncTaskListener;
@@ -56,7 +57,7 @@ public class ProfileManager {
         }
 
         //Set gendle
-        myProfileInfo.setGendle(avUser.getInt(ProfileUtil.REG_KEY_GENDER));
+        myProfileInfo.setGendle(avUser.getString(ProfileUtil.REG_KEY_GENDER));
 
         //Set birthday
         myProfileInfo.setBirthday(avUser.getString(ProfileUtil.REG_KEY_BIRTH_DAY));
@@ -130,6 +131,14 @@ public class ProfileManager {
     public void updateUserLocation(GeoData location, AsyncTaskListener listener) {
         try {
             mProfileApi.updateLocation(location, listener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateDynamicData(MyDynamicInfo dynData, AsyncTaskListener listener) {
+        try {
+            mProfileApi.updateDynamicData(dynData, listener);
         } catch (Exception e) {
             e.printStackTrace();
         }

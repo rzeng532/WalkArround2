@@ -3,6 +3,10 @@
  */
 package com.example.walkarround.myself.util;
 
+import com.avos.avoscloud.AVGeoPoint;
+import com.avos.avoscloud.AVObject;
+import com.example.walkarround.Location.model.GeoData;
+
 /**
  * Date: 2015-12-08
  *
@@ -35,4 +39,17 @@ public class ProfileUtil {
     public static final String REG_KEY_LOCATION_EX = "location_ex"; //geo pointer
     public static final String REG_KEY_LOCATION_ADDR = "address"; //a sub element for location(latitude, longitude, addr)
 
+    //Dynamic data
+    public static final String DYN_DATA_GEO = REG_KEY_LOCATION;
+    public static final String DYN_DATA_ONLINE_STATE = "onlineStatus";
+    public static final String DYN_DATA_USER_ID = "userId";
+    public static final String DYN_DATA_DATING_STATE = "datingStatus";
+
+    public static AVGeoPoint geodataConvert2AVObj(GeoData data) {
+        if(data == null) {
+            return null;
+        }
+
+        return (new AVGeoPoint(data.getLatitude(), data.getLongitude()));
+    }
 }

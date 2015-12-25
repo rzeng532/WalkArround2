@@ -3,8 +3,11 @@
  */
 package com.example.walkarround.myself.manager;
 
+import java.util.List;
+
 import com.avos.avoscloud.*;
 import com.example.walkarround.Location.model.GeoData;
+import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
@@ -92,6 +95,52 @@ public class ProfileApiImpl extends ProfileApiAbstract {
         } else {
             refreshLocationData(input, listener);
         }
+    }
+
+    @Override
+    public void updateDynamicData(MyDynamicInfo dynamicInfo, AsyncTaskListener listener) throws Exception {
+        if(dynamicInfo == null) {
+            return;
+        }
+
+        AVQuery<AVObject> query = new AVQuery<AVObject>(AppConstant.TABLE_DYNAMIC_USER_DATA);
+        query.whereEqualTo(ProfileUtil.DYN_DATA_USER_ID, AVUser.getCurrentUser());
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if(e == null) {
+                    //Query success
+                    AVObject objLocation = null;
+                    if(list != null && list.size() > 0) {
+                        //There is record, update original one.
+                        objLocation =  (AVObject)list.get(0); //There is only one record
+                    } else {
+                        //There is no record, create a new one.
+                        objLocation = new AVObject(AppConstant.TABLE_DYNAMIC_USER_DATA);
+                        objLocation.put(ProfileUtil.DYN_DATA_USER_ID, AVUser.getCurrentUser());
+                    }
+
+                    //Fill data
+                    objLocation.put(ProfileUtil.DYN_DATA_ONLINE_STATE, dynamicInfo.getOnlineState());
+                    objLocation.put(ProfileUtil.DYN_DATA_GEO, ProfileUtil.geodataConvert2AVObj(dynamicInfo.getCurGeo()));
+                    objLocation.put(ProfileUtil.DYN_DATA_DATING_STATE, dynamicInfo.getDatingState());
+
+                    //Update dynamic data to server.
+                    objLocation.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if(e == null) {
+                                listener.onSuccess();
+                            } else {
+                                listener.onFailed(e);
+                            }
+                        }
+                    });
+                } else {
+                    listener.onFailed(e);
+                }
+            }
+        });
     }
 
     @Override

@@ -13,7 +13,7 @@ public class MyProfileInfo {
     String mBirthday = null;
     String mSignature = null;
     String mMobileNum = null;
-    int mGendle = 0; //0: men, 1: female
+    String mGendle = null; //0: men, 1: female
     GeoData mLocation = null;
 
     public String getMobileNum() {
@@ -24,11 +24,11 @@ public class MyProfileInfo {
         this.mMobileNum = mobile;
     }
 
-    public int getGendle() {
+    public String getGendle() {
         return mGendle;
     }
 
-    public void setGendle(int mGendle) {
+    public void setGendle(String mGendle) {
         this.mGendle = mGendle;
     }
 

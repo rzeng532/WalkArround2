@@ -33,6 +33,7 @@ import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.myself.activity.DetailInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
+import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.setting.activity.AppSettingActivity;
 import com.example.walkarround.util.AppConstant;
@@ -66,14 +67,28 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private GeoData mMyGeo = null;
 
+    AsyncTaskListener mDynUpdateListener = new AsyncTaskListener() {
+        @Override
+        public void onSuccess() {
+            amLogger.d("update dynamic success.");
+        }
+
+        @Override
+        public void onFailed(AVException e) {
+            //TODO:
+            amLogger.d("update dynamic failed.");
+        }
+    };
+
+
     AsyncTaskListener mLocListener = new AsyncTaskListener() {
         @Override
         public void onSuccess() {
             mMyGeo = LocationManager.getInstance(getApplicationContext()).getCurrentLoc();
-            if (mMyGeo != null) {
-                amLogger.d("latitude: " + mMyGeo.getLatitude());
-                amLogger.d("longitude: " + mMyGeo.getLongitude());
-                amLogger.d("Addr: " + mMyGeo.getAddrInfor());
+
+            if(mMyGeo != null) {
+                //Update user dynamic data - online state & GEO.
+                ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(mMyGeo,true, 1), mDynUpdateListener);
             }
         }
 
