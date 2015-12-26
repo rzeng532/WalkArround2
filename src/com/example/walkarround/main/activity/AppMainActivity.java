@@ -39,6 +39,7 @@ import com.example.walkarround.setting.activity.AppSettingActivity;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
+import com.example.walkarround.util.network.NetWorkManager;
 
 /**
  * Created by Richard on 2015/12/20.
@@ -152,6 +153,11 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         initData();
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
             mDrawerLayout.closeDrawers();
+        }
+
+        if(!NetWorkManager.getInstance(getApplicationContext()).isNetworkAvailable()) {
+            Toast.makeText(getApplicationContext(), getString(R.string.err_network_unavailable), Toast.LENGTH_SHORT).show();
+            return;
         }
     }
 

@@ -13,6 +13,7 @@ import com.example.walkarround.R;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
+import com.example.walkarround.util.network.NetWorkManager;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -50,6 +51,7 @@ public class WalkArroundApp extends Application {
 
         //Init location manager.
         LocationManager.getInstance(getApplicationContext());
+        NetWorkManager.getInstance(getApplicationContext());
     }
 
 

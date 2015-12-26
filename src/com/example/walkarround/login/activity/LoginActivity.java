@@ -24,6 +24,7 @@ import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
+import com.example.walkarround.util.network.NetWorkManager;
 
 /**
  * A class for login operations
@@ -122,6 +123,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             if (!isLoginParamsValid()) {
                 return;
             }
+            if(!NetWorkManager.getInstance(getApplicationContext()).isNetworkAvailable()) {
+                Toast.makeText(getApplicationContext(), getString(R.string.err_network_unavailable), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             showDialog();
             try {
                 String strUsername = ((EditText) findViewById(R.id.signin_input_username)).getText().toString();

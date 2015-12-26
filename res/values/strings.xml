@@ -25,6 +25,7 @@
     <string name="err_file_donot_exist">文件不存在</string>
     <string name="err_img_update_fail">上传头像失败</string>
     <string name="err_location_update_fail">上传位置失败</string>
+    <string name="err_network_unavailable">当前网络不可用</string>
     <string name="warning_hint_memory_short">内存不足</string>
 
     <!-- Strings for dialog -->

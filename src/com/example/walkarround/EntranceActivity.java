@@ -8,6 +8,7 @@ import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.myself.activity.MyselfActivity;
 import com.example.walkarround.util.AppConstant;
+import com.example.walkarround.util.network.NetWorkManager;
 
 public class EntranceActivity extends Activity {
 
@@ -43,7 +44,7 @@ public class EntranceActivity extends Activity {
         int targetActivity = intent.getIntExtra(AppConstant.KEY_START_TARGET_ACTIVITY, AppConstant.START_INVALID_VALUE);
         switch (targetActivity) {
             case AppConstant.START_LOGIN_ACTIVITY:
-                Intent target = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent target = new Intent(getApplicationContext(), EntranceActivity.class);
                 startActivity(intent);
                 break;
             default:
@@ -59,14 +60,19 @@ public class EntranceActivity extends Activity {
         switch (requestCode) {
             case REQ_CODE_LOGIN:
                 if(resultCode != AppConstant.ACTIVITY_RETURN_CODE_OK) {
-                    finish();
+                    finishEntranceActivity();
                 }
                 break;
             case REQ_CODE_MAIN:
-                finish();
+                finishEntranceActivity();
                 break;
             default:
                 break;
         }
+    }
+
+    private void finishEntranceActivity() {
+        NetWorkManager.getInstance(getApplicationContext()).onDestroy(getApplicationContext());
+        finish();
     }
 }
