@@ -3,10 +3,11 @@ package com.example.walkarround;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.example.walkarround.login.activity.LoginActivity;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.main.activity.AppMainActivity;
-import com.example.walkarround.myself.activity.MyselfActivity;
+import com.example.walkarround.myself.task.OnlineStateTask;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.network.NetWorkManager;
 
@@ -22,6 +23,7 @@ public class EntranceActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         boolean isLogined = LoginManager.getInstance().isLogined();
         if (isLogined) {
             startActivityForResult(new Intent(this, AppMainActivity.class), REQ_CODE_LOGIN);
@@ -30,6 +32,12 @@ public class EntranceActivity extends Activity {
         }
 
         //finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        OnlineStateTask.getInstance(getApplicationContext()).startTask();
     }
 
     @Override
@@ -45,7 +53,7 @@ public class EntranceActivity extends Activity {
         switch (targetActivity) {
             case AppConstant.START_LOGIN_ACTIVITY:
                 Intent target = new Intent(getApplicationContext(), EntranceActivity.class);
-                startActivity(intent);
+                startActivity(target);
                 break;
             default:
                 break;
@@ -55,12 +63,14 @@ public class EntranceActivity extends Activity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
             case REQ_CODE_LOGIN:
-                if(resultCode != AppConstant.ACTIVITY_RETURN_CODE_OK) {
+                if (resultCode != AppConstant.ACTIVITY_RETURN_CODE_OK) {
                     finishEntranceActivity();
+                } else {
+                    OnlineStateTask.getInstance(getApplicationContext()).startTask();
                 }
                 break;
             case REQ_CODE_MAIN:
@@ -73,6 +83,9 @@ public class EntranceActivity extends Activity {
 
     private void finishEntranceActivity() {
         NetWorkManager.getInstance(getApplicationContext()).onDestroy(getApplicationContext());
+
+        OnlineStateTask.getInstance(getApplicationContext()).stopTask();
+
         finish();
     }
 }

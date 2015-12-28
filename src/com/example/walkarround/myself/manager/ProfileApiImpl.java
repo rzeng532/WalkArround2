@@ -5,14 +5,29 @@ package com.example.walkarround.myself.manager;
 
 import java.util.List;
 
-import com.avos.avoscloud.*;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVGeoPoint;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 
-import static com.example.walkarround.myself.util.ProfileUtil.*;
+import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_BIRTH_DAY;
+import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_GENDER;
+import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_LOCATION;
+import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_LOCATION_ADDR;
+import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_LOCATION_EX;
+import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_PORTRAIT;
+import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_SIGNATURE;
+import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_USER_NAME;
 
 /**
  * TODO: description
@@ -99,7 +114,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
 
     @Override
     public void updateDynamicData(MyDynamicInfo dynamicInfo, AsyncTaskListener listener) throws Exception {
-        if(dynamicInfo == null) {
+        if (dynamicInfo == null) {
             return;
         }
 
@@ -108,12 +123,13 @@ public class ProfileApiImpl extends ProfileApiAbstract {
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
-                if(e == null) {
+
+                if (e == null) {
                     //Query success
                     AVObject objLocation = null;
-                    if(list != null && list.size() > 0) {
+                    if (list != null && list.size() > 0) {
                         //There is record, update original one.
-                        objLocation =  (AVObject)list.get(0); //There is only one record
+                        objLocation = (AVObject) list.get(0); //There is only one record
                     } else {
                         //There is no record, create a new one.
                         objLocation = new AVObject(AppConstant.TABLE_DYNAMIC_USER_DATA);
@@ -129,7 +145,11 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                     objLocation.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException e) {
-                            if(e == null) {
+                            if (listener == null) {
+                                return;
+                            }
+
+                            if (e == null) {
                                 listener.onSuccess();
                             } else {
                                 listener.onFailed(e);
@@ -137,7 +157,9 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                         }
                     });
                 } else {
-                    listener.onFailed(e);
+                    if (listener != null) {
+                        listener.onFailed(e);
+                    }
                 }
             }
         });
@@ -191,7 +213,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
 
                 @Override
                 protected void internalDone0(Object o, AVException e) {
-                    if(e == null) {
+                    if (e == null) {
                         AVObject post = (AVObject) o;
                         if (post != null) {
                             post.put(REG_KEY_LOCATION, new AVGeoPoint(input.getLatitude(), input.getLongitude()));
