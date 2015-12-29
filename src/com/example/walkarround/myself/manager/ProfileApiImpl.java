@@ -20,15 +20,6 @@ import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 
-import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_BIRTH_DAY;
-import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_GENDER;
-import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_LOCATION;
-import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_LOCATION_ADDR;
-import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_LOCATION_EX;
-import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_PORTRAIT;
-import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_SIGNATURE;
-import static com.example.walkarround.myself.util.ProfileUtil.REG_KEY_USER_NAME;
-
 /**
  * TODO: description
  * Date: 2015-12-08
@@ -40,7 +31,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     public void updateGendle(int value) throws Exception {
         AVUser user = AVUser.getCurrentUser();
         user.setFetchWhenSave(true);
-        user.put(REG_KEY_GENDER, value);
+        user.put(ProfileUtil.REG_KEY_GENDER, value);
         user.saveInBackground();
     }
 
@@ -48,7 +39,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     public void updateSignature(String newSignature, AsyncTaskListener listener) throws Exception {
         AVUser user = AVUser.getCurrentUser();
         user.setFetchWhenSave(true);
-        user.put(REG_KEY_SIGNATURE, newSignature);
+        user.put(ProfileUtil.REG_KEY_SIGNATURE, newSignature);
         user.saveInBackground(new SaveCallback() {
 
             @Override
@@ -66,7 +57,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     public void updateBirthday(String birth) throws Exception {
         AVUser user = AVUser.getCurrentUser();
         user.setFetchWhenSave(true);
-        user.put(REG_KEY_BIRTH_DAY, birth);
+        user.put(ProfileUtil.REG_KEY_BIRTH_DAY, birth);
         user.saveInBackground();
     }
 
@@ -74,7 +65,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     public void updateUsername(final String username, AsyncTaskListener listener) throws Exception {
         AVUser user = AVUser.getCurrentUser();
 
-        user.put(REG_KEY_USER_NAME, username);
+        user.put(ProfileUtil.REG_KEY_USER_NAME, username);
         user.setFetchWhenSave(true);
         user.saveInBackground(new SaveCallback() {
             @Override
@@ -103,7 +94,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
 
         //Get current user and old location data.
         AVUser user = AVUser.getCurrentUser();
-        AVObject origLocation = (AVObject) user.get(REG_KEY_LOCATION_EX);
+        AVObject origLocation = (AVObject) user.get(ProfileUtil.REG_KEY_LOCATION_EX);
 
         if (origLocation == null) {
             newLocationData(input, listener);
@@ -176,7 +167,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
 
         AVFile file = AVFile.withAbsoluteLocalPath(user.getMobilePhoneNumber(), path);
         //user.setFetchWhenSave(true);
-        user.put(REG_KEY_PORTRAIT, file);
+        user.put(ProfileUtil.REG_KEY_PORTRAIT, file);
         //TODO: maybe we need a callback here.
         user.saveInBackground(new SaveCallback() {
             @Override
@@ -204,7 +195,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
         }
 
         AVUser user = AVUser.getCurrentUser();
-        AVObject origLocation = (AVObject) user.get(REG_KEY_LOCATION_EX);
+        AVObject origLocation = (AVObject) user.get(ProfileUtil.REG_KEY_LOCATION_EX);
 
         if (origLocation != null) {
 
@@ -216,14 +207,14 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                     if (e == null) {
                         AVObject post = (AVObject) o;
                         if (post != null) {
-                            post.put(REG_KEY_LOCATION, new AVGeoPoint(input.getLatitude(), input.getLongitude()));
-                            post.put(REG_KEY_LOCATION_ADDR, input.getAddrInfor());
+                            post.put(ProfileUtil.REG_KEY_LOCATION, new AVGeoPoint(input.getLatitude(), input.getLongitude()));
+                            post.put(ProfileUtil.REG_KEY_LOCATION_ADDR, input.getAddrInfor());
                             post.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(AVException e) {
                                     if (e == null) {
                                         user.setFetchWhenSave(true);
-                                        user.put(REG_KEY_LOCATION_EX, post);
+                                        user.put(ProfileUtil.REG_KEY_LOCATION_EX, post);
                                         user.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(AVException e) {
@@ -268,15 +259,15 @@ public class ProfileApiImpl extends ProfileApiAbstract {
         AVObject objLocation = new AVObject(AppConstant.TABLE_LOCATION_INFOR);
         AVGeoPoint geoInfor = new AVGeoPoint(input.getLatitude(), input.getLongitude());
         objLocation.setFetchWhenSave(true);
-        objLocation.put(REG_KEY_LOCATION, geoInfor);
-        objLocation.put(REG_KEY_LOCATION_ADDR, input.getAddrInfor());
+        objLocation.put(ProfileUtil.REG_KEY_LOCATION, geoInfor);
+        objLocation.put(ProfileUtil.REG_KEY_LOCATION_ADDR, input.getAddrInfor());
         objLocation.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
                 if (e == null) {
                     //Update user location information.
                     user.setFetchWhenSave(true);
-                    user.put(REG_KEY_LOCATION_EX, objLocation);
+                    user.put(ProfileUtil.REG_KEY_LOCATION_EX, objLocation);
                     user.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException e) {

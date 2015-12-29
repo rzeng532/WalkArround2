@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.example.walkarround.R;
 import com.example.walkarround.util.Logger;
 
+import static android.app.AlertDialog.*;
+
 /**
  * TODO: description
  * Date: 2015-11-26
@@ -319,11 +321,11 @@ public class DialogFactory {
         return dialog;
     }
 
-    public static AlertDialog.Builder getImageListDialog(Context context, String title, String[] items,
+    public static Builder getImageListDialog(Context context, String title, String[] items,
                                                          int[] imageResIds, DialogInterface.OnClickListener listener) {
         myLogger.d("getImageListDialog 开始");
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        Builder builder = new Builder(context);
         builder.setTitle(title);
         MyDialogListAdapter listAdapter = new MyDialogListAdapter(context, items, imageResIds);
         builder.setAdapter(listAdapter, listener);
@@ -364,4 +366,17 @@ public class DialogFactory {
         dialog.setContentView(contentView);
         return dialog;
     }
+
+    public static Dialog getSingleChoiceDialog(Context context, String title, int arrayID,
+                                                DialogInterface.OnClickListener singleListener,
+                                                DialogInterface.OnClickListener confirmListener) {
+
+        Builder builder = new Builder(context);
+        builder.setTitle(title);
+        builder.setSingleChoiceItems(arrayID, 0, singleListener);
+        builder.setPositiveButton("确定", confirmListener);
+
+        return builder.create();
+    }
+
 }

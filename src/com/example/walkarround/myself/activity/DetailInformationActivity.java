@@ -3,6 +3,7 @@ package com.example.walkarround.myself.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.avos.avoscloud.AVException;
@@ -100,6 +102,18 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             mUpdateHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
         }
     };
+
+    //Listener for gendle single choice
+    private String mProfileGendle;
+    private DialogInterface.OnClickListener mGendleSingleListener =
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which) {
+                    mProfileGendle = (which == 0) ? "1" : "0"; //1 means man
+                }
+            };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +217,10 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
             case R.id.detail_gendle:
                 logger.d("onClick, gendle.");
-
+                DialogFactory.getSingleChoiceDialog(getApplicationContext(),
+                        getString(R.string.profile_infor_gendle),
+                        R.array.profile_gendle,
+                        mGendleSingleListener, null);
                 break;
 
             case R.id.detail_birth:
