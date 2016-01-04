@@ -95,7 +95,7 @@ public class ProfileManager {
     /*
      * Update gendle
      */
-    public void updateGendle(int value) {
+    public void updateGendle(String value) {
         try {
             mProfileApi.updateGendle(value);
         } catch (Exception e) {

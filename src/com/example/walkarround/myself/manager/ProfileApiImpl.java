@@ -28,7 +28,7 @@ import com.example.walkarround.util.AsyncTaskListener;
  */
 public class ProfileApiImpl extends ProfileApiAbstract {
     @Override
-    public void updateGendle(int value) throws Exception {
+    public void updateGendle(String value) throws Exception {
         AVUser user = AVUser.getCurrentUser();
         user.setFetchWhenSave(true);
         user.put(ProfileUtil.REG_KEY_GENDER, value);

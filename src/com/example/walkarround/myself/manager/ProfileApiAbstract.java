@@ -14,7 +14,7 @@ import com.example.walkarround.util.AsyncTaskListener;
  * @author Administrator
  */
 public abstract class ProfileApiAbstract {
-    public abstract void updateGendle(int value) throws Exception;
+    public abstract void updateGendle(String value) throws Exception;
 
     public abstract void updateSignature(String newSignature, AsyncTaskListener listener)throws Exception;
 

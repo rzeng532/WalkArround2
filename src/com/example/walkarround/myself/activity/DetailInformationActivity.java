@@ -74,6 +74,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     private final int HANDLER_MSG_DELAY = 1000; //1 second
 
     private Dialog mLoadingDialog;
+    private Dialog mGendleSelectDialog;
     private Handler mUpdateHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -109,11 +110,11 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int which) {
-                    mProfileGendle = (which == 0) ? "1" : "0"; //1 means man
+                    mProfileGendle = (which == 0) ? "0" : "1"; //0 means man
+                    myProfileInfo.setGendle(mProfileGendle);
+                    ProfileManager.getInstance().updateGendle(mProfileGendle);
                 }
             };
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +136,10 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
     public void initView() {
         mTvTitle = (TextView) findViewById(R.id.title_name);
         mTvTitle.setOnClickListener(this);
@@ -217,10 +222,12 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
             case R.id.detail_gendle:
                 logger.d("onClick, gendle.");
-                DialogFactory.getSingleChoiceDialog(getApplicationContext(),
+                int selected = myProfileInfo.getGendle().equals(ProfileUtil.REG_GENDER_MEN) ? 0 : 1;
+                mGendleSelectDialog = DialogFactory.getSingleChoiceDialog(this,
                         getString(R.string.profile_infor_gendle),
-                        R.array.profile_gendle,
+                        R.array.profile_gendle, selected,
                         mGendleSingleListener, null);
+                mGendleSelectDialog.show();
                 break;
 
             case R.id.detail_birth:

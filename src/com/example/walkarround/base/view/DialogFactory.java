@@ -367,14 +367,21 @@ public class DialogFactory {
         return dialog;
     }
 
-    public static Dialog getSingleChoiceDialog(Context context, String title, int arrayID,
+    public static Dialog getSingleChoiceDialog(Context context, String title, int arrayID,int selected,
                                                 DialogInterface.OnClickListener singleListener,
                                                 DialogInterface.OnClickListener confirmListener) {
+        if(context == null) {
+            return null;
+        }
+
+        if(selected < 0 || selected >= context.getResources().getTextArray(arrayID).length) {
+            selected = 0;
+        }
 
         Builder builder = new Builder(context);
         builder.setTitle(title);
-        builder.setSingleChoiceItems(arrayID, 0, singleListener);
-        builder.setPositiveButton("确定", confirmListener);
+        builder.setSingleChoiceItems(arrayID, selected, singleListener);
+        builder.setPositiveButton(R.string.common_ok, confirmListener);
 
         return builder.create();
     }
