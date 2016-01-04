@@ -3,6 +3,8 @@
  */
 package com.example.walkarround.base.view;
 
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,6 +16,9 @@ import android.view.*;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.DatePicker;
+import android.widget.DatePicker.OnDateChangedListener;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.walkarround.R;
 import com.example.walkarround.util.Logger;
@@ -384,6 +389,19 @@ public class DialogFactory {
         builder.setPositiveButton(R.string.common_ok, confirmListener);
 
         return builder.create();
+    }
+
+    public static Dialog getDatePickerDialog(Context activity, int year, int month, int day,
+                                             OnDateChangedListener listener) {
+
+        Dialog dialog = new Dialog(activity, R.style.Theme_CustomDialog);
+        View contentView = LayoutInflater.from(activity).inflate(R.layout.dialog_datepicker, null);
+
+        DatePicker datePicker = (DatePicker)contentView.findViewById(R.id.datepicker);
+        datePicker.init(year, month, day, listener);
+
+        dialog.setContentView(contentView);
+        return dialog;
     }
 
 }

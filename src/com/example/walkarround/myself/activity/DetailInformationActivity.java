@@ -14,9 +14,12 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.Location.activity.LocationActivity;
 import com.example.walkarround.R;
@@ -34,7 +37,9 @@ import com.example.walkarround.util.image.ImageBrowserActivity;
 import com.example.walkarround.util.image.ImageChooseActivity;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by Richard on 2015/12/9.
@@ -75,6 +80,9 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
     private Dialog mLoadingDialog;
     private Dialog mGendleSelectDialog;
+    private Dialog mDatePickerDialog;
+
+
     private Handler mUpdateHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -130,7 +138,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
         if (CommonUtils.hasSdcard()) {
             profileheadTemp = new File(Environment.getExternalStorageDirectory(), "/portrait.jpg");
-            if(!profileheadTemp.exists()) {
+            if (!profileheadTemp.exists()) {
                 headUri = Uri.fromFile(profileheadTemp);
             }
         }
@@ -140,6 +148,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     protected void onDestroy() {
         super.onDestroy();
     }
+
     public void initView() {
         mTvTitle = (TextView) findViewById(R.id.title_name);
         mTvTitle.setOnClickListener(this);
@@ -184,7 +193,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             mTvMobile.setText(myProfileInfo.getMobileNum());
             mTvSignature.setText(myProfileInfo.getSignature());
 
-            if(myProfileInfo.getLocation() != null){
+            if (myProfileInfo.getLocation() != null) {
                 mTvLocation.setText(myProfileInfo.getLocation().getAddrInfor());
             }
         }
@@ -232,6 +241,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
             case R.id.detail_birth:
                 logger.d("onClick, birth.");
+                startDatePicker();
                 break;
 
             case R.id.detail_signature:
@@ -307,7 +317,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 profileheadTemp.delete();
                 headUri = null;
             }
-        } else if(requestCode == REQUEST_CODE_LOCATION) {
+        } else if (requestCode == REQUEST_CODE_LOCATION) {
             if (resultCode != RESULT_OK || data == null) {
                 return;
             }
@@ -317,7 +327,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                     data.getStringExtra(LocationActivity.ADDRESS));
 
             ProfileManager.getInstance().updateUserLocation(location, mUpdateListener);
-        } else if(requestCode == REQUEST_CODE_EDIT_STR) {
+        } else if (requestCode == REQUEST_CODE_EDIT_STR) {
             if (resultCode != RESULT_OK) {
                 return;
             }
@@ -398,5 +408,24 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         Intent intent = new Intent(this, LocationActivity.class);
 
         startActivityForResult(intent, REQUEST_CODE_LOCATION);
+    }
+
+    private void startDatePicker() {
+
+        mDatePickerDialog = DialogFactory.getDatePickerDialog(this, 2016, 1, 4, new OnDateChangedListener() {
+
+            @Override
+            public void onDateChanged(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, monthOfYear, dayOfMonth);
+                SimpleDateFormat format = new SimpleDateFormat(
+                        "yyyy年MM月dd日  HH:mm");
+                Toast.makeText(DetailInformationActivity.this,
+                        format.format(calendar.getTime()), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mDatePickerDialog.show();
     }
 }
