@@ -8,13 +8,21 @@ import java.net.URLEncoder;
  */
 public class HttpUtil {
 
-    public static final String HTTP_BASE_SPLIT_SYM = "/";
+    //Base URL elements
+    private static final String HTTP_BASE_SPLIT_SYM = "/";
 
-    public static final String HTTP_BASE_URL = " https://leancloud.cn:443";
+    private static final String HTTP_BASE_URL = " https://leancloud.cn:443";
 
-    public static final String HTTP_BASE_FUNC = "1.1/functions";
+    private static final String HTTP_BASE_FUNC = "1.1/functions";
 
-    public static final String HTTP_QUERY_NEARLY_USERS = "sendVerifyCode";
+    public static final String HTTP_FUNC_QUERY_NEARLY_USERS = "queryNearlyUsers";
+
+    //Public HTTP tasks
+    public static final String HTTP_TASK_QUERY_NEARLY_USERS = HTTP_BASE_URL + HTTP_BASE_SPLIT_SYM +
+            HTTP_BASE_FUNC + HTTP_BASE_SPLIT_SYM +
+            HTTP_FUNC_QUERY_NEARLY_USERS;
+
+    public static final String HTTP_PARAM_QUERY_NEARLY_USERS_ID = "userDynamicDataId";
 
     private String addEntityKeyValue(String key, String value) {
         try {

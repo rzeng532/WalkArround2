@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 
 public class HttpTask extends HttpTaskBase {
@@ -43,12 +44,16 @@ public class HttpTask extends HttpTaskBase {
             bufferedReader.close();
             conn.disconnect();
             if (TextUtils.isEmpty(sb.toString())){
+                Log.v("HTTP response", sb.toString());
                 doResultCallback(null, TaskResult.FAILED);
                 return;
             }
             doResultCallback(sb.toString(),TaskResult.SUCCEESS);
         } catch (IOException e) {
             e.printStackTrace();
+
+            Log.v("", e.toString());
+
             doResultCallback(null, TaskResult.ERROR);
         }
 

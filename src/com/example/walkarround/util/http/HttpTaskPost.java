@@ -69,6 +69,7 @@ public class HttpTaskPost extends HttpTask {
             conn.setDoOutput(true);
             conn.setDoInput(true);
             conn.setUseCaches(false);
+            conn.setUseCaches(false);
             conn.addRequestProperty("Cookie", JSESSIONID);
             if (headerMap != null){
                 for (Map.Entry<String, String> entry : headerMap.entrySet()){
@@ -77,6 +78,12 @@ public class HttpTaskPost extends HttpTask {
             }
 
             DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+
+            if (!TextUtils.isEmpty(content)){
+                out.writeBytes(content);
+            }
+
+            /*
             int lastIndex = -1;
             if ( !TextUtils.isEmpty(content)&&(lastIndex = content.lastIndexOf("&")) != -1) {
                 content = content.substring(0, lastIndex);
@@ -85,6 +92,7 @@ public class HttpTaskPost extends HttpTask {
             if (bytes != null){
                 out.write(bytes);
             }
+            */
 
             out.flush();
             out.close();

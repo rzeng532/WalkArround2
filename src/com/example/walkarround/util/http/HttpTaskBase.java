@@ -10,7 +10,6 @@ public class HttpTaskBase implements Runnable {
          * @方法名：onPreTask
          * @描述：(描述这个方法的作用)
          * @输出：void
-         * @作者：shijunfeng
          *
          */
         void onPreTask(String requestCode);
@@ -21,7 +20,6 @@ public class HttpTaskBase implements Runnable {
          * @param object
          * @return
          * @输出：TaskReuslt
-         * @作者：shijunfeng
          *
          */
         void onResult(Object object, TaskResult resultCode, String requestCode, String threadId);
@@ -32,7 +30,6 @@ public class HttpTaskBase implements Runnable {
          * @描述：返回任务结果
          * @return
          * @输出：
-         * @作者：shijunfeng
          *
          */
         void onProgress(int progress, String requestCode);

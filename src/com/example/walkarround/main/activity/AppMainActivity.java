@@ -1,6 +1,8 @@
 package com.example.walkarround.main.activity;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -26,11 +28,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
+import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.myself.activity.DetailInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyDynamicInfo;
@@ -39,7 +43,13 @@ import com.example.walkarround.setting.activity.AppSettingActivity;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
+import com.example.walkarround.util.http.HttpTaskBase;
+import com.example.walkarround.util.http.HttpTaskBase.onResultListener;
+import com.example.walkarround.util.http.HttpUtil;
+import com.example.walkarround.util.http.ThreadPoolManager;
 import com.example.walkarround.util.network.NetWorkManager;
+
+import static com.example.walkarround.util.http.HttpTaskBase.*;
 
 /**
  * Created by Richard on 2015/12/20.
@@ -68,10 +78,47 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private GeoData mMyGeo = null;
 
+    private QueryNearlyUsers mQueryTask;
+    private onResultListener mQueryListener = new onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
+            if(TaskResult.SUCCEESS == resultCode) {
+                amLogger.d("TaskResult.SUCCEESS");
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
     AsyncTaskListener mDynUpdateListener = new AsyncTaskListener() {
         @Override
         public void onSuccess() {
             amLogger.d("update dynamic success.");
+
+            //Query nearly users
+            StringBuilder stringBuilder = new StringBuilder(HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS);
+
+            JSONObject param = new JSONObject();
+            param.put(HttpUtil.HTTP_PARAM_QUERY_NEARLY_USERS_ID, "567e966e00b0adf744f09b09");
+
+            Map<String, String> header = new HashMap<>();
+            header.put("X-LC-Id", "nddk6udki7vg06j1w2gqli72t0q64hxivnf2zvxdzm8sef55");
+            header.put("X-LC-Key", "qke60ogn5d7vpr4k3he9ykm9sibq6buifwxxrjkl2qytm480");
+            header.put("Content-Type", "application/json");
+
+            mQueryTask = new QueryNearlyUsers(getApplicationContext(),
+                    mQueryListener, HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS, stringBuilder.toString(), param.toString(), header);
+
+            ThreadPoolManager.getPoolManager().start();
+            ThreadPoolManager.getPoolManager().addAsyncTask(mQueryTask);
         }
 
         @Override
