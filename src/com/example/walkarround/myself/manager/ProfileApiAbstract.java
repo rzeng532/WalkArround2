@@ -27,4 +27,6 @@ public abstract class ProfileApiAbstract {
     public abstract void updateLocation(GeoData location, AsyncTaskListener listener)throws Exception;
 
     public abstract void updateDynamicData(MyDynamicInfo dynamicInfo, AsyncTaskListener listener)throws Exception;
+
+    public abstract void queryCurUserDynData(AsyncTaskListener listener);
 }

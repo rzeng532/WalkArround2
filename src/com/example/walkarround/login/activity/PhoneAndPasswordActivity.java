@@ -58,7 +58,7 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
 
     AsyncTaskListener mAccountManagerListener = new AsyncTaskListener() {
         @Override
-        public void onSuccess() {
+        public void onSuccess(Object data) {
             //dismissDialog();
             //Start check SMS code activity
             Intent intent = new Intent(PhoneAndPasswordActivity.this, CheckSMSCodeActivity.class);

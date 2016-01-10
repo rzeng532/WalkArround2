@@ -1,12 +1,6 @@
 package com.example.walkarround.login.manager;
 
-import android.widget.EditText;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.LogInCallback;
-import com.avos.avoscloud.SignUpCallback;
-import com.example.walkarround.R;
+import com.avos.avoscloud.*;
 import com.example.walkarround.login.util.LoginConstant;
 import com.example.walkarround.util.AppSharedPreference;
 import com.example.walkarround.util.AsyncTaskListener;
@@ -42,7 +36,7 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
         AVUser.loginByMobilePhoneNumberInBackground(phone, password, new LogInCallback() {
             public void done(AVUser user, AVException e) {
                 if (user != null) {
-                    listener.onSuccess();
+                    listener.onSuccess(null);
 
                     //TODO: we should get current user here.
                     //setCurrentAccount(null, phone, password);
@@ -72,7 +66,7 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
         user.signUpInBackground(new SignUpCallback() {
             public void done(AVException e) {
                 if (e == null) {
-                    listener.onSuccess();
+                    listener.onSuccess(null);
                     //setCurrentAccount(userName, phoneNum,  password);
                 } else {
                     listener.onFailed(e);
@@ -119,7 +113,7 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
             @Override
             public void done(AVException e) {
                 if (e == null) {
-                    listener.onSuccess();
+                    listener.onSuccess(null);
                 } else {
                     listener.onFailed(e);
                 }

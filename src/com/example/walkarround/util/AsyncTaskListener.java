@@ -13,7 +13,7 @@ import com.avos.avoscloud.AVException;
  * A listener for login manager to get SUC or FAIL result.
  */
 public interface AsyncTaskListener {
-        public abstract void onSuccess();
+        public abstract void onSuccess(Object data);
 
         public abstract void onFailed(AVException e);
 }

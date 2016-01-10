@@ -16,16 +16,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.DatePicker.OnDateChangedListener;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.Location.activity.LocationActivity;
+import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
-import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
@@ -98,7 +96,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
     private AsyncTaskListener mUpdateListener = new AsyncTaskListener() {
         @Override
-        public void onSuccess() {
+        public void onSuccess(Object data) {
             Message msg = Message.obtain();
             msg.what = UPDATE_PORTRAIT_OK;
             mUpdateHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);

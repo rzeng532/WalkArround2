@@ -62,7 +62,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     AsyncTaskListener mLoginListener = new AsyncTaskListener() {
         @Override
-        public void onSuccess() {
+        public void onSuccess(Object data) {
             Toast.makeText(getApplicationContext(), getString(R.string.login_do_login_success), Toast.LENGTH_SHORT).show();
 
             Message msg = Message.obtain();

@@ -24,6 +24,19 @@ public class HttpUtil {
 
     public static final String HTTP_PARAM_QUERY_NEARLY_USERS_ID = "userDynamicDataId";
 
+    //Request header parameters
+    public static final String HTTP_REQ_HEADER_LC_ID = "X-LC-Id";
+    public static final String HTTP_REQ_HEADER_LC_KEY = "X-LC-Key";
+    public static final String HTTP_REQ_HEADER_CONTENT_TYPE = "Content-Type";
+    public static final String HTTP_REQ_HEADER_CONTENT_TYPE_JSON = "application/json";
+
+
+    //Response common result
+    public static final String HTTP_RESPONSE_KEY_RESULT_RESULT = "result";
+    public static final String HTTP_RESPONSE_KEY_RESULT_CODE = "code";
+    public static final String HTTP_RESPONSE_KEY_RESULT_CODE_SUC = "200";
+    public static final String HTTP_RESPONSE_KEY_RESULT_DATA = "results";
+
     private String addEntityKeyValue(String key, String value) {
         try {
             return (URLEncoder.encode(key, "utf-8") + "=" + URLEncoder.encode(value, "utf-8") + "&");

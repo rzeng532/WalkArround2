@@ -57,7 +57,7 @@ public class EditStrProfileInfoActivity extends Activity implements View.OnClick
 
     private AsyncTaskListener updateProfileListener = new AsyncTaskListener() {
         @Override
-        public void onSuccess() {
+        public void onSuccess(Object data) {
             Message msg = Message.obtain();
             msg.what = UPDATE_OK;
             mUpdateProfileHandler.sendMessageDelayed(msg, 0);

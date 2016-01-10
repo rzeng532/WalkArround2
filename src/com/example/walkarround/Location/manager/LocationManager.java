@@ -180,7 +180,7 @@ public class LocationManager {
      */
     private void triggerLocListener(Map.Entry<String, AsyncTaskListener> entry, boolean bSuccess, AVException e) {
             if(bSuccess) {
-                entry.getValue().onSuccess();
+                entry.getValue().onSuccess(null);
             } else {
                 entry.getValue().onFailed(e);
             }

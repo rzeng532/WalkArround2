@@ -1,14 +1,6 @@
 package com.example.walkarround.main.activity;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.app.SearchManager;
+import android.app.*;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -16,24 +8,16 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.view.*;
+import android.widget.*;
 import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVException;
-import com.example.walkarround.R;
-import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
+import com.example.walkarround.R;
+import com.example.walkarround.base.view.PortraitView;
+import com.example.walkarround.main.model.NearlyUser;
+import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.myself.activity.DetailInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
@@ -43,13 +27,17 @@ import com.example.walkarround.setting.activity.AppSettingActivity;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
-import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpTaskBase.onResultListener;
 import com.example.walkarround.util.http.HttpUtil;
 import com.example.walkarround.util.http.ThreadPoolManager;
 import com.example.walkarround.util.network.NetWorkManager;
 
-import static com.example.walkarround.util.http.HttpTaskBase.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import static com.example.walkarround.util.http.HttpTaskBase.TaskResult;
 
 /**
  * Created by Richard on 2015/12/20.
@@ -87,6 +75,12 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
+            if(object != null &&
+                    WalkArroundJsonResultParser.parseReturnCode((String)object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
+                List<NearlyUser> userList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String)object);
+                int len = (userList != null) ? userList.size() : 0;
+            }
+
             if(TaskResult.SUCCEESS == resultCode) {
                 amLogger.d("TaskResult.SUCCEESS");
             }
@@ -100,7 +94,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     AsyncTaskListener mDynUpdateListener = new AsyncTaskListener() {
         @Override
-        public void onSuccess() {
+        public void onSuccess(Object data) {
             amLogger.d("update dynamic success.");
 
             //Query nearly users
@@ -110,9 +104,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             param.put(HttpUtil.HTTP_PARAM_QUERY_NEARLY_USERS_ID, "567e966e00b0adf744f09b09");
 
             Map<String, String> header = new HashMap<>();
-            header.put("X-LC-Id", "nddk6udki7vg06j1w2gqli72t0q64hxivnf2zvxdzm8sef55");
-            header.put("X-LC-Key", "qke60ogn5d7vpr4k3he9ykm9sibq6buifwxxrjkl2qytm480");
-            header.put("Content-Type", "application/json");
+            header.put(HttpUtil.HTTP_REQ_HEADER_LC_ID, AppConstant.LEANCLOUD_APP_ID);
+            header.put(HttpUtil.HTTP_REQ_HEADER_LC_KEY, AppConstant.LEANCLOUD_APP_KEY);
+            header.put(HttpUtil.HTTP_REQ_HEADER_CONTENT_TYPE, HttpUtil.HTTP_REQ_HEADER_CONTENT_TYPE_JSON);
 
             mQueryTask = new QueryNearlyUsers(getApplicationContext(),
                     mQueryListener, HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS, stringBuilder.toString(), param.toString(), header);
@@ -131,7 +125,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     AsyncTaskListener mLocListener = new AsyncTaskListener() {
         @Override
-        public void onSuccess() {
+        public void onSuccess(Object data) {
             mMyGeo = LocationManager.getInstance(getApplicationContext()).getCurrentLoc();
 
             if(mMyGeo != null) {

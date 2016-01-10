@@ -3,22 +3,14 @@
  */
 package com.example.walkarround.myself.manager;
 
-import java.util.List;
-
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.GetCallback;
-import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.*;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
+
+import java.util.List;
 
 /**
  * TODO: description
@@ -45,7 +37,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
             @Override
             public void done(AVException e) {
                 if (e == null) {
-                    listener.onSuccess();
+                    listener.onSuccess(null);
                 } else {
                     listener.onFailed(e);
                 }
@@ -72,11 +64,11 @@ public class ProfileApiImpl extends ProfileApiAbstract {
             public void done(AVException e) {
                 if (e == null) {
                     //user.setUsername(username);
-                    listener.onSuccess();
+                    listener.onSuccess(null);
                 } else {
                     int code = e.getCode();
                     if (code == 0) {
-                        listener.onSuccess();
+                        listener.onSuccess(null);
                     } else {
                         listener.onFailed(e);
                     }
@@ -132,6 +124,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                     objLocation.put(ProfileUtil.DYN_DATA_GEO, ProfileUtil.geodataConvert2AVObj(dynamicInfo.getCurGeo()));
                     objLocation.put(ProfileUtil.DYN_DATA_DATING_STATE, dynamicInfo.getDatingState());
 
+                    final String dynUserObjId = objLocation.getObjectId();
                     //Update dynamic data to server.
                     objLocation.saveInBackground(new SaveCallback() {
                         @Override
@@ -141,7 +134,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                             }
 
                             if (e == null) {
-                                listener.onSuccess();
+                                listener.onSuccess(dynUserObjId);
                             } else {
                                 listener.onFailed(e);
                             }
@@ -151,6 +144,37 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                     if (listener != null) {
                         listener.onFailed(e);
                     }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void queryCurUserDynData(AsyncTaskListener listener) {
+
+        if(listener == null) {
+            return ;
+        }
+
+        //Query current user's dynamic data
+        AVQuery<AVObject> query = new AVQuery<AVObject>(AppConstant.TABLE_DYNAMIC_USER_DATA);
+        query.whereEqualTo(ProfileUtil.DYN_DATA_USER_ID, AVUser.getCurrentUser());
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+
+                if (e == null) {
+                    //Query success
+                    AVObject objLocation = null;
+                    if (list != null && list.size() > 0) {
+                        //There is record, update original one.
+                        objLocation = (AVObject) list.get(0); //There is only one record
+                        listener.onSuccess(objLocation);
+                    } else {
+                        listener.onFailed(null);
+                    }
+                } else {
+                    listener.onFailed(e);
                 }
             }
         });
@@ -178,7 +202,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                         orignalFile.deleteInBackground();
                     }
 
-                    listener.onSuccess();
+                    listener.onSuccess(null);
                 } else {
                     listener.onFailed(e);
                 }
@@ -219,7 +243,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                                             @Override
                                             public void done(AVException e) {
                                                 if (e == null) {
-                                                    listener.onSuccess();
+                                                    listener.onSuccess(null);
                                                 } else {
                                                     listener.onFailed(e);
                                                 }
@@ -272,7 +296,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                         @Override
                         public void done(AVException e) {
                             if (e == null) {
-                                listener.onSuccess();
+                                listener.onSuccess(null);
                             } else {
                                 listener.onFailed(e);
                             }

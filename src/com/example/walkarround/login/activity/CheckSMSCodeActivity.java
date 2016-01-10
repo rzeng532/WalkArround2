@@ -87,7 +87,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
 
     AsyncTaskListener mGetSMSCodeListener = new AsyncTaskListener() {
         @Override
-        public void onSuccess() {
+        public void onSuccess(Object data) {
             Toast.makeText(getApplicationContext(), getString(R.string.register_signup_success), Toast.LENGTH_SHORT).show();
 
             Message msg = Message.obtain();
