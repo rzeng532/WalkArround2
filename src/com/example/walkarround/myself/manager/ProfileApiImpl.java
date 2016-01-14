@@ -95,12 +95,20 @@ public class ProfileApiImpl extends ProfileApiAbstract {
         }
     }
 
+    /*
+     * Step 1: query if current user has dynamic data at first;
+     * Step 2: If step_1 query data, user queried item. Otherwise, create a new dynamic data;
+     * Step 3: Save data in background;
+     * Step 4: Query current user data again and return dynamic data's object ID;
+     *
+     */
     @Override
     public void updateDynamicData(MyDynamicInfo dynamicInfo, AsyncTaskListener listener) throws Exception {
         if (dynamicInfo == null) {
             return;
         }
 
+        //Query dynamic data at first
         AVQuery<AVObject> query = new AVQuery<AVObject>(AppConstant.TABLE_DYNAMIC_USER_DATA);
         query.whereEqualTo(ProfileUtil.DYN_DATA_USER_ID, AVUser.getCurrentUser());
         query.findInBackground(new FindCallback<AVObject>() {
@@ -124,7 +132,6 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                     objLocation.put(ProfileUtil.DYN_DATA_GEO, ProfileUtil.geodataConvert2AVObj(dynamicInfo.getCurGeo()));
                     objLocation.put(ProfileUtil.DYN_DATA_DATING_STATE, dynamicInfo.getDatingState());
 
-                    final String dynUserObjId = objLocation.getObjectId();
                     //Update dynamic data to server.
                     objLocation.saveInBackground(new SaveCallback() {
                         @Override
@@ -134,7 +141,23 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                             }
 
                             if (e == null) {
-                                listener.onSuccess(dynUserObjId);
+                                //Update object successful, query current user's data again.
+                                queryCurUserDynData(new AsyncTaskListener() {
+                                    @Override
+                                    public void onSuccess(Object data) {
+                                        if(data != null) {
+                                            AVObject dynData = (AVObject) data;
+                                            listener.onSuccess(dynData.getObjectId());
+                                        } else {
+                                            listener.onFailed(null);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailed(AVException e) {
+                                        listener.onFailed(e);
+                                    }
+                                });
                             } else {
                                 listener.onFailed(e);
                             }

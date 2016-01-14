@@ -8,7 +8,9 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.*;
 import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVException;
@@ -34,7 +36,6 @@ import com.example.walkarround.util.network.NetWorkManager;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import static com.example.walkarround.util.http.HttpTaskBase.TaskResult;
@@ -66,6 +67,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private GeoData mMyGeo = null;
 
+    List<NearlyUser> mNearlyUserList;
+
     private QueryNearlyUsers mQueryTask;
     private onResultListener mQueryListener = new onResultListener() {
         @Override
@@ -77,8 +80,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
             if(object != null &&
                     WalkArroundJsonResultParser.parseReturnCode((String)object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
-                List<NearlyUser> userList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String)object);
-                int len = (userList != null) ? userList.size() : 0;
+                mNearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String)object);
             }
 
             if(TaskResult.SUCCEESS == resultCode) {
@@ -101,7 +103,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             StringBuilder stringBuilder = new StringBuilder(HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS);
 
             JSONObject param = new JSONObject();
-            param.put(HttpUtil.HTTP_PARAM_QUERY_NEARLY_USERS_ID, "567e966e00b0adf744f09b09");
+            param.put(HttpUtil.HTTP_PARAM_QUERY_NEARLY_USERS_ID, (String)data);
 
             Map<String, String> header = new HashMap<>();
             header.put(HttpUtil.HTTP_REQ_HEADER_LC_ID, AppConstant.LEANCLOUD_APP_ID);
@@ -277,7 +279,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = PlanetFragment.newInstance(position);
+        Fragment fragment = NearlyUsersFragment.newInstance(position);
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -339,68 +341,5 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         LocationManager.getInstance(getApplicationContext()).onDestroy();
-    }
-
-    /**
-     * Fragment that appears in the "content_frame", shows a planet
-     */
-    public static class PlanetFragment extends Fragment implements View.OnClickListener {
-        public static final String ARG_PLANET_NUMBER = "planet_number";
-        private View mViewRoot;
-        private View mTvTitle;
-        private ImageView mIvImage;
-
-        public PlanetFragment() {
-            // Empty constructor required for fragment subclasses
-        }
-
-        public static Fragment newInstance(int position) {
-            Fragment fragment = new PlanetFragment();
-            Bundle args = new Bundle();
-            args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            initView(inflater, container);
-            initData(savedInstanceState);
-            return mViewRoot;
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.title:
-                    //TODO: we should use handler for communication between activty and fragment later.
-                    DrawerLayout slideMenu = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-                    LinearLayout mViewLeftMenu = (LinearLayout) getActivity().findViewById(R.id.left_drawer);
-                    slideMenu.openDrawer(mViewLeftMenu);
-                    //getActivity().finish();
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        private void initView(LayoutInflater inflater, ViewGroup container) {
-            mViewRoot = inflater.inflate(R.layout.fragment_planet, container, false);
-
-            mIvImage = ((ImageView) mViewRoot.findViewById(R.id.image));
-
-            mTvTitle = (View) mViewRoot.findViewById(R.id.title);
-            mTvTitle.setOnClickListener(this);
-        }
-
-        private void initData(Bundle savedInstanceState) {
-            int i = getArguments().getInt(ARG_PLANET_NUMBER);
-            String planet = getResources().getStringArray(R.array.planets_array)[i];
-            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-                    "drawable", getActivity().getPackageName());
-            mIvImage.setImageResource(imageId);
-        }
     }
 }
