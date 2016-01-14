@@ -2,15 +2,19 @@ package com.example.walkarround.main.activity;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ViewFlipper;
 import com.example.walkarround.R;
+import com.example.walkarround.main.model.NearlyUser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -21,18 +25,52 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private View mViewRoot;
     private View mTvTitle;
     private ImageView mIvImage;
-    private ViewFlipper mVFlipper;
+    private RadarScanView mRadarView;
+
+    private static List<NearlyUser> mNearlyUserList;
+
+    private static NearlyUsersFragment mNUFragment;
+
+    private final int RADAR_STOP_DELAY = 5 * 1000;
+    private final int UPDATE_NEARLY_USERS = 0;
+    private Handler mFragmentHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == UPDATE_NEARLY_USERS) {
+                showNearyUser();
+            }
+        }
+    };
+
+    public void updateNearlyUserList(List<NearlyUser> list) {
+        if(mNearlyUserList != null) {
+            mNearlyUserList.clear();
+        } else {
+            mNearlyUserList = new ArrayList<NearlyUser>();
+        }
+
+        mNearlyUserList.addAll(list);
+        mFragmentHandler.sendEmptyMessageDelayed(UPDATE_NEARLY_USERS, RADAR_STOP_DELAY);
+    }
 
     public NearlyUsersFragment() {
         // Empty constructor required for fragment subclasses
     }
 
-    public static Fragment newInstance(int position) {
-        Fragment fragment = new NearlyUsersFragment();
-        Bundle args = new Bundle();
-        args.putInt(NearlyUsersFragment.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
-        return fragment;
+    public static NearlyUsersFragment getInstance() {
+
+        if(mNUFragment == null) {
+            synchronized (NearlyUsersFragment.class) {
+                if(mNUFragment == null) {
+                    mNUFragment = new NearlyUsersFragment();
+                    Bundle args = new Bundle();
+                    args.putInt(NearlyUsersFragment.ARG_PLANET_NUMBER, 0);
+                    mNUFragment.setArguments(args);
+                }
+            }
+        }
+
+        return mNUFragment;
     }
 
     @Override
@@ -63,9 +101,10 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         mViewRoot = inflater.inflate(R.layout.fragment_planet, container, false);
 
         mIvImage = ((ImageView) mViewRoot.findViewById(R.id.image));
-        //mVFlipper = (ViewFlipper) mViewRoot.findViewById(R.id.viewFlipper);
+        mIvImage.setVisibility(View.GONE);
         mTvTitle = (View) mViewRoot.findViewById(R.id.title);
         mTvTitle.setOnClickListener(this);
+        mRadarView = (RadarScanView) mViewRoot.findViewById(R.id.radar);
     }
 
     private void initData(Bundle savedInstanceState) {
@@ -74,5 +113,15 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
                 "drawable", getActivity().getPackageName());
         mIvImage.setImageResource(imageId);
+    }
+
+    private void showRadar() {
+        mRadarView.setVisibility(View.VISIBLE);
+        mIvImage.setVisibility(View.GONE);
+    }
+
+    private void showNearyUser() {
+        mRadarView.setVisibility(View.GONE);
+        mIvImage.setVisibility(View.VISIBLE);
     }
 }

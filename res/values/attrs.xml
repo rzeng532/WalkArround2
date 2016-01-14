@@ -2,34 +2,34 @@
 <resources>
 
     <declare-styleable name="roundedimageview">
-        <attr name="border_thickness" format="dimension" />
-        <attr name="border_inside_color" format="color" />
+        <attr name="border_thickness" format="dimension"/>
+        <attr name="border_inside_color" format="color"/>
         <attr name="border_outside_color" format="color"></attr>
     </declare-styleable>
     <declare-styleable name="MyRelativeRecordLayout">
-        <attr name="recordWidth" format="integer" />
-        <attr name="recordHeight" format="integer" />
-        <attr name="record_maxtime" format="integer" />
+        <attr name="recordWidth" format="integer"/>
+        <attr name="recordHeight" format="integer"/>
+        <attr name="record_maxtime" format="integer"/>
     </declare-styleable>
     <declare-styleable name="PagerSlidingTabStrip">
-        <attr name="pstsIndicatorColor" format="color" />
-        <attr name="pstsUnderlineColor" format="color" />
-        <attr name="pstsDividerColor" format="color" />
-        <attr name="pstsIndicatorHeight" format="dimension" />
-        <attr name="pstsUnderlineHeight" format="dimension" />
-        <attr name="pstsDividerPadding" format="dimension" />
-        <attr name="pstsTabPaddingLeftRight" format="dimension" />
-        <attr name="pstsScrollOffset" format="dimension" />
-        <attr name="pstsTabBackground" format="reference" />
-        <attr name="pstsShouldExpand" format="boolean" />
-        <attr name="pstsTextAllCaps" format="boolean" />
+        <attr name="pstsIndicatorColor" format="color"/>
+        <attr name="pstsUnderlineColor" format="color"/>
+        <attr name="pstsDividerColor" format="color"/>
+        <attr name="pstsIndicatorHeight" format="dimension"/>
+        <attr name="pstsUnderlineHeight" format="dimension"/>
+        <attr name="pstsDividerPadding" format="dimension"/>
+        <attr name="pstsTabPaddingLeftRight" format="dimension"/>
+        <attr name="pstsScrollOffset" format="dimension"/>
+        <attr name="pstsTabBackground" format="reference"/>
+        <attr name="pstsShouldExpand" format="boolean"/>
+        <attr name="pstsTextAllCaps" format="boolean"/>
     </declare-styleable>
     <declare-styleable name="RoundProgressBar">
-        <attr name="roundColor" format="color" />
-        <attr name="roundProgressColor" format="color" />
+        <attr name="roundColor" format="color"/>
+        <attr name="roundProgressColor" format="color"/>
         <attr name="roundWidth" format="dimension"></attr>
-        <attr name="textColor" format="color" />
-        <attr name="textSize" format="dimension" />
+        <attr name="textColor" format="color"/>
+        <attr name="textSize" format="dimension"/>
         <attr name="max" format="integer"></attr>
         <attr name="textIsDisplayable" format="boolean"></attr>
         <attr name="style">
@@ -38,72 +38,72 @@
         </attr>
     </declare-styleable>
     <declare-styleable name="GifView">
-        <attr name="gif" format="reference" />
-        <attr name="paused" format="boolean" />
+        <attr name="gif" format="reference"/>
+        <attr name="paused" format="boolean"/>
     </declare-styleable>
     <declare-styleable name="CustomTheme">
-        <attr name="gifViewStyle" format="reference" />
+        <attr name="gifViewStyle" format="reference"/>
     </declare-styleable>
     <declare-styleable name="CustomPassword">
-        <attr name="showPass" format="reference" />
-        <attr name="noShowPass" format="reference" />
+        <attr name="showPass" format="reference"/>
+        <attr name="noShowPass" format="reference"/>
     </declare-styleable>
     <declare-styleable name="PullToRefresh">
 
         <!-- A drawable to use as the background of the Refreshable View -->
-        <attr name="ptrRefreshableViewBackground" format="reference|color" />
+        <attr name="ptrRefreshableViewBackground" format="reference|color"/>
 
         <!-- A drawable to use as the background of the Header and Footer Loading Views -->
-        <attr name="ptrHeaderBackground" format="reference|color" />
+        <attr name="ptrHeaderBackground" format="reference|color"/>
 
         <!-- Text Color of the Header and Footer Loading Views -->
-        <attr name="ptrHeaderTextColor" format="reference|color" />
+        <attr name="ptrHeaderTextColor" format="reference|color"/>
 
         <!-- Text Color of the Header and Footer Loading Views Sub Header -->
-        <attr name="ptrHeaderSubTextColor" format="reference|color" />
+        <attr name="ptrHeaderSubTextColor" format="reference|color"/>
 
         <!-- Mode of Pull-to-Refresh that should be used -->
         <attr name="ptrMode">
-            <flag name="disabled" value="0x0" />
-            <flag name="pullFromStart" value="0x1" />
-            <flag name="pullFromEnd" value="0x2" />
-            <flag name="both" value="0x3" />
-            <flag name="manualOnly" value="0x4" />
+            <flag name="disabled" value="0x0"/>
+            <flag name="pullFromStart" value="0x1"/>
+            <flag name="pullFromEnd" value="0x2"/>
+            <flag name="both" value="0x3"/>
+            <flag name="manualOnly" value="0x4"/>
 
             <!-- These last two are depreacted -->
-            <flag name="pullDownFromTop" value="0x1" />
-            <flag name="pullUpFromBottom" value="0x2" />
+            <flag name="pullDownFromTop" value="0x1"/>
+            <flag name="pullUpFromBottom" value="0x2"/>
         </attr>
 
         <!-- Whether the Indicator overlay(s) should be used -->
-        <attr name="ptrShowIndicator" format="reference|boolean" />
+        <attr name="ptrShowIndicator" format="reference|boolean"/>
 
         <!-- Drawable to use as Loading Indicator. Changes both Header and Footer. -->
-        <attr name="ptrDrawable" format="reference" />
+        <attr name="ptrDrawable" format="reference"/>
 
         <!-- Drawable to use as Loading Indicator in the Header View. Overrides value set in ptrDrawable. -->
-        <attr name="ptrDrawableStart" format="reference" />
+        <attr name="ptrDrawableStart" format="reference"/>
 
         <!-- Drawable to use as Loading Indicator in the Footer View. Overrides value set in ptrDrawable. -->
-        <attr name="ptrDrawableEnd" format="reference" />
+        <attr name="ptrDrawableEnd" format="reference"/>
 
         <!-- Whether Android's built-in Over Scroll should be utilised for Pull-to-Refresh. -->
-        <attr name="ptrOverScroll" format="reference|boolean" />
+        <attr name="ptrOverScroll" format="reference|boolean"/>
 
         <!-- Base text color, typeface, size, and style for Header and Footer Loading Views -->
-        <attr name="ptrHeaderTextAppearance" format="reference" />
+        <attr name="ptrHeaderTextAppearance" format="reference"/>
 
         <!-- Base text color, typeface, size, and style for Header and Footer Loading Views Sub Header -->
-        <attr name="ptrSubHeaderTextAppearance" format="reference" />
+        <attr name="ptrSubHeaderTextAppearance" format="reference"/>
 
         <!-- Style of Animation should be used displayed when pulling. -->
         <attr name="ptrAnimationStyle">
-            <flag name="rotate" value="0x0" />
-            <flag name="flip" value="0x1" />
+            <flag name="rotate" value="0x0"/>
+            <flag name="flip" value="0x1"/>
         </attr>
 
         <!-- Whether the user can scroll while the View is Refreshing -->
-        <attr name="ptrScrollingWhileRefreshingEnabled" format="reference|boolean" />
+        <attr name="ptrScrollingWhileRefreshingEnabled" format="reference|boolean"/>
 
         <!--
         	Whether PullToRefreshListView has it's extras enabled. This allows the user to be 
@@ -111,19 +111,19 @@
         	Header and/or Footer Views to the ListView.
 
         -->
-        <attr name="ptrListViewExtrasEnabled" format="reference|boolean" />
+        <attr name="ptrListViewExtrasEnabled" format="reference|boolean"/>
 
         <!--
         	Whether the Drawable should be continually rotated as you pull. This only
         	takes effect when using the 'Rotate' Animation Style.
 
         -->
-        <attr name="ptrRotateDrawableWhilePulling" format="reference|boolean" />
+        <attr name="ptrRotateDrawableWhilePulling" format="reference|boolean"/>
 
         <!-- BELOW HERE ARE DEPRECEATED. DO NOT USE. -->
-        <attr name="ptrAdapterViewBackground" format="reference|color" />
-        <attr name="ptrDrawableTop" format="reference" />
-        <attr name="ptrDrawableBottom" format="reference" />
+        <attr name="ptrAdapterViewBackground" format="reference|color"/>
+        <attr name="ptrDrawableTop" format="reference"/>
+        <attr name="ptrDrawableBottom" format="reference"/>
     </declare-styleable>
     <!--ExpandableTextView-->
     <declare-styleable name="ExpandableTextView">
@@ -180,6 +180,12 @@
         <attr name="android:soundEffectsEnabled"/>
         <attr name="android:tag"/>
         <attr name="android:visibility"/>
+    </declare-styleable>
+
+    <declare-styleable name="RadarScanView">
+        <attr name="circleColor" format="color"/>
+        <attr name="radarColor" format="color"/>
+        <attr name="tailColor" format="color"/>
     </declare-styleable>
 
 </resources>

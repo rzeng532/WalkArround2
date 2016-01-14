@@ -45,8 +45,15 @@
                android:id="@+id/image"
                android:layout_width="match_parent"
                android:layout_height="match_parent"
-
                android:gravity="center"
                android:padding="32dp"/>
+
+    <com.example.walkarround.main.activity.RadarScanView
+            android:id="@+id/radar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    </com.example.walkarround.main.activity.RadarScanView>
+
 
 </LinearLayout>

@@ -67,8 +67,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private GeoData mMyGeo = null;
 
-    List<NearlyUser> mNearlyUserList;
-
     private QueryNearlyUsers mQueryTask;
     private onResultListener mQueryListener = new onResultListener() {
         @Override
@@ -80,7 +78,10 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
             if(object != null &&
                     WalkArroundJsonResultParser.parseReturnCode((String)object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
-                mNearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String)object);
+                List<NearlyUser> nearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String)object);
+                if(nearlyUserList != null && nearlyUserList.size() > 0) {
+                    NearlyUsersFragment.getInstance().updateNearlyUserList(nearlyUserList);
+                }
             }
 
             if(TaskResult.SUCCEESS == resultCode) {
@@ -279,7 +280,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = NearlyUsersFragment.newInstance(position);
+        Fragment fragment = NearlyUsersFragment.getInstance();
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
