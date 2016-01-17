@@ -71,11 +71,6 @@
     <color name="viewfinder_mask">#60000000</color>
     <color name="possible_result_points">#c0ffff00</color>
 
-    <!-- 友圈 -->
-    <color name="blue_sky">#18B4ED</color>
-    <color name="class_circle_blue_color">#07CBCA</color>
-    <color name="comm_line">#eaeaea</color>
-    <color name="class_circle_reply_bg_normal">#EEEEEE</color>
-    <color name="class_circle_reply_bg_press">#D5D5D5</color>
-
+    <color name="card_background">#ffffff</color>
+    <color name="card_shadow">#10000000</color>
 </resources>

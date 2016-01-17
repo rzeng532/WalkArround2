@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.example.walkarround.R;
+import com.example.walkarround.flingswipe.SwipeFlingAdapterView;
+import com.example.walkarround.main.adapter.NearlyUserListAdapter;
 import com.example.walkarround.main.model.NearlyUser;
+import com.example.walkarround.radar.RadarScanView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by cmcc on 16/1/11.
@@ -23,14 +25,34 @@ import java.util.Locale;
 public class NearlyUsersFragment extends Fragment implements View.OnClickListener {
     public static final String ARG_PLANET_NUMBER = "planet_number";
     private View mViewRoot;
+
+    //For title and slide menu
     private View mTvTitle;
-    private ImageView mIvImage;
+
+    //For nearly user list.
+    private SwipeFlingAdapterView mUserFrame;
+    //For buttons.
+    private View mUserFrameButtons;
+
+    //For radar display.
     private RadarScanView mRadarView;
 
-    private static List<NearlyUser> mNearlyUserList;
+    //Image mLeftDislike / mRightLike = dislike / like
+    private ImageView mLeftDislike;
+    private ImageView mRightLike;
 
+    //Real data from server.
+    private static List<NearlyUser> mNearlyUserList = new ArrayList<>();
+
+    //Private static instance for getInstance.
     private static NearlyUsersFragment mNUFragment;
 
+    private NearlyUserListAdapter mUserListAdapter;
+
+    //
+    private int i = 0;
+
+    //Handler
     private final int RADAR_STOP_DELAY = 5 * 1000;
     private final int UPDATE_NEARLY_USERS = 0;
     private Handler mFragmentHandler = new Handler() {
@@ -43,13 +65,16 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     };
 
     public void updateNearlyUserList(List<NearlyUser> list) {
-        if(mNearlyUserList != null) {
-            mNearlyUserList.clear();
-        } else {
-            mNearlyUserList = new ArrayList<NearlyUser>();
+
+        if (getActivity() == null || getActivity().isDestroyed()) {
+            return;
         }
 
-        mNearlyUserList.addAll(list);
+        synchronized (NearlyUsersFragment.class) {
+            mNearlyUserList.clear();
+            mNearlyUserList.addAll(list);
+        }
+
         mFragmentHandler.sendEmptyMessageDelayed(UPDATE_NEARLY_USERS, RADAR_STOP_DELAY);
     }
 
@@ -100,28 +125,127 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private void initView(LayoutInflater inflater, ViewGroup container) {
         mViewRoot = inflater.inflate(R.layout.fragment_planet, container, false);
 
-        mIvImage = ((ImageView) mViewRoot.findViewById(R.id.image));
-        mIvImage.setVisibility(View.GONE);
+        //Set those elements as gone at first and display them while there is data from server.
+        mUserFrame = ((SwipeFlingAdapterView) mViewRoot.findViewById(R.id.userFrame));
+        mUserFrame.setVisibility(View.GONE);
+        mUserFrameButtons = ((View) mViewRoot.findViewById(R.id.userFrameButtons));
+        mUserFrameButtons.setVisibility(View.GONE);
+
+        //Like and Dislike button - init view & set onClicklistener.
+        mLeftDislike = (ImageView)  mViewRoot.findViewById(R.id.left);
+        mLeftDislike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                left();
+            }
+        });
+        mRightLike = (ImageView)  mViewRoot.findViewById(R.id.right);
+        mRightLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                right();
+            }
+        });
+
+        //Init title
         mTvTitle = (View) mViewRoot.findViewById(R.id.title);
         mTvTitle.setOnClickListener(this);
+
+        //Radar will be displayed at first.
         mRadarView = (RadarScanView) mViewRoot.findViewById(R.id.radar);
     }
 
     private void initData(Bundle savedInstanceState) {
-        int i = getArguments().getInt(ARG_PLANET_NUMBER);
-        String planet = getResources().getStringArray(R.array.planets_array)[i];
-        int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-                "drawable", getActivity().getPackageName());
-        mIvImage.setImageResource(imageId);
+        mUserListAdapter = new NearlyUserListAdapter(getActivity(), mNearlyUserList);
+
+        mUserFrame.setAdapter(mUserListAdapter);
+        mUserFrame.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
+            @Override
+            public void removeFirstObjectInAdapter() {
+                if(mNearlyUserList != null && mNearlyUserList.size() > 0) {
+                    synchronized (NearlyUsersFragment.class) {
+                        mNearlyUserList.remove(0);
+                    }
+                    mUserListAdapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onLeftCardExit(Object dataObject) {
+                if (mNearlyUserList != null && mNearlyUserList.size() == 0) {
+                    //If there is no data, display radar again.
+                    showRadar();
+                };
+            }
+
+            @Override
+            public void onRightCardExit(Object dataObject) {
+                if (mNearlyUserList != null && mNearlyUserList.size() == 0) {
+                    //If there is no data, display radar again.
+                    showRadar();
+                };
+            }
+
+            @Override
+            public void onAdapterAboutToEmpty(int itemsInAdapter) {
+                //mNearlyUserList.add(new CardMode("循环测试", 18, list.get(itemsInAdapter % imageUrls.length - 1)));
+                mUserListAdapter.notifyDataSetChanged();
+                i++;
+            }
+
+            @Override
+            public void onScroll(float scrollProgressPercent) {
+                try {
+                    View view = mUserFrame.getSelectedView();
+                    view.findViewById(R.id.item_swipe_right_indicator).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
+                    view.findViewById(R.id.item_swipe_left_indicator).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        mUserFrame.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClicked(int itemPosition, Object dataObject) {
+                ;
+            }
+        });
+
+
+//        int i = getArguments().getInt(ARG_PLANET_NUMBER);
+//        String planet = getResources().getStringArray(R.array.planets_array)[i];
+//        int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
+//                "drawable", getActivity().getPackageName());
+//        mUserFrame.setImageResource(imageId);
     }
 
+    /*
+     * We will show radar on loading page / while there is no other data
+     */
     private void showRadar() {
         mRadarView.setVisibility(View.VISIBLE);
-        mIvImage.setVisibility(View.GONE);
+
+        mUserFrameButtons.setVisibility(View.GONE);
+        mUserFrame.setVisibility(View.GONE);
     }
 
     private void showNearyUser() {
         mRadarView.setVisibility(View.GONE);
-        mIvImage.setVisibility(View.VISIBLE);
+
+        mUserFrame.setVisibility(View.VISIBLE);
+        mUserFrameButtons.setVisibility(View.VISIBLE);
+
+        if(mUserListAdapter != null) {
+            mUserListAdapter.notifyDataSetChanged();
+        }
     }
+
+    private void right() {
+        mUserFrame.getTopCardListener().selectRight();
+    }
+
+    private void left() {
+        mUserFrame.getTopCardListener().selectLeft();
+    }
+
 }

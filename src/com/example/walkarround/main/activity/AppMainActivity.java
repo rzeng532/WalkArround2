@@ -79,7 +79,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             if(object != null &&
                     WalkArroundJsonResultParser.parseReturnCode((String)object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
                 List<NearlyUser> nearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String)object);
-                if(nearlyUserList != null && nearlyUserList.size() > 0) {
+                if(!isFinishing() && nearlyUserList != null && nearlyUserList.size() > 0) {
                     NearlyUsersFragment.getInstance().updateNearlyUserList(nearlyUserList);
                 }
             }
@@ -293,6 +293,16 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         //mDrawerLayout.closeDrawer(mViewLeftMenu);
     }
 
+    private void removeFragment() {
+        Fragment fragment = NearlyUsersFragment.getInstance();
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.remove(fragment);
+        ft.commit();
+    }
+
+
     @Override
     public void setTitle(CharSequence title) {
         //mTitle = title;
@@ -341,6 +351,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mDynUpdateListener = null;
+        mQueryListener = null;
         LocationManager.getInstance(getApplicationContext()).onDestroy();
     }
 }

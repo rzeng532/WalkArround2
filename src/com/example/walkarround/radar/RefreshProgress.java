@@ -1,4 +1,4 @@
-package com.example.walkarround.main.activity;
+package com.example.walkarround.radar;
 
 
 import android.content.Context;
@@ -13,8 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
-
-import java.util.Map;
 
 
 public class RefreshProgress extends View

@@ -1,4 +1,5 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res/com.example.walkarround"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@android:color/black"
@@ -41,19 +42,25 @@
                 android:textSize="20sp"/>
     </RelativeLayout>
 
-    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-               android:id="@+id/image"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:gravity="center"
-               android:padding="32dp"/>
+    <include layout="@layout/main_nearly_user_buttons"
+             android:id="@+id/userFrameButtons"/>
 
-    <com.example.walkarround.main.activity.RadarScanView
+
+    <com.example.walkarround.flingswipe.SwipeFlingAdapterView
+            android:id="@+id/userFrame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:rotation_degrees="15.5"
+            tools:context=".MyActivity" />
+
+
+    <com.example.walkarround.radar.RadarScanView
             android:id="@+id/radar"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-    </com.example.walkarround.main.activity.RadarScanView>
+    </com.example.walkarround.radar.RadarScanView>
 
 
 </LinearLayout>

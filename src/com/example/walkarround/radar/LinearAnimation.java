@@ -1,4 +1,4 @@
-package com.example.walkarround.main.activity;
+package com.example.walkarround.radar;
 
 
 import android.view.animation.Animation;
