@@ -137,6 +137,7 @@ public class ThreadPoolManager {
         }
 
         synchronized (mAsyncTasks) {
+            start();
             logger.i("add task: " + task.getId()+" requestCode: "+task.getRequestCode());
             if (mThreadPool.isShutdown()) {
                 mThreadPool = Executors.newFixedThreadPool(this.mPoolSize); 

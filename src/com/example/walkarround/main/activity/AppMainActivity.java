@@ -21,6 +21,7 @@ import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.main.model.NearlyUser;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.QueryNearlyUsers;
+import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.myself.activity.DetailInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyDynamicInfo;
@@ -67,7 +68,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private GeoData mMyGeo = null;
 
-    private QueryNearlyUsers mQueryTask;
     private onResultListener mQueryListener = new onResultListener() {
         @Override
         public void onPreTask(String requestCode) {
@@ -101,21 +101,12 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             amLogger.d("update dynamic success.");
 
             //Query nearly users
-            StringBuilder stringBuilder = new StringBuilder(HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS);
-
-            JSONObject param = new JSONObject();
-            param.put(HttpUtil.HTTP_PARAM_QUERY_NEARLY_USERS_ID, (String)data);
-
-            Map<String, String> header = new HashMap<>();
-            header.put(HttpUtil.HTTP_REQ_HEADER_LC_ID, AppConstant.LEANCLOUD_APP_ID);
-            header.put(HttpUtil.HTTP_REQ_HEADER_LC_KEY, AppConstant.LEANCLOUD_APP_KEY);
-            header.put(HttpUtil.HTTP_REQ_HEADER_CONTENT_TYPE, HttpUtil.HTTP_REQ_HEADER_CONTENT_TYPE_JSON);
-
-            mQueryTask = new QueryNearlyUsers(getApplicationContext(),
-                    mQueryListener, HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS, stringBuilder.toString(), param.toString(), header);
-
-            ThreadPoolManager.getPoolManager().start();
-            ThreadPoolManager.getPoolManager().addAsyncTask(mQueryTask);
+            ThreadPoolManager.getPoolManager().addAsyncTask(new QueryNearlyUsers(getApplicationContext(),
+                    mQueryListener,
+                    HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS,
+                    HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS,
+                    QueryNearlyUsers.getParams((String)data),
+                    TaskUtil.getTaskHeader()));
         }
 
         @Override

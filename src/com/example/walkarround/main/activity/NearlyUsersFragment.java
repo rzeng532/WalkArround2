@@ -10,11 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
 import com.example.walkarround.flingswipe.SwipeFlingAdapterView;
 import com.example.walkarround.main.adapter.NearlyUserListAdapter;
 import com.example.walkarround.main.model.NearlyUser;
+import com.example.walkarround.main.task.LikeSomeOneTask;
+import com.example.walkarround.main.task.QueryNearlyUsers;
+import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.radar.RadarScanView;
+import com.example.walkarround.util.http.HttpTaskBase;
+import com.example.walkarround.util.http.HttpUtil;
+import com.example.walkarround.util.http.ThreadPoolManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +48,8 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     //Image mLeftDislike / mRightLike = dislike / like
     private ImageView mLeftDislike;
     private ImageView mRightLike;
+    private String mStrFromUsrId;
+    private String mStrToUsrId;
 
     //Real data from server.
     private static List<NearlyUser> mNearlyUserList = new ArrayList<>();
@@ -49,7 +59,23 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
     private NearlyUserListAdapter mUserListAdapter;
 
-    //
+    private HttpTaskBase.onResultListener mLikeSomeoneListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
     private int i = 0;
 
     //Handler
@@ -73,6 +99,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         synchronized (NearlyUsersFragment.class) {
             mNearlyUserList.clear();
             mNearlyUserList.addAll(list);
+            mStrToUsrId = mNearlyUserList.get(0).getObjectId();
         }
 
         mFragmentHandler.sendEmptyMessageDelayed(UPDATE_NEARLY_USERS, RADAR_STOP_DELAY);
@@ -164,6 +191,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             public void removeFirstObjectInAdapter() {
                 if(mNearlyUserList != null && mNearlyUserList.size() > 0) {
                     synchronized (NearlyUsersFragment.class) {
+                        mStrToUsrId = mNearlyUserList.get(0).getObjectId();
                         mNearlyUserList.remove(0);
                     }
                     mUserListAdapter.notifyDataSetChanged();
@@ -179,6 +207,13 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void onRightCardExit(Object dataObject) {
+                ThreadPoolManager.getPoolManager().addAsyncTask(new LikeSomeOneTask(getActivity().getApplicationContext(),
+                        mLikeSomeoneListener,
+                        HttpUtil.HTTP_FUNC_LIKE_SOMEONE,
+                        HttpUtil.HTTP_TASK_LIKE_SOMEONE,
+                        LikeSomeOneTask.getParams(mStrFromUsrId, mStrToUsrId),
+                        TaskUtil.getTaskHeader()));
+
                 if (mNearlyUserList != null && mNearlyUserList.size() == 0) {
                     //If there is no data, display radar again.
                     showRadar();
@@ -211,12 +246,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             }
         });
 
-
-//        int i = getArguments().getInt(ARG_PLANET_NUMBER);
-//        String planet = getResources().getStringArray(R.array.planets_array)[i];
-//        int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-//                "drawable", getActivity().getPackageName());
-//        mUserFrame.setImageResource(imageId);
+        mStrFromUsrId = AVUser.getCurrentUser().getObjectId();
     }
 
     /*

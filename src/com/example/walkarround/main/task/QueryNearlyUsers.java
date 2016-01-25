@@ -1,8 +1,12 @@
 package com.example.walkarround.main.task;
 
 import android.content.Context;
+import com.alibaba.fastjson.JSONObject;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.http.HttpTaskPost;
+import com.example.walkarround.util.http.HttpUtil;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,5 +21,15 @@ public class QueryNearlyUsers extends HttpTaskPost{
     @Override
     public void run() {
         super.run();
+    }
+
+    /*
+     * Return JSON parameters to String style.
+     */
+    public static String getParams(String userid) {
+        JSONObject param = new JSONObject();
+        param.put(HttpUtil.HTTP_PARAM_QUERY_NEARLY_USERS_ID, userid);
+
+        return param.toString();
     }
 }
