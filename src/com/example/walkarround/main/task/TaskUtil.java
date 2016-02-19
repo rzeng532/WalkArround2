@@ -17,8 +17,8 @@ import java.util.Map;
  */
 public class TaskUtil {
     /*
- * Return JSON parameters to String style.
- */
+     * Return JSON parameters to String style.
+     */
     public static Map<String, String> getTaskHeader() {
         Map<String, String> header = new HashMap<>();
         header.put(HttpUtil.HTTP_REQ_HEADER_LC_ID, AppConstant.LEANCLOUD_APP_ID);
