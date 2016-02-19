@@ -70,6 +70,7 @@
     <string name="setting_about_app">关于走走</string>
     <string name="setting_do_logout">退出</string>
     <string name="setting_logout_or_not">退出当前账号？</string>
+    <string name="setting_chat">聊天</string>
 
     <!-- Strings for myself -->
     <string name="profile_activity_title">个人信息</string>

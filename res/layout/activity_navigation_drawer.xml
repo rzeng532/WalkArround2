@@ -150,6 +150,35 @@
                 android:layout_alignParentBottom="true"
                 android:background="@color/linecor1"/>
 
+        <RelativeLayout
+                android:id="@+id/rl_slide_chat"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@drawable/list_item_bg"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+            <!-- we need an image here -->
+
+            <TextView
+                    android:id="@+id/tv_slide_chat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="@dimen/font_size3"
+                    android:background="@drawable/list_item_bg"
+                    android:textColor="@color/fontcor1"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/setting_chat"/>
+        </RelativeLayout>
+
+        <!-- Divide line -->
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/linecor1"/>
+
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

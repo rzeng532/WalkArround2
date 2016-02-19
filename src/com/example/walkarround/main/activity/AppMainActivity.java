@@ -12,8 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
-import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
@@ -22,6 +24,7 @@ import com.example.walkarround.main.model.NearlyUser;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.myself.activity.DetailInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyDynamicInfo;
@@ -35,9 +38,7 @@ import com.example.walkarround.util.http.HttpUtil;
 import com.example.walkarround.util.http.ThreadPoolManager;
 import com.example.walkarround.util.network.NetWorkManager;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.example.walkarround.util.http.HttpTaskBase.TaskResult;
 
@@ -57,6 +58,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
      * UI elements on main activity
      */
     private View mViewSetting;
+    private View mViewChat;
     private View mViewMain;
     private RelativeLayout mViewPortrait;
     private LinearLayout mViewLeftMenu;
@@ -76,15 +78,15 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
-            if(object != null &&
-                    WalkArroundJsonResultParser.parseReturnCode((String)object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
-                List<NearlyUser> nearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String)object);
-                if(!isFinishing() && nearlyUserList != null && nearlyUserList.size() > 0) {
+            if (object != null &&
+                    WalkArroundJsonResultParser.parseReturnCode((String) object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
+                List<NearlyUser> nearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String) object);
+                if (!isFinishing() && nearlyUserList != null && nearlyUserList.size() > 0) {
                     NearlyUsersFragment.getInstance().updateNearlyUserList(nearlyUserList);
                 }
             }
 
-            if(TaskResult.SUCCEESS == resultCode) {
+            if (TaskResult.SUCCEESS == resultCode) {
                 amLogger.d("TaskResult.SUCCEESS");
             }
         }
@@ -105,7 +107,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                     mQueryListener,
                     HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS,
                     HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS,
-                    QueryNearlyUsers.getParams((String)data),
+                    QueryNearlyUsers.getParams((String) data),
                     TaskUtil.getTaskHeader()));
         }
 
@@ -122,9 +124,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         public void onSuccess(Object data) {
             mMyGeo = LocationManager.getInstance(getApplicationContext()).getCurrentLoc();
 
-            if(mMyGeo != null) {
+            if (mMyGeo != null) {
                 //Update user dynamic data - online state & GEO.
-                ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(mMyGeo,true, 1), mDynUpdateListener);
+                ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(mMyGeo, true, 1), mDynUpdateListener);
             }
         }
 
@@ -180,6 +182,25 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         }
 
         LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mLocListener);
+
+        //IM client init operation.
+        WalkArroundMsgManager.getInstance().open(WalkArroundMsgManager.getInstance().getClientId(),
+                new AVIMClientCallback() {
+                    @Override
+                    public void done(AVIMClient avimClient, AVIMException e) {
+                        if (e == null) {
+                            //Test code
+                            String memberId = "567e95ec60b2e1871e04a8ae";
+                            if(WalkArroundMsgManager.getInstance().getClientId().equalsIgnoreCase(memberId)) {
+                                memberId = "565eb4fd60b25b0435209c10";
+                            }
+                            WalkArroundMsgManager.getInstance().getConversation(memberId);
+                            amLogger.d("Open client success.");
+                        } else {
+                            amLogger.d("Open client fail.");
+                        }
+                    }
+                });
     }
 
     @Override
@@ -190,7 +211,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             mDrawerLayout.closeDrawers();
         }
 
-        if(!NetWorkManager.getInstance(getApplicationContext()).isNetworkAvailable()) {
+        if (!NetWorkManager.getInstance(getApplicationContext()).isNetworkAvailable()) {
             Toast.makeText(getApplicationContext(), getString(R.string.err_network_unavailable), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -247,6 +268,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         mViewMain = (RelativeLayout) findViewById(R.id.rl_slide_main);
         mViewMain.setOnClickListener(this);
+
+        mViewChat = (RelativeLayout) findViewById(R.id.rl_slide_chat);
+        mViewChat.setOnClickListener(this);
 
         mViewLeftMenu = (LinearLayout) findViewById(R.id.left_drawer);
         //mViewLeftMenu.setOnClickListener(this);
@@ -332,6 +356,10 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
             case R.id.menu_portrait://goto setting activity
                 startActivity(new Intent(AppMainActivity.this, DetailInformationActivity.class));
+                break;
+
+            case R.id.rl_slide_chat:
+                WalkArroundMsgManager.getInstance().sendTextMsg();
                 break;
 
             default:

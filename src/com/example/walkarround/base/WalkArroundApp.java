@@ -9,8 +9,12 @@ import android.graphics.Bitmap.Config;
 import android.os.Environment;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.im.v2.AVIMMessageManager;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.example.walkarround.R;
 import com.example.walkarround.Location.manager.LocationManager;
+import com.example.walkarround.message.handler.WrDefaultMsgHandler;
+import com.example.walkarround.message.handler.WrTypedMsgHandler;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.network.NetWorkManager;
@@ -44,6 +48,8 @@ public class WalkArroundApp extends Application {
         try {
             AVOSCloud.setDebugLogEnabled(true);
             AVOSCloud.initialize(this, AppConstant.LEANCLOUD_APP_ID, AppConstant.LEANCLOUD_APP_KEY);
+            AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, WrTypedMsgHandler.getMsgHandlerInstance(this));
+            AVIMMessageManager.registerDefaultMessageHandler(new WrDefaultMsgHandler());
             initImageLoader(AppConstant.MAX_IMAGE_LOADER_CACHE_SIZE);
         } catch (Exception e) {
             e.printStackTrace();
