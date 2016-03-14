@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bgcor1">
+    <com.example.walkarround.message.activity.FootPagePoint
+        android:id="@+id/chat_tool_page_pp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_indicator_width"/>
+    <com.example.walkarround.message.activity.FootScrollLayout
+        android:id="@+id/chat_tool_panel_sl"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
+    <ListView android:id="@+id/phrasebook_list_lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@id/chat_tool_panel_sl"
+        android:layout_alignBottom="@id/chat_tool_panel_sl"
+        android:layout_marginTop="-10dp"
+        android:background="@color/bgcor1"
+        android:divider="@color/linecor1"
+        android:dividerHeight="0.5dp"
+        android:visibility="gone"
+        android:listSelector="@drawable/list_item_bg"/>
+</RelativeLayout>

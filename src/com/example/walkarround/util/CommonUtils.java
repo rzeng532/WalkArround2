@@ -5,13 +5,11 @@ package com.example.walkarround.util;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.text.TextUtils;
 import com.example.walkarround.R;
 import com.example.walkarround.base.WalkArroundApp;
-
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -487,4 +485,39 @@ public class CommonUtils {
             return false;
         }
     }
+
+    /**
+     * 根据名字获取头像背景资源id
+     *
+     * @param name
+     * @return
+     */
+    public static int getPhotoBgResId(String name) {
+        if (TextUtils.isEmpty(name)) {
+            return 0;
+        }
+        char[] nameChars = name.toCharArray();
+        char nameChar = nameChars[nameChars.length - 1];
+        int nameCharIndex = nameChar - 'a';
+        nameCharIndex = nameCharIndex > 0 ? nameCharIndex : -nameCharIndex;
+        int resId = R.drawable.photo_bg_color0;
+        switch (nameCharIndex) {
+            case 0:
+                resId = R.drawable.photo_bg_color0;
+                break;
+            case 1:
+                resId = R.drawable.photo_bg_color1;
+                break;
+            case 2:
+                resId = R.drawable.photo_bg_color2;
+                break;
+            case 3:
+                resId = R.drawable.photo_bg_color3;
+                break;
+            default:
+                break;
+        }
+        return resId;
+    }
+
 }

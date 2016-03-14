@@ -6,6 +6,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.login.manager.LoginManager;
+import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
@@ -68,6 +69,22 @@ public class ProfileManager {
         myProfileInfo.setLocation(new GeoData((AVObject) avUser.get(ProfileUtil.REG_KEY_LOCATION_EX)));
 
         return myProfileInfo;
+    }
+
+    public ContactInfo getMyContactInfo() {
+        MyProfileInfo myProfileInfo = getMyProfile();
+
+        ContactInfo infor = new ContactInfo();
+        infor.setUsername(myProfileInfo.getUsrName());
+        infor.setBirthday(myProfileInfo.getBirthday());
+        infor.setGender(myProfileInfo.getGendle());
+        infor.setMobilePhoneNumber(myProfileInfo.getMobileNum());
+
+        ContactInfo.PortraitEntity entry = infor.getPortrait();
+        entry.setUrl(myProfileInfo.getPortraitPath());
+        infor.setPortrait(entry);
+
+        return infor;
     }
 
     /*
@@ -141,6 +158,15 @@ public class ProfileManager {
             mProfileApi.updateDynamicData(dynData, listener);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public String getCurUsrObjId() {
+        AVUser avUser = AVUser.getCurrentUser();
+        if(avUser != null) {
+            return avUser.getObjectId();
+        } else {
+            return null;
         }
     }
 }

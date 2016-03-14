@@ -10,7 +10,7 @@ import android.widget.TextView;
 //import com.bumptech.glide.Glide;
 import com.example.walkarround.R;
 import com.example.walkarround.flingswipe.RotateTextImageView;
-import com.example.walkarround.main.model.NearlyUser;
+import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.util.image.ImageLoaderManager;
 
 import java.util.List;
@@ -20,9 +20,9 @@ import java.util.List;
  */
 public class NearlyUserListAdapter extends BaseAdapter {
     private Context mContext;
-    private List<NearlyUser> mUserList;
+    private List<ContactInfo> mUserList;
 
-    public NearlyUserListAdapter(Context mContext, List<NearlyUser> mCardList) {
+    public NearlyUserListAdapter(Context mContext, List<ContactInfo> mCardList) {
         this.mContext = mContext;
         this.mUserList = mCardList;
     }

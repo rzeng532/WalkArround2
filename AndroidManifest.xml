@@ -36,6 +36,11 @@
                 android:value="9d6c7cac79d49a10ca2cb9640347b44b"/>
         <service android:name="com.amap.api.location.APSService"></service>
 
+        <provider
+                android:name=".message.provider.MessageProvider"
+                android:authorities="com.example.walkarround.provider.message"
+                android:exported="false"/>
+
         <!-- Activity list -->
         <activity
             android:name=".EntranceActivity"
@@ -60,6 +65,15 @@
         <activity android:name=".util.image.ImageChooseActivity" />
         <activity android:name=".Location.activity.LocationActivity"/>
         <activity android:name=".main.activity.AppMainActivity"/>
+        <activity android:name=".message.activity.BuildMessageActivity"/>
+        <activity android:name=".message.activity.ChatDetailActivity"/>
+        <activity android:name=".message.activity.ImageBrowserActivity"/>
+        <activity android:name=".message.activity.ImageChooseActivity"/>
+        <activity android:name=".message.activity.ImageViewerActivity"/>
+        <activity android:name=".message.activity.ShowLocationActivity"/>
+        <activity android:name=".message.activity.PlaintTextDetailActivity"/>
+        <activity android:name=".message.activity.PlayVideoActivity"/>
+        <activity android:name=".message.activity.TakeVideoActivity"/>
 
         <!--  -->
         <service android:name="com.avos.avoscloud.PushService"/>

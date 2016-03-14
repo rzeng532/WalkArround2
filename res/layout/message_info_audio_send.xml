@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/msg_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="12dp"
+    android:paddingBottom="6dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:splitMotionEvents="true" >
+
+    <TextView
+        android:id="@+id/msg_send_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="2dp"
+        android:textColor="@color/fontcor4"
+        android:textSize="@dimen/font_size5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/msg_send_time_tv"
+        android:layout_gravity="end"
+        android:gravity="center_vertical|start"
+        android:orientation="horizontal" >
+
+        <CheckedTextView
+            android:id="@+id/select_check_ctv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="top"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/check_selecte_bg"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/blank_v"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:clickable="false" />
+
+        <ImageView
+            android:id="@+id/msg_status_fail_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/chat_msg_status_fail" />
+
+        <TextView
+            android:id="@+id/msg_audio_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="12&apos;"
+            android:textColor="@color/fontcor5"
+            android:textSize="@dimen/font_size3" />
+
+        <LinearLayout
+            android:id="@+id/msg_item_bg_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/chat_to_bg"
+            android:maxWidth="232dp"
+            android:orientation="horizontal"
+            android:paddingLeft="12dp"
+            android:paddingRight="24dp" >
+
+            <ImageView
+                android:id="@+id/msg_audio_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/chatting_outgo_playing_audio"
+                android:gravity="center" />
+        </LinearLayout>
+        <com.example.walkarround.base.view.PhotoView
+            android:id="@+id/msg_contact_profile_pv"
+            android:layout_marginLeft="5dp"
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+</RelativeLayout>

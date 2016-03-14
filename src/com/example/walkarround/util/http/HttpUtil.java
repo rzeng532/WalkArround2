@@ -32,7 +32,6 @@ public class HttpUtil {
     public static final String HTTP_TASK_GO_TOGETHER = HTTP_TASK_PRE +
             HTTP_FUNC_GO_TOGETHER;
 
-
     public static final String HTTP_PARAM_QUERY_NEARLY_USERS_ID = "userDynamicDataId";
     public static final String HTTP_PARAM_LIKE_SOMEONE_FROM = "fromUserId";
     public static final String HTTP_PARAM_LIKE_SOMEONE_TO = "toUserId";
@@ -44,12 +43,16 @@ public class HttpUtil {
     public static final String HTTP_REQ_HEADER_CONTENT_TYPE = "Content-Type";
     public static final String HTTP_REQ_HEADER_CONTENT_TYPE_JSON = "application/json";
 
-
     //Response common result
     public static final String HTTP_RESPONSE_KEY_RESULT_RESULT = "result";
     public static final String HTTP_RESPONSE_KEY_RESULT_CODE = "code";
     public static final String HTTP_RESPONSE_KEY_RESULT_CODE_SUC = "200";
     public static final String HTTP_RESPONSE_KEY_RESULT_DATA = "results";
+
+    //Response: like someone task
+    public static final String HTTP_RESPONSE_KEY_LIKE_TO_USER = "toUser";
+    public static final String HTTP_RESPONSE_KEY_LIKE_FROM_USER = "fromUser";
+    public static final String HTTP_RESPONSE_KEY_LIKE_STATUS = "status";
 
     private String addEntityKeyValue(String key, String value) {
         try {

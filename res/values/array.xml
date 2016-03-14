@@ -35,4 +35,18 @@
         <item>女</item>
     </string-array>
 
+    <!-- 消息更多按钮选项 -->
+    <array name="message_time_more_menu">
+        <item>查看联系人</item>
+        <item>查看友圈</item>
+        <item>加入黑名单</item>
+    </array>
+
+    <!-- 消息会话更多按钮选项 -->
+    <array name="msg_conversation_more_menu">
+        <item>创建群聊</item>
+        <item>新建消息</item>
+    </array>
+
+
 </resources>

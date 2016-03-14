@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android_custom="http://schemas.android.com/apk/res/com.example.walkarround"
+    android:id="@+id/msg_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="12dp"
+    android:paddingBottom="8dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp" >
+    
+    <TextView
+        android:id="@+id/msg_send_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="2dp"
+        android:textColor="@color/fontcor4"
+        android:textSize="@dimen/font_size5" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/msg_send_time_tv">
+
+        <CheckedTextView
+            android:id="@+id/select_check_ctv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="top"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/check_selecte_bg"
+            android:visibility="gone" />
+        <View
+            android:id="@+id/blank_v"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageView android:id="@+id/msg_status_fail_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/chat_msg_status_fail"/>
+        <RelativeLayout
+            android:id="@+id/msg_item_bg_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/chat_to_bg"
+            android:paddingLeft="4dp"
+            android:paddingTop="4dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="4dp" >
+
+            <LinearLayout android:id="@+id/video_thumb_ll"
+                android:layout_width="138dp"
+                android:layout_height="126dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/message_video_thumb"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+
+            <com.example.walkarround.base.view.RoundProgressBar
+                android:id="@+id/message_video_progressBar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="48dp"
+                android_custom:roundColor="#66000000"
+                android_custom:roundProgressColor="#dcdcdc"
+                android_custom:roundWidth="3dp"
+                android_custom:textColor="#9A32CD"
+                android_custom:textIsDisplayable="false"
+                android_custom:textSize="18sp"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/message_video_btn_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/video_thumb_ll"
+                android:layout_alignBottom="@id/video_thumb_ll"
+                android:layout_alignLeft="@id/video_thumb_ll"
+                android:layout_alignRight="@id/video_thumb_ll"
+                android:background="@color/transparent0.4"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/videoplay"/>
+        </RelativeLayout>
+        <com.example.walkarround.base.view.PhotoView
+            android:id="@+id/msg_contact_profile_pv"
+            android:layout_marginLeft="5dp"
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+</RelativeLayout>

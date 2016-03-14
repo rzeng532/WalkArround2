@@ -30,6 +30,24 @@ public class AppConstant {
     public static final String LOCATION_PIC_PATH = CAMERA_TAKE_PIC_PATH;
     public static final String APP_DATA_ROOT_PATH = "/com.example.prcs";
 
+    /* 收藏信息文件存储位置 */
+    public static final String FAVORITE_MSG_FILE_PATH = "/msg/collect/";
+
+    /* 语音消息文件路径 */
+    public static final String AUDIO_FILE_PATH = "/msg/audio/";
+
+    /* 视频消息文件路径 */
+    public static final String VIDEO_FILE_PATH = "/msg/video/";
+
+    /* 发送地图时产生的位置图片 */
+
+    /* 消息下载信息目录 */
+    public static final String MSG_DOWNLOAD_PATH = "/msg/message/";
+
+    /* 公众号消息下载信息目录 */
+    public static final String PA_MSG_DOWNLOAD_PATH = "/msg/paMsg/";
+
+
     // A switcher to enable message method sending map picture
     public static final boolean IS_ENABLE_MSG_LOCATION_PIC = true;
 

@@ -2,7 +2,7 @@ package com.example.walkarround.main.parser;
 
 import android.text.TextUtils;
 import com.alibaba.fastjson.JSONObject;
-import com.example.walkarround.main.model.NearlyUser;
+import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.util.http.HttpUtil;
 
 import java.util.List;
@@ -31,7 +31,33 @@ public class WalkArroundJsonResultParser {
         return "";
     }
 
-    public static List<NearlyUser> parse2NearlyUserModelList(String str) {
+    public static String parseRequireCode(String source, String reqCode) {
+        if (TextUtils.isEmpty(source)){
+            return "";
+        }
+
+        try {
+            JSONObject jsonObject = JSONObject.parseObject(source);
+            if (jsonObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT)) {
+
+                JSONObject jsonResultObject = jsonObject.getJSONObject(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT);
+                if(jsonResultObject != null && jsonResultObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA)) {
+
+                    JSONObject subResultObject = jsonResultObject.getJSONObject(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA);
+                    if (subResultObject != null && subResultObject.containsKey(reqCode)) {
+                        return subResultObject.getString(reqCode);
+                    }
+                    //String data = jsonResultObject.getJSONArray(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA).toJSONString();
+                    //return JSONObject.parseArray(data, ContactInfo.class);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static List<ContactInfo> parse2NearlyUserModelList(String str) {
         if (TextUtils.isEmpty(str)){
             return null;
         }
@@ -44,7 +70,7 @@ public class WalkArroundJsonResultParser {
 
                 if(jsonResultObject != null && jsonResultObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA)) {
                     String data = jsonResultObject.getJSONArray(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA).toJSONString();
-                    return JSONObject.parseArray(data, NearlyUser.class);
+                    return JSONObject.parseArray(data, ContactInfo.class);
                 }
             }
         }catch (Exception e){

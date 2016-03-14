@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:background="@drawable/list_item_bg"> <!-- android:background="#FFAABBCC" -->
+
+    <RelativeLayout android:id="@+id/photo_layout"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:paddingBottom="2dp">
+        <com.example.walkarround.base.view.PhotoView
+            android:id="@+id/conv_portrait"
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="3dp" />
+        <TextView
+            android:id="@+id/conv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="16dp"
+            android:minWidth="16dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/message_unread_count_bg"
+            android:gravity="center"
+            android:textColor="@color/fontcor3"
+            android:visibility="gone"
+            android:textSize="@dimen/size6"/>
+
+    </RelativeLayout>
+
+    <ImageView 
+        android:id="@+id/conversation_item_top_sign"
+        android:layout_width="13dip"
+        android:layout_height="13dip"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/public_icon_list_top"/>
+
+    <RelativeLayout android:id="@+id/conversation_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="68dp"
+        android:layout_toRightOf="@id/photo_layout"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/conv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/conv_date"
+            android:layout_alignParentLeft="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:gravity="center_vertical"
+            android:textColor="@color/fontcor1"
+            android:textSize="@dimen/font_size3" />
+        <TextView
+            android:id="@+id/conv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/conv_name"
+            android:layout_alignBottom="@id/conv_name"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:textColor="@color/fontcor4"
+            android:textSize="@dimen/font_size6" />
+        <TextView
+            android:id="@+id/conv_note"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/conv_name"
+            android:drawablePadding="5dp"
+            android:paddingTop="2dp"
+            android:gravity="center_vertical"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/fontcor5"
+            android:textSize="@dimen/font_size4" />
+    </RelativeLayout>
+    <View android:layout_width="match_parent"
+          android:layout_height="0.5dp"
+          android:layout_alignLeft="@id/conversation_content_layout"
+          android:layout_alignBottom="@id/conversation_content_layout"
+          android:background="@color/linecor1"/>
+</RelativeLayout>

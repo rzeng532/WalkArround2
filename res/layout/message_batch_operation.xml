@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/message_batch_panel_ll"
+    android:background="@color/bgcor1"
+    android:clickable="true"
+    android:orientation="vertical">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/linecor1" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_tool_bar_height"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:id="@+id/select_all_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <ImageView android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@+id/select_all_tv"
+                android:layout_alignRight="@+id/select_all_tv"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/circle_hollow_blue_bg"/>
+            <TextView android:id="@+id/select_all_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textColor="@color/fontcor2"
+                android:textSize="@dimen/font_size6"
+                android:text="@string/message_mark_select_all"/>
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/msg_mark_collect_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:drawableTop="@drawable/toolbar_collect_bg"
+            android:textColor="@drawable/font_color_msg_popup_menu_item"
+            android:textSize="@dimen/font_size6"
+            android:text="@string/menu_mark_collect"/>
+        <TextView
+            android:id="@+id/msg_mark_foward_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:drawableTop="@drawable/toolbar_farword_bg"
+            android:textColor="@drawable/font_color_msg_popup_menu_item"
+            android:textSize="@dimen/font_size6"
+            android:text="@string/menu_mark_foword" />
+        <TextView
+            android:id="@+id/msg_detail_delete_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:drawableTop="@drawable/toolbar_delete_bg"
+            android:textColor="@drawable/font_color_msg_popup_menu_item"
+            android:textSize="@dimen/font_size6"
+            android:text="@string/menu_mark_delete"/>
+        <TextView
+            android:id="@+id/msg_mark_copy_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:visibility="gone"
+            android:drawableTop="@drawable/toolbar_copy_bg"
+            android:textColor="@drawable/font_color_msg_popup_menu_item"
+            android:textSize="@dimen/font_size6"
+            android:text="@string/menu_mark_copy" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -20,10 +20,11 @@ import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.PortraitView;
-import com.example.walkarround.main.model.NearlyUser;
+import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.message.activity.ConversationFragment;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.myself.activity.DetailInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
@@ -70,7 +71,10 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private GeoData mMyGeo = null;
 
-    private onResultListener mQueryListener = new onResultListener() {
+    private final int FRAGMENT_PAGE_ID_MAIN = 0;
+    private final int FRAGMENT_PAGE_ID_CONVERSATION = 1;
+
+    private onResultListener mQueryNearUserListener = new onResultListener() {
         @Override
         public void onPreTask(String requestCode) {
 
@@ -80,7 +84,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
             if (object != null &&
                     WalkArroundJsonResultParser.parseReturnCode((String) object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
-                List<NearlyUser> nearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String) object);
+                List<ContactInfo> nearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String) object);
                 if (!isFinishing() && nearlyUserList != null && nearlyUserList.size() > 0) {
                     NearlyUsersFragment.getInstance().updateNearlyUserList(nearlyUserList);
                 }
@@ -104,7 +108,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
             //Query nearly users
             ThreadPoolManager.getPoolManager().addAsyncTask(new QueryNearlyUsers(getApplicationContext(),
-                    mQueryListener,
+                    mQueryNearUserListener,
                     HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS,
                     HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS,
                     QueryNearlyUsers.getParams((String) data),
@@ -117,7 +121,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             amLogger.d("update dynamic failed.");
         }
     };
-
 
     AsyncTaskListener mLocListener = new AsyncTaskListener() {
         @Override
@@ -178,23 +181,23 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         if (savedInstanceState == null) {
             //Start main activity
-            selectItem(0);
+            selectItem(FRAGMENT_PAGE_ID_MAIN);
         }
 
         LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mLocListener);
 
         //IM client init operation.
-        WalkArroundMsgManager.getInstance().open(WalkArroundMsgManager.getInstance().getClientId(),
+        WalkArroundMsgManager.getInstance(getApplicationContext()).open(WalkArroundMsgManager.getInstance(getApplicationContext()).getClientId(),
                 new AVIMClientCallback() {
                     @Override
                     public void done(AVIMClient avimClient, AVIMException e) {
                         if (e == null) {
                             //Test code
                             String memberId = "567e95ec60b2e1871e04a8ae";
-                            if(WalkArroundMsgManager.getInstance().getClientId().equalsIgnoreCase(memberId)) {
+                            if(WalkArroundMsgManager.getInstance(getApplicationContext()).getClientId().equalsIgnoreCase(memberId)) {
                                 memberId = "565eb4fd60b25b0435209c10";
                             }
-                            WalkArroundMsgManager.getInstance().getConversation(memberId);
+                            WalkArroundMsgManager.getInstance(getApplicationContext()).getConversation(memberId);
                             amLogger.d("Open client success.");
                         } else {
                             amLogger.d("Open client fail.");
@@ -295,7 +298,12 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = NearlyUsersFragment.getInstance();
+        Fragment fragment = null;
+        if(position == FRAGMENT_PAGE_ID_MAIN) {
+            fragment = NearlyUsersFragment.getInstance();
+        } else if(position == FRAGMENT_PAGE_ID_CONVERSATION) {
+            fragment = ConversationFragment.getInstance();
+        }
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -349,8 +357,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                 startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
                 break;
 
-            case R.id.rl_slide_main://goto setting activity
-                //startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
+            case R.id.rl_slide_main://goto main fragment
+                selectItem(FRAGMENT_PAGE_ID_MAIN);
                 mDrawerLayout.closeDrawers();
                 break;
 
@@ -359,7 +367,13 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                 break;
 
             case R.id.rl_slide_chat:
-                WalkArroundMsgManager.getInstance().sendTextMsg();
+                String memberId = "567e95ec60b2e1871e04a8ae";
+                if(WalkArroundMsgManager.getInstance(getApplicationContext()).getClientId().equalsIgnoreCase(memberId)) {
+                    memberId = "565eb4fd60b25b0435209c10";
+                }
+                WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(memberId, "hello walkarround.");
+
+                selectItem(FRAGMENT_PAGE_ID_CONVERSATION);
                 break;
 
             default:
@@ -371,7 +385,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         mDynUpdateListener = null;
-        mQueryListener = null;
+        mQueryNearUserListener = null;
         LocationManager.getInstance(getApplicationContext()).onDestroy();
     }
 }

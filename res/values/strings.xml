@@ -13,6 +13,7 @@
     <string name="common_please_wait_for_a_moment">请稍等...</string>
     <string name="com_select">选择</string>
     <string name="common_search">搜索</string>
+    <string name="common_select">选择</string>
 
     <!-- Strings for dialog -->
     <string name="err_account_already_exist">该账户已存在</string>
@@ -114,9 +115,136 @@
     <!-- Main activity strings -->
     <string name="main_title">走走</string>
 
-    <!-- Test strings  -->
+    <!-- Message strings -->
+    <string name="msg_session_video">[视频]</string>
+    <string name="msg_session_audio">[语音]</string>
+    <string name="msg_session_picture">[图片]</string>
+    <string name="msg_session_location">[位置]</string>
+    <string name="msg_session_vcard">[文件]</string>
+    <string name="msg_session_draft">[草稿]</string>
+    <string name="msg_session_phone">[手机]</string>
+    <string name="msg_check_network_settings">当前网络不可用，请检查你的网络设置。</string>
+    <string name="msg_network_notice">您目前的网络不可用，消息将以普通短信的方式发送。</string>
+    <string name="message_mark_select_all">全选</string>
+    <string name="message_mark_clear_all">清除</string>
+    <string name="message_mark_clear_top">消顶</string>
+    <string name="menu_mark_delete">删除</string>
+    <string name="menu_mark_collect">收藏</string>
+    <string name="menu_mark_cancle_collect">取消收藏</string>
+    <string name="menu_mark_foword">转发</string>
+    <string name="menu_mark_copy">复制</string>
+    <string name="menu_mark_more">更多</string>
+    <string name="msg_msg_voice_press_speak">按住说话</string>
+    <string name="msg_msg_voice_release_cancel">松开取消</string>
+    <string name="msg_msg_voice_release_send">松开发送</string>
+    <string name="msg_msg_voice_file_error">录音失败，请重试</string>
+    <string name="msg_msg_voice_create_file_error">创建语音消息文件失败，无法发送</string>
+    <string name="msg_msg_voice_record_duration_too_short">录音时间太短</string>
+    <string name="msg_msg_voice_record_duration_too_long">录音时间太长</string>
+    <string name="msg_msg_voice_cancel_send">放弃输入</string>
+    <string name="msg_msg_voice_do_cancel_send_1">上滑放弃</string>
+    <string name="msg_msg_voice_do_cancel_send_2">松开手指，取消发送</string>
+    <string name="msg_msg_voice_time_remaining">还剩%1$d秒</string>
+    <string name="msg_msg_no_select">请至少选择一条消息</string>
+    <string name="msg_select_pics_preview">预览</string>
+    <string name="msg_select_pics_all">所有图片</string>
+    <string name="msg_select_pics_choose_directory">目录选择</string>
+    <string name="msg_select_at_least_1_pic">请至少选择一张图片发送</string>
+    <string name="msg_select_at_most_pic">您最多只能选择%1$d张照片</string>
+    <string name="msg_select_pic">请先选择图片</string>
+    <string name="msg_select_pics_preview_multi">预览(%1$d)</string>
+    <string name="msg_select_pics_send_multi">发送(%1$d&#047;%2$d)</string>
+    <string name="msg_select_pics_finish_multi">完成(%1$d&#047;%2$d)</string>
+    <string name="chatting_send">发送</string>
+    <string name="chatting_photos">照片</string>
+    <string name="chatting_camera">拍摄</string>
+    <string name="chatting_file">文件</string>
+    <string name="chatting_video">视频</string>
+    <string name="chatting_phrasebook">常用语</string>
+    <string name="chatting_location">定位</string>
+    <string name="chatting_timesend">定时发送</string>
+    <string name="chatting_fire">阅后即焚</string>
+    <string name="chatting_contacts">联系人</string>
+    <string name="chatting_picture">图片</string>
+    <string name="chatting_voice">视频聊天</string>
+    <string name="chatting_delete">删除</string>
+    <string name="chatting_resend">重新发送</string>
+    <string name="chatting_browser_image">查看图片</string>
+    <string name="chatting_preview_image">原图</string>
+    <string name="file_broken_please_send_other_file">文件损坏或大于10M，发送失败</string>
+    <string name="draft">[草稿]</string>
+    <string name="public_accounts_name">公众号</string>
+    <string name="public_accounts_year">年</string>
+    <string name="public_accounts_day">日</string>
+    <string name="public_accounts_month">月</string>
+    <string name="hour_minute_separator">:</string>
+    <string name="me">我</string>
+    <string name="msg_send_fail">信息发送失败,重新发送消息？</string>
+    <string name="msg_dialog_detail">聊天详情</string>
+    <string name="msg_dialog_detail_not_set">未设置</string>
+    <string name="msg_dialog_detail_set_top">置顶聊天</string>
+    <string name="msg_dialog_detail_notify">消息提醒</string>
+    <string name="msg_dialog_detail_view_friends">查看友圈</string>
+    <string name="msg_dialog_detail_clear_chat_records">清空消息记录</string>
+    <string name="clear_chat_log_hint">是否清空当前会话记录？</string>
+    <string name="msg_network_connection_failed">
+        如需要连接到互联网，可以参考以下方法：\n在设备的\"设置\"-\"Wi-Fi网络\"设置面板中选择一个可用的Wi-Fi热点接入。\n在设备的\"设置\"-\"通用\"-\"网络\"设置面板中启用蜂窝数据（启用后运营商可能会收取数据通信费用
+        ）。\n如果您已接入Wi-Fi网络：\n请检查您所连接的Wi-Fi热点是否已接入互联网，或该热点是否允许您的设备访问互联网。
+    </string>
+    <string name="shut_video">关闭</string>
+    <string name="load_fail_notice">加载失败，轻触屏幕重新加载</string>
+    <string name="image_load_fail">图片加载错误</string>
+    <!-- download string -->
+    <string name="pause">暂停</string>
+    <string name="resume_download">继续下载</string>
+    <string name="download_fail">下载失败</string>
+    <string name="msg_video_too_short">提示太短需要删除</string>
+    <string name="msg_video_record_success">录制完成</string>
+    <string name="msg_video_record_fail">录制失败</string>
+    <string name="msg_up_to_giveup">上滑放弃</string>
+    <string name="msg_loose_to_giveup">松开，放弃拍摄</string>
+    <string name="msg_press_to_takevideo">按住拍摄</string>
+    <string name="msg_too_short_for_lasttakevideo">距离上一次拍摄太短了</string>
+    <string name="msg_pic_deleted_notices">原文件已经不存在</string>
+    <string name="pic_full_size">原图</string>
+    <string name="msg_pic_total_count">共%1$s张</string>
+    <string name="open_camera_fail">打开相机失败</string>
+    <string name="max_input_length">最多可以输入%1$s个字</string>
+    <string name="msg_max_input_length">文字超出限制</string>
+    <string name="message_receiver_hint">收件人</string>
+    <string name="loading">加载中</string>
+    <string name="load_fail">加载失败，请稍后重试</string>
+    <string name="pull_up_load_more">上拉加载更多</string>
+    <string name="pull_down_load_more">下拉加载更多</string>
+    <string name="release_to_load">松开加载更多</string>
+    <string name="message_menu_mark_top">置顶</string>
+    <string name="message_menu_mark_read">标记已读</string>
+    <string name="message_search">搜索</string>
+    <string name="conversation_no_conversation">没有消息</string>
+    <string name="msg_page_batchoperation">批量操作</string>
+    <string name="msg_delete_conversations_confirm">确定要删除所选的%1$d个会话吗？</string>
+    <string name="msg_search_to_long_notices">文字输入超出限制</string>
+    <string name="session_operation_cancel">取消操作</string>
+    <string name="session_operation_ing">正在进行批量处理</string>
+    <string name="session_operation_ing_toast">请等待操作完成返回或取消操作</string>
+    <string name="why_no_sms_conversations">为什么短消息页面是空的？</string>
+    <string name="msg_record_chat_title">聊天记录</string>
+
+
+    <!-- Pull refresh string -->
+    <string name="pull_to_refresh_pull_label">下拉以刷新...</string>
+    <string name="pull_to_refresh_release_label">放开以刷新...</string>
+    <string name="pull_to_refresh_refreshing_label">正在刷新...</string>
+    <string name="pull_to_refresh_from_bottom_pull_label">@string/pull_to_refresh_pull_label</string>
+    <string name="pull_to_refresh_from_bottom_release_label">@string/pull_to_refresh_release_label</string>
+    <string name="pull_to_refresh_from_bottom_refreshing_label">@string/pull_to_refresh_refreshing_label</string>
+
+    <!-- Other strings  -->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="msg_time_yestoday">昨天</string>
+    <string name="about">关于</string>
+
 </resources>

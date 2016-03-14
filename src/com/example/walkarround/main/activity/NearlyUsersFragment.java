@@ -14,13 +14,15 @@ import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
 import com.example.walkarround.flingswipe.SwipeFlingAdapterView;
 import com.example.walkarround.main.adapter.NearlyUserListAdapter;
-import com.example.walkarround.main.model.NearlyUser;
+import com.example.walkarround.main.model.ContactInfo;
+import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.LikeSomeOneTask;
-import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.main.task.TaskUtil;
-import com.example.walkarround.myself.manager.ProfileManager;
+import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.radar.RadarScanView;
+import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
+import com.example.walkarround.util.http.HttpTaskBase.TaskResult;
 import com.example.walkarround.util.http.HttpUtil;
 import com.example.walkarround.util.http.ThreadPoolManager;
 
@@ -31,6 +33,9 @@ import java.util.List;
  * Created by cmcc on 16/1/11.
  */
 public class NearlyUsersFragment extends Fragment implements View.OnClickListener {
+
+    private static final Logger logger = Logger.getLogger(NearlyUsersFragment.class.getSimpleName());
+
     public static final String ARG_PLANET_NUMBER = "planet_number";
     private View mViewRoot;
 
@@ -52,7 +57,8 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private String mStrToUsrId;
 
     //Real data from server.
-    private static List<NearlyUser> mNearlyUserList = new ArrayList<>();
+    private static List<ContactInfo> mNearlyUserList = new ArrayList<>();
+    private static List<ContactInfo> mDeleletedUserList = new ArrayList<>();
 
     //Private static instance for getInstance.
     private static NearlyUsersFragment mNUFragment;
@@ -66,8 +72,30 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         }
 
         @Override
-        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+        public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            //If you like some and the reponse status is "2", it means "toUser" also like you.
+            if(TaskResult.SUCCEESS == resultCode) {
+                //Get status & Get TO user.
+                String strState = WalkArroundJsonResultParser.parseRequireCode((String)object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_STATUS);
+                if(strState.equalsIgnoreCase("2")) {
+                    String strUser = WalkArroundJsonResultParser.parseRequireCode((String)object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_TO_USER);
+                    ContactInfo userData = null;
+                    for (ContactInfo contact : mDeleletedUserList) {
+                        if(contact.getObjectId().equalsIgnoreCase(strUser)) {
+                            //TODO: maybe we should new a contact to save data.
+                            userData = contact;
+                            break;
+                        }
+                    }
+                    //Save user information to contact manager.
+                    ContactsManager.getInstance(getActivity().getApplicationContext()).addContactInfo(userData);
+                }
 
+                logger.d("like someone response: \r\n" + (String)object);
+            } else if(TaskResult.FAILED == resultCode) {
+                logger.d("like someone response failed");
+            }
         }
 
         @Override
@@ -90,7 +118,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         }
     };
 
-    public void updateNearlyUserList(List<NearlyUser> list) {
+    public void updateNearlyUserList(List<ContactInfo> list) {
 
         if (getActivity() == null || getActivity().isDestroyed()) {
             return;
@@ -98,6 +126,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
         synchronized (NearlyUsersFragment.class) {
             mNearlyUserList.clear();
+            mDeleletedUserList.clear();
             mNearlyUserList.addAll(list);
             mStrToUsrId = mNearlyUserList.get(0).getObjectId();
         }
@@ -192,7 +221,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 if(mNearlyUserList != null && mNearlyUserList.size() > 0) {
                     synchronized (NearlyUsersFragment.class) {
                         mStrToUsrId = mNearlyUserList.get(0).getObjectId();
-                        mNearlyUserList.remove(0);
+                        mDeleletedUserList.add(mNearlyUserList.remove(0));
                     }
                     mUserListAdapter.notifyDataSetChanged();
                 }
@@ -247,6 +276,10 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         });
 
         mStrFromUsrId = AVUser.getCurrentUser().getObjectId();
+
+        if(mNearlyUserList != null && mNearlyUserList.size() > 0) {
+            showNearyUser();
+        }
     }
 
     /*

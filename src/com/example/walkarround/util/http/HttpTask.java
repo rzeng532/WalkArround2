@@ -1,13 +1,13 @@
 package com.example.walkarround.util.http;
 
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-
-import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
 
 
 public class HttpTask extends HttpTaskBase {
@@ -43,8 +43,7 @@ public class HttpTask extends HttpTaskBase {
             }
             bufferedReader.close();
             conn.disconnect();
-            if (TextUtils.isEmpty(sb.toString())){
-                Log.v("HTTP response", sb.toString());
+            if (TextUtils.isEmpty(sb.toString())) {
                 doResultCallback(null, TaskResult.FAILED);
                 return;
             }

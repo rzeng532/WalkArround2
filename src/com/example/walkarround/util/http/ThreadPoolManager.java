@@ -1,28 +1,17 @@
 package com.example.walkarround.util.http;
 
+import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import com.example.walkarround.util.Logger;
+import com.example.walkarround.util.network.NetConnectionReceiver;
+
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
-import android.content.Context;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-
-import com.example.walkarround.util.Logger;
-import com.example.walkarround.util.network.NetConnectionReceiver;
-
-/**
- * 
- * @包名：com.cmri.prcs.message.threadpool
- * @类名：ThreadPoolManager
- * @描述：线程池管理类
- * @作者：shijunfeng
- * @时间：2015年6月5日下午5:32:53
- * @版本：1.0.0
- *
- */
 public class ThreadPoolManager {
 
     private static final Logger logger = Logger.getLogger(ThreadPoolManager.class.getSimpleName());
@@ -242,17 +231,6 @@ public class ThreadPoolManager {
             mPoolThread = null;
         }
     }
-
-    /**
-     * 
-     * @包名：com.cmri.prcs.message.threadpool
-     * @类名：PoolRunnable
-     * @描述：实现轮询的Runnable
-     * @作者：shijunfeng
-     * @时间：2015年6月6日上午7:58:59
-     * @版本：1.0.0
-     *
-     */
 
     private class PoolRunnable implements Runnable {
 

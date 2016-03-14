@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgcor1"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/header_title_bg"
+            android:gravity="center_vertical">
+
+        <TextView
+                android:id="@+id/title_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/btn_pre_bg_light"
+                android:drawableLeft="@drawable/main_ic_drawer"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="15dp"
+                android:text="@string/msg_record_chat_title"
+                android:textColor="#ffffff"
+                android:textSize="20sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ll_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/network_status_rl"
+        android:background="@color/bgcor1">
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/bt_cancel_search"
+            android:layout_alignParentLeft="true"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/public_icon_searchbar_search"
+            android:drawablePadding="8dp"
+            android:hint="@string/message_search"
+            android:maxEms="10"
+            android:maxLength="32"
+            android:paddingLeft="25dp"
+            android:singleLine="true"
+            android:textColor="@color/fontcor1"
+            android:textColorHint="@color/fontcor4"
+            android:textSize="@dimen/font_size3" />
+
+        <ImageView
+            android:id="@+id/bt_cancel_search"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:paddingLeft="8dp"
+            android:paddingRight="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/public_search_clear_slt"
+            android:visibility="gone" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/linecor1"/>
+    </RelativeLayout>
+
+    <RelativeLayout 
+        android:id="@+id/network_status_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/network_status_notice_tv"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="#faeb6d"
+            android:drawableRight="@drawable/public_icon_content_right"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center_vertical"
+            android:text="@string/msg_check_network_settings"
+            android:textColor="@color/fontcor2"
+            android:textSize="@dimen/font_size6" />
+
+        <View
+            android:layout_below="@id/network_status_notice_tv"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#94892f" />
+
+    </RelativeLayout>
+
+    <ViewStub android:id="@+id/batch_operate_vs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_bar_height"
+        android:layout_alignParentBottom="true"
+        android:layout="@layout/conversation_batch_operate_layout"/>
+
+    <ListView
+        android:id="@+id/converstaion_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_batch_operate"
+        android:layout_below="@id/ll_search_bar"
+        android:cacheColorHint="#00000000"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent"
+        android:scrollbarSize="4dp"
+        android:scrollbarThumbVertical="@drawable/scrollbar_thumb_vertical"
+        android:splitMotionEvents="false" />
+
+    <LinearLayout
+        android:id="@+id/search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_batch_operate"
+        android:layout_below="@id/ll_search_bar"
+        android:background="@color/bgcor1"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:visibility="gone" >
+
+        <ListView
+            android:id="@+id/search_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:listSelector="@android:color/transparent"
+            android:divider="@null"
+            android:scrollbarSize="4dp"
+            android:scrollbarThumbVertical="@drawable/scrollbar_thumb_vertical"
+            android:splitMotionEvents="false" />
+
+        <ImageView
+            android:id="@+id/notify_list_empty_view_iv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="60dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/list_empty_image"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_no_conversation_hint"
+            android:layout_width="fill_parent"
+            android:layout_height="28dp"
+            android:layout_marginLeft="19dp"
+            android:gravity="center_vertical"
+            android:text="@string/conversation_no_conversation"
+            android:textColor="@color/cor3"
+            android:textSize="@dimen/size4"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <View android:id="@+id/page_mask_v"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:clickable="true"/>
+</RelativeLayout>

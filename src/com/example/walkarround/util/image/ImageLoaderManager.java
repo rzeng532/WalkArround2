@@ -3,7 +3,7 @@
  */
 package com.example.walkarround.util.image;
 
-import android.graphics.Bitmap;
+import android.graphics.*;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import com.example.walkarround.R;
@@ -227,5 +227,29 @@ public class ImageLoaderManager {
             displayOptions = ImageOptionsManager.getInstance().getEmptyOptions();
         }
         return displayOptions;
+    }
+
+    /**
+     * 根据原图和变长绘制圆形图片
+     *
+     * @param source
+     * @return
+     */
+    public static Bitmap createCircleImage(Bitmap source) {
+        if (source == null) {
+            return null;
+        }
+        final Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        int min = source.getWidth();
+        Bitmap target = Bitmap.createBitmap(min, min, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(target);
+        // 绘制圆形
+        canvas.drawCircle(min / 2, min / 2, min / 2, paint);
+        //使用SRC_IN
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        //绘制图片
+        canvas.drawBitmap(source, 0, 0, paint);
+        return target;
     }
 }

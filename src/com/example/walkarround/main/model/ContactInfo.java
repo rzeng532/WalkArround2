@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Richard on 16/1/10.
  */
-public class NearlyUser implements Serializable {
+public class ContactInfo implements Serializable {
 
 
     /**
