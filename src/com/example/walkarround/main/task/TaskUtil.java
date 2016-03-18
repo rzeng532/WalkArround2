@@ -16,6 +16,13 @@ import java.util.Map;
  * @author Administrator
  */
 public class TaskUtil {
+
+    public static final String RESPONSE_USR_STATUS_SINGLE = "1"; //请求
+    public static final String RESPONSE_USR_STATUS_ACCEPT = "2"; //接收
+    public static final String RESPONSE_USR_STATUS_TOGETHER = "3"; //走走
+    public static final String RESPONSE_USR_STATUS_IMPRESSION = "4"; //评价
+    public static final String RESPONSE_USR_STATUS_FINISH = "5"; //结束
+
     /*
      * Return JSON parameters to String style.
      */

@@ -24,6 +24,7 @@ import com.example.walkarround.message.util.MessageComparator;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageConstant.MessageState;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
+import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
 
 import java.util.*;
@@ -43,6 +44,7 @@ public class WalkArroundMsgManager {
     public static final int PAGE_COUNT = 15;
     private static WalkArroundMsgManager mInstance;
     private Context mContext = null;
+    private HashMap<String, AVIMConversation> mConversationMap = new HashMap<>();
 
     private WalkArroundMsgManager(Context context) {
         this.mContext = context;
@@ -82,6 +84,32 @@ public class WalkArroundMsgManager {
         if (mMsgManager != null) {
             ((LittleCMsgManager) mMsgManager).setConversation(mInstance.mImConversation);
         }
+    }
+
+    public void resetConversation() {
+        if (mMsgManager != null) {
+            ((LittleCMsgManager) mMsgManager).setConversation(null);
+        }
+    }
+
+    public void sayHello(String receiver, String content) {
+
+        if(TextUtils.isEmpty(receiver) || TextUtils.isEmpty(content)) {
+            return;
+        }
+
+        List<String> recipient = new ArrayList<String>();
+        recipient.add(receiver);
+
+        long threadId = mInstance.mMsgManager.getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, recipient);
+        if (threadId > 0) {
+            //If there is already a conversation, we just skip it.
+            return;
+        }
+
+        //We need a listener here to send Hello while we get conversation.
+        //WalkArroundMsgManager.getInstance(mContext).getConversation(receiver, null);
+        sendTextMsg(receiver, content);
     }
 
     /*
@@ -125,36 +153,26 @@ public class WalkArroundMsgManager {
         }
     }
 
-    /*
-    public void sendTextMsg() {
-        if(mInstance == null || mImConversation == null) {
+    public void getConversation(final String memberId, AsyncTaskListener listener) {
+
+        //Find cache conversation at first.
+        if(mConversationMap.size() > 0 && mConversationMap.containsKey(memberId)) {
+            mInstance.mImConversation = mInstance.mConversationMap.get(memberId);
+            setConversation();
+            if(listener != null) {
+                listener.onSuccess(null);
+            }
             return;
         }
 
-        if(mInstance.mAvimClient == null) {
-            mInstance.mAvimClient = AVIMClient.getInstance(getClientId());
-        }
-
-        //Try to send a test message
-        AVIMTextMessage msg = new AVIMTextMessage();
-        msg.setText("Test");
-        // 发送消息
-        mImConversation.sendMessage(msg,  new AVIMConversationCallback() {
-            @Override
-            public void done(AVIMException e) {
-                if (e == null) {
-                    Log.d("Test", "发送成功！");
-                }
-            }
-        });
-    }
-    */
-
-    public void getConversation(final String memberId) {
+        //Find it from server.
         final AVIMClient client = getMsgClient();
         AVIMConversationQuery conversationQuery = client.getQuery();
         conversationQuery.withMembers(Arrays.asList(memberId), true);
         //conversationQuery.whereEqualTo("customConversationType",1);
+
+        //Clear conversation before there is result from server.
+        resetConversation();
         conversationQuery.findInBackground(new AVIMConversationQueryCallback() {
             @Override
             public void done(List<AVIMConversation> list, AVIMException e) {
@@ -162,17 +180,31 @@ public class WalkArroundMsgManager {
                     if (null != list && list.size() > 0) {
                         //Set current conversation. We just need the first one if list size > 1.
                         mInstance.mImConversation = list.get(0);
+                        mInstance.mConversationMap.put(memberId, mInstance.mImConversation);
                         setConversation();
+                        listener.onSuccess(null);
                     } else {
                         mInstance.mAvimClient.createConversation(Arrays.asList(memberId), null, null, false, new AVIMConversationCreatedCallback() {
                             @Override
                             public void done(AVIMConversation avimConversation, AVIMException e) {
                                 if (e == null) {
                                     mInstance.mImConversation = avimConversation;
+                                    mInstance.mConversationMap.put(memberId, mInstance.mImConversation);
                                     setConversation();
+                                    if(listener != null) {
+                                        listener.onSuccess(null);
+                                    }
+                                } else {
+                                    if(listener != null) {
+                                        listener.onFailed(e);
+                                    }
                                 }
                             }
                         });
+                    }
+                } else {
+                    if(listener != null) {
+                        listener.onFailed(e);
                     }
                 }
             }

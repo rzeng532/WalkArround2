@@ -30,6 +30,7 @@ public class ContactInfoDatabase extends SQLiteOpenHelper {
         public static final String OBJECTID = "objid";
         public static final String CREATEDAT = "createtime";
         public static final String UPDATEAT = "updatetime";
+        public static final String PORTRAIT = "portrait";
         /*冗余字段便于以后扩充*/
         public static final String _DATA1 = "_data1";
         public static final String _DATA2 = "_data2";
@@ -64,6 +65,7 @@ public class ContactInfoDatabase extends SQLiteOpenHelper {
                 + Contact.OBJECTID + " TEXT, "
                 + Contact.CREATEDAT + " TEXT, "
                 + Contact.UPDATEAT + " TEXT, "
+                + Contact.PORTRAIT + " TEXT, "
                 + Contact._DATA1 + " TEXT, "
                 + Contact._DATA2 + " TEXT, "
                 + Contact._DATA3 + " TEXT, "
@@ -73,7 +75,5 @@ public class ContactInfoDatabase extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
-    }
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) { }
 }

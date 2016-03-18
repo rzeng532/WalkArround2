@@ -445,6 +445,7 @@ public class LittleCMsgManager extends MessageAbstractManger {
                              boolean isBurnAfter, String extraInfo) {
 
         if(mCurConversation == null) {
+            //Query conversation
             logger.e("sendMessage conversation is NULL!");
             return;
         }

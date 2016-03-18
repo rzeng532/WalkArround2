@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.LikeSomeOneTask;
 import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.manager.ContactsManager;
+import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.radar.RadarScanView;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
@@ -78,20 +80,13 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             if(TaskResult.SUCCEESS == resultCode) {
                 //Get status & Get TO user.
                 String strState = WalkArroundJsonResultParser.parseRequireCode((String)object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_STATUS);
-                if(strState.equalsIgnoreCase("2")) {
+                if(strState.equalsIgnoreCase(TaskUtil.RESPONSE_USR_STATUS_ACCEPT)) {
                     String strUser = WalkArroundJsonResultParser.parseRequireCode((String)object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_TO_USER);
-                    ContactInfo userData = null;
-                    for (ContactInfo contact : mDeleletedUserList) {
-                        if(contact.getObjectId().equalsIgnoreCase(strUser)) {
-                            //TODO: maybe we should new a contact to save data.
-                            userData = contact;
-                            break;
-                        }
-                    }
-                    //Save user information to contact manager.
-                    ContactsManager.getInstance(getActivity().getApplicationContext()).addContactInfo(userData);
+                    addCacheContact(strUser);
+                    sayHello(strUser);
                 }
 
+                //TODO: This log should be deleted later.
                 logger.d("like someone response: \r\n" + (String)object);
             } else if(TaskResult.FAILED == resultCode) {
                 logger.d("like someone response failed");
@@ -118,7 +113,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         }
     };
 
-    public void updateNearlyUserList(List<ContactInfo> list) {
+    protected void updateNearlyUserList(List<ContactInfo> list) {
 
         if (getActivity() == null || getActivity().isDestroyed()) {
             return;
@@ -132,6 +127,11 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         }
 
         mFragmentHandler.sendEmptyMessageDelayed(UPDATE_NEARLY_USERS, RADAR_STOP_DELAY);
+    }
+
+    protected void clearNearlyUserList() {
+        mNearlyUserList.clear();
+        mDeleletedUserList.clear();
     }
 
     public NearlyUsersFragment() {
@@ -311,4 +311,25 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         mUserFrame.getTopCardListener().selectLeft();
     }
 
+    private void addCacheContact(String userId) {
+        for (ContactInfo contact : mDeleletedUserList) {
+            if(contact.getObjectId().equalsIgnoreCase(userId)) {
+                //TODO: maybe we should new a contact to save data.
+                ContactsManager.getInstance(getActivity().getApplicationContext()).addContactInfo(contact);
+                break;
+            }
+        }
+    }
+    /*
+     * Say hello to people who you like and he/she also like you .
+     */
+    private void sayHello(String userId) {
+        if(TextUtils.isEmpty(userId)) {
+            logger.d("The user id is empty. Failed to say Hello!");
+            return;
+        }
+
+        //TODO: Check there is no such conversation.
+        WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).sayHello(userId, getString(R.string.msg_say_hello));
+    }
 }

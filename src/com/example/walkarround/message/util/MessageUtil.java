@@ -246,7 +246,7 @@ public class MessageUtil {
 
         //TODO: extend chat type while there is group chat.
         msgInfo.setChatType(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
-        msgInfo.setTime(cmMessage.getReceiptTimestamp());
+        msgInfo.setTime(cmMessage.getTimestamp());
         msgInfo.setSendReceive(MessageConstant.MessageSendReceive.MSG_RECEIVE);
         msgInfo.setMsgState(MessageConstant.MessageState.MSG_STATE_UNRECEIVE);
         msgInfo.setIsRead(false);

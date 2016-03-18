@@ -146,9 +146,9 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
 
     public static ConversationFragment getInstance() {
 
-        if(mConversationFragment == null) {
+        if (mConversationFragment == null) {
             synchronized (ConversationFragment.class) {
-                if(mConversationFragment == null) {
+                if (mConversationFragment == null) {
                     mConversationFragment = new ConversationFragment();
                     Bundle args = new Bundle();
                     mConversationFragment.setArguments(args);
@@ -167,7 +167,7 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-           if (MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED.equals(action)) {
+            if (MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED.equals(action)) {
                 // 新到消息
                 onReceiverRscMsg(context, intent);
             } else if (BuildMessageActivity.ACTION_NOTIFY_CONVERSATION_REFRESH.equals(action)) {
@@ -175,10 +175,10 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
                 long threadId = intent.getLongExtra(BuildMessageActivity.CONVERSATION_REFRESH_ID,
                         BuildMessageActivity.CONVERSATION_DEFAULT_THREAD_ID);
                 sessionInfoChanged(threadId, true);
-           } else if (MsgBroadcastConstants.ACTION_MESSAGE_STATUS_CHANGED.equals(action)) {
-               // 消息状态变化
-               onMsgStatusChanged(intent);
-           }
+            } else if (MsgBroadcastConstants.ACTION_MESSAGE_STATUS_CHANGED.equals(action)) {
+                // 消息状态变化
+                onMsgStatusChanged(intent);
+            }
         }
 
     };
@@ -1071,28 +1071,15 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
                 || mPageState == PageState.NOTIFY_BATCH_PAGE) {
             refreshBatchPanel();
         } else {
-           if (listDO.getItemType() == ConversationType.NOTICES_MSG) {
-                if (mPageState == PageState.NORMAL && listDO.getTop() != MessageConstant.TopState.TOP) {
-                    // 通知消息入口
-                    if (!mNotifyMsgAdapter.hasInitData()) {
-                        queryNotifyList();
-                    }
-                    onPageStateChanged(PageState.NOTIFY_PAGE, mPageState);
-                } else {
-                    Intent intent = transToBuildMsgIntent(listDO);
-                    if (intent == null) {
-                        return;
-                    }
-                    mContext.startActivity(intent);
-                }
-            } else {
-                // 普通会话消息
-                Intent intent = transToBuildMsgIntent(listDO);
-                if (intent == null) {
-                    return;
-                }
-               mContext.startActivity(intent);
+            //Get conversation at first.
+            WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).getConversation(listDO.getContact(), null);
+
+            // 普通会话消息
+            Intent intent = transToBuildMsgIntent(listDO);
+            if (intent == null) {
+                return;
             }
+            mContext.startActivity(intent);
         }
     }
 
@@ -1105,12 +1092,12 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
     private Intent transToBuildMsgIntent(MessageSessionBaseModel listDO) {
         Intent intent = new Intent(mContext, BuildMessageActivity.class);
 
-            intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_RECEIVER, listDO.getContact());
-            intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, listDO.getThreadId());
+        intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_RECEIVER, listDO.getContact());
+        intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, listDO.getThreadId());
 
-            intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, listDO.getChatType());
-            intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, listDO.name);
-            intent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
+        intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, listDO.getChatType());
+        intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, listDO.name);
+        intent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
 
         return intent;
     }
@@ -1326,7 +1313,6 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
         return popupWindow;
     }
 */
-
     @Override
     public void popupListItemOnClick(int type, int position) {
 /*        mPopupWindow.dismiss();

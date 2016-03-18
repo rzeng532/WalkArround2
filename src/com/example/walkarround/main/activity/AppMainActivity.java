@@ -52,7 +52,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-
+    private int mCurFragmentPage = -1;
     private String[] mPlanetTitles;
 
     /*
@@ -192,18 +192,20 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void done(AVIMClient avimClient, AVIMException e) {
                         if (e == null) {
-                            //Test code
-                            String memberId = "567e95ec60b2e1871e04a8ae";
-                            if(WalkArroundMsgManager.getInstance(getApplicationContext()).getClientId().equalsIgnoreCase(memberId)) {
-                                memberId = "565eb4fd60b25b0435209c10";
-                            }
-                            WalkArroundMsgManager.getInstance(getApplicationContext()).getConversation(memberId);
                             amLogger.d("Open client success.");
                         } else {
                             amLogger.d("Open client fail.");
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        //Clear nearly user list while user select to exit main page. So user can search user while he/she enter next time.
+        NearlyUsersFragment.getInstance().clearNearlyUserList();
     }
 
     @Override
@@ -299,9 +301,11 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     private void selectItem(int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
-        if(position == FRAGMENT_PAGE_ID_MAIN) {
+        if (position == FRAGMENT_PAGE_ID_MAIN) {
+            mCurFragmentPage = FRAGMENT_PAGE_ID_MAIN;
             fragment = NearlyUsersFragment.getInstance();
-        } else if(position == FRAGMENT_PAGE_ID_CONVERSATION) {
+        } else if (position == FRAGMENT_PAGE_ID_CONVERSATION) {
+            mCurFragmentPage = FRAGMENT_PAGE_ID_CONVERSATION;
             fragment = ConversationFragment.getInstance();
         }
 
@@ -324,7 +328,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         ft.remove(fragment);
         ft.commit();
     }
-
 
     @Override
     public void setTitle(CharSequence title) {
@@ -367,12 +370,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                 break;
 
             case R.id.rl_slide_chat:
-                String memberId = "567e95ec60b2e1871e04a8ae";
-                if(WalkArroundMsgManager.getInstance(getApplicationContext()).getClientId().equalsIgnoreCase(memberId)) {
-                    memberId = "565eb4fd60b25b0435209c10";
-                }
-                WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(memberId, "hello walkarround.");
-
                 selectItem(FRAGMENT_PAGE_ID_CONVERSATION);
                 break;
 

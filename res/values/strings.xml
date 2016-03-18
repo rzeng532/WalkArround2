@@ -229,7 +229,7 @@
     <string name="session_operation_ing_toast">请等待操作完成返回或取消操作</string>
     <string name="why_no_sms_conversations">为什么短消息页面是空的？</string>
     <string name="msg_record_chat_title">聊天记录</string>
-
+    <string name="msg_say_hello">Hi</string>
 
     <!-- Pull refresh string -->
     <string name="pull_to_refresh_pull_label">下拉以刷新...</string>

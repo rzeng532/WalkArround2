@@ -1553,12 +1553,12 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                         R.drawable.contact_default_profile);
                 mRecipientInfo.setDisplayName(contact.getUsername());
                 receiverNameStr = contact.getUsername();
+                receiverNumStr = contact.getMobilePhoneNumber();
             }
 
             makeCall.setVisibility(View.VISIBLE);
             moreView.setVisibility(View.VISIBLE);
             oneToMutiView.setVisibility(View.GONE);
-            receiverNumStr = contact.getMobilePhoneNumber();
         }
 
         TextView receiverName = (TextView) detailHeaderView.findViewById(R.id.message_title_name_tv);

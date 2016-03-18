@@ -206,11 +206,13 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
      * @param listDO
      */
     private void setItemContactInfo(ViewHolder holder, MessageSessionBaseModel listDO) {
+
+        ContactInfo info = null;
+
         if (listDO.name == null) {
             // 首次，则获取联系人信息
-            //else {
+            info = ContactsManager.getInstance(mContext).getContactByUsrObjId(listDO.getContact());
             //TODO: get contact infor by user object id.
-                ContactInfo info = null;
                 //ContactInfo info = NewContactManager.getInstance(mContext)
                 //        .getDetailByPhoneNumber(listDO.getContact());
                 if (info != null) {
@@ -222,16 +224,22 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                     listDO.name = "";
                     listDO.defaultResId = R.drawable.contact_default_profile;
                 }
-            //}
         }
 
-        String name = null;
+        String name;
         if (!TextUtils.isEmpty(listDO.name)) {
             name = listDO.name;
+        } else if(info != null && !TextUtils.isEmpty(info.getMobilePhoneNumber())) {
+            name = info.getMobilePhoneNumber();
         } else {
             name = listDO.getContact();
         }
         holder.tvName.setText(name);
+
+        //Set photo
+        holder.ivPortrait.setCheckBoxVisibility(View.GONE);
+        holder.ivPortrait.setChecked(false);
+        holder.ivPortrait.setBaseData(name, listDO.profile, listDO.nameLastC, listDO.defaultResId);
     }
 
     /**
