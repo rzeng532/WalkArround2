@@ -75,7 +75,7 @@
         <activity android:name=".message.activity.PlayVideoActivity"/>
         <activity android:name=".message.activity.TakeVideoActivity"/>
 
-        <!--  -->
+        <!-- Clean cloud SDK elements -->
         <service android:name="com.avos.avoscloud.PushService"/>
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
             <intent-filter>
@@ -84,5 +84,17 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <!-- message receiver for APP
+                <action android:name="com.suntek.mway.rcs.ACTION_UI_INVITE_TO_JOIN_GROUP"/>
+                <action android:name="com.suntek.mway.rcs.ACTION_UI_SHOW_GROUP_MESSAGE_NOTIFY"/>
+                <action android:name="com.suntek.mway.rcs.ACTION_UI_GROUP_INVITATION"/>
+         -->
+        <receiver android:name="com.example.walkarround.message.receiver.MessageReceiver">
+            <intent-filter>
+                <action android:name="com.example.walkarround.ACTION_UI_SHOW_MESSAGE_NOTIFY"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

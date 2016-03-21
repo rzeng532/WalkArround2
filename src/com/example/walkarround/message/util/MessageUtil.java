@@ -17,6 +17,7 @@ import com.example.walkarround.util.Logger;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -233,16 +234,14 @@ public class MessageUtil {
         return  AppSharedPreference.getBoolean(curUsrId + MessageConstant.MSG_NEW_MSG_NOTIFICATION_REC_SWITCH, true);
     }
 
+    //This is for received message
     public static ChatMsgBaseInfo convertMsg(AVIMTypedMessage cmMessage) {
         ChatMsgBaseInfo msgInfo = new ChatMessageInfo();
-        //msgInfo.setMsgId(cmMessage.getMessageId());
-        msgInfo.setContact(cmMessage.getFrom());
 
-//        if (MessageType.MSG_TYPE_GIF == cmMessage.getContentType()) {
-//            msgInfo.setMsgType(MessageType.MSG_TYPE_IMAGE);
-//        } else {
-//            msgInfo.setMsgType(cmMessage.getContentType());
-//        }
+        List<String> receiver = new ArrayList<>();
+        receiver.add(ProfileManager.getInstance().getCurUsrObjId());
+        msgInfo.setReceiver(receiver);
+        msgInfo.setContact(cmMessage.getFrom());
 
         //TODO: extend chat type while there is group chat.
         msgInfo.setChatType(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
@@ -250,10 +249,7 @@ public class MessageUtil {
         msgInfo.setSendReceive(MessageConstant.MessageSendReceive.MSG_RECEIVE);
         msgInfo.setMsgState(MessageConstant.MessageState.MSG_STATE_UNRECEIVE);
         msgInfo.setIsRead(false);
-        //msgInfo.setPacketId(cmMessage.getConversationId());
-        //msgInfo.setExtraInfo(cmMessage.getExtra());
 
-        //MessageBody messageBody = cmMessage.getMessageBody();
         if (cmMessage instanceof AVIMAudioMessage) {
             msgInfo.setMsgType(MessageType.MSG_TYPE_AUDIO);
             msgInfo.setDuration((int)(((AVIMAudioMessage) cmMessage).getDuration()));

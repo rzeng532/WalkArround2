@@ -80,8 +80,16 @@ public class WalkArroundMsgManager {
     /*
      * User should set a conversation object before start it.
      */
+    //TODO: set / get conversation should add on abstract class.
     public void setConversation() {
         if (mMsgManager != null) {
+            ((LittleCMsgManager) mMsgManager).setConversation(mInstance.mImConversation);
+        }
+    }
+
+    public void clearCurConversation() {
+        if (mMsgManager != null) {
+            mInstance.mImConversation = null;
             ((LittleCMsgManager) mMsgManager).setConversation(mInstance.mImConversation);
         }
     }
@@ -105,6 +113,23 @@ public class WalkArroundMsgManager {
         if (threadId > 0) {
             //If there is already a conversation, we just skip it.
             return;
+        }
+
+        //Check current conversation is correct or not
+        if(mInstance.mImConversation != null) {
+            List<String> members = mInstance.mImConversation.getMembers();
+            int i = 0;
+            for (String mem : members) {
+                if(mem.equalsIgnoreCase(receiver)) {
+                    i++;
+                    break;
+                }
+            }
+
+            //If current conversation do NOT contain user object ID,we set current conversation as NULL to trigger getConversation from cache / net.
+            if(i == 0) {
+                clearCurConversation();
+            }
         }
 
         //We need a listener here to send Hello while we get conversation.

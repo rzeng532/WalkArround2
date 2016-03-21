@@ -329,7 +329,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             return;
         }
 
-        //TODO: Check there is no such conversation.
+        //TODO: Check if there is conversation.
         WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).sayHello(userId, getString(R.string.msg_say_hello));
     }
 }

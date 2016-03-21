@@ -12,6 +12,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
@@ -29,6 +30,7 @@ import com.example.walkarround.message.util.MessageConstant.MessageType;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.AppConstant;
+import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.image.CompressPicUtil;
 import com.example.walkarround.util.image.ImageUtil;
@@ -66,6 +68,8 @@ public class LittleCMsgManager extends MessageAbstractManger {
     public void setConversation(AVIMConversation conversation) {
         mCurConversation = conversation;
     }
+
+    public AVIMConversation getConversation() { return mCurConversation; }
 
     /**
      * 发送纯文本短信
@@ -444,31 +448,53 @@ public class LittleCMsgManager extends MessageAbstractManger {
     private void sendMessage(MessageRecipientInfo recipientInfo, long msgId, AVIMTypedMessage content,
                              boolean isBurnAfter, String extraInfo) {
 
+        //If conversation is NULL or conversation is incorrect, we should find conversation before sending message.
         if(mCurConversation == null) {
             //Query conversation
+            WalkArroundMsgManager.getInstance(mContext).getConversation(recipientInfo.getRecipientList().get(0), new AsyncTaskListener() {
+
+                @Override
+                public void onSuccess(Object data) {
+                    sendMsgViaAVSSdk(content, msgId);
+                }
+
+                @Override
+                public void onFailed(AVException e) {
+                    onSendError(msgId);
+                }
+            });
             logger.e("sendMessage conversation is NULL!");
             return;
         }
 
         switch (recipientInfo.getConversationType()) {
             case ChatType.CHAT_TYPE_ONE2ONE:
-                // 一对一. send message here.
-                mCurConversation.sendMessage(content,  new AVIMConversationCallback() {
-                    @Override
-                    public void done(AVIMException e) {
-                        if (e == null) {
-                            onSendSuccess(msgId);
-                            logger.d("发送成功！");
-                        } else {
-                            onSendError(msgId);
-                            logger.d("发送失败！");
-                        }
-                    }
-                });
+                sendMsgViaAVSSdk(content, msgId);
                 break;
             default:
                 break;
         }
+    }
+
+    private void sendMsgViaAVSSdk(AVIMTypedMessage content, long msgId) {
+
+        if(mCurConversation == null) {
+            return;
+        }
+
+        // 一对一. send message here.
+        mCurConversation.sendMessage(content,  new AVIMConversationCallback() {
+            @Override
+            public void done(AVIMException e) {
+                if (e == null) {
+                    onSendSuccess(msgId);
+                    logger.d("发送成功！");
+                } else {
+                    onSendError(msgId);
+                    logger.d("发送失败！");
+                }
+            }
+        });
     }
 
     /**

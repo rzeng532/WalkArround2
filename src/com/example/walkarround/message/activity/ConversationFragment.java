@@ -443,6 +443,8 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
 
     public View onCreateView(Context context) {
         if (mContentView != null) {
+            //如果之前已经有UI资源,直接初始化数据.防止中间有数据变化.
+            initData();
             return mContentView;
         }
         mContentView = LayoutInflater.from(context).inflate(R.layout.fragment_conversation, null);
@@ -454,18 +456,22 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
         registerListener();
 
         showCircleDialog();
+
+        //初始化数据
+        initData();
+
+        return mContentView;
+    }
+
+    private void initData() {
         // 获取所有联系人
         getAllContacts();
-
-        // 启动线程池
-        ThreadPoolManager.getPoolManager().start();
 
         // 加载数据
         ThreadPoolManager.getPoolManager().addAsyncTask(
                 new AsyncTaskLoadSession(mContext,
                         MessageConstant.MSG_OPERATION_LOAD, 0, Integer.MAX_VALUE, mAsysResultListener)
         );
-        return mContentView;
     }
 
     @Override

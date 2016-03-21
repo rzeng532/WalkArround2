@@ -17,7 +17,6 @@ import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.model.MessageRecipientInfo;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
-import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.Logger;
 
 import java.util.ArrayList;
@@ -76,8 +75,6 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
                             try {
                                 MessageRecipientInfo recipientInfo = WalkArroundMsgManager.getInstance(mContext).abstractReceiptInfo(receipient, MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
                                 ChatMsgBaseInfo msgInfo = MessageUtil.convertMsg(message);
-                                msgInfo.setReceiver(recipientInfo.getRecipientList());
-                                msgInfo.setContact(ProfileManager.getInstance().getCurUsrObjId());
                                 msgInfo.setThreadId(recipientInfo.getThreadId());
 
                                 //we should do those operations on background.

@@ -8,15 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 import com.example.walkarround.R;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.activity.BuildMessageActivity;
+import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
-import com.example.walkarround.message.util.MessageConstant;
+import com.example.walkarround.message.util.EmojiParser;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.util.CommonUtils;
@@ -25,10 +25,11 @@ import com.example.walkarround.util.TimeFormattedUtil;
 import com.example.walkarround.util.image.ImageLoaderManager;
 
 /**
- * 短信监听
+ * Listener for message.
  */
 public class MessageReceiver extends BroadcastReceiver {
 
+    private static final String DEFAULT_NOTIFICATION_ID = "12345";
     private static final Logger sLogger = Logger.getLogger(MessageReceiver.class.getSimpleName());
 
     @Override
@@ -36,14 +37,6 @@ public class MessageReceiver extends BroadcastReceiver {
         String action = intent.getAction();
        if (MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED.equals(action)) {
             // 新到一对一消息
-            int msgType = intent.getIntExtra(MsgBroadcastConstants.BC_VAR_MSG_TYPE, 0);
-            String extraInfo = intent.getStringExtra(MsgBroadcastConstants.BC_VAR_MSG_EXTRA);
-            if (!TextUtils.isEmpty(extraInfo)
-                    && (msgType == MessageConstant.MessageType.MSG_TYPE_IMAGE
-                    || msgType == MessageConstant.MessageType.MSG_TYPE_MAP)) {
-                // 通话主题和位置消息
-                return;
-            }
             long messageId = intent.getLongExtra(MsgBroadcastConstants.BC_VAR_MSG_ID, 0);
             String contact = intent.getStringExtra(MsgBroadcastConstants.BC_VAR_CONTACT); //User object id
 
@@ -84,21 +77,22 @@ public class MessageReceiver extends BroadcastReceiver {
         intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, message.getChatType());
 
         //TODO: contact should write to DB & we should crate a content provider for those contacts.
-        ContactInfo contact = null;//NewContactManager.getInstance(context).getDetailByPhoneNumber(message.getContact());
+        ContactInfo contact = ContactsManager.getInstance(context).getContactByUsrObjId(message.getContact());//NewContactManager.getInstance(context).getDetailByPhoneNumber(message.getContact());
         if (contact != null) {
             intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, contact.getUsername());
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(context, (int) message.getMsgThreadId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        String displayName = contact == null ? message.getContact() : contact.getUsername();
+        //If the contact is null, set the user name as empty.
+        String displayName = (contact == null ? "" : contact.getUsername());
         message.setData(MessageUtil.getDisplayStr(context, displayName, message));
         Notification notification = new Notification();
         notification.flags = Notification.FLAG_AUTO_CANCEL;
         notification.icon = R.drawable.msg_notify_icon;
 
         //TODO: Add Emoji parser later.
-        //notification.tickerText = EmojiParser.getInstance(context).getSmileyText(message.getData());
+        notification.tickerText = EmojiParser.getInstance(context).getSmileyText(message.getData());
         notification.tickerText = message.getData();
 
         if (Build.VERSION.SDK_INT == 19) {
@@ -110,7 +104,7 @@ public class MessageReceiver extends BroadcastReceiver {
 //        notification.defaults=Notification.DEFAULT_SOUND;
         initNotifyView(context, notification.contentView, message, contact);
         try {
-            String number = message.getContact();
+            String number = (contact == null ? DEFAULT_NOTIFICATION_ID : contact.getMobilePhoneNumber());
             int startPos = number.length() > 5 ? number.length() - 5 : 0;
             int id = Integer.parseInt(number.substring(startPos));
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

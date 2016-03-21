@@ -257,6 +257,7 @@ public abstract class MessageAbstractManger {
     public abstract boolean isTopMsgByNum(int chatType, List<String> numList)  throws Exception;
 
     public abstract Uri saveMessage(ChatMsgBaseInfo message);
+
     //public List<GroupInvitationBaseInfo> getGroupInvitationList(long beginId, int count) throws Exception {
     //    return null;
     //}

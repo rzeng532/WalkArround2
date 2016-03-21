@@ -7,31 +7,29 @@ package com.example.walkarround.message.util;
  * 消息相关的广播
  * Date: 2015-06-03
  *
- * @author mss
+ * @author
  */
 public class MsgBroadcastConstants {
 
     /*消息接收/发送*/
-    public static final String ACTION_MESSAGE_STATUS_CHANGED = "com.suntek.mway.rcs.ACTION_UI_MESSAGE_STATUS_CHANGE_NOTIFY";
-    public static final String ACTION_MESSAGE_NEW_RECEIVED = "com.suntek.mway.rcs.ACTION_UI_SHOW_MESSAGE_NOTIFY";
-    public static final String ACTION_GROUP_MESSAGE_NEW_RECEIVED = "com.suntek.mway.rcs.ACTION_UI_SHOW_GROUP_MESSAGE_NOTIFY";
-    public static final String ACTION_CONTACT_COMPOSING_INFO = "com.suntek.mway.rcs.ACTION_UI_SHOW_COMPOSING_INFO";
-    public static final String ACTION_PA_MESSAGE_NEW_RECEIVED = "ACTION_UI_SHOW_PA_MESSAGE_NOTIFY";
-    public static final String ACTION_PA_MESSAGE_STATUS_CHANGED = "ACTION_UI_PA_MESSAGE_STATUS_CHANGE_NOTIFY";
-    public static final String ACTION_PA_PUSH_MESSAGE_RECEIVED = "ACTION_UI_PA_PUSH_MESSAGE_NOTIFY";
+    public static final String ACTION_MESSAGE_STATUS_CHANGED = "com.example.walkarround.ACTION_UI_MESSAGE_STATUS_CHANGE_NOTIFY";
+    public static final String ACTION_MESSAGE_NEW_RECEIVED = "com.example.walkarround.ACTION_UI_SHOW_MESSAGE_NOTIFY";
+    public static final String ACTION_GROUP_MESSAGE_NEW_RECEIVED = "com.example.walkarround.ACTION_UI_SHOW_GROUP_MESSAGE_NOTIFY";
+    public static final String ACTION_CONTACT_COMPOSING_INFO = "com.example.walkarround.ACTION_UI_SHOW_COMPOSING_INFO";
+
     /*消息发送进度*/
-    public static final String ACTION_SEND_PERCENT = "com.suntek.mway.rcs.ACTION_SEND_PERCENT";
+    public static final String ACTION_SEND_PERCENT = "com.example.walkarround.ACTION_SEND_PERCENT";
 
     /*下载文件*/
     public static final String ACTION_PA_MESSAGE_DOWNLOADING_CHANGE = "PA_MESSAGE_DOWNLOADING_FILE_CHANGE";
-    public static final String ACTION_DOWNLOADING_FILE_CHANGE = "com.suntek.mway.rcs.UI_DOWNLOADING_FILE_CHANGE";
+    public static final String ACTION_DOWNLOADING_FILE_CHANGE = "com.example.walkarround.UI_DOWNLOADING_FILE_CHANGE";
     public static final String ACTION_FILE_TRANSFER_PROGRESS = "ui_file_transfre_progress";
-    public static final String ACTION_DOWNLOADING_FILE_FAIL = "com.suntek.mway.rcs.UI_DOWNLOADING_FILE_FAIL";
+    public static final String ACTION_DOWNLOADING_FILE_FAIL = "com.example.walkarround.UI_DOWNLOADING_FILE_FAIL";
     /*群组管理*/
-    public static final String ACTION_GROUP_CREATE = "com.suntek.mway.rcs.ACTION_UI_GROUP_CREATE";// 创建群
-    public static final String ACTION_GROUP_CREATE_ERROR = "com.suntek.mway.rcs.ACTION_UI_GROUP_ERROR";// 创建失败
-    public static final String ACTION_GROUP_INFO_CHANGED = "com.suntek.mway.rcs.ACTION_UI_GROUP_MANAGE_NOTIFY";
-    public static final String ACTION_GROUP_INVITATION = "com.suntek.mway.rcs.ACTION_UI_GROUP_INVITATION";
+    public static final String ACTION_GROUP_CREATE = "com.example.walkarround.ACTION_UI_GROUP_CREATE";// 创建群
+    public static final String ACTION_GROUP_CREATE_ERROR = "com.example.walkarround.ACTION_UI_GROUP_ERROR";// 创建失败
+    public static final String ACTION_GROUP_INFO_CHANGED = "com.example.walkarround.ACTION_UI_GROUP_MANAGE_NOTIFY";
+    public static final String ACTION_GROUP_INVITATION = "com.example.walkarround.ACTION_UI_GROUP_INVITATION";
 
     /*群变更消息类型*/
     public static final String GROUP_CHANGED_TYPE_UPDATE_SUBJECT = "updateSubject";

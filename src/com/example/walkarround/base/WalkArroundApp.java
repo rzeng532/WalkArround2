@@ -15,6 +15,7 @@ import com.example.walkarround.R;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.message.handler.WrDefaultMsgHandler;
 import com.example.walkarround.message.handler.WrTypedMsgHandler;
+import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
@@ -62,6 +63,9 @@ public class WalkArroundApp extends Application {
 
         //Send prior sending message as FAIL state.
         WalkArroundMsgManager.getInstance(getApplicationContext()).setAllSendingMsgStatusFail();
+
+        //Init contacts
+        ContactsManager.getInstance(getApplicationContext());
     }
 
 
