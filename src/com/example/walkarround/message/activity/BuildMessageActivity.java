@@ -14,11 +14,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
@@ -58,7 +56,6 @@ import com.example.walkarround.message.util.MessageConstant.ChatType;
 import com.example.walkarround.message.util.MessageConstant.MessageSendReceive;
 import com.example.walkarround.message.util.MessageConstant.MessageState;
 import com.example.walkarround.message.util.MessageConstant.MessageType;
-import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.CommonUtils;
@@ -1769,60 +1766,20 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             if (mRecipientInfo.getRecipientList() == null || mRecipientInfo.getRecipientList().size() == 0) {
                 mBottomLeftView.setEnabled(false);
             } else {
-//                boolean hasNotRcsUser = false;
-//                if (mRecipientInfo.getConversationType() != ChatType.CHAT_TYPE_GROUP) {
-//                    List<String> recipientList = mRecipientInfo.getRecipientList();
-//                    for (String num : recipientList) {
-//                        // 判断是否是RCS用户
-//                        if (!NewContactManager.getInstance(getApplicationContext()).isRcsUser(num)) {
-//                            hasNotRcsUser = true;
-//                            break;
-//                        }
-//                    }
-//                }
                 mBottomLeftView.setEnabled(isNetworkAvailable);
             }
             return;
         }
         if (mRecipientInfo.getRecipientList() == null || mRecipientInfo.getRecipientList().size() == 0) {
-            mMoreToolsPanel.setContactsEnable(false);
             mMoreToolsPanel.setPictureEnable(false);
             mMoreToolsPanel.setLocationEnable(false);
-            mMoreToolsPanel.setVideoEnable(false);
+            //mMoreToolsPanel.setVideoEnable(false);
             mBottomLeftView.setEnabled(false);
-            mMoreToolsPanel.setReadBurnEnable(false);
-            mMoreToolsPanel.setTimeSendEnable(false);
         } else {
-//            boolean hasNotRcsUser = false;
-//            if (mRecipientInfo.getConversationType() != ChatType.CHAT_TYPE_GROUP) {
-//                List<String> recipientList = mRecipientInfo.getRecipientList();
-//                for (String num : recipientList) {
-//                    // 判断是否是RCS用户
-//                    if (!NewContactManager.getInstance(getApplicationContext()).isRcsUser(num)) {
-//                        hasNotRcsUser = true;
-//                        break;
-//                    }
-//                }
-//            }
-//            boolean isEnable = isNetworkAvailable & !hasNotRcsUser;
             boolean isEnable = isNetworkAvailable;
-            if (mRecipientInfo.getConversationType() == ChatType.CHAT_TYPE_GROUP) {
-                mMoreToolsPanel.setReadBurnEnable(false);
-                mMoreToolsPanel.setTimeSendEnable(false);
-            } else {
-                mMoreToolsPanel.setReadBurnEnable(isEnable);
-//                mMoreToolsPanel.setTimeSendEnable(!hasNotRcsUser);
-                mMoreToolsPanel.setTimeSendEnable(true);
-            }
-            mMoreToolsPanel.setContactsEnable(isEnable);
             mMoreToolsPanel.setLocationEnable(isEnable);
-            mMoreToolsPanel.setVideoEnable(isEnable);
-//            if (hasNotRcsUser) {
-//                boolean hasOneReceiver = mRecipientInfo.getRecipientList().size() == 1;
-//                mMoreToolsPanel.setPictureEnable(hasOneReceiver);
-//            } else {
-//                mMoreToolsPanel.setPictureEnable(true);
-//            }
+            //mMoreToolsPanel.setVideoEnable(isEnable);
+            mMoreToolsPanel.setPictureEnable(isEnable);
             mBottomLeftView.setEnabled(isEnable);
         }
     }
@@ -1896,21 +1853,21 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      */
     public void onCameraClick() {
         // 打开照相机进行拍照
-        mPhotoImagePath = MessageUtil.createCameraTakePicFile();
-        if (TextUtils.isEmpty(mPhotoImagePath)) {
-            Toast.makeText(this, R.string.open_camera_fail, Toast.LENGTH_LONG).show();
-            return;
-        }
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        Uri fileUri = Uri.fromFile(new File(mPhotoImagePath));
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        startActivityForResult(intent, REQUEST_CODE_CAMERA);
+//        mPhotoImagePath = MessageUtil.createCameraTakePicFile();
+//        if (TextUtils.isEmpty(mPhotoImagePath)) {
+//            Toast.makeText(this, R.string.open_camera_fail, Toast.LENGTH_LONG).show();
+//            return;
+//        }
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        Uri fileUri = Uri.fromFile(new File(mPhotoImagePath));
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+//        startActivityForResult(intent, REQUEST_CODE_CAMERA);
     }
 
     @Override
     public void onVideoClick() {
-        Intent intent = new Intent(this, TakeVideoActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_TAKE_VIDEO);
+//        Intent intent = new Intent(this, TakeVideoActivity.class);
+//        startActivityForResult(intent, REQUEST_CODE_TAKE_VIDEO);
     }
 
     @Override

@@ -20,12 +20,8 @@ public class ChatAssistToolsView extends LinearLayout implements View.OnClickLis
     private static final Logger logger = Logger.getLogger(ChatAssistToolsView.class.getSimpleName());
     private static final int COLUMN_COUNT = 4;
     private final static int TOOLS_PER_PAGE_COUNT = 8;
-    private static final int[] TOOLS_TEXT_RES_IDS = {R.string.chatting_picture, R.string.chatting_video,
-            R.string.chatting_location, R.string.chatting_fire, R.string.chatting_timesend,
-            R.string.chatting_phrasebook, R.string.chatting_contacts};
-    private static final int[] TOOLS_DRAWABLE_RES_IDS = {R.drawable.chat_picture_bg, R.drawable.chat_video_bg,
-            R.drawable.chat_location_bg, R.drawable.chat_fire_bg, R.drawable.chat_timesent_bg,
-            R.drawable.chat_phrasebook_bg, R.drawable.chat_contacts_bg};
+    private static final int[] TOOLS_TEXT_RES_IDS = {R.string.chatting_picture, R.string.chatting_location};
+    private static final int[] TOOLS_DRAWABLE_RES_IDS = {R.drawable.chat_picture_bg, R.drawable.chat_location_bg};
 
     private ToolsViewOnClick mToolItemClickListener;
     private ListView mPhrasebookListView;
@@ -89,9 +85,9 @@ public class ChatAssistToolsView extends LinearLayout implements View.OnClickLis
         int pageCount = (int) Math.ceil(visibleTools.size() / (float) TOOLS_PER_PAGE_COUNT);
         if (pageCount == 1) {
             // 只有一页
-            int columns = visibleTools.size() < COLUMN_COUNT ?
-                    visibleTools.size() : COLUMN_COUNT;
-            GridView gv = createToolsPageView(context, columns);
+//            int columns = visibleTools.size() < COLUMN_COUNT ?
+//                    visibleTools.size() : COLUMN_COUNT;
+            GridView gv = createToolsPageView(context, COLUMN_COUNT);
             ToolsViewAdapter adapter = new ToolsViewAdapter(context);
             adapter.setResInfo(visibleTools);
             adapter.setViewClickListener(this);
@@ -135,15 +131,10 @@ public class ChatAssistToolsView extends LinearLayout implements View.OnClickLis
      * @方法名：setOnClickListener
      * @描述：设置点击事件监听
      * @输出：void
-     * @作者：mss
+     * @作者：
      */
     public void setToolsOnClickListener(ToolsViewOnClick toolItemClickListener) {
         mToolItemClickListener = toolItemClickListener;
-    }
-
-    public void setContactsEnable(boolean enabled) {
-        mToolsViewInfo.get(R.string.chatting_contacts).isEnable = enabled;
-        updateToolsView();
     }
 
     public void setPictureEnable(boolean enabled) {
@@ -151,33 +142,13 @@ public class ChatAssistToolsView extends LinearLayout implements View.OnClickLis
         updateToolsView();
     }
 
-    public void setVideoEnable(boolean enabled) {
-        mToolsViewInfo.get(R.string.chatting_video).isEnable = enabled;
-        updateToolsView();
-    }
+//    public void setVideoEnable(boolean enabled) {
+//        mToolsViewInfo.get(R.string.chatting_video).isEnable = enabled;
+//        updateToolsView();
+//    }
 
     public void setLocationEnable(boolean enabled) {
         mToolsViewInfo.get(R.string.chatting_location).isEnable = enabled;
-        updateToolsView();
-    }
-
-    public void setTimeSendEnable(boolean enabled) {
-        mToolsViewInfo.get(R.string.chatting_timesend).isEnable = enabled;
-        updateToolsView();
-    }
-
-    public void setReadBurnEnable(boolean enabled) {
-        mToolsViewInfo.get(R.string.chatting_fire).isEnable = enabled;
-        updateToolsView();
-    }
-
-    public void setPhrasebookEnable(boolean enabled) {
-        mToolsViewInfo.get(R.string.chatting_phrasebook).isEnable = enabled;
-        updateToolsView();
-    }
-
-    public void setContactsVisibility(int visibility) {
-        mToolsViewInfo.get(R.string.chatting_contacts).visibility = visibility;
         updateToolsView();
     }
 
@@ -186,28 +157,13 @@ public class ChatAssistToolsView extends LinearLayout implements View.OnClickLis
         updateToolsView();
     }
 
-    public void setVideoVisibility(int visibility) {
-        mToolsViewInfo.get(R.string.chatting_video).visibility = visibility;
-        updateToolsView();
-    }
+//    public void setVideoVisibility(int visibility) {
+//        mToolsViewInfo.get(R.string.chatting_video).visibility = visibility;
+//        updateToolsView();
+//    }
 
     public void setLocationVisibility(int visibility) {
         mToolsViewInfo.get(R.string.chatting_location).visibility = visibility;
-        updateToolsView();
-    }
-
-    public void setTimeSendVisibilty(int visibility) {
-        mToolsViewInfo.get(R.string.chatting_timesend).visibility = visibility;
-        updateToolsView();
-    }
-
-    public void setReadBurnVisibilty(int visibility) {
-        mToolsViewInfo.get(R.string.chatting_fire).visibility = visibility;
-        updateToolsView();
-    }
-
-    public void setPhrasebookVisibility(int visibility) {
-        mToolsViewInfo.get(R.string.chatting_phrasebook).visibility = visibility;
         updateToolsView();
     }
 
@@ -239,16 +195,6 @@ public class ChatAssistToolsView extends LinearLayout implements View.OnClickLis
      */
     private void toolsViewClick(int textResId) {
         switch (textResId) {
-            case R.string.chatting_phrasebook:
-                if (mPhrasebookListView == null) {
-                    mPhrasebookListView = (ListView) findViewById(R.id.phrasebook_list_lv);
-                    String[] phrasebookList = getContext().getResources().getStringArray(R.array.phrasebook);
-                    PhrasebookListAdapter adapter = new PhrasebookListAdapter(getContext(), phrasebookList);
-                    mPhrasebookListView.setAdapter(adapter);
-                    mPhrasebookListView.setOnItemClickListener(this);
-                }
-                mPhrasebookListView.setVisibility(VISIBLE);
-                break;
 //            case R.string.chatting_contacts:
 //                if (mToolItemClickListener != null) {
 //                    mToolItemClickListener.onContactsClick();
@@ -259,11 +205,11 @@ public class ChatAssistToolsView extends LinearLayout implements View.OnClickLis
                     mToolItemClickListener.onPictureClick();
                 }
                 break;
-            case R.string.chatting_video:
-                if (mToolItemClickListener != null) {
-                    mToolItemClickListener.onVideoClick();
-                }
-                break;
+//            case R.string.chatting_video:
+//                if (mToolItemClickListener != null) {
+//                    mToolItemClickListener.onVideoClick();
+//                }
+//                break;
             case R.string.chatting_location:
                 if (mToolItemClickListener != null) {
                     mToolItemClickListener.onLocation();
