@@ -47,6 +47,10 @@ public class ContactsManager {
 
         if(mInstance.mUserMap != null && !TextUtils.isEmpty(userId)) {
             userInfo = mInstance.mUserMap.get(userId);
+            if(userInfo == null) {
+                //Find user on server.
+
+            }
         }
 
         return userInfo;

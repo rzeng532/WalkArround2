@@ -6,16 +6,18 @@ package com.example.walkarround.message.handler;
 import android.content.ContentUris;
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
-import com.avos.avoscloud.im.v2.messages.*;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.model.MessageRecipientInfo;
 import com.example.walkarround.message.util.MessageConstant;
+import com.example.walkarround.message.util.MessageConstant.MessageState;
+import com.example.walkarround.message.util.MessageConstant.MessageType;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.util.Logger;
 
@@ -57,48 +59,62 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
             String clientID = (avUser == null ? null : avUser.getObjectId());
             if (clientID != null && client.getClientId().equals(clientID)) {
                 logger.d("get message from " + message.getFrom());
-                if(message instanceof AVIMAudioMessage) {
+                //Start a new thread to receive message.
+                Runnable saveMsg = new Runnable() {
+                    @Override
+                    public void run() {
+                        List<String> receipient = new ArrayList<>();
+                        receipient.add(message.getFrom());
+                        try {
+                            MessageRecipientInfo recipientInfo = WalkArroundMsgManager.getInstance(mContext).abstractReceiptInfo(receipient, MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
+                            ChatMsgBaseInfo msgInfo = MessageUtil.convertMsg(message);
+                            msgInfo.setThreadId(recipientInfo.getThreadId());
 
-                } else if(message instanceof AVIMImageMessage) {
+                            //download message file or thumbnail.
+                            downloadMsgFile(msgInfo);
 
-                } else if(message instanceof AVIMLocationMessage) {
-
-                } else if(message instanceof AVIMVideoMessage) {
-
-                } else if(message instanceof AVIMTextMessage) {
-
-                    Runnable saveMsg = new Runnable() {
-                        @Override
-                        public void run() {
-                            List<String> receipient = new ArrayList<>();
-                            receipient.add(message.getFrom());
-                            try {
-                                MessageRecipientInfo recipientInfo = WalkArroundMsgManager.getInstance(mContext).abstractReceiptInfo(receipient, MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
-                                ChatMsgBaseInfo msgInfo = MessageUtil.convertMsg(message);
-                                msgInfo.setThreadId(recipientInfo.getThreadId());
-
-                                //we should do those operations on background.
-                                Uri msgUri = WalkArroundMsgManager.getInstance(mContext).saveChatmsg(msgInfo);
-                                if (msgUri != null) {
-                                    msgInfo.setMsgId(ContentUris.parseId(msgUri));
-                                    WalkArroundMsgManager.getInstance(mContext).addMsgUnreadCountByThreadId(msgInfo.getMsgThreadId());
-                                    WalkArroundMsgManager.getInstance(mContext).onLoadMsgResult(msgInfo, null, true);
-
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            //we should do those operations on background.
+                            Uri msgUri = WalkArroundMsgManager.getInstance(mContext).saveChatmsg(msgInfo);
+                            if (msgUri != null) {
+                                msgInfo.setMsgId(ContentUris.parseId(msgUri));
+                                WalkArroundMsgManager.getInstance(mContext).addMsgUnreadCountByThreadId(msgInfo.getMsgThreadId());
+                                WalkArroundMsgManager.getInstance(mContext).onLoadMsgResult(msgInfo, null, true);
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    };
+                    }
+                };
 
-                    new Thread(saveMsg).start();
-
-                }
+                new Thread(saveMsg).start();
             } else {
                 client.close(null);
             }
         } catch (IllegalStateException e) {
             client.close(null);
+        }
+    }
+
+    private void downloadMsgFile(ChatMsgBaseInfo msg) {
+        if(!TextUtils.isEmpty(msg.getFileUrlPath())) {
+            if(msg.getMsgType() == MessageType.MSG_TYPE_AUDIO
+                || msg.getMsgType() == MessageType.MSG_TYPE_MAP) {
+
+                String filePath = msg.getFileUrlPath();
+
+                String localFilePath = MessageUtil.getMsgFileDownLoadPath(msg.getMsgType())
+                        + System.currentTimeMillis();
+                int dot = filePath.lastIndexOf('.');
+                if ((dot > -1) && (dot < (filePath.length() - 1))) {
+                    localFilePath += ".";
+                    localFilePath += filePath.substring(dot + 1);
+                }
+                boolean isSuccess = MessageUtil.downloadFile(filePath, localFilePath);
+                if (isSuccess) {
+                    msg.setFilePath(localFilePath);
+                    msg.setMsgState(MessageState.MSG_STATE_RECEIVED);
+                }
+            }
         }
     }
 }
