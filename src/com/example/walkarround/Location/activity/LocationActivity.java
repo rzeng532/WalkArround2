@@ -351,15 +351,15 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
         try {
             String filePath = null;
             //We don't need map screenshot now. We will open it later.
-            //if (AppConstant.IS_ENABLE_MSG_LOCATION_PIC) {
-            //    filePath = createLocationPic(arg0);
-            //}
+            if (AppConstant.IS_ENABLE_MSG_LOCATION_PIC) {
+                filePath = createLocationPic(arg0);
+            }
             LocationItem temp = locationItems.get(formerCheckedIndex);
             Intent resultIntent = new Intent();
             Bundle dataBundle = new Bundle();
             dataBundle.putString(ADDRESS, temp.getSubtitle());
-            //dataBundle.putString(IMAGE_PATH, filePath);
-            // dataBundle.putString(MAP_SCREEN_SHOT_URL, mapScreenShotUrl);
+            dataBundle.putString(IMAGE_PATH, filePath);
+            //dataBundle.putString(MAP_SCREEN_SHOT_URL, mapScreenShotUrl);
             dataBundle.putDouble(LATITUDE, temp.getLatitude());
             dataBundle.putDouble(LONGITUDE, temp.getLongitude());
             resultIntent.putExtras(dataBundle);

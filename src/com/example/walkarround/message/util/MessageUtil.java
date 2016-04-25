@@ -3,6 +3,7 @@ package com.example.walkarround.message.util;
 import android.content.Context;
 import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.*;
 import com.example.walkarround.R;
@@ -14,8 +15,18 @@ import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AppSharedPreference;
 import com.example.walkarround.util.Logger;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -270,18 +281,91 @@ public class MessageUtil {
 //            msgInfo.setFileUrlPath(((VideoMessageBody) messageBody).getOriginalUri());
 //            msgInfo.setThumbUrlPath(((VideoMessageBody) messageBody).getThumbnailUrl());
         } else if (cmMessage instanceof AVIMLocationMessage) {
-//            msgInfo.setLocationLabel(((LocationMessageBody) messageBody).getAddress());
-//            msgInfo.setLatitute(((LocationMessageBody) messageBody).getLatitude());
-//            msgInfo.setLongitude(((LocationMessageBody) messageBody).getLongitude());
+            msgInfo.setMsgType(MessageType.MSG_TYPE_MAP);
+            msgInfo.setLocationLabel(((AVIMLocationMessage) cmMessage).getText());
+            String content = ((AVIMLocationMessage) cmMessage).getContent();
+            AVGeoPoint temp = ((AVIMLocationMessage) cmMessage).getLocation();
+            if(temp != null) {
+                msgInfo.setLatitute(temp.getLatitude());
+                msgInfo.setLongitude(temp.getLongitude());
+            }
 //            msgInfo.setFileSize(((LocationMessageBody) messageBody).getFileLength());
 //            msgInfo.setFileName(((LocationMessageBody) messageBody).getFileName());
 //            msgInfo.setFileUrlPath(((LocationMessageBody) messageBody).getOriginalUri());
-        } else if (cmMessage instanceof AVIMLocationMessage) {
-            msgInfo.setMsgType(MessageType.MSG_TYPE_TEXT);
         } else if (cmMessage instanceof AVIMTextMessage) {
+            msgInfo.setMsgType(MessageType.MSG_TYPE_TEXT);
             msgInfo.setData(((AVIMTextMessage)cmMessage).getText());
         }
 
         return msgInfo;
+    }
+
+    /**
+     * 获取文件下载路径
+     *
+     * @param msgType 消息类型
+     * @return 文件下载路径
+     */
+    public static String getMsgFileDownLoadPath(int msgType) {
+        String basePath = WalkArroundApp.MTC_DATA_PATH;
+        switch (msgType) {
+            case MessageType.MSG_TYPE_AUDIO:
+                basePath += AppConstant.AUDIO_FILE_PATH;
+                break;
+            case MessageType.MSG_TYPE_MAP:
+                basePath += AppConstant.LOCATION_PIC_PATH;
+                break;
+            case MessageType.MSG_TYPE_IMAGE:
+                basePath += AppConstant.CAMERA_TAKE_PIC_PATH;
+                break;
+            default:
+                basePath += AppConstant.MSG_DOWNLOAD_PATH;
+                break;
+        }
+        File folder = new File(basePath);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        return basePath;
+    }
+
+    /*
+     * Download special file by HTTP connection.
+     */
+    public static boolean downloadFile(String urlSite, String localFilePath) {
+        if (TextUtils.isEmpty(urlSite) || TextUtils.isEmpty(localFilePath)) {
+            return false;
+        }
+        boolean success = false;
+        HttpClient client = new DefaultHttpClient();
+        HttpGet get = new HttpGet(urlSite);
+        HttpResponse response;
+        try {
+            response = client.execute(get);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                HttpEntity entity = response.getEntity();
+                InputStream is = entity.getContent();
+                if (is != null) {
+                    File file = new File(localFilePath);
+                    FileOutputStream fileOutputStream = new FileOutputStream(file);
+                    byte[] buf = new byte[1024];
+                    int ch = -1;
+                    while ((ch = is.read(buf)) != -1) {
+                        fileOutputStream.write(buf, 0, ch);
+                    }
+                    fileOutputStream.flush();
+                    success = true;
+                    fileOutputStream.close();
+                    is.close();
+                }
+            }
+        } catch (ClientProtocolException e) {
+            logger.e("downloadFile ClientProtocolException:" + e.getMessage());
+            success = false;
+        } catch (IOException e) {
+            logger.e("downloadFile IOException:" + e.getMessage());
+            success = false;
+        }
+        return success;
     }
 }

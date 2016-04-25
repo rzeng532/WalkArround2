@@ -2553,14 +2553,13 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     @Override
     public void sendVoice(String audioFilePath, int recordTime) {
         // 发送音频
-        boolean isBurn = mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_VOICE;
-        long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendAudioFile(mRecipientInfo, audioFilePath, recordTime, isBurn,
+        long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendAudioFile(mRecipientInfo, audioFilePath, recordTime, false,
                 0, true);
         transferToDetailView(messageId, false);
-        if (isBurn) {
-            mCurrentMessageEditState = MESSAGE_EDIT_STATE_BURN_AFTER;
-            switchBottomPanelView(mCurrentMessageEditState);
-        }
+//        if (isBurn) {
+//            mCurrentMessageEditState = MESSAGE_EDIT_STATE_BURN_AFTER;
+//            switchBottomPanelView(mCurrentMessageEditState);
+//        }
     }
 
     /**

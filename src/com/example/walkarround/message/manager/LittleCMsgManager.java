@@ -255,7 +255,7 @@ public class LittleCMsgManager extends MessageAbstractManger {
             return -1L;
         }
         if (recipientInfo.getThreadId() <= 0) {
-            // 还没创建conversation，或者只有SMS消息时
+            // 还没创建conversation时
             long threadId = messageDbManager.getConversationId(recipientInfo.getConversationType(),
                     recipientInfo.getRecipientList());
             if (threadId <= 0) {
@@ -281,7 +281,7 @@ public class LittleCMsgManager extends MessageAbstractManger {
         msgInfo.setFileSize(file.length());
         msgInfo.setThreadId(recipientInfo.getThreadId());
         msgInfo.setChatType(recipientInfo.getConversationType());
-        msgInfo.setIsBurnAfter(isBurnAfter);
+        //msgInfo.setIsBurnAfter(isBurnAfter);
         Uri insertUri = messageDbManager.addMessage(msgInfo);
         if (insertUri == null) {
             logger.e("insert to message db fail");
@@ -419,10 +419,12 @@ public class LittleCMsgManager extends MessageAbstractManger {
         msgInfo.setLocationLabel(address);
         msgInfo.setLatitute(lat);
         msgInfo.setLongitude(lng);
-        File file = new File(imagePath);
-        msgInfo.setFileName(file.getName());
-        msgInfo.setFilePath(imagePath);
-        msgInfo.setFileSize(file.length());
+        if(!TextUtils.isEmpty(imagePath)) {
+            File file = new File(imagePath);
+            msgInfo.setFileName(file.getName());
+            msgInfo.setFilePath(imagePath);
+            msgInfo.setFileSize(file.length());
+        }
         msgInfo.setThreadId(recipientInfo.getThreadId());
         msgInfo.setChatType(recipientInfo.getConversationType());
         msgInfo.setExtraInfo(extraInfo);
@@ -433,7 +435,8 @@ public class LittleCMsgManager extends MessageAbstractManger {
         }
         long id = ContentUris.parseId(insertUri);
         AVIMLocationMessage content = new AVIMLocationMessage();
-        content.setLocation(new AVGeoPoint(lng, lat));
+        content.setLocation(new AVGeoPoint(lat, lng));
+        content.setText(address);
         sendMessage(recipientInfo, id, content, false, extraInfo);
         return id;
     }
