@@ -2,7 +2,7 @@
               xmlns:app="http://schemas.android.com/apk/res/com.example.walkarround"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@android:color/black"
+              android:background="@color/bgcor1"
               android:orientation="vertical"><!--
   Copyright 2014 The Android Open Source Project
 
@@ -19,11 +19,12 @@
   limitations under the License.
   -->
 
+    <!-- android:background="@drawable/header_title_bg" -->
     <RelativeLayout
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:background="@drawable/header_title_bg"
+            android:background="@color/bgcor1"
             android:gravity="center_vertical">
 
         <TextView
@@ -35,32 +36,58 @@
                 android:drawableLeft="@drawable/main_ic_drawer"
                 android:drawablePadding="8dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="16dp"
+                android:paddingLeft="8dp"
                 android:paddingRight="15dp"
                 android:text="@string/main_title"
-                android:textColor="#ffffff"
-                android:textSize="20sp"/>
+                android:textColor="@color/emerald_green"
+                android:textSize="21sp"/>
+
+        <ImageView
+                android:id="@+id/right_chat_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="8dp"
+                android:src="@drawable/icon_chat_title_right"/>
     </RelativeLayout>
 
-    <include layout="@layout/main_nearly_user_buttons"
-             android:id="@+id/userFrameButtons"/>
-
-
-    <com.example.walkarround.flingswipe.SwipeFlingAdapterView
-            android:id="@+id/userFrame"
+    <!-- Divide line -->
+    <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:rotation_degrees="15.5"
-            tools:context=".MyActivity" />
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/linecor5"/>
 
-
-    <com.example.walkarround.radar.RadarScanView
-            android:id="@+id/radar"
+    <RelativeLayout
+            android:id="@+id/body"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/bgcor1"
+            android:gravity="center_vertical">
 
-    </com.example.walkarround.radar.RadarScanView>
+        <com.example.walkarround.flingswipe.SwipeFlingAdapterView
+                android:id="@+id/userFrame"
+                android:paddingTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/userFrameButtons"
+                android:layout_gravity="center"
+                app:rotation_degrees="15.5"/>
 
+        <include layout="@layout/main_nearly_user_buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:layout_centerHorizontal="true"
+                 android:layout_alignParentBottom="true"
+                 android:id="@+id/userFrameButtons"/>
+
+        <com.example.walkarround.radar.RadarScanView
+                android:id="@+id/radar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+        </com.example.walkarround.radar.RadarScanView>
+    </RelativeLayout>
 
 </LinearLayout>

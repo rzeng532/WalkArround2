@@ -53,7 +53,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private int mCurFragmentPage = -1;
-    private String[] mPlanetTitles;
 
     /*
      * UI elements on main activity
@@ -146,7 +145,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         initView();
 
-        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         // set a custom shadow that overlays the main content when the drawer opens
@@ -314,8 +312,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
 
-        // update selected item title, then close the drawer
-        setTitle(mPlanetTitles[position]);
         mDrawerLayout.closeDrawers();
         //mDrawerLayout.closeDrawer(mViewLeftMenu);
     }

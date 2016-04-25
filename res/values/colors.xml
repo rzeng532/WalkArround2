@@ -28,6 +28,7 @@
     <color name="linecor2">#ffffff</color>
     <color name="linecor3">#499dfb</color>
     <color name="linecor4">#2b384c</color>
+    <color name="linecor5">#f2f2f2</color>
 
     <!-- font color -->
     <color name="fontcor1">#333333</color>
@@ -73,4 +74,7 @@
 
     <color name="card_background">#ffffff</color>
     <color name="card_shadow">#10000000</color>
+
+    <color name="emerald_green">#2AC8D7</color>
+    <color name="emerald_green_50">#f92AC8D7</color>
 </resources>
