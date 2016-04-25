@@ -43,6 +43,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
     //For title and slide menu
     private View mTvTitle;
+    private ImageView mIvChatEntrance;
 
     //For nearly user list.
     private SwipeFlingAdapterView mUserFrame;
@@ -165,14 +166,16 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.title:
+            case R.id.title_name:
                 //TODO: we should use handler for communication between activty and fragment later.
                 DrawerLayout slideMenu = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
                 LinearLayout mViewLeftMenu = (LinearLayout) getActivity().findViewById(R.id.left_drawer);
                 slideMenu.openDrawer(mViewLeftMenu);
                 //getActivity().finish();
                 break;
-
+            case R.id.right_chat_iv:
+                //Start build message activity
+                break;
             default:
                 break;
         }
@@ -204,8 +207,10 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         });
 
         //Init title
-        mTvTitle = (View) mViewRoot.findViewById(R.id.title);
+        mTvTitle = (View) mViewRoot.findViewById(R.id.title_name);
         mTvTitle.setOnClickListener(this);
+        mIvChatEntrance = (ImageView) mViewRoot.findViewById(R.id.right_chat_iv);
+        mIvChatEntrance.setOnClickListener(this);
 
         //Radar will be displayed at first.
         mRadarView = (RadarScanView) mViewRoot.findViewById(R.id.radar);
