@@ -96,15 +96,23 @@
                 android:background="@drawable/slidemenu_item_bg"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
+            <ImageView
+                    android:id="@+id/iv_slide_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="16dp"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/icon_slide_setting"/>
 
-            <!-- we need an image here -->
             <TextView
                     android:id="@+id/tv_slide_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textSize="@dimen/font_size3"
                     android:textColor="@color/fontcor3"
-                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@id/iv_slide_setting"
+                    android:paddingLeft="16dp"
                     android:gravity="center_vertical"
                     android:text="@string/setting_title"/>
         </RelativeLayout>

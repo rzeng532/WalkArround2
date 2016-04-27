@@ -5,23 +5,16 @@ package com.example.walkarround.setting.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.example.walkarround.EntranceActivity;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
-import com.example.walkarround.login.activity.LoginActivity;
-import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.setting.manager.SettingManager;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
@@ -35,7 +28,7 @@ import com.example.walkarround.util.Logger;
 public class AppSettingActivity extends Activity implements View.OnClickListener{
 
     private static final Logger logger = Logger.getLogger(AppSettingActivity.class.getSimpleName());
-    private TextView titleName;
+    private ImageView titleName;
     private TextView tvLastBackupTime;
     private TextView tvContactBackup;
     private TextView tvContactResotre;
@@ -61,8 +54,11 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
     };
 
     private void assignViews() {
-        titleName = (TextView) findViewById(R.id.title_name);
-        titleName.setOnClickListener(this);
+        //Title
+        View title = findViewById(R.id.title);
+        title.findViewById(R.id.back_rl).setOnClickListener(this);
+        title.findViewById(R.id.more_rl).setVisibility(View.GONE);
+        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.setting_title);
 
         tvResetPasswordApp = (TextView) findViewById(R.id.tv_reset_password);
         tvResetPasswordApp.setOnClickListener(this);
@@ -87,7 +83,7 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.title_name://返回
+            case R.id.back_rl://返回
                 finish();
                 break;
 

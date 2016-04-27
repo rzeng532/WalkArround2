@@ -1,105 +1,105 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/signin_homebg" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/signin_homebg">
 
-<ImageView 
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="38dp"
-    android:id="@+id/logo"
-    android:src="@drawable/signin_logo"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="38dp"
+            android:id="@+id/logo"
+            android:text="@string/main_title"
+            android:textColor="@color/fontcor3"
+            android:textSize="@dimen/font_size1"/>
 
-<RelativeLayout 
-    android:layout_width="272dp"
-    android:layout_height="99dp"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="47dp"
-    android:layout_below="@id/logo"
-    android:id="@+id/signin_input_rl"
-    android:background="@drawable/signin_inputbg" >
+    <RelativeLayout
+            android:layout_width="272dp"
+            android:layout_height="99dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="47dp"
+            android:layout_below="@id/logo"
+            android:id="@+id/signin_input_rl"
+            android:background="@drawable/signin_inputbg">
 
-	<com.example.walkarround.base.view.EditTextWithDel
-	    android:id="@+id/signin_input_username"
-	    android:layout_width="match_parent"
-	    android:layout_height="49dp"
-	    android:layout_alignParentTop="true"
-	    android:background="@null"
-        android:numeric="integer"
-	    android:drawableLeft="@drawable/signin_icon_phone"
-	    android:drawablePadding="11dp"
-	    android:drawableRight="@drawable/public_search_clear_slt"
-	    android:hint="@string/login_hint_input_phone_num"
-	    android:paddingBottom="11dp"
-	    android:paddingLeft="16dp"
-	    android:paddingRight="16dp"
-	    android:paddingTop="12dp"
-	    android:singleLine="true"
-	    android:textSize="@dimen/font_size3"
-		android:textColor="#28ffff" />
+        <com.example.walkarround.base.view.EditTextWithDel
+                android:id="@+id/signin_input_username"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:layout_alignParentTop="true"
+                android:background="@null"
+                android:numeric="integer"
+                android:drawableLeft="@drawable/signin_icon_phone"
+                android:drawablePadding="11dp"
+                android:drawableRight="@drawable/public_search_clear_slt"
+                android:hint="@string/login_hint_input_phone_num"
+                android:paddingBottom="11dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="12dp"
+                android:singleLine="true"
+                android:textSize="@dimen/font_size3"
+                android:textColor="#28ffff"/>
 
-	<ImageView 
-	    android:layout_width="209dp"
-	    android:layout_height="1dp"
-	    android:layout_centerVertical="true"
-	    android:layout_marginLeft="47dp"
-	    android:src="#14ffff" />
+        <ImageView
+                android:layout_width="209dp"
+                android:layout_height="1dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="47dp"
+                android:src="#14ffff"/>
 
-	<com.example.walkarround.base.view.EditTextWithDel
-	    android:id="@+id/signin_input_password"
-	    android:layout_width="match_parent"
-	    android:layout_height="49dp"
-	    android:layout_alignParentBottom="true"
-	    android:background="@null"
-	    android:drawableLeft="@drawable/signin_icon_key"
-	    android:drawablePadding="11dp"
-	    android:drawableRight="@drawable/public_search_clear_slt"
-	    android:hint="@string/login_hint_input_password"
-	    android:inputType="textPassword"
-	    android:paddingBottom="12dp"
-	    android:paddingLeft="16dp"
-	    android:paddingRight="16dp"
-	    android:paddingTop="11dp"
-	    android:singleLine="true"
-	    android:textSize="@dimen/font_size3"
-	    android:textColor="#28ffff" />
+        <com.example.walkarround.base.view.EditTextWithDel
+                android:id="@+id/signin_input_password"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:layout_alignParentBottom="true"
+                android:background="@null"
+                android:drawableLeft="@drawable/signin_icon_key"
+                android:drawablePadding="11dp"
+                android:drawableRight="@drawable/public_search_clear_slt"
+                android:hint="@string/login_hint_input_password"
+                android:inputType="textPassword"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="11dp"
+                android:singleLine="true"
+                android:textSize="@dimen/font_size3"
+                android:textColor="#28ffff"/>
+    </RelativeLayout>
 
-</RelativeLayout>
+    <Button
+            android:layout_width="272dp"
+            android:layout_height="45dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:layout_below="@id/signin_input_rl"
+            android:id="@+id/signin_loginin"
+            android:text="@string/login_dologin"
+            android:textColor="@color/fontcor3"
+            android:textSize="@dimen/font_size3"
+            android:background="@drawable/signin_btnbg_signin"/>
 
-<Button
-    android:layout_width="272dp"
-    android:layout_height="45dp"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="32dp"
-    android:layout_below="@id/signin_input_rl"
-    android:id="@+id/signin_loginin"
-    android:text="@string/login_dologin"
-    android:textColor="@color/fontcor3"
-    android:textSize="@dimen/font_size3"
-    android:background="@drawable/signin_btnbg_signin" />
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/signin_loginin"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/signin_loginin"
+            android:id="@+id/signin_forgot_password"
+            android:text="@string/login_forgot_password"
+            android:textColor="#46ffff"
+            android:textSize="@dimen/font_size5"/>
 
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignRight="@id/signin_loginin"
-    android:layout_marginTop="20dp"
-    android:layout_below="@id/signin_loginin"
-    android:id="@+id/signin_forgot_password"
-    android:text="@string/login_forgot_password"
-    android:textColor="#46ffff"
-    android:textSize="@dimen/font_size5" />
-
-<Button 
-    android:layout_width="272dp"
-    android:layout_height="45dp"
-    android:layout_centerHorizontal="true"
-    android:layout_marginBottom="18dp"
-    android:layout_alignParentBottom="true"
-    android:id="@+id/signin_register"
-    android:text="@string/register_registe"
-    android:textColor="@color/fontcor3"
-    android:textSize="@dimen/font_size3"
-    android:background="@drawable/signin_btnbg_signup" />
-
+    <Button
+            android:layout_width="272dp"
+            android:layout_height="45dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/signin_forgot_password"
+            android:id="@+id/signin_register"
+            android:text="@string/register_registe"
+            android:textColor="@color/fontcor3"
+            android:textSize="@dimen/font_size3"
+            android:background="@drawable/signin_btnbg_signup"/>
 </RelativeLayout>

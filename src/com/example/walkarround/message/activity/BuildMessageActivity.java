@@ -1195,115 +1195,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     }
 
     /**
-     * 初始化可编辑联系人头部
-     */
-//    protected void initHeadReceiverView() {
-//        View detailHeaderView = findViewById(R.id.message_detail_title_layout);
-//        if (detailHeaderView != null) {
-//            detailHeaderView.setVisibility(View.GONE);
-//        }
-//        if (mMessageDetailAdapter != null) {
-//            mMessageDetailAdapter.setMessageInfo(null);
-//            mMessageDetailAdapter.notifyDataSetChanged();
-//            mMessageListView.setMode(PullToRefreshBase.Mode.DISABLED);
-//        }
-//        View headView = findViewById(R.id.build_message_title_layout);
-//        if (headView == null) {
-//            ViewStub buildReceiverHeader = (ViewStub) findViewById(R.id.build_message_vs);
-//            buildReceiverHeader.inflate();
-//            headView = findViewById(R.id.build_message_title_layout);
-//        } else {
-//            headView.setVisibility(View.VISIBLE);
-//            return;
-//        }
-//
-//        // 返回
-//        headView.findViewById(R.id.back_iv).setOnClickListener(this);
-//
-//        // 快速联系人
-//        mFastContactGridView = (GridView) headView.findViewById(R.id.build_message_fast_receiver_gv);
-//        mFastContactAdapter.setFastContactList(mFastContactsList);
-//        mFastContactGridView.setAdapter(mFastContactAdapter);
-//        // 检索联系人结果
-//        mSearchContactView = (ListView) headView.findViewById(R.id.build_message_search_receiver_lv);
-//        mSearchContactAdapter = new SearchContactAdapter(this, this);
-//        mSearchContactView.setAdapter(mSearchContactAdapter);
-//        // 选择收信人结果
-//        mChoseContactsView = (ContactEditGroupView) headView.findViewById(R.id.chose_contacts_layout);
-//        mChoseContactsView.setContactsChangeListener(this);
-//
-//        headView.findViewById(R.id.build_message_add_contacts_iv).setOnClickListener(this);
-//
-//        // 收信人展示区域
-//        View choseContactsDisView = headView.findViewById(R.id.build_message_receiver_rl);
-//        choseContactsDisView.setOnClickListener(this);
-//        // 收信人编辑区域
-//        View contactsEditView = headView.findViewById(R.id.build_message_reciever_sv);
-//
-//        mReceiverEditView = (EditText) headView.findViewById(R.id.build_message_reciever_et);
-//        mReceiverEditView.setTag(R.id.build_message_receiver_rl, choseContactsDisView);
-//        mReceiverEditView.setTag(R.id.build_message_reciever_sv, contactsEditView);
-//        mReceiverEditView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean hasFocus) {
-//                if (!hasFocus) {
-//                    if (!TextUtils.isEmpty(mReceiverEditView.getText())) {
-//                        MessageFastContact contact = new MessageFastContact();
-//                        contact.setAddress(mReceiverEditView.getText().toString());
-//                        mChoseContactsView.addContact(contact);
-//                        mReceiverEditView.setText("");
-//                    }
-//                    ((View) mReceiverEditView.getTag(R.id.build_message_receiver_rl)).setVisibility(View.VISIBLE);
-//                    ((View) mReceiverEditView.getTag(R.id.build_message_reciever_sv)).setVisibility(View.GONE);
-//                    showFastContact(false);
-//                    if (!isNetworkAvailable) {
-//                        findViewById(R.id.network_status_notice_tv).setVisibility(View.VISIBLE);
-//                    }
-//                } else if (!isNetworkAvailable) {
-//                    // 编辑联系人状态不显示网络提示
-//                    findViewById(R.id.network_status_notice_tv).setVisibility(View.GONE);
-//                }
-//            }
-//        });
-//
-//        mReceiverEditView.setOnKeyListener(new View.OnKeyListener() {
-//            @Override
-//            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-//                if (keyCode == KeyEvent.KEYCODE_DEL && keyEvent.getAction() == KeyEvent.ACTION_DOWN
-//                        && mReceiverEditView.getTag(R.id.build_message_reciever_et) == null) {
-//                    // 删除键，删除最后一个联系人
-//                    int selectionStart = mReceiverEditView.getSelectionStart();
-//                    int selectionEnd = mReceiverEditView.getSelectionEnd();
-//                    if (selectionStart == 0 && selectionEnd == 0 && mChoseContactsView.getChoseContactList().size() > 0) {
-//                        mChoseContactsView.deleteLastContacts();
-//                        return true;
-//                    }
-//                } else if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-//                    mSendMessageEditView.requestFocus();
-//                }
-//                mReceiverEditView.setTag(R.id.build_message_reciever_et, null);
-//                return false;
-//            }
-//        });
-//
-//        mReceiverEditView.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-//                mReceiverEditView.setTag(R.id.build_message_reciever_et, mReceiverEditView.getSelectionStart());
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                mSearchContactAdapter.performFilter(editable.toString());
-//            }
-//        });
-//    }
-
-    /**
      * 切换到信息详细列表
      */
     private void transferToDetailView(long lastMessageId, int msgFrom, boolean isDelayScroll) {
@@ -1513,12 +1404,15 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      */
     private void initMessageDetailHeader() {
 
+        //Title
         View detailHeaderView = findViewById(R.id.message_header_layout);
-        boolean hasInit = true;
-
+        //Left, back
+        detailHeaderView.findViewById(R.id.back_iv).setOnClickListener(this);
+        //Miffle, portrait
         PhotoView photoView = (PhotoView) detailHeaderView.findViewById(R.id.message_title_profile_pv);
-        // 头部更多
+        //Right, more
         View moreView = detailHeaderView.findViewById(R.id.message_title_more_iv);
+        moreView.setOnClickListener(this);
 
         int conversationType = mRecipientInfo.getConversationType();
         String receiverNameStr = mRecipientInfo.getDisplayName();
@@ -1547,14 +1441,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             receiverName.setText(receiverNameStr);
             receiverNum.setText(receiverNumStr);
         }
-
-        if (hasInit) {
-            return;
-        }
-        // 返回
-        detailHeaderView.findViewById(R.id.back_iv).setOnClickListener(this);
-        // 头部更多
-        moreView.setOnClickListener(this);
     }
 
     /**

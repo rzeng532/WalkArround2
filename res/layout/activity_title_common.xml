@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/bgcor1">
 
     <RelativeLayout
@@ -20,8 +20,9 @@
 
         <TextView
                 android:id="@+id/left_tx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:padding="4dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/back_iv"
@@ -59,8 +60,6 @@
     <RelativeLayout
             android:id="@+id/middle_rl"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
-            android:paddingRight="10dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
@@ -68,6 +67,7 @@
                     android:id="@+id/middle_iv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
                     android:visibility="gone"/>
 
@@ -78,8 +78,8 @@
                     android:layout_toRightOf="@id/middle_iv"
                     android:gravity="center"
                     android:layout_centerInParent="true"
-                    android:textSize="@dimen/font_size9"
-                    android:textColor="@color/fontcor3"/>
+                    android:textSize="@dimen/font_size5"
+                    android:textColor="@color/emerald_green"/>
         </RelativeLayout>
 
         <View
