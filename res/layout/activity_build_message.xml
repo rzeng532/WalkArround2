@@ -3,17 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgcor2">
-    <LinearLayout android:id="@+id/message_header_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <!-- 已建立聊天消息头部：收信人不可编辑 -->
-        <ViewStub
-            android:id="@+id/message_detail_vs"
+
+    <include
+            android:id="@+id/message_header_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout="@layout/message_detail_header"/>
-    </LinearLayout>
+            android:layout_height="@dimen/title_height"
+            layout="@layout/message_detail_header"/>
+
     <TextView
         android:id="@+id/network_status_notice_tv"
         android:layout_width="match_parent"

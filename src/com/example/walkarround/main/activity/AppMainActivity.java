@@ -58,11 +58,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
      * UI elements on main activity
      */
     private View mViewSetting;
-    private View mViewChat;
-    private View mViewMain;
     private RelativeLayout mViewPortrait;
     private LinearLayout mViewLeftMenu;
-    private FrameLayout mFrame;
     private PortraitView mPvPortrait;
     private TextView mTvUserName;
 
@@ -262,18 +259,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     }
 
     private void initView() {
-        mFrame = (FrameLayout) findViewById(R.id.content_frame);
-        //mTvTitle = (TextView) findViewById(R.id.title_name);
-        //mTvTitle.setOnClickListener(this);
-
         mViewSetting = (RelativeLayout) findViewById(R.id.rl_slide_setting);
         mViewSetting.setOnClickListener(this);
-
-        mViewMain = (RelativeLayout) findViewById(R.id.rl_slide_main);
-        mViewMain.setOnClickListener(this);
-
-        mViewChat = (RelativeLayout) findViewById(R.id.rl_slide_chat);
-        mViewChat.setOnClickListener(this);
 
         mViewLeftMenu = (LinearLayout) findViewById(R.id.left_drawer);
         //mViewLeftMenu.setOnClickListener(this);
@@ -313,17 +300,16 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         ft.commit();
 
         mDrawerLayout.closeDrawers();
-        //mDrawerLayout.closeDrawer(mViewLeftMenu);
     }
 
-    private void removeFragment() {
-        Fragment fragment = NearlyUsersFragment.getInstance();
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.remove(fragment);
-        ft.commit();
-    }
+//    private void removeFragment() {
+//        Fragment fragment = NearlyUsersFragment.getInstance();
+//
+//        FragmentManager fragmentManager = getFragmentManager();
+//        FragmentTransaction ft = fragmentManager.beginTransaction();
+//        ft.remove(fragment);
+//        ft.commit();
+//    }
 
     @Override
     public void setTitle(CharSequence title) {
@@ -355,20 +341,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             case R.id.rl_slide_setting://goto setting activity
                 startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
                 break;
-
-            case R.id.rl_slide_main://goto main fragment
-                selectItem(FRAGMENT_PAGE_ID_MAIN);
-                mDrawerLayout.closeDrawers();
-                break;
-
             case R.id.menu_portrait://goto setting activity
                 startActivity(new Intent(AppMainActivity.this, DetailInformationActivity.class));
                 break;
-
-            case R.id.rl_slide_chat:
-                selectItem(FRAGMENT_PAGE_ID_CONVERSATION);
-                break;
-
             default:
                 break;
         }

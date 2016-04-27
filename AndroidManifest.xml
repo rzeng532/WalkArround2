@@ -67,6 +67,7 @@
         <activity android:name=".Location.activity.LocationActivity"/>
         <activity android:name=".main.activity.AppMainActivity"/>
         <activity android:name=".message.activity.BuildMessageActivity"/>
+        <activity android:name=".message.activity.ConversationActivity"/>
         <activity android:name=".message.activity.ChatDetailActivity"/>
         <activity android:name=".message.activity.ImageBrowserActivity"/>
         <activity android:name=".message.activity.ImageChooseActivity"/>

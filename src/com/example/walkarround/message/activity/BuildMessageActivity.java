@@ -1512,33 +1512,14 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      * 初始化收信人头部
      */
     private void initMessageDetailHeader() {
-//        View headView = findViewById(R.id.build_message_title_layout);
-//        if (headView != null) {
-//            headView.setVisibility(View.GONE);
-//        }
-        View detailHeaderView = findViewById(R.id.message_detail_title_layout);
+
+        View detailHeaderView = findViewById(R.id.message_header_layout);
         boolean hasInit = true;
-        if (detailHeaderView == null) {
-            ViewStub detailHeader = (ViewStub) findViewById(R.id.message_detail_vs);
-            detailHeader.inflate();
-            detailHeaderView = findViewById(R.id.message_detail_title_layout);
-            hasInit = false;
-        } else {
-            detailHeaderView.setVisibility(View.VISIBLE);
-            if (mMessageDetailAdapter != null) {
-                mMessageDetailAdapter.setInSelectMode(false);
-                mMessageDetailAdapter.notifyDataSetChanged();
-            }
-        }
 
         PhotoView photoView = (PhotoView) detailHeaderView.findViewById(R.id.message_title_profile_pv);
-        // 打电话
-        View makeCall = detailHeaderView.findViewById(R.id.message_title_call_iv);
         // 头部更多
         View moreView = detailHeaderView.findViewById(R.id.message_title_more_iv);
 
-        // 一对多
-        View oneToMutiView = detailHeaderView.findViewById(R.id.msg_muti_receiver_rl);
         int conversationType = mRecipientInfo.getConversationType();
         String receiverNameStr = mRecipientInfo.getDisplayName();
         String receiverNumStr = null;
@@ -1553,9 +1534,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 receiverNumStr = contact.getMobilePhoneNumber();
             }
 
-            makeCall.setVisibility(View.VISIBLE);
             moreView.setVisibility(View.VISIBLE);
-            oneToMutiView.setVisibility(View.GONE);
         }
 
         TextView receiverName = (TextView) detailHeaderView.findViewById(R.id.message_title_name_tv);
@@ -1574,13 +1553,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
         // 返回
         detailHeaderView.findViewById(R.id.back_iv).setOnClickListener(this);
-        // 打电话
-        makeCall.setOnClickListener(this);
         // 头部更多
         moreView.setOnClickListener(this);
-        // 群聊更多
-        //oneToMutiView.setOnClickListener(this);
-        //groupView.setOnClickListener(this);
     }
 
     /**
@@ -1969,15 +1943,11 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 }
             }
             break;
-        case R.id.message_title_call_iv:
-            // 打电话
-            //doCall(view);
-            break;
         case R.id.message_title_more_iv:
-        //case R.id.message_profile_group_iv:
+            //case R.id.message_profile_group_iv:
             // 更多
             // titleContactsMore(view);
-            showChatDetail();
+            //showChatDetail();
             break;
         case R.id.select_all_rl:
             // 全选或取消全选

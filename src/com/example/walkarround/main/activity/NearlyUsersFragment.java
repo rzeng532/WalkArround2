@@ -1,6 +1,7 @@
 package com.example.walkarround.main.activity;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,14 +14,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
+import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.flingswipe.SwipeFlingAdapterView;
 import com.example.walkarround.main.adapter.NearlyUserListAdapter;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.LikeSomeOneTask;
 import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.message.activity.ConversationActivity;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.myself.manager.ProfileManager;
+import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.radar.RadarScanView;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
@@ -42,6 +47,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private View mViewRoot;
 
     //For title and slide menu
+    private PortraitView mPvPortrait;
     private View mTvTitle;
     private ImageView mIvChatEntrance;
 
@@ -175,6 +181,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.right_chat_iv:
                 //Start build message activity
+                startActivity(new Intent(getActivity(), ConversationActivity.class));
                 break;
             default:
                 break;
@@ -207,8 +214,12 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         });
 
         //Init title
+        //Left portrait
+        mPvPortrait = (PortraitView) mViewRoot.findViewById(R.id.iv_title_portrait);
+        //Middle
         mTvTitle = (View) mViewRoot.findViewById(R.id.title_name);
         mTvTitle.setOnClickListener(this);
+        //Right icon
         mIvChatEntrance = (ImageView) mViewRoot.findViewById(R.id.right_chat_iv);
         mIvChatEntrance.setOnClickListener(this);
 
@@ -284,6 +295,13 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
         if(mNearlyUserList != null && mNearlyUserList.size() > 0) {
             showNearyUser();
+        }
+
+        MyProfileInfo myProfileInfo = ProfileManager.getInstance().getMyProfile();
+
+        if (!TextUtils.isEmpty(myProfileInfo.getUsrName()) && !TextUtils.isEmpty(myProfileInfo.getMobileNum())) {
+            mPvPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
+                    myProfileInfo.getUsrName().substring(0, 1), -1);
         }
     }
 

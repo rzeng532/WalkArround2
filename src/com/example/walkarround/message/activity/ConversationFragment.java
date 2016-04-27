@@ -10,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -505,7 +504,6 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
 
     }
 
-
     public boolean onBackPressed() {
         if (mPageState == PageState.NOTIFY_SEARCH_PAGE
                 || mPageState == PageState.NORMAL_SEARCH_PAGE) {
@@ -548,12 +546,8 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
             listAdapter = mNotifyMsgAdapter;
         }
         switch (view.getId()) {
-            case R.id.title:
-                //TODO: we should use handler for communication between activty and fragment later.
-                DrawerLayout slideMenu = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-                LinearLayout mViewLeftMenu = (LinearLayout) getActivity().findViewById(R.id.left_drawer);
-                slideMenu.openDrawer(mViewLeftMenu);
-                //getActivity().finish();
+            case R.id.back_rl:
+                getActivity().finish();
                 break;
 
 //            case R.id.network_status_rl:
@@ -840,11 +834,52 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
      * @param contentView
      */
     private void findView(View contentView) {
+
+        //Title
+        View title = contentView.findViewById(R.id.title);
+        title.findViewById(R.id.back_rl).setOnClickListener(this);
+        title.findViewById(R.id.more_rl).setVisibility(View.GONE);
+        title.findViewById(R.id.middle_iv).setVisibility(View.VISIBLE);
+        ((ImageView)title.findViewById(R.id.middle_iv)).setImageResource(R.drawable.icon_conversation_title);
+        title.findViewById(R.id.display_name).setVisibility(View.GONE);
+        //Drawable drawableTitleLeft = mContext.getResources().getDrawable(R.drawable.icon_conversation_title);
+        //((TextView) title.findViewById(R.id.display_name)).setCompoundDrawables(drawableTitleLeft,null,null,null);
+        //((TextView) title.findViewById(R.id.display_name)).setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_conversation_title,0,0,0);
+
         // 网络提示
         mNetStatusView = contentView.findViewById(R.id.network_status_rl);
         mNetStatusView.setOnClickListener(this);
 
         // 查找框
+        initSearchEditText(contentView);
+
+        // 会话列表
+        mConversationListView = (ListView) contentView.findViewById(R.id.converstaion_list);
+        mNoConversationView = LayoutInflater.from(mContext).inflate(R.layout.message_conversation_listview_empty, null);
+        mNoConversationView.findViewById(R.id.tv_why_no_conversations).setOnClickListener(this);
+        mConversationListView.addFooterView(mNoConversationView);
+        mNoConversationView.setVisibility(View.GONE);
+        mConversationAdapter = new ConversationListAdapter(mContext);
+        mConversationAdapter.setItemListener(this);
+        mConversationListView.setAdapter(mConversationAdapter);
+        mConversationListView.removeFooterView(mNoConversationView);
+
+        // 初始化搜索/通知消息List
+        mSearchResultListView = (ListView) contentView.findViewById(R.id.search_list);
+
+        mNotifyMsgAdapter = new NotifyMsgListAdapter(mContext);
+        mNotifyMsgAdapter.setItemListener(this);
+
+        mSearchResultAdapter = new SearchMessageResultListAdapter(mContext);
+        mSearchResultAdapter.setItemListener(this);
+
+        mNotifyMsgEmptyView = contentView.findViewById(R.id.notify_list_empty_view_iv);
+        mSearchEmptyView = contentView.findViewById(R.id.tv_no_conversation_hint);
+
+        contentView.findViewById(R.id.title).setOnClickListener(this);
+    }
+
+    private void initSearchEditText(View contentView) {
         mSearchEditClearView = contentView.findViewById(R.id.bt_cancel_search);
         mSearchEditClearView.setOnClickListener(this);
         mSearchBarView = contentView.findViewById(R.id.ll_search_bar);
@@ -888,31 +923,6 @@ public class ConversationFragment extends Fragment implements ConversationItemLi
                 }
             }
         });
-
-        // 会话列表
-        mConversationListView = (ListView) contentView.findViewById(R.id.converstaion_list);
-        mNoConversationView = LayoutInflater.from(mContext).inflate(R.layout.message_conversation_listview_empty, null);
-        mNoConversationView.findViewById(R.id.tv_why_no_conversations).setOnClickListener(this);
-        mConversationListView.addFooterView(mNoConversationView);
-        mNoConversationView.setVisibility(View.GONE);
-        mConversationAdapter = new ConversationListAdapter(mContext);
-        mConversationAdapter.setItemListener(this);
-        mConversationListView.setAdapter(mConversationAdapter);
-        mConversationListView.removeFooterView(mNoConversationView);
-
-        // 初始化搜索/通知消息List
-        mSearchResultListView = (ListView) contentView.findViewById(R.id.search_list);
-
-        mNotifyMsgAdapter = new NotifyMsgListAdapter(mContext);
-        mNotifyMsgAdapter.setItemListener(this);
-
-        mSearchResultAdapter = new SearchMessageResultListAdapter(mContext);
-        mSearchResultAdapter.setItemListener(this);
-
-        mNotifyMsgEmptyView = contentView.findViewById(R.id.notify_list_empty_view_iv);
-        mSearchEmptyView = contentView.findViewById(R.id.tv_no_conversation_hint);
-
-        contentView.findViewById(R.id.title).setOnClickListener(this);
     }
 
     /**

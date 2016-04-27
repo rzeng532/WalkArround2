@@ -31,8 +31,7 @@
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/title"/>
+        android:layout_height="match_parent"/>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat
          this as a sliding drawer on the left side for left-to-right
@@ -89,36 +88,7 @@
             android:layout_alignParentBottom="true"
             android:background="@color/linecor5"/>
 
-        <RelativeLayout
-                android:id="@+id/rl_slide_main"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:background="@drawable/slidemenu_item_bg"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-            <!-- we need an image here -->
-
-            <TextView
-                    android:id="@+id/tv_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="@dimen/font_size3"
-                    android:textColor="@color/fontcor1"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:text="@string/main_title"/>
-        </RelativeLayout>
-
         <!-- android:layout_alignParentRight="true" -->
-
-        <!-- Divide line -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/linecor5"/>
-
         <RelativeLayout
                 android:id="@+id/rl_slide_setting"
                 android:layout_width="match_parent"
@@ -145,35 +115,6 @@
                 android:layout_height="0.5dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/linecor5"/>
-
-        <RelativeLayout
-                android:id="@+id/rl_slide_chat"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:background="@drawable/slidemenu_item_bg"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-            <!-- we need an image here -->
-
-            <TextView
-                    android:id="@+id/tv_slide_chat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="@dimen/font_size3"
-                    android:textColor="@color/fontcor1"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:text="@string/setting_chat"/>
-        </RelativeLayout>
-
-        <!-- Divide line -->
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/linecor5"/>
-
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

@@ -1,5 +1,8 @@
 <resources>
 
+    <!-- Title height -->
+    <dimen name="title_height">54dp</dimen>
+
     <!-- font size -->
     <dimen name="font_size1">20sp</dimen>
     <dimen name="font_size2">18sp</dimen>
@@ -10,6 +13,7 @@
     <dimen name="font_size7">10sp</dimen>
     <dimen name="font_size8">24sp</dimen>
     <dimen name="font_size9">30sp</dimen>
+    <dimen name="font_size_title">21sp</dimen>
     <dimen name="font_size2_dp">18dp</dimen>
     <dimen name="font_size3_dp">16dp</dimen>
     <dimen name="font_size4_dp">15dp</dimen>
