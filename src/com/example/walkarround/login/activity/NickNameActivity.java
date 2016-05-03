@@ -21,7 +21,6 @@ public class NickNameActivity extends Activity implements View.OnClickListener{
 
     EditText mEtNickName = null;
     Button mBtNext = null;
-    TextView mTitle = null;
 
     private final int NICK_MAX_LENGTH = 32;
 
@@ -33,12 +32,16 @@ public class NickNameActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_input_nickname);
 
+        //Title
+        View title = findViewById(R.id.title);
+        title.findViewById(R.id.back_rl).setOnClickListener(this);
+        title.findViewById(R.id.more_rl).setVisibility(View.GONE);
+        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.register_create_account);
+
         mEtNickName = (EditText) findViewById(R.id.nick_edit);
-        mTitle = (TextView) findViewById(R.id.title_name);
         mBtNext = (Button) findViewById(R.id.btn_nextstep);
 
         mEtNickName.setOnClickListener(this);
-        mTitle.setOnClickListener(this);
         mBtNext.setOnClickListener(this);
 
         //Init nick name
@@ -67,7 +70,7 @@ public class NickNameActivity extends Activity implements View.OnClickListener{
                 Intent intent = new Intent(this, PhoneAndPasswordActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_NEXT_PAGE);
             }
-        } else if(view.getId() == R.id.title_name) {
+        } else if(view.getId() == R.id.back_rl) {
             this.finish();
         }
     }

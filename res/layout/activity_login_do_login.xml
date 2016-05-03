@@ -27,7 +27,6 @@
                 android:layout_alignParentTop="true"
                 android:background="@null"
                 android:numeric="integer"
-                android:drawablePadding="11dp"
                 android:drawableRight="@drawable/public_search_clear_slt"
                 android:hint="@string/login_hint_input_phone_num"
                 android:paddingBottom="11dp"
