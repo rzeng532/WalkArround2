@@ -3,8 +3,7 @@ package com.example.walkarround;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.example.walkarround.login.activity.LoginActivity;
+import com.example.walkarround.login.activity.LoginOrRegActivity;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.myself.task.OnlineStateTask;
@@ -28,7 +27,7 @@ public class EntranceActivity extends Activity {
         if (isLogined) {
             startActivityForResult(new Intent(this, AppMainActivity.class), REQ_CODE_LOGIN);
         } else {
-            startActivityForResult(new Intent(this, LoginActivity.class), REQ_CODE_MAIN);
+            startActivityForResult(new Intent(this, LoginOrRegActivity.class), REQ_CODE_MAIN);
         }
 
         //finish();

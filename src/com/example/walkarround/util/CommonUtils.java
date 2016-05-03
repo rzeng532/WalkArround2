@@ -37,6 +37,9 @@ import java.util.regex.Pattern;
 
 public class CommonUtils {
 
+    public static final int ACTIVITY_FINISH_NORMAL_FINISH = 100;
+    public static final int ACTIVITY_FINISH_BACK = 101;
+
     // 检查手机号是否有效
     public static boolean validatePhoneNum(String phoneNum) {
         // return phoneNum.matches("^(\\+86)?1[0-9]{10}$");

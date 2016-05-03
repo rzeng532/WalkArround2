@@ -72,4 +72,6 @@
     <dimen name="msg_small_gap">12dp</dimen>
     <dimen name="msg_big_gap">24dp</dimen>
 
+    <dimen name="padding_left_common">16dp</dimen>
+
 </resources>

@@ -37,24 +37,28 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private EditText edUserName = null;
     private EditText edPassWord = null;
     private Button btnLogin = null;
-    private Button btnRegister = null;
+    //private Button btnRegister = null;
     private TextView tvForgotPwd = null;
     private Dialog mLoadingDialog;
     private Logger loginLogger;
 
     private final int LOGIN_OK = 0;
     private final int LOGIN_FAIL = 1;
-    private final int HANDLER_MSG_DELAY = 1000; //1 second
+    private final int HANDLER_MSG_DELAY = 2000; //1 second
 
     private Handler mLoginHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == LOGIN_OK) {
                 //Goto target page.
+                dismissDialog();
+                Toast.makeText(getApplicationContext(), getString(R.string.login_do_login_success), Toast.LENGTH_SHORT).show();
                 startMainActivity();
                 setResult(AppConstant.ACTIVITY_RETURN_CODE_OK);
+                setResult(CommonUtils.ACTIVITY_FINISH_NORMAL_FINISH);
                 finish();
             } else if (msg.what == LOGIN_FAIL) {
+                dismissDialog();
                 Toast.makeText(getApplicationContext(), (String) msg.obj, Toast.LENGTH_SHORT).show();
             }
         }
@@ -63,21 +67,17 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     AsyncTaskListener mLoginListener = new AsyncTaskListener() {
         @Override
         public void onSuccess(Object data) {
-            Toast.makeText(getApplicationContext(), getString(R.string.login_do_login_success), Toast.LENGTH_SHORT).show();
-
             Message msg = Message.obtain();
             loginLogger.d("Do login success.");
 
             LoginManager.getInstance().setCurrentUser();
 
-            dismissDialog();
             msg.what = LOGIN_OK;
             mLoginHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
         }
 
         @Override
         public void onFailed(AVException e) {
-            dismissDialog();
             loginLogger.d("Get SMS code failed, " + e.getMessage());
             Message msg = Message.obtain();
             msg.what = LOGIN_FAIL;
@@ -95,7 +95,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     private void findView() {
-        setContentView(R.layout.activity_login_do_login);
+
+        //Title
+        View title = findViewById(R.id.title);
+        title.findViewById(R.id.back_rl).setOnClickListener(this);
+        title.findViewById(R.id.more_rl).setVisibility(View.GONE);
+        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.login_dologin);
 
         //Init UI elements
         edUserName = (EditText) findViewById(R.id.signin_input_username);
@@ -110,8 +115,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         btnLogin = (Button) findViewById(R.id.signin_loginin);
         btnLogin.setOnClickListener(this);
-        btnRegister = (Button) findViewById(R.id.signin_register);
-        btnRegister.setOnClickListener(this);
         tvForgotPwd = (TextView) findViewById(R.id.signin_forgot_password);
         tvForgotPwd.setOnClickListener(this);
     }
@@ -136,11 +139,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (v.getId() == R.id.signin_register) {
-            Intent intent = new Intent(LoginActivity.this, NickNameActivity.class);
-            startActivity(intent);
         } else if (v.getId() == R.id.signin_forgot_password) {
             //TODO: add forgot password step.
+        } else if (v.getId() == R.id.back_rl) {
+            this.finish();
         }
     }
 

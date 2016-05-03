@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.walkarround.R;
 import com.example.walkarround.login.manager.LoginManager;
+import com.example.walkarround.util.CommonUtils;
 
 /**
  * Created by Richard on 2015/11/22.
@@ -81,6 +82,7 @@ public class NickNameActivity extends Activity implements View.OnClickListener{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_NEXT_PAGE) {
             if (resultCode == PhoneAndPasswordActivity.RESULT_OK) {
+                setResult(CommonUtils.ACTIVITY_FINISH_NORMAL_FINISH);
                 this.finish();
             } else if(resultCode == PhoneAndPasswordActivity.RESULT_BACK) {
                 initNickName();

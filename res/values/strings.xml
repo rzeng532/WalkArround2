@@ -35,6 +35,7 @@
     <string name="dialog_not_show_this_again">不再显示此提示</string>
 
     <!-- Strings for register & login -->
+    <string name="register_create_account">创建账号</string>
     <string name="register_registe">注册</string>
     <string name="register_input_youraccount">请输入手机号</string>
     <string name="register_set_yournick">请设置昵称</string>

@@ -54,6 +54,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".login.activity.LoginOrRegActivity"/>
         <activity android:name=".login.activity.NickNameActivity"/>
         <activity android:name=".login.activity.PhoneAndPasswordActivity" />
         <activity android:name=".login.activity.CheckSMSCodeActivity" />
