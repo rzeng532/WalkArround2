@@ -11,10 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
-import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
@@ -35,12 +33,10 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
     private EditText mTelView;
     private EditText mPassView;
     private Button btnNext;
-    private TextView mTitleView;
     private Dialog mLoadingDialog;
     private final int ERROR = 1;
 
     public static final int RESULT_OK = 0;
-    public static final int RESULT_BACK = 1;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -86,13 +82,24 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
     }
 
     private void initView() {
+
+        //Title
+        View title = findViewById(R.id.title);
+        title.findViewById(R.id.back_rl).setOnClickListener(this);
+        title.findViewById(R.id.more_rl).setVisibility(View.GONE);
+        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.register_create_account);
+
         mTelView = (EditText) findViewById(R.id.account_edit);
         mPassView = (EditText) findViewById(R.id.password_edit);
         btnNext = (Button) findViewById(R.id.btn_nextstep);
-        mTitleView = (TextView) findViewById(R.id.title_name);
-        mTitleView.setOnClickListener(this);
         btnNext.setOnClickListener(this);
         myLogger.d("Init view complete.");
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(CommonUtils.ACTIVITY_FINISH_BACK);
+        finish();
     }
 
     @Override
@@ -113,28 +120,13 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
                 Toast.makeText(this, R.string.login_password_cannot_be_null, Toast.LENGTH_SHORT).show();
                 return;
             }
-            //TODO: do register step.
+
             LoginManager.getInstance().setPhoneNum(mStrPhoneNum);
             LoginManager.getInstance().setPassword(pass);
             LoginManager.getInstance().doRegister(mAccountManagerListener);
-            //showDialog(getString(R.string.register_do_signup));
-        } else if (v.getId() == R.id.title_name) {
-            setResult(RESULT_BACK);
+        } else if (v.getId() == R.id.back_rl) {
+            setResult(CommonUtils.ACTIVITY_FINISH_BACK);
             finish();
-        }
-    }
-
-    private void showDialog(String content) {
-        if (mLoadingDialog == null) {
-            mLoadingDialog = DialogFactory.getLoadingDialog(this, content, true, null);
-            mLoadingDialog.show();
-        }
-    }
-
-    private void dismissDialog() {
-        if (!this.isFinishing() && mLoadingDialog != null) {
-            mLoadingDialog.dismiss();
-            mLoadingDialog = null;
         }
     }
 
@@ -144,10 +136,11 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
         if (requestCode == CHECKSMSCODE) {
             myLogger.d("onActivityResult, CHECKSMSCODE.");
 
-            if (resultCode == CheckSMSCodeActivity.GIVEUP) {
-                setResult(RESULT_BACK);
-                finish();
-            } else if (resultCode == CheckSMSCodeActivity.FINISHTHIS) {
+//            if (resultCode == CheckSMSCodeActivity.GIVEUP) {
+//                setResult(RESULT_BACK);
+//                finish();
+//            } else
+            if (resultCode == CheckSMSCodeActivity.FINISHTHIS) {
                 setResult(RESULT_OK);
                 finish();
             }

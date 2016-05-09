@@ -48,12 +48,14 @@
     <string name="register_reget_check_code">点击重新获取验证码</string>
     <string name="register_do_signup">注册中...</string>
     <string name="register_signup_success">注册成功</string>
+    <string name="register_sms_already_sent">我们向%1$s发送了一个验证码</string>
+    <string name="register_select_gender">请选择性别</string>
 
     <string name="login_hint_input_phone_num">请输入注册时的手机号</string>
     <string name="login_hint_input_password">请输入密码</string>
     <string name="login_dologin">登录</string>
     <string name="login_forgot_password">忘记密码</string>
-    <string name="login_set_yourpassword">忘记密码</string>
+    <string name="login_set_yourpassword">设置密码</string>
     <string name="login_nick_cannot_be_null">昵称不能为空</string>
     <string name="login_nick_beyond_length_limit">昵称过长</string>
     <string name="login_nick_cannot_contain_space">昵称不能包含空格</string>
@@ -247,5 +249,7 @@
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
     <string name="msg_time_yestoday">昨天</string>
     <string name="about">关于</string>
+    <string name="gender_men">男</string>
+    <string name="gender_female">女</string>
 
 </resources>

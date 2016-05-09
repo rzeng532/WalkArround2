@@ -20,6 +20,7 @@ public class LoginManager {
     /* Class values */
 
     private String mStrNickName = null;
+    private String mIntGender = null;
     private String mStrPhoneNum = null;
     private String mStrPassword = null;
     private static LoginApiAbstract mLoginApi = null;
@@ -65,6 +66,10 @@ public class LoginManager {
         return mStrPassword;
     }
 
+    public void setGender(String gender) { this.mIntGender = gender;}
+
+    public String getGender() { return mIntGender; }
+
     public void setPassword(String mStrPassword) {
         this.mStrPassword = mStrPassword;
     }
@@ -75,12 +80,19 @@ public class LoginManager {
             mLoginApi.doRegister(LoginManager.getInstance().getPhoneNum(),
                     LoginManager.getInstance().getPassword(),
                     LoginManager.getInstance().getUserName(),
-                    "", //We don't need email address now.
+                    LoginManager.getInstance().getGender(),
                     listener);
             setCurrentAccount(LoginManager.getInstance().getUserName(),
                     LoginManager.getInstance().getPhoneNum(),
                     LoginManager.getInstance().getPassword());
         }
+    }
+
+    public void clearAllData() {
+        mStrNickName = null;
+        mIntGender = null;
+        mStrPhoneNum = null;
+        mStrPassword = null;
     }
 
     /*

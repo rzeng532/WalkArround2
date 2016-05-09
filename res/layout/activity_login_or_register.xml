@@ -23,7 +23,7 @@
             android:text="@string/login_dologin"
             android:textColor="@color/fontcor3"
             android:textSize="@dimen/font_size3"
-            android:background="@drawable/login_btn_bg"/>
+            android:background="@null"/>
 
     <Button
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:text="@string/register_create_account"
             android:textColor="@color/fontcor3"
             android:textSize="@dimen/font_size3"
-            android:background="@drawable/login_btn_bg"/>
+            android:background="@color/red_button"/>
 
     <View
             android:id="@+id/line"

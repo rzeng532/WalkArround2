@@ -11,7 +11,10 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
@@ -24,7 +27,6 @@ import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.main.task.TaskUtil;
-import com.example.walkarround.message.activity.ConversationFragment;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.myself.activity.DetailInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
@@ -289,11 +291,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         if (position == FRAGMENT_PAGE_ID_MAIN) {
             mCurFragmentPage = FRAGMENT_PAGE_ID_MAIN;
             fragment = NearlyUsersFragment.getInstance();
-        } else if (position == FRAGMENT_PAGE_ID_CONVERSATION) {
-            mCurFragmentPage = FRAGMENT_PAGE_ID_CONVERSATION;
-            fragment = ConversationFragment.getInstance();
         }
-
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.content_frame, fragment);

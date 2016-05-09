@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.walkarround.R;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.util.CommonUtils;
@@ -67,27 +66,36 @@ public class NickNameActivity extends Activity implements View.OnClickListener{
                 return;
             } else {
                 LoginManager.getInstance().setNickName(nickName);
-                Intent intent = new Intent(this, PhoneAndPasswordActivity.class);
+                Intent intent = new Intent(this, SelectGenderActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_NEXT_PAGE);
             }
         } else if(view.getId() == R.id.back_rl) {
+            //Clear all data if user select to exit
+            LoginManager.getInstance().clearAllData();
             this.finish();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        LoginManager.getInstance().clearAllData();
+        this.finish();
     }
 
     private void initNickName() {
         String strNick = LoginManager.getInstance().getUserName();
         if (!TextUtils.isEmpty(strNick) && mEtNickName != null) {
             mEtNickName.setText(strNick);
+            mEtNickName.setSelection(strNick.length());
         }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_NEXT_PAGE) {
-            if (resultCode == PhoneAndPasswordActivity.RESULT_OK) {
+            if (resultCode == CommonUtils.ACTIVITY_FINISH_NORMAL_FINISH) {
                 setResult(CommonUtils.ACTIVITY_FINISH_NORMAL_FINISH);
                 this.finish();
-            } else if(resultCode == PhoneAndPasswordActivity.RESULT_BACK) {
+            } else if(resultCode == CommonUtils.ACTIVITY_FINISH_BACK) {
                 initNickName();
             }
         }

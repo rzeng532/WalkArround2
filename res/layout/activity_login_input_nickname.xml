@@ -40,16 +40,22 @@
 
     <Button
             android:id="@+id/btn_nextstep"
-            android:layout_width="320dp"
+            android:layout_width="match_parent"
             android:layout_height="45dp"
             android:paddingLeft="@dimen/padding_left_common"
             android:paddingRight="@dimen/padding_left_common"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/signin_input_rl"
-            android:layout_marginTop="32dp"
+            android:layout_above="@+id/line"
             android:textColor="@color/fontcor3"
             android:textSize="@dimen/font_size3"
             android:text="@string/common_next"
-            android:background="@color/emerald_green"
+            android:background="@drawable/login_btn_bg"
     />
+
+    <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/linecor1"/>
 </RelativeLayout>

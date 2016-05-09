@@ -40,6 +40,9 @@ public class CommonUtils {
     public static final int ACTIVITY_FINISH_NORMAL_FINISH = 100;
     public static final int ACTIVITY_FINISH_BACK = 101;
 
+    public static final String PROFILE_GENDER_MEN = "0";
+    public static final String PROFILE_GENDER_FEMALE = "1";
+
     // 检查手机号是否有效
     public static boolean validatePhoneNum(String phoneNum) {
         // return phoneNum.matches("^(\\+86)?1[0-9]{10}$");

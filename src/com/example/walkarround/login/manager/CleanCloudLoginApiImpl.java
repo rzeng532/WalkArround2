@@ -2,6 +2,7 @@ package com.example.walkarround.login.manager;
 
 import com.avos.avoscloud.*;
 import com.example.walkarround.login.util.LoginConstant;
+import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppSharedPreference;
 import com.example.walkarround.util.AsyncTaskListener;
 
@@ -15,7 +16,7 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
         doRegister(LoginManager.getInstance().getPhoneNum(),
                 LoginManager.getInstance().getPassword(),
                 LoginManager.getInstance().getUserName(),
-                "",
+                LoginManager.getInstance().getGender(),
                 listener);
     }
 
@@ -54,14 +55,13 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
     }
 
     @Override
-    public void doRegister(final String phoneNum, final String password, final String userName, String email, final AsyncTaskListener listener) {
+    public void doRegister(final String phoneNum, final String password, final String userName, String gender, final AsyncTaskListener listener) {
 
         AVUser user = new AVUser();
         user.setUsername(userName);
         user.setPassword(password);
-        //user.setEmail(email);
         user.setMobilePhoneNumber(phoneNum);
-        //user.put(LoginConstant.REG_KEY_NICK_NAME, userName);
+        user.put(ProfileUtil.REG_KEY_GENDER, gender);
 
         user.signUpInBackground(new SignUpCallback() {
             public void done(AVException e) {

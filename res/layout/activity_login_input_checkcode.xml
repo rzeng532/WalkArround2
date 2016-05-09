@@ -1,147 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/bgcor1">
 
-    <RelativeLayout
+    <include
             android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/title_bar_height"
-            android:background="@drawable/header_title_bg">
+            android:layout_height="@dimen/title_height"
+            layout="@layout/activity_title_common"/>
 
-        <TextView
-                android:id="@+id/title_name"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:background="@drawable/btn_pre_bg_light"
-                android:clickable="true"
-                android:drawableLeft="@drawable/public_icon_titlebar_back"
-                android:drawablePadding="10dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:textColor="@color/fontcor3"
-                android:text="@string/register_registe"
-                android:textSize="@dimen/font_size2"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-            android:id="@+id/image_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_marginTop="38dp"
-            >
-
-        <ImageView
-                android:id="@+id/line_view"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_marginTop="12dp"
-                android:background="@color/linecor1"
-                />
-        <ImageView
-                android:id="@+id/three_roundview"
-                android:layout_width="29dp"
-                android:layout_height="29dp"
-                android:src="@drawable/signin_step3"
-                android:background="@drawable/number_bac"
-                android:layout_centerHorizontal="true"
-
-                />
-        <ImageView
-                android:id="@+id/two_roundview"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="2dp"
-                android:layout_toLeftOf="@+id/three_roundview"
-                android:layout_marginRight="40dp"
-                android:src="@drawable/signin_step2"
-                android:background="@drawable/number_white_bac"
-                />
-
-        <ImageView
-                android:id="@+id/one_roundview"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/signin_step1"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/number_white_bac"
-                android:layout_toLeftOf="@+id/two_roundview"
-                android:layout_marginRight="40dp"
-                />
-
-
-    </RelativeLayout>
     <TextView
-            android:id="@+id/nick_txtView"
+            android:id="@+id/tip_sms_already_sent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/image_layout"
+            android:layout_below="@+id/title"
             android:layout_marginTop="20dp"
-            android:text="@string/register_input_checkcode"
             android:layout_centerHorizontal="true"
-            android:textSize="@dimen/font_size1"
-            android:textColor="@color/fontcor1"/>
+            android:textSize="@dimen/font_size5"
+            android:textColor="@color/fontcor4"/>
 
-    <com.example.walkarround.base.view.EditTextWithDel
-            android:id="@+id/checkcode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/nick_txtView"
-            android:layout_marginTop="58dp"
-            android:layout_marginLeft="44dp"
-            android:layout_marginRight="44dp"
-            android:paddingBottom="8dp"
-            android:background="@drawable/edit_nickname"
-            android:hint="@string/register_hint_input_checkcode"
-            android:textColorHint="@color/fontcor4"
-            android:textSize="@dimen/font_size3"
-            android:textColor="@color/fontcor1"
-            android:singleLine="true"
-            android:numeric="integer"
-            android:drawableRight="@drawable/public_icon_searchbar_delete"
-            />
+    <RelativeLayout
+            android:layout_width="320dp"
+            android:layout_height="49dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/tip_sms_already_sent"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="@dimen/padding_left_common"
+            android:paddingRight="@dimen/padding_left_common"
+            android:id="@+id/signin_input_rl"
+            android:background="@drawable/signin_inputbg">
+
+        <com.example.walkarround.base.view.EditTextWithDel
+                android:id="@+id/checkcode"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:paddingBottom="11dp"
+                android:paddingTop="12dp"
+                android:maxLength="50"
+                android:background="@null"
+                android:drawableRight="@drawable/public_search_clear_slt"
+                android:hint="@string/register_hint_input_checkcode"
+                android:textColorHint="@color/fontcor4"
+                android:textSize="@dimen/font_size3"
+                android:textColor="@color/fontcor1"
+                android:singleLine="true"/>
+    </RelativeLayout>
 
     <RelativeLayout
             android:id="@+id/tip_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/checkcode"
+            android:layout_below="@+id/signin_input_rl"
             android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
-            >
+            android:layout_centerHorizontal="true">
         <TextView
                 android:id="@+id/tip_txtView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size5"
-                android:textColor="@color/fontcor6"
-                />
+                android:textColor="@color/emerald_green"/>
 
-            <TextView
-                    android:id="@+id/tip_standard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/font_size5"
-                    android:textColor="@color/fontcor4"
-                    android:layout_toRightOf="@+id/tip_txtView"
-                    android:text="@string/register_time_next_reget"
-                    />
+        <TextView
+                android:id="@+id/tip_standard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size5"
+                android:textColor="@color/fontcor4"
+                android:layout_toRightOf="@+id/tip_txtView"
+                android:text="@string/register_time_next_reget"/>
     </RelativeLayout>
 
     <Button
             android:id="@+id/btn_nextstep"
-            android:layout_width="272dp"
+            android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:paddingLeft="@dimen/padding_left_common"
+            android:paddingRight="@dimen/padding_left_common"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/nick_txtView"
-            android:layout_marginTop="168dp"
+            android:layout_above="@+id/line"
             android:textColor="@color/fontcor3"
             android:textSize="@dimen/font_size3"
-            android:text="@string/register_finish"
-            android:background="@drawable/btn_nextstep"
-            />
+            android:text="@string/common_next"
+            android:background="@drawable/login_btn_bg"/>
 
+    <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/linecor1"/>
 </RelativeLayout>

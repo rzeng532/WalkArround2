@@ -1,143 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:pass="http://schemas.android.com/apk/res/com.example.walkarround"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/bgcor1">
 
-    <RelativeLayout
+    <include
             android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/title_bar_height"
-            android:background="@drawable/header_title_bg">
-
-        <TextView
-                android:id="@+id/title_name"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:background="@drawable/btn_pre_bg_light"
-                android:clickable="true"
-                android:drawablePadding="10dp"
-                android:gravity="center_vertical"
-                android:drawableLeft="@drawable/public_icon_titlebar_back"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:textColor="@color/fontcor3"
-                android:text="@string/register_registe"
-                android:textSize="@dimen/font_size2"/>
-    </RelativeLayout>
+            android:layout_height="@dimen/title_height"
+            layout="@layout/activity_title_common"/>
 
     <RelativeLayout
-            android:id="@+id/image_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_marginTop="38dp"
-            >
-
-        <ImageView
-                android:id="@+id/line_view"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_marginTop="12dp"
-                android:background="@color/linecor1"
-                />
-        <ImageView
-                android:id="@+id/two_roundview"
-                android:layout_width="29dp"
-                android:layout_height="29dp"
-                android:src="@drawable/signin_step2"
-                android:background="@drawable/number_bac"
-                android:layout_centerHorizontal="true"
-                />
-
-        <ImageView
-                android:id="@+id/one_roundview"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/signin_step1"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/number_white_bac"
-                android:layout_toLeftOf="@+id/two_roundview"
-                android:layout_marginRight="40dp"
-                />
-
-        <ImageView
-                android:id="@+id/three_roundview"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="2dp"
-                android:src="@drawable/signin_step3"
-                android:background="@drawable/number_white_bac"
-                android:layout_toRightOf="@+id/two_roundview"
-                android:layout_marginLeft="40dp"
-                />
-    </RelativeLayout>
-    <TextView
-            android:id="@+id/nick_txtView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/image_layout"
-            android:layout_marginTop="20dp"
-            android:text="@string/register_input_youraccount"
+            android:layout_width="320dp"
+            android:layout_height="99dp"
             android:layout_centerHorizontal="true"
-            android:textSize="@dimen/font_size1"
-            android:textColor="@color/fontcor1"/>
+            android:layout_below="@+id/title"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="@dimen/padding_left_common"
+            android:paddingRight="@dimen/padding_left_common"
+            android:id="@+id/signin_input_rl"
+            android:background="@drawable/signin_inputbg">
 
-    <com.example.walkarround.base.view.EditTextWithDel
-            android:id="@+id/account_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/nick_txtView"
-            android:layout_marginTop="58dp"
-            android:layout_marginLeft="44dp"
-            android:layout_marginRight="44dp"
-            android:paddingBottom="8dp"
-            android:background="@drawable/edit_nickname"
-            android:hint="@string/register_input_youraccount"
-            android:textColorHint="@color/fontcor4"
-            android:textSize="@dimen/font_size3"
-            android:textColor="@color/fontcor1"
-            android:singleLine="true"
-            android:numeric="integer"
-            android:drawableRight="@drawable/public_icon_searchbar_delete"
-            />
+        <com.example.walkarround.base.view.EditTextWithDel
+                android:id="@+id/account_edit"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:layout_alignParentTop="true"
+                android:background="@null"
+                android:numeric="integer"
+                android:drawableRight="@drawable/public_search_clear_slt"
+                android:hint="@string/register_input_youraccount"
+                android:paddingBottom="11dp"
+                android:paddingTop="12dp"
+                android:singleLine="true"
+                android:textSize="@dimen/font_size3"
+                android:textColor="@color/fontcor1"/>
 
-    <com.example.walkarround.base.view.EditPasswordView
-            android:id="@+id/password_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/nick_txtView"
-            android:layout_marginTop="112dp"
-            android:layout_marginLeft="44dp"
-            android:layout_marginRight="44dp"
-            android:paddingBottom="8dp"
-            android:background="@drawable/edit_nickname"
-            android:hint="@string/login_set_yourpassword"
-            android:textColorHint="@color/fontcor4"
-            android:textSize="@dimen/font_size3"
-            android:textColor="@color/fontcor1"
-            android:inputType="textPassword"
-            android:drawableRight="@drawable/signin_show"
-            pass:showPass="@drawable/signin_show"
-            pass:noShowPass="@drawable/signin_noshow"
-            android:singleLine="true"
-            android:maxLength="32"/>
-
-
+        <com.example.walkarround.base.view.EditTextWithDel
+                android:id="@+id/password_edit"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:layout_alignParentBottom="true"
+                android:background="@null"
+                android:drawablePadding="11dp"
+                android:drawableRight="@drawable/public_search_clear_slt"
+                android:hint="@string/login_set_yourpassword"
+                android:inputType="textPassword"
+                android:paddingBottom="12dp"
+                android:paddingTop="11dp"
+                android:singleLine="true"
+                android:textSize="@dimen/font_size3"
+                android:textColor="@color/fontcor1"/>
+    </RelativeLayout>
 
     <Button
             android:id="@+id/btn_nextstep"
-            android:layout_width="272dp"
+            android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:paddingLeft="@dimen/padding_left_common"
+            android:paddingRight="@dimen/padding_left_common"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/password_edit"
-            android:layout_marginTop="32dp"
+            android:layout_above="@+id/line"
             android:textColor="@color/fontcor3"
             android:textSize="@dimen/font_size3"
             android:text="@string/common_next"
-            android:background="@drawable/btn_nextstep"
-            />
+            android:background="@drawable/login_btn_bg"/>
 
-
+    <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/linecor1"/>
 </RelativeLayout>

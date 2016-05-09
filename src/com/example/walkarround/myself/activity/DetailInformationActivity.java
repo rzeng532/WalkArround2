@@ -116,7 +116,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int which) {
-                    mProfileGendle = (which == 0) ? "0" : "1"; //0 means man
+                    mProfileGendle = (which == 0) ? CommonUtils.PROFILE_GENDER_MEN : CommonUtils.PROFILE_GENDER_FEMALE;
                     myProfileInfo.setGendle(mProfileGendle);
                     ProfileManager.getInstance().updateGendle(mProfileGendle);
                 }
@@ -190,10 +190,23 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             mTvUserName.setText(myProfileInfo.getUsrName());
             mTvMobile.setText(myProfileInfo.getMobileNum());
             mTvSignature.setText(myProfileInfo.getSignature());
-
+            mTvGendle.setText(getGenderDisplayName(myProfileInfo.getGendle()));
             if (myProfileInfo.getLocation() != null) {
                 mTvLocation.setText(myProfileInfo.getLocation().getAddrInfor());
             }
+        }
+    }
+
+    private String getGenderDisplayName(String value) {
+
+        if(TextUtils.isEmpty(value)) {
+            return "";
+        }
+
+        if(value.equalsIgnoreCase(CommonUtils.PROFILE_GENDER_MEN)) {
+            return getResources().getString(R.string.gender_men);
+        } else {
+            return getResources().getString(R.string.gender_female);
         }
     }
 

@@ -55,9 +55,13 @@
         </activity>
 
         <activity android:name=".login.activity.LoginOrRegActivity"/>
-        <activity android:name=".login.activity.NickNameActivity"/>
-        <activity android:name=".login.activity.PhoneAndPasswordActivity" />
-        <activity android:name=".login.activity.CheckSMSCodeActivity" />
+        <activity android:name=".login.activity.NickNameActivity"
+                  android:windowSoftInputMode="adjustResize|stateVisible"/>
+        <activity android:name=".login.activity.SelectGenderActivity"/>
+        <activity android:name=".login.activity.PhoneAndPasswordActivity"
+                  android:windowSoftInputMode="adjustResize|stateVisible"/>
+        <activity android:name=".login.activity.CheckSMSCodeActivity"
+                  android:windowSoftInputMode="adjustResize|stateVisible"/>
         <activity android:name=".login.activity.LoginActivity" />
         <activity android:name=".setting.activity.AppSettingActivity" />
         <activity android:name=".myself.activity.MyselfActivity" />

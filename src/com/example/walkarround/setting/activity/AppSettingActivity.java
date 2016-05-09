@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.walkarround.EntranceActivity;
 import com.example.walkarround.R;
@@ -28,19 +27,12 @@ import com.example.walkarround.util.Logger;
 public class AppSettingActivity extends Activity implements View.OnClickListener{
 
     private static final Logger logger = Logger.getLogger(AppSettingActivity.class.getSimpleName());
-    private ImageView titleName;
-    private TextView tvLastBackupTime;
-    private TextView tvContactBackup;
-    private TextView tvContactResotre;
-    private TextView tvBlackList;
     //private CheckSwitchButton csbNewMsgNotifyReceive;
     private TextView tvResetPasswordApp;
     private TextView tvAboutApp;
     private TextView tvUpdate;
     //    private TextView tvFeedback;
     private TextView tvLogout;
-    private String masterPhoneNum;
-    private int maxProgress;
 
     private Handler mHandler = new Handler() {
         @Override

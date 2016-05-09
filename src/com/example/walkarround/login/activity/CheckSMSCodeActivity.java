@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
@@ -39,9 +38,8 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
     private String mStrNickName;
     private TextView mTipView;
     private TextView mTipStandard;
-    private Button mFinishButton;
+    private Button mNextButton;
     private EditText mCodeView;
-    private TextView mBackView;
     private Timer mTimer;
     private int mTime;
     private Dialog mLoadingDialog;
@@ -68,8 +66,8 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
                 mTipStandard.setText(getString(R.string.register_reget_check_code));
                 mTipStandard.setTextColor(getResources().getColor(R.color.fontcor6));
                 mTipStandard.setOnClickListener(CheckSMSCodeActivity.this);
-                mFinishButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_gray_nextstep));
-                mFinishButton.setOnClickListener(null);
+                mNextButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_gray_nextstep));
+                mNextButton.setOnClickListener(null);
             } else if (msg.what == ERROR) {
                 String tip = (String) msg.obj;
                 Toast.makeText(CheckSMSCodeActivity.this, tip, Toast.LENGTH_SHORT).show();
@@ -89,7 +87,6 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
         @Override
         public void onSuccess(Object data) {
             Toast.makeText(getApplicationContext(), getString(R.string.register_signup_success), Toast.LENGTH_SHORT).show();
-
             Message msg = Message.obtain();
             myLogger.d("Get SMS code success.");
             dismissDialog();
@@ -107,7 +104,6 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
             mHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
         }
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,13 +131,24 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
     }
 
     private void initView() {
-        mFinishButton = (Button) findViewById(R.id.btn_nextstep);
+
+        //Tip
+        if(!TextUtils.isEmpty(mStrPhoneNum)) {
+            TextView tip = (TextView)findViewById(R.id.tip_sms_already_sent);
+            tip.setText(getString(R.string.register_sms_already_sent, mStrPhoneNum));
+        }
+
+        //Title
+        View title = findViewById(R.id.title);
+        title.findViewById(R.id.back_rl).setOnClickListener(this);
+        title.findViewById(R.id.more_rl).setVisibility(View.GONE);
+        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.register_create_account);
+
+        mNextButton = (Button) findViewById(R.id.btn_nextstep);
         mTipView = (TextView) findViewById(R.id.tip_txtView);
         mTipStandard = (TextView) findViewById(R.id.tip_standard);
         mCodeView = (EditText) findViewById(R.id.checkcode);
-        mBackView = (TextView) findViewById(R.id.title_name);
-        mBackView.setOnClickListener(this);
-        mFinishButton.setOnClickListener(this);
+        mNextButton.setOnClickListener(this);
     }
 
     private void startTimerTask() {
@@ -156,8 +163,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
         mTipStandard.setOnClickListener(null);
         mTipStandard.setTextColor(getResources().getColor(R.color.fontcor4));
         mTipStandard.setText(getString(R.string.register_time_next_reget));
-        mFinishButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_nextstep));
-        mFinishButton.setOnClickListener(this);
+        mNextButton.setOnClickListener(this);
         mTimer.schedule(mTimerTask, 0, 1000);
     }
 
@@ -200,7 +206,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
             LoginManager.getInstance().createAccountWithCode(code, mGetSMSCodeListener);
         } else if (v.getId() == R.id.tip_standard) {
             startTimerTask();
-        } else if (v.getId() == R.id.title_name) {
+        } else if (v.getId() == R.id.back_rl) {
             Dialog noticeDialog = DialogFactory.getNoticeDialog(this,
                     getResources().getString(R.string.register_sure_give_up_register), this, null);
             noticeDialog.show();
