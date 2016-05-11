@@ -48,7 +48,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
     //For title and slide menu
     private PortraitView mPvPortrait;
-    private View mTvTitle;
+    //private View mTvTitle;
     private ImageView mIvChatEntrance;
 
     //For nearly user list.
@@ -172,7 +172,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.title_name:
+            case R.id.iv_title_portrait:
                 //TODO: we should use handler for communication between activty and fragment later.
                 DrawerLayout slideMenu = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
                 LinearLayout mViewLeftMenu = (LinearLayout) getActivity().findViewById(R.id.left_drawer);
@@ -216,9 +216,9 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         //Init title
         //Left portrait
         mPvPortrait = (PortraitView) mViewRoot.findViewById(R.id.iv_title_portrait);
+        mPvPortrait.setOnClickListener(this);
         //Middle
-        mTvTitle = (View) mViewRoot.findViewById(R.id.title_name);
-        mTvTitle.setOnClickListener(this);
+        //mTvTitle = (View) mViewRoot.findViewById(R.id.title_name);
         //Right icon
         mIvChatEntrance = (ImageView) mViewRoot.findViewById(R.id.right_chat_iv);
         mIvChatEntrance.setOnClickListener(this);

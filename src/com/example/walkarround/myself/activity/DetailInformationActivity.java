@@ -148,8 +148,11 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     }
 
     public void initView() {
-        mTvTitle = (TextView) findViewById(R.id.title_name);
-        mTvTitle.setOnClickListener(this);
+        //Title
+        findViewById(R.id.title).findViewById(R.id.back_rl).setOnClickListener(this);
+        mTvTitle = (TextView)(findViewById(R.id.title).findViewById(R.id.display_name));
+        mTvTitle.setText(R.string.profile_activity_title);
+        findViewById(R.id.title).findViewById(R.id.more_rl).setVisibility(View.GONE);
 
         mVPortrait = (View) findViewById(R.id.detail_portrait);
         mVPortrait.setOnClickListener(this);
@@ -213,7 +216,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.title_name://back
+            case R.id.back_rl://back
                 setResult(AppConstant.ACTIVITY_RETURN_CODE_CANCEL);
                 finish();
                 break;

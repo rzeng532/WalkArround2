@@ -80,11 +80,16 @@ public class EditStrProfileInfoActivity extends Activity implements View.OnClick
     }
 
     public void initView() {
-        mTvTitle = (TextView) findViewById(R.id.back);
-        mTvTitle.setOnClickListener(this);
-
-        mTvUpdate = (TextView) findViewById(R.id.send);
+        //Title
+        //Back key
+        ((View) findViewById(R.id.title)).findViewById(R.id.back_rl).setOnClickListener(this);
+        //Title
+        mTvTitle = (TextView)(findViewById(R.id.title).findViewById(R.id.display_name));
+        //Right key
+        mTvUpdate = (TextView)(findViewById(R.id.title).findViewById(R.id.right_tx));
+        mTvUpdate.setText(R.string.profile_infor_update);
         mTvUpdate.setOnClickListener(this);
+        (findViewById(R.id.title).findViewById(R.id.more_iv)).setVisibility(View.GONE);
 
         mEtInput = (EditText) findViewById(R.id.input);
     }
@@ -107,12 +112,12 @@ public class EditStrProfileInfoActivity extends Activity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back://back
+            case R.id.back_rl://back
                 //popup to indicate user exit or not if there is data.
                 //TODO:
                 finish();
                 break;
-            case R.id.send://send
+            case R.id.right_tx://send
                 updateData(mEditType);
                 break;
             default:

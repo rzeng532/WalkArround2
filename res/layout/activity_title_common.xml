@@ -27,7 +27,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/back_iv"
                 android:textSize="@dimen/font_size_title"
-                android:textColor="@color/fontcor3"/>
+                android:textColor="@color/emerald_green"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -44,13 +44,14 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:textSize="@dimen/font_size_title"
-                android:textColor="@color/fontcor3"/>
+                android:textSize="@dimen/font_size2"
+                android:textColor="@color/emerald_green"/>
 
         <ImageView
                 android:id="@+id/more_iv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:layout_toRightOf="@id/right_tx"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
@@ -79,7 +80,7 @@
                     android:layout_toRightOf="@id/middle_iv"
                     android:gravity="center"
                     android:layout_centerInParent="true"
-                    android:textSize="@dimen/font_size5"
+                    android:textSize="@dimen/font_size_title"
                     android:textColor="@color/emerald_green"/>
         </RelativeLayout>
 
