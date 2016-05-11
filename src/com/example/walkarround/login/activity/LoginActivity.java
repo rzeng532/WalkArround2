@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -86,11 +88,34 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     };
 
+    private TextWatcher mContentWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            setNextButtonVisibleOrNot();
+        }
+    };
+
+    private void setNextButtonVisibleOrNot() {
+        if(edUserName != null && edUserName.getText().length() > 0
+                && edPassWord != null && edPassWord.getText().length() > 0) {
+            btnLogin.setVisibility(View.VISIBLE);
+        } else {
+            btnLogin.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_do_login);
         findView();
+        setNextButtonVisibleOrNot();
         loginLogger = Logger.getLogger(LoginActivity.class.getSimpleName());
     }
 
@@ -104,7 +129,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         //Init UI elements
         edUserName = (EditText) findViewById(R.id.signin_input_username);
+        edUserName.addTextChangedListener(mContentWatcher);
         edPassWord = (EditText) findViewById(R.id.signin_input_password);
+        edPassWord.addTextChangedListener(mContentWatcher);
 
         //Get current user
         String strOrigUser = LoginManager.getInstance().getCurrentUserName();

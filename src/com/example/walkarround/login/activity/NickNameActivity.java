@@ -3,7 +3,9 @@ package com.example.walkarround.login.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +33,13 @@ public class NickNameActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_input_nickname);
 
+        initView();
+
+        //Init nick name
+        initNickName();
+    }
+
+    private void initView() {
         //Title
         View title = findViewById(R.id.title);
         title.findViewById(R.id.back_rl).setOnClickListener(this);
@@ -41,10 +50,28 @@ public class NickNameActivity extends Activity implements View.OnClickListener{
         mBtNext = (Button) findViewById(R.id.btn_nextstep);
 
         mEtNickName.setOnClickListener(this);
-        mBtNext.setOnClickListener(this);
+        mEtNickName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        //Init nick name
-        initNickName();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(mEtNickName.getText().length() <= 0) {
+                    mBtNext.setVisibility(View.GONE);
+                } else {
+                    mBtNext.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        mBtNext.setOnClickListener(this);
     }
 
     @Override
@@ -87,6 +114,9 @@ public class NickNameActivity extends Activity implements View.OnClickListener{
         if (!TextUtils.isEmpty(strNick) && mEtNickName != null) {
             mEtNickName.setText(strNick);
             mEtNickName.setSelection(strNick.length());
+            mBtNext.setVisibility(View.VISIBLE);
+        } else {
+            mBtNext.setVisibility(View.GONE);
         }
     }
 

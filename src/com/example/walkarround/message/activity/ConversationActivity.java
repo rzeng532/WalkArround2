@@ -419,11 +419,11 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     public  void onDestroy() {
         super.onDestroy();
         if (null != mMessageReceiver) {
-            mContext.unregisterReceiver(mMessageReceiver);
+            unregisterReceiver(mMessageReceiver);
             mMessageReceiver = null;
         }
         if (null != mNetworkReceiver) {
-            mContext.unregisterReceiver(mNetworkReceiver);
+            unregisterReceiver(mNetworkReceiver);
             mNetworkReceiver = null;
         }
 
@@ -525,7 +525,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     break;
                 }
                 Dialog deleteConfirmDialog = DialogFactory.getNoticeDialog(
-                        mContext, mContext.getString(R.string.msg_delete_conversations_confirm,
+                        ConversationActivity.this, getString(R.string.msg_delete_conversations_confirm,
                                 listAdapter.getChosenItemCount()),
                         new DialogFactory.NoticeDialogClickListener() {
 
@@ -591,12 +591,12 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_STATUS_CHANGED);
         commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_INVITATION);
 
-        mContext.registerReceiver(mMessageReceiver, commandFilter);
+        registerReceiver(mMessageReceiver, commandFilter);
 
         // 网络状态监听
         IntentFilter networkFilter = new IntentFilter();
         networkFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        mContext.registerReceiver(mNetworkReceiver, networkFilter);
+        registerReceiver(mNetworkReceiver, networkFilter);
     }
 
     /**
@@ -784,11 +784,11 @@ public class ConversationActivity extends Activity implements ConversationItemLi
 
         // 会话列表
         mConversationListView = (ListView) findViewById(R.id.converstaion_list);
-        mNoConversationView = LayoutInflater.from(mContext).inflate(R.layout.message_conversation_listview_empty, null);
+        mNoConversationView = LayoutInflater.from(this).inflate(R.layout.message_conversation_listview_empty, null);
         mNoConversationView.findViewById(R.id.tv_why_no_conversations).setOnClickListener(this);
         mConversationListView.addFooterView(mNoConversationView);
         mNoConversationView.setVisibility(View.GONE);
-        mConversationAdapter = new ConversationListAdapter(mContext);
+        mConversationAdapter = new ConversationListAdapter(this);
         mConversationAdapter.setItemListener(this);
         mConversationListView.setAdapter(mConversationAdapter);
         mConversationListView.removeFooterView(mNoConversationView);
@@ -796,10 +796,10 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         // 初始化搜索/通知消息List
         mSearchResultListView = (ListView) findViewById(R.id.search_list);
 
-        mNotifyMsgAdapter = new NotifyMsgListAdapter(mContext);
+        mNotifyMsgAdapter = new NotifyMsgListAdapter(this);
         mNotifyMsgAdapter.setItemListener(this);
 
-        mSearchResultAdapter = new SearchMessageResultListAdapter(mContext);
+        mSearchResultAdapter = new SearchMessageResultListAdapter(this);
         mSearchResultAdapter.setItemListener(this);
 
         mNotifyMsgEmptyView = findViewById(R.id.notify_list_empty_view_iv);
@@ -840,7 +840,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     mTimer.schedule(mSearchTask, SEARCH_TASK_DELAY);
                 } else if (s.toString().length() > 32) {
                     mSearchEditClearView.setVisibility(View.VISIBLE);
-                    Toast.makeText(mContext, R.string.msg_search_to_long_notices, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ConversationActivity.this, R.string.msg_search_to_long_notices, Toast.LENGTH_LONG).show();
                 } else {
                     mSearchEditClearView.setVisibility(View.GONE);
                     // 显示消息列表
@@ -907,15 +907,15 @@ public class ConversationActivity extends Activity implements ConversationItemLi
      */
     private void showHorizontalDialog(int max) {
         if (mDlgHorizontal == null) {
-            mDlgHorizontal = new ProgressDialogHorizontal(mContext, max,
-                    mContext.getString(R.string.session_operation_ing),
-                    mContext.getString(R.string.session_operation_cancel));
+            mDlgHorizontal = new ProgressDialogHorizontal(ConversationActivity.this, max,
+                    getString(R.string.session_operation_ing),
+                    getString(R.string.session_operation_cancel));
             mDlgHorizontal.setOnKeyListener(new DialogInterface.OnKeyListener() {
 
                 @Override
                 public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-                        Toast.makeText(mContext, R.string.session_operation_ing_toast, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ConversationActivity.this, R.string.session_operation_ing_toast, Toast.LENGTH_SHORT).show();
                         return true;
                     }
                     return false;
@@ -991,7 +991,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             listDO.setThreadId(id);
         }
 
-        Intent intent = new Intent(mContext, BuildMessageActivity.class);
+        Intent intent = new Intent(this, BuildMessageActivity.class);
         // 一对一聊天
         String contact = listDO.getContact();
         if (listDO.getSendReceive() == MessageConstant.MessageSendReceive.MSG_SEND) {
@@ -1006,7 +1006,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         // 消息来源
         int msgFromType = BuildMessageActivity.MSG_FROM_TYPE_RCS;
         intent.putExtra(BuildMessageActivity.INTENT_LOCATION_MESSAGE_FROM_TYPE, msgFromType);
-        mContext.startActivity(intent);
+        startActivity(intent);
     }
 
     @Override
@@ -1024,7 +1024,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             if (intent == null) {
                 return;
             }
-            mContext.startActivity(intent);
+            startActivity(intent);
         }
     }
 

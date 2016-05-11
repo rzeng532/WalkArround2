@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +41,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
     private TextView mTipView;
     private TextView mTipStandard;
     private Button mNextButton;
-    private EditText mCodeView;
+    private EditText mEvCodeView;
     private Timer mTimer;
     private int mTime;
     private Dialog mLoadingDialog;
@@ -147,8 +149,30 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
         mNextButton = (Button) findViewById(R.id.btn_nextstep);
         mTipView = (TextView) findViewById(R.id.tip_txtView);
         mTipStandard = (TextView) findViewById(R.id.tip_standard);
-        mCodeView = (EditText) findViewById(R.id.checkcode);
+        mEvCodeView = (EditText) findViewById(R.id.checkcode);
+        mEvCodeView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setNextButtonVisibleOrNot();
+            }
+        });
         mNextButton.setOnClickListener(this);
+
+        setNextButtonVisibleOrNot();
+    }
+
+    private void setNextButtonVisibleOrNot() {
+        if(mEvCodeView != null && mEvCodeView.getText().length() > 0) {
+            mNextButton.setVisibility(View.VISIBLE);
+        } else {
+            mNextButton.setVisibility(View.GONE);
+        }
     }
 
     private void startTimerTask() {
@@ -196,7 +220,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_nextstep) {
-            String code = mCodeView.getText().toString();
+            String code = mEvCodeView.getText().toString();
             if (TextUtils.isEmpty(code)) {
                 Toast.makeText(this, getString(R.string.login_hint_please_input_SMS_code), Toast.LENGTH_SHORT).show();
                 return;

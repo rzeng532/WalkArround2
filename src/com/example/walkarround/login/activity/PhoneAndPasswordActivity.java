@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +54,28 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
         }
     };
 
+    private TextWatcher mContentWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            setNextButtonVisibleOrNot();
+        }
+    };
+
+    private void setNextButtonVisibleOrNot() {
+        if(mTelView != null && mTelView.getText().length() > 0
+                && mPassView != null && mPassView.getText().length() > 0) {
+            btnNext.setVisibility(View.VISIBLE);
+        } else {
+            btnNext.setVisibility(View.GONE);
+        }
+    }
+
     AsyncTaskListener mAccountManagerListener = new AsyncTaskListener() {
         @Override
         public void onSuccess(Object data) {
@@ -90,9 +114,14 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
         ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.register_create_account);
 
         mTelView = (EditText) findViewById(R.id.account_edit);
+        mTelView.addTextChangedListener(mContentWatcher);
         mPassView = (EditText) findViewById(R.id.password_edit);
+        mPassView.addTextChangedListener(mContentWatcher);
         btnNext = (Button) findViewById(R.id.btn_nextstep);
         btnNext.setOnClickListener(this);
+
+        //Init next button state.
+        setNextButtonVisibleOrNot();
         myLogger.d("Init view complete.");
     }
 
@@ -123,7 +152,9 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
 
             LoginManager.getInstance().setPhoneNum(mStrPhoneNum);
             LoginManager.getInstance().setPassword(pass);
-            LoginManager.getInstance().doRegister(mAccountManagerListener);
+            //LoginManager.getInstance().doRegister(mAccountManagerListener);
+            Intent intent = new Intent(PhoneAndPasswordActivity.this, CheckSMSCodeActivity.class);
+            startActivityForResult(intent, CHECKSMSCODE);
         } else if (v.getId() == R.id.back_rl) {
             setResult(CommonUtils.ACTIVITY_FINISH_BACK);
             finish();
