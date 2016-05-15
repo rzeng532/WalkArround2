@@ -614,21 +614,21 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             onSelectedPictures(pathList, fullSizedMap, isBurnAfter);
             switchBottomPanelView(false);
         } else if (requestCode == REQUEST_CODE_TAKE_VIDEO) {
-            if (resultCode != RESULT_OK) {
-                return;
-            }
-            final String filename = data.getStringExtra(TakeVideoActivity.INTENT_VIDEO_PATH);
-            final int videoLength = data.getIntExtra(TakeVideoActivity.INTENT_VIDEO_LENGTH, 0);
-            final boolean isBurn = mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER;
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendVideoFile(mRecipientInfo, filename, videoLength,
-                            isBurn, 0, true);
-                    transferToDetailView(messageId, false);
-                    switchBottomPanelView(false);
-                }
-            });
+//            if (resultCode != RESULT_OK) {
+//                return;
+//            }
+//            final String filename = data.getStringExtra(TakeVideoActivity.INTENT_VIDEO_PATH);
+//            final int videoLength = data.getIntExtra(TakeVideoActivity.INTENT_VIDEO_LENGTH, 0);
+//            final boolean isBurn = mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER;
+//            new Handler().post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendVideoFile(mRecipientInfo, filename, videoLength,
+//                            isBurn, 0, true);
+//                    transferToDetailView(messageId, false);
+//                    switchBottomPanelView(false);
+//                }
+//            });
         } else if (requestCode == REQUEST_CODE_FORWARD_MSG) {
             // 转发，选择了联系人
 //            if (resultCode != RESULT_OK) {
@@ -927,13 +927,13 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         mBottomLeftView.setOnClickListener(this);
         setToolsViewEnable();
 
-        mMessageBottomView.findViewById(R.id.emoji_iv).setOnClickListener(this);
+        //mMessageBottomView.findViewById(R.id.emoji_iv).setOnClickListener(this);
 
         // 右侧发送、更多、表情等按钮
         mBottomRightView = findViewById(R.id.edit_message_right_rl);
-        View rightBtn = mBottomRightView.findViewById(R.id.right_change_iv);
-        rightBtn.setOnClickListener(this);
-        mBottomRightView.setTag(R.id.right_change_iv, rightBtn);
+        //View rightBtn = mBottomRightView.findViewById(R.id.right_change_iv);
+        //rightBtn.setOnClickListener(this);
+        //mBottomRightView.setTag(R.id.right_change_iv, rightBtn);
         View sendBtn = mBottomRightView.findViewById(R.id.send_message_tv);
         sendBtn.setOnClickListener(this);
         // Check if there is recipients or not.
@@ -984,11 +984,11 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
             @Override
             public void onClick(View v) {
-                if (mEmojiPanel != null) {
-                    mEmojiPanel.setVisibility(View.GONE);
-                    ImageView emjio = (ImageView) mMessageBottomView.findViewById(R.id.emoji_iv);
-                    emjio.setSelected(false);
-                }
+//                if (mEmojiPanel != null) {
+//                    mEmojiPanel.setVisibility(View.GONE);
+//                    ImageView emjio = (ImageView) mMessageBottomView.findViewById(R.id.emoji_iv);
+//                    emjio.setSelected(false);
+//                }
                 switchBottomPanelView();
             }
         });
@@ -1001,6 +1001,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 mSendMessageEditView.setSelection(draftMessage.getData().length());
             }
         }
+
+        findViewById(R.id.tv_select_position).setOnClickListener(this);
+
         /*
          * if(!NetworkUtil.isNetworkAvailable(getBaseContext())){
          * mSendMessageEditView.setHint(R.string.msg_edit_hint_no_network); if(mCurrentMessageEditState !=
@@ -1174,17 +1177,17 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 return;
             }
             String inputText = input.trim();
-            if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_MORE_EMOJI) {
-                if (mTimeSendView.getVisibility() == View.VISIBLE
-                        || inputText.length() > 0) {
-                    ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.VISIBLE);
-                    ((ImageView) mBottomRightView.getTag(R.id.right_change_iv)).setVisibility(View.INVISIBLE);
-                } else {
-                    ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.GONE);
-                    ((ImageView) mBottomRightView.getTag(R.id.right_change_iv)).setVisibility(View.VISIBLE);
-                }
-                return;
-            }
+//            if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_MORE_EMOJI) {
+//                if (mTimeSendView.getVisibility() == View.VISIBLE
+//                        || inputText.length() > 0) {
+//                    ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.VISIBLE);
+//                    //((ImageView) mBottomRightView.getTag(R.id.right_change_iv)).setVisibility(View.INVISIBLE);
+//                } else {
+//                    ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.GONE);
+//                    //((ImageView) mBottomRightView.getTag(R.id.right_change_iv)).setVisibility(View.VISIBLE);
+//                }
+//                return;
+//            }
             if (!TextUtils.isEmpty(inputText)
                     && (mCurrentMessageEditState == MESSAGE_EDIT_STATE_HAS_INPUT
                     || mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_HAS_INPUT)) {
@@ -1388,14 +1391,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
 
         TextView receiverName = (TextView) detailHeaderView.findViewById(R.id.message_title_name_tv);
-        TextView receiverNum = (TextView) detailHeaderView.findViewById(R.id.activity_message_title_address);
         if (TextUtils.isEmpty(receiverNameStr)) {
-            receiverNum.setVisibility(View.GONE);
             receiverName.setText(receiverNumStr);
         } else {
-            receiverNum.setVisibility(View.VISIBLE);
             receiverName.setText(receiverNameStr);
-            receiverNum.setText(receiverNumStr);
         }
     }
 
@@ -1432,14 +1431,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
 
         TextView receiverName = (TextView) detailHeaderView.findViewById(R.id.message_title_name_tv);
-        TextView receiverNum = (TextView) detailHeaderView.findViewById(R.id.activity_message_title_address);
         if (TextUtils.isEmpty(receiverNameStr)) {
-            receiverNum.setVisibility(View.GONE);
             receiverName.setText(receiverNumStr);
         } else {
-            receiverNum.setVisibility(View.VISIBLE);
             receiverName.setText(receiverNameStr);
-            receiverNum.setText(receiverNumStr);
         }
     }
 
@@ -1531,57 +1526,59 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         int toolsPanelVisibility = View.GONE;
         int voicePanelVisibility = View.GONE;
         boolean canSend = false;
-        ImageView emjio = (ImageView) mMessageBottomView.findViewById(R.id.emoji_iv);
+        //ImageView emjio = (ImageView) mMessageBottomView.findViewById(R.id.emoji_iv);
         switch (currentState) {
         case MESSAGE_EDIT_STATE_DEFAULT:
             mSendMessageEditView.setHint("");
-            emjio.setImageResource(R.drawable.message_btn_smile);
+            mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.VISIBLE);
+            //emjio.setImageResource(R.drawable.message_btn_smile);
             if (mTimeSendView.getVisibility() == View.VISIBLE) {
                 rightViewResId = R.drawable.message_btn_close;
             }
             break;
         case MESSAGE_EDIT_STATE_HAS_INPUT:
-            emjio.setImageResource(R.drawable.message_btn_smile);
+            //emjio.setImageResource(R.drawable.message_btn_smile);
             if (mTimeSendView.getVisibility() == View.VISIBLE) {
                 rightViewResId = R.drawable.message_btn_close;
             }
             canSend = true;
             break;
-        case MESSAGE_EDIT_STATE_MORE_EMOJI:
-            if (mEmojiPanel == null) {
-                ViewStub emojiView = (ViewStub) mMessageBottomView.findViewById(R.id.emoji_vs);
-                emojiView.inflate();
-                mEmojiPanel = (EmojiPanelView) findViewById(R.id.emoji_panel_epv);
-                mEmojiPanel.setOnEmojiClickListener(this);
-            }
-            emjio.setImageResource(R.drawable.message_btn_smile);
-            mSendMessageEditView.setHint("");
-            hideSoftInput();
-            emojiVisibility = View.VISIBLE;
-            if(mTimeSendView.getVisibility() == View.VISIBLE){
-                rightViewResId = R.drawable.message_btn_close;
-            }
-            break;
-        case MESSAGE_EDIT_STATE_MORE_OPERATE:
-            if (mMoreToolsPanel == null) {
-                ViewStub chatView = (ViewStub) mMessageBottomView.findViewById(R.id.chat_tools_vs);
-                chatView.inflate();
-                mMoreToolsPanel = (ChatAssistToolsView) findViewById(R.id.chat_tools_layout);
-                mMoreToolsPanel.setToolsOnClickListener(this);
-                setToolsViewEnable();
-            }
-            emjio.setImageResource(R.drawable.message_btn_smile);
-            emjio.setSelected(false);
-            mSendMessageEditView.setHint("");
-            hideSoftInput();
-            rightViewResId = R.drawable.message_btn_close;
-            toolsPanelVisibility = View.VISIBLE;
-            break;
+//        case MESSAGE_EDIT_STATE_MORE_EMOJI:
+//            if (mEmojiPanel == null) {
+//                ViewStub emojiView = (ViewStub) mMessageBottomView.findViewById(R.id.emoji_vs);
+//                emojiView.inflate();
+//                mEmojiPanel = (EmojiPanelView) findViewById(R.id.emoji_panel_epv);
+//                mEmojiPanel.setOnEmojiClickListener(this);
+//            }
+//            //emjio.setImageResource(R.drawable.message_btn_smile);
+//            mSendMessageEditView.setHint("");
+//            hideSoftInput();
+//            emojiVisibility = View.VISIBLE;
+//            if(mTimeSendView.getVisibility() == View.VISIBLE){
+//                rightViewResId = R.drawable.message_btn_close;
+//            }
+//            break;
+//        case MESSAGE_EDIT_STATE_MORE_OPERATE:
+//            if (mMoreToolsPanel == null) {
+//                ViewStub chatView = (ViewStub) mMessageBottomView.findViewById(R.id.chat_tools_vs);
+//                chatView.inflate();
+//                mMoreToolsPanel = (ChatAssistToolsView) findViewById(R.id.chat_tools_layout);
+//                mMoreToolsPanel.setToolsOnClickListener(this);
+//                setToolsViewEnable();
+//            }
+//            //emjio.setImageResource(R.drawable.message_btn_smile);
+//            //emjio.setSelected(false);
+//            mSendMessageEditView.setHint("");
+//            hideSoftInput();
+//            rightViewResId = R.drawable.message_btn_close;
+//            toolsPanelVisibility = View.VISIBLE;
+//            break;
         case MESSAGE_EDIT_STATE_VOICE:
             mVoiceListener.setAudioStatusIcon(R.drawable.public_btn_enterbar_voicebtn,
                     R.drawable.public_btn_enterbar_voicebtn2, R.drawable.progress_voice_duration);
-            emjio.setImageResource(R.drawable.message_btn_smile);
+            //emjio.setImageResource(R.drawable.message_btn_smile);
             hideSoftInput();
+            mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.GONE);
             voicePanelVisibility = View.VISIBLE;
             leftViewResId = R.drawable.message_btn_keybroad;
             if (mTimeSendView.getVisibility() == View.VISIBLE) {
@@ -1593,21 +1590,21 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
 
         mBottomLeftView.setImageResource(leftViewResId);
-        if (canSend) {
-            ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.VISIBLE);
-            ((ImageView) mBottomRightView.getTag(R.id.right_change_iv)).setVisibility(View.INVISIBLE);
-        } else {
-            ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.GONE);
-            ImageView rightBtn = (ImageView) mBottomRightView.getTag(R.id.right_change_iv);
-            rightBtn.setImageResource(rightViewResId);
-            rightBtn.setVisibility(View.VISIBLE);
-        }
+//        if (canSend) {
+//            ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.VISIBLE);
+//            //((ImageView) mBottomRightView.getTag(R.id.right_change_iv)).setVisibility(View.INVISIBLE);
+//        } else {
+//            ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.GONE);
+//            //ImageView rightBtn = (ImageView) mBottomRightView.getTag(R.id.right_change_iv);
+//            //rightBtn.setImageResource(rightViewResId);
+//            //rightBtn.setVisibility(View.VISIBLE);
+//        }
 
         mVoicePanel.setVisibility(voicePanelVisibility);
         voicePanelVisibility = voicePanelVisibility == View.VISIBLE ? View.GONE : View.VISIBLE;
         mMessageBottomView.findViewById(R.id.message_edit_ll).setVisibility(voicePanelVisibility);
         voicePanelVisibility = currentState == MESSAGE_EDIT_STATE_BURN_HAS_INPUT ? View.GONE : voicePanelVisibility;
-        emjio.setVisibility(voicePanelVisibility);
+        //emjio.setVisibility(voicePanelVisibility);
 
         if (mMoreToolsPanel != null) {
             mMoreToolsPanel.setVisibility(toolsPanelVisibility);
@@ -1765,18 +1762,18 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 //                mBurnMsgTypeChoosePopup.showAtLocation(view, Gravity.NO_GRAVITY, 0, 0);
 //            } else {
                 // 表情
-                if (view.isSelected()) {
-                    if (mEmojiPanel != null) {
-                        mEmojiPanel.setVisibility(View.GONE);
-                    }
-                    showSoftInput();
-                    switchBottomPanelView();
-                } else {
-                    hideSoftInput();
-                    mCurrentMessageEditState = MESSAGE_EDIT_STATE_MORE_EMOJI;
-                    switchBottomPanelView(mCurrentMessageEditState);
-                }
-                view.setSelected(!view.isSelected());
+//                if (view.isSelected()) {
+//                    if (mEmojiPanel != null) {
+//                        mEmojiPanel.setVisibility(View.GONE);
+//                    }
+//                    showSoftInput();
+//                    switchBottomPanelView();
+//                } else {
+//                    hideSoftInput();
+//                    mCurrentMessageEditState = MESSAGE_EDIT_STATE_MORE_EMOJI;
+//                    switchBottomPanelView(mCurrentMessageEditState);
+//                }
+//                view.setSelected(!view.isSelected());
             //}
             break;
         case R.id.msg_popup_menu_layout:
@@ -1796,39 +1793,39 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 switchBottomPanelView(mCurrentMessageEditState);
             }
             break;
-        case R.id.right_change_iv:
-            // 消息编辑右侧按钮
-            if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_VOICE
-                    && mTimeSendView.getVisibility() == View.VISIBLE) {
-                switchBottomPanelView();
-            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_MORE_OPERATE) {
-                if (mEmojiPanel != null) {
-                    mEmojiPanel.setVisibility(View.GONE);
-                }
-                switchBottomPanelView();
-            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_MORE_EMOJI
-                    || mCurrentMessageEditState == MESSAGE_EDIT_STATE_VOICE) {
-                mCurrentMessageEditState = MESSAGE_EDIT_STATE_MORE_OPERATE;
-                switchBottomPanelView(mCurrentMessageEditState);
-            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER
-                    || mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_VOICE) {
-                mTimeSendView.setText(null);
-                mTimeSendView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                mTimeSendView.setVisibility(View.GONE);
-                mCurrentMessageEditState = MESSAGE_EDIT_STATE_DEFAULT;
-                switchBottomPanelView(mCurrentMessageEditState);
-            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_DEFAULT) {
-                if (mTimeSendView.getVisibility() == View.VISIBLE) {
-                    mSendMessageEditView.setText("");
-                    mTimeSendView.setText("");
-                    mTimeSendView.setVisibility(View.GONE);
-                    switchBottomPanelView(mCurrentMessageEditState);
-                } else {
-                    mCurrentMessageEditState = MESSAGE_EDIT_STATE_MORE_OPERATE;
-                    switchBottomPanelView(mCurrentMessageEditState);
-                }
-            }
-            break;
+//        case R.id.right_change_iv:
+//            // 消息编辑右侧按钮
+//            if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_VOICE
+//                    && mTimeSendView.getVisibility() == View.VISIBLE) {
+//                switchBottomPanelView();
+//            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_MORE_OPERATE) {
+//                if (mEmojiPanel != null) {
+//                    mEmojiPanel.setVisibility(View.GONE);
+//                }
+//                switchBottomPanelView();
+//            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_MORE_EMOJI
+//                    || mCurrentMessageEditState == MESSAGE_EDIT_STATE_VOICE) {
+//                mCurrentMessageEditState = MESSAGE_EDIT_STATE_MORE_OPERATE;
+//                switchBottomPanelView(mCurrentMessageEditState);
+//            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER
+//                    || mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_VOICE) {
+//                mTimeSendView.setText(null);
+//                mTimeSendView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+//                mTimeSendView.setVisibility(View.GONE);
+//                mCurrentMessageEditState = MESSAGE_EDIT_STATE_DEFAULT;
+//                switchBottomPanelView(mCurrentMessageEditState);
+//            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_DEFAULT) {
+//                if (mTimeSendView.getVisibility() == View.VISIBLE) {
+//                    mSendMessageEditView.setText("");
+//                    mTimeSendView.setText("");
+//                    mTimeSendView.setVisibility(View.GONE);
+//                    switchBottomPanelView(mCurrentMessageEditState);
+//                } else {
+//                    mCurrentMessageEditState = MESSAGE_EDIT_STATE_MORE_OPERATE;
+//                    switchBottomPanelView(mCurrentMessageEditState);
+//                }
+//            }
+//            break;
         case R.id.message_title_more_iv:
             //case R.id.message_profile_group_iv:
             // 更多
@@ -1900,6 +1897,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 //onSetTimeOnClick();
                 hideSoftInput();
             }
+            break;
+        case R.id.tv_select_position:
+            Intent intent = new Intent(this, LocationActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_MAP);
             break;
         default:
             break;

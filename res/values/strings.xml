@@ -233,6 +233,7 @@
     <string name="why_no_sms_conversations">为什么短消息页面是空的？</string>
     <string name="msg_record_chat_title">聊天记录</string>
     <string name="msg_say_hello">Hi</string>
+    <string name="msg_select_walkarround_place">选择10分钟走走地点</string>
 
     <!-- Pull refresh string -->
     <string name="pull_to_refresh_pull_label">下拉以刷新...</string>

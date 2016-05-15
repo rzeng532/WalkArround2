@@ -13,6 +13,17 @@
         android:layout_height="0.5dp"
         android:background="@color/linecor1" />
 
+    <TextView
+            android:id="@+id/tv_select_position"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="@string/msg_select_walkarround_place"
+            android:textColor="@color/fontcor3"
+            android:textSize="@dimen/font_size3"
+            android:background="@color/red_button"/>
+
     <RelativeLayout
         android:id="@+id/edit_message_row_rl"
         android:layout_width="match_parent"
@@ -135,7 +146,8 @@
                 android:textSize="@dimen/font_size3" />
         </LinearLayout>
 
-        <ImageView
+        <!--
+            <ImageView
             android:id="@+id/emoji_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -146,9 +158,9 @@
             android:paddingRight="8dp"
             android:scaleType="centerInside"
             android:src="@drawable/message_btn_smile" />
+         -->
 
         <!-- 文本消息输入框右侧的灰色竖线 -->
-
         <View
             android:id="@+id/right_divider_v"
             android:layout_width="0.5dp"
@@ -166,6 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true" >
 
+            <!--
             <ImageView
                 android:id="@+id/right_change_iv"
                 android:layout_width="match_parent"
@@ -175,18 +188,18 @@
                 android:paddingTop="11dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/public_btn_enterbar_more" />
+            -->
 
             <TextView
                 android:id="@+id/send_message_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/right_change_iv"
-                android:layout_alignTop="@id/right_change_iv"
                 android:gravity="center"
+                android:paddingBottom="11dp"
+                android:paddingTop="11dp"
                 android:text="@string/chatting_send"
-                android:textColor="@drawable/font_color_build_message_send"
-                android:textSize="@dimen/font_size2_dp"
-                android:visibility="gone" />
+                android:textColor="@color/emerald_green"
+                android:textSize="@dimen/font_size2_dp"/>
         </RelativeLayout>
     </RelativeLayout>
 
@@ -198,19 +211,23 @@
         android:background="@color/linecor1" />
 
     <!-- 表情图片 -->
-
+    <!--
     <ViewStub
         android:id="@+id/emoji_vs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout="@layout/emoji_panel" />
-    <!-- 图片，表情，名片等按钮 -->
+     -->
 
-    <ViewStub
+    <!-- 图片，表情，名片等按钮
+        <ViewStub
         android:id="@+id/chat_tools_vs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout="@layout/chat_tools_panel" />
+    -->
+
+
 
 </LinearLayout>

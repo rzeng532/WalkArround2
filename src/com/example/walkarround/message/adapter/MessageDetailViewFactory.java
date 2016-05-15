@@ -188,9 +188,6 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             // 发送的消息
             msgBgResId = R.drawable.chat_to_bg;
             viewHolder.msgHintTv.setVisibility(View.GONE);
-            if (message.isTimeSendMsg()) {
-                msgBgResId = R.drawable.chat_time_send_msg_to_bg;
-            }
         } else {
             // 接收的消息
             msgBgResId = R.drawable.chat_from_bg;
