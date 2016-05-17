@@ -5,8 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import com.avos.avoscloud.*;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.provider.ContactInfoDatabase;
+import com.example.walkarround.myself.util.ProfileUtil;
+import com.example.walkarround.util.AsyncTaskListener;
+import com.example.walkarround.util.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,10 +24,23 @@ public class ContactsManager {
 
     private static ContactsManager mInstance;
     private HashMap<String, ContactInfo> mUserMap = new HashMap<>();
+    private Logger mLogger = Logger.getLogger(ContactsManager.class.getSimpleName());
     private static final int DATABASE_VERSION = 1;
     private Context mContext;
 
     SQLiteDatabase dbContactInfo;
+
+    AsyncTaskListener mGetContactListener = new AsyncTaskListener() {
+        @Override
+        public void onSuccess(Object data) {
+
+        }
+
+        @Override
+        public void onFailed(AVException e) {
+
+        }
+    };
 
     private ContactsManager(Context context) {
         this.dbContactInfo = (new ContactInfoDatabase(context, ContactInfoDatabase.Contact.TABLE_NAME, DATABASE_VERSION)).getWritableDatabase();
@@ -47,13 +64,39 @@ public class ContactsManager {
 
         if(mInstance.mUserMap != null && !TextUtils.isEmpty(userId)) {
             userInfo = mInstance.mUserMap.get(userId);
+            mLogger.d("getContactByUsrObjId: contact is " + (userInfo == null ? "NULL" : "Not NULL"));
             if(userInfo == null) {
                 //Find user on server.
-
+                getContactFromServer(userId, mGetContactListener);
             }
         }
 
         return userInfo;
+    }
+
+    public ContactInfo getContactFromServer(String userId, AsyncTaskListener listener) {
+        if(TextUtils.isEmpty(userId)) {
+            return null;
+        }
+        mLogger.d("getContactFromServer.");
+        ContactInfo contact = null;
+        AVQuery<AVObject> query = new AVQuery<>("_User");
+        query.whereEqualTo("objectId", userId);
+        // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                mLogger.d("getContactFromServer callback done.");
+                if(list != null && list.size() > 0) {
+                    mLogger.d("getContactFromServer callback list is NOT empty.");
+                    listener.onSuccess(null);
+                } else {
+                    listener.onFailed(e);
+                }
+            }
+        });
+
+        return contact;
     }
 
     public void addContactInfo(ContactInfo addOne) {
@@ -145,6 +188,41 @@ public class ContactsManager {
         ContactInfo.PortraitEntity entry = contact.getPortrait();
         entry.setUrl(portrait);
         contact.setPortrait(entry);
+
+        return contact;
+    }
+
+    private ContactInfo convertAVUser2Contact(AVObject user) {
+        if(user != null) {
+            return null;
+        }
+
+        AVUser avUser = ((AVUser)user);
+
+        ContactInfo contact = new ContactInfo();
+
+        //Set user name
+        contact.setUsername(avUser.getUsername());
+        //Set mobile number
+        contact.setMobilePhoneNumber(avUser.getMobilePhoneNumber());
+        //Set obj id
+        contact.setObjectId(user.getObjectId());
+        //Set portrait
+        ContactInfo.PortraitEntity entry = contact.getPortrait();
+        AVFile portraitURL = ((AVUser)user).getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
+        if(portraitURL != null && !TextUtils.isEmpty(portraitURL.getUrl())) {
+            entry.setUrl(portraitURL.getUrl());
+        } else {
+            entry.setUrl("");
+        }
+        contact.setPortrait(entry);
+
+        //Set gendle
+        contact.setGender(avUser.getString(ProfileUtil.REG_KEY_GENDER));
+        //Set birthday
+        contact.setBirthday(avUser.getString(ProfileUtil.REG_KEY_BIRTH_DAY));
+        //Set signature
+        contact.setSignature(avUser.getString(ProfileUtil.REG_KEY_SIGNATURE));
 
         return contact;
     }
