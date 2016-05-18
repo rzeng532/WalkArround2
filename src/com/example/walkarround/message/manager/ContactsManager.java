@@ -201,7 +201,7 @@ public class ContactsManager {
     }
 
     private ContactInfo convertAVUser2Contact(AVObject user) {
-        if(user != null) {
+        if(user == null) {
             return null;
         }
 

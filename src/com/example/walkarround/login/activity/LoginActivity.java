@@ -133,6 +133,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         edPassWord = (EditText) findViewById(R.id.signin_input_password);
         edPassWord.addTextChangedListener(mContentWatcher);
 
+        //Button init step should before setText step. Since set text will trigger button visible or not.
+        btnLogin = (Button) findViewById(R.id.signin_loginin);
+        btnLogin.setOnClickListener(this);
+
         //Get current user
         String strOrigUser = LoginManager.getInstance().getCurrentUserName();
         if (!TextUtils.isEmpty(strOrigUser)) {
@@ -140,8 +144,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             edPassWord.requestFocus();
         }
 
-        btnLogin = (Button) findViewById(R.id.signin_loginin);
-        btnLogin.setOnClickListener(this);
         tvForgotPwd = (TextView) findViewById(R.id.signin_forgot_password);
         tvForgotPwd.setOnClickListener(this);
     }

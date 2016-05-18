@@ -76,7 +76,8 @@ public class MessageReceiver extends BroadcastReceiver {
             ContactsManager.getInstance(context).getContactFromServer(message.getContact(), new AsyncTaskListener() {
                 @Override
                 public void onSuccess(Object data) {
-                    doNotification(context, (ContactInfo) contact, message);
+                    ContactsManager.getInstance(context).addContactInfo((ContactInfo) data);
+                    doNotification(context, (ContactInfo) data, message);
                 }
 
                 @Override
