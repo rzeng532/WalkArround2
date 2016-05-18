@@ -33,12 +33,15 @@ public class ContactsManager {
     AsyncTaskListener mGetContactListener = new AsyncTaskListener() {
         @Override
         public void onSuccess(Object data) {
-
+            if(data != null) {
+                //Insert contact to DB and hashmap.
+                addContactInfo((ContactInfo) data);
+            }
         }
 
         @Override
         public void onFailed(AVException e) {
-
+            mLogger.w("Failed to get contact info.");
         }
     };
 
@@ -65,40 +68,45 @@ public class ContactsManager {
         if(mInstance.mUserMap != null && !TextUtils.isEmpty(userId)) {
             userInfo = mInstance.mUserMap.get(userId);
             mLogger.d("getContactByUsrObjId: contact is " + (userInfo == null ? "NULL" : "Not NULL"));
-            if(userInfo == null) {
-                //Find user on server.
-                getContactFromServer(userId, mGetContactListener);
-            }
         }
 
         return userInfo;
     }
 
-    public ContactInfo getContactFromServer(String userId, AsyncTaskListener listener) {
+    public void getContactFromServer(String userId) {
+        getContactFromServer(userId, mGetContactListener);
+    }
+
+    public void getContactFromServer(String userId, AsyncTaskListener listener) {
         if(TextUtils.isEmpty(userId)) {
-            return null;
+            return;
         }
         mLogger.d("getContactFromServer.");
         ContactInfo contact = null;
         AVQuery<AVObject> query = new AVQuery<>("_User");
         query.whereEqualTo("objectId", userId);
-        // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 mLogger.d("getContactFromServer callback done.");
                 if(list != null && list.size() > 0) {
+                    //There is only one result on list since obj id is unique on service "_User" table.
                     mLogger.d("getContactFromServer callback list is NOT empty.");
-                    listener.onSuccess(null);
+                    ContactInfo contact = convertAVUser2Contact(list.get(0));
+                    listener.onSuccess(contact);
                 } else {
                     listener.onFailed(e);
                 }
             }
         });
 
-        return contact;
+        return;
     }
 
+    /*
+     * TODO: there is a problem. If user already saved on contact manager, user update contact information later.
+     *       Then latest contact infor will not be displayed.
+     */
     public void addContactInfo(ContactInfo addOne) {
         if(addOne != null && mInstance.mUserMap != null) {
 
@@ -203,10 +211,13 @@ public class ContactsManager {
 
         //Set user name
         contact.setUsername(avUser.getUsername());
+
         //Set mobile number
         contact.setMobilePhoneNumber(avUser.getMobilePhoneNumber());
+
         //Set obj id
         contact.setObjectId(user.getObjectId());
+
         //Set portrait
         ContactInfo.PortraitEntity entry = contact.getPortrait();
         AVFile portraitURL = ((AVUser)user).getAVFile(ProfileUtil.REG_KEY_PORTRAIT);

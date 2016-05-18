@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.view.View;
 import android.widget.RemoteViews;
+import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.activity.BuildMessageActivity;
@@ -19,6 +20,7 @@ import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.util.EmojiParser;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
+import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.TimeFormattedUtil;
@@ -66,51 +68,22 @@ public class MessageReceiver extends BroadcastReceiver {
     }
 
     private void notification(Context context, ChatMsgBaseInfo message) {
-        if (message == null) {
-            return;
-        }
-        Intent intent = new Intent();
-        intent.setClass(context.getApplicationContext(), BuildMessageActivity.class);
-        intent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
-        intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_RECEIVER, message.getContact());
-        intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, message.getMsgThreadId());
-        intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, message.getChatType());
-
-        //TODO: contact should write to DB & we should crate a content provider for those contacts.
-        ContactInfo contact = ContactsManager.getInstance(context).getContactByUsrObjId(message.getContact());//NewContactManager.getInstance(context).getDetailByPhoneNumber(message.getContact());
+        //Get contact infor if local data doesn't contain this user.
+        ContactInfo contact = ContactsManager.getInstance(context).getContactByUsrObjId(message.getContact());
         if (contact != null) {
-            intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, contact.getUsername());
-        }
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, (int) message.getMsgThreadId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            doNotification(context, contact, message);
+        } else {
+            ContactsManager.getInstance(context).getContactFromServer(message.getContact(), new AsyncTaskListener() {
+                @Override
+                public void onSuccess(Object data) {
+                    doNotification(context, (ContactInfo) contact, message);
+                }
 
-        //If the contact is null, set the user name as empty.
-        String displayName = (contact == null ? "" : contact.getUsername());
-        message.setData(MessageUtil.getDisplayStr(context, displayName, message));
-        Notification notification = new Notification();
-        notification.flags = Notification.FLAG_AUTO_CANCEL;
-        notification.icon = R.drawable.msg_notify_icon;
-
-        //TODO: Add Emoji parser later.
-        notification.tickerText = EmojiParser.getInstance(context).getSmileyText(message.getData());
-        notification.tickerText = message.getData();
-
-        if (Build.VERSION.SDK_INT == 19) {
-            contentIntent.cancel();
-            contentIntent = PendingIntent.getActivity(context, (int) message.getMsgThreadId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        }
-        notification.contentIntent = contentIntent;
-        notification.contentView = new RemoteViews(context.getPackageName(), R.layout.msg_notify_panel);
-//        notification.defaults=Notification.DEFAULT_SOUND;
-        initNotifyView(context, notification.contentView, message, contact);
-        try {
-            String number = (contact == null ? DEFAULT_NOTIFICATION_ID : contact.getMobilePhoneNumber());
-            int startPos = number.length() > 5 ? number.length() - 5 : 0;
-            int id = Integer.parseInt(number.substring(startPos));
-            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.notify(number, id, notification);
-        } catch (NumberFormatException e) {
-            sLogger.e("notification NumberFormatException:" + e.getMessage());
+                @Override
+                public void onFailed(AVException e) {
+                    doNotification(context, null, message);
+                }
+            });
         }
     }
 
@@ -146,5 +119,54 @@ public class MessageReceiver extends BroadcastReceiver {
         panelView.setTextViewText(R.id.notify_msg_content_tv, message.getData());
         panelView.setTextViewText(R.id.notify_time_tv,
                 TimeFormattedUtil.getDetailDisplayTime(context, message.getTime()));
+    }
+
+    private void doNotification(Context context, ContactInfo contact, ChatMsgBaseInfo message) {
+        if (message == null) {
+            return;
+        }
+        Intent intent = new Intent();
+        intent.setClass(context.getApplicationContext(), BuildMessageActivity.class);
+        intent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
+        intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_RECEIVER, message.getContact());
+        intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, message.getMsgThreadId());
+        intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, message.getChatType());
+
+        //TODO: contact should write to DB & we should crate a content provider for those contacts.
+        if (contact != null) {
+            intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, contact.getUsername());
+        }
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, (int) message.getMsgThreadId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        //If the contact is null, set the user name as empty.
+        String displayName = (contact == null ? "" : contact.getUsername());
+        message.setData(MessageUtil.getDisplayStr(context, displayName, message));
+        Notification notification = new Notification();
+        notification.flags = Notification.FLAG_AUTO_CANCEL;
+        notification.icon = R.drawable.msg_notify_icon;
+
+        //TODO: Add Emoji parser later.
+        notification.tickerText = EmojiParser.getInstance(context).getSmileyText(message.getData());
+        notification.tickerText = message.getData();
+
+        if (Build.VERSION.SDK_INT == 19) {
+            contentIntent.cancel();
+            contentIntent = PendingIntent.getActivity(context, (int) message.getMsgThreadId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        notification.contentIntent = contentIntent;
+        notification.contentView = new RemoteViews(context.getPackageName(), R.layout.msg_notify_panel);
+//        notification.defaults=Notification.DEFAULT_SOUND;
+        initNotifyView(context, notification.contentView, message, contact);
+        try {
+            String number = (contact == null ? DEFAULT_NOTIFICATION_ID : contact.getMobilePhoneNumber());
+            int startPos = number.length() > 5 ? number.length() - 5 : 0;
+            int id = Integer.parseInt(number.substring(startPos));
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.notify(number, id, notification);
+        } catch (NumberFormatException e) {
+            sLogger.e("notification NumberFormatException:" + e.getMessage());
+        }
     }
 }
