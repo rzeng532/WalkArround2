@@ -82,6 +82,7 @@
         <activity android:name=".message.activity.PlaintTextDetailActivity"/>
         <activity android:name=".message.activity.PlayVideoActivity"/>
         <activity android:name=".message.activity.TakeVideoActivity"/>
+        <activity android:name=".base.TestActivity"/>
 
         <!-- Clean cloud SDK elements -->
         <service android:name="com.avos.avoscloud.PushService"/>

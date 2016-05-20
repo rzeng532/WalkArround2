@@ -78,4 +78,5 @@
     <color name="emerald_green">#2AC8D7</color>
     <color name="emerald_green_50">#f92AC8D7</color>
     <color name="red_button">#fe7379</color>
+    <color name="ripple_line_cor">#0059ccf5</color>
 </resources>
