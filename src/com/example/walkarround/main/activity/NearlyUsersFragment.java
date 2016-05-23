@@ -16,6 +16,7 @@ import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
 import com.example.walkarround.base.TestActivity;
 import com.example.walkarround.base.view.PortraitView;
+import com.example.walkarround.base.view.RippleView;
 import com.example.walkarround.flingswipe.SwipeFlingAdapterView;
 import com.example.walkarround.main.adapter.NearlyUserListAdapter;
 import com.example.walkarround.main.model.ContactInfo;
@@ -26,7 +27,6 @@ import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
-import com.example.walkarround.radar.RadarScanView;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpTaskBase.TaskResult;
@@ -57,7 +57,8 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private View mUserFrameButtons;
 
     //For radar display.
-    private RadarScanView mRadarView;
+    private RippleView mSearchingView;
+    private PortraitView mSearchingPortrait;
 
     //Image mLeftDislike / mRightLike = dislike / like
     private ImageView mLeftDislike;
@@ -84,18 +85,18 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
             //Task success.
             //If you like some and the reponse status is "2", it means "toUser" also like you.
-            if(TaskResult.SUCCEESS == resultCode) {
+            if (TaskResult.SUCCEESS == resultCode) {
                 //Get status & Get TO user.
-                String strState = WalkArroundJsonResultParser.parseRequireCode((String)object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_STATUS);
-                if(strState.equalsIgnoreCase(TaskUtil.RESPONSE_USR_STATUS_ACCEPT)) {
-                    String strUser = WalkArroundJsonResultParser.parseRequireCode((String)object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_TO_USER);
+                String strState = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_STATUS);
+                if (strState.equalsIgnoreCase(TaskUtil.RESPONSE_USR_STATUS_ACCEPT)) {
+                    String strUser = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_TO_USER);
                     addCacheContact(strUser);
                     sayHello(strUser);
                 }
 
                 //TODO: This log should be deleted later.
-                logger.d("like someone response: \r\n" + (String)object);
-            } else if(TaskResult.FAILED == resultCode) {
+                logger.d("like someone response: \r\n" + (String) object);
+            } else if (TaskResult.FAILED == resultCode) {
                 logger.d("like someone response failed");
             }
         }
@@ -147,9 +148,9 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
     public static NearlyUsersFragment getInstance() {
 
-        if(mNUFragment == null) {
+        if (mNUFragment == null) {
             synchronized (NearlyUsersFragment.class) {
-                if(mNUFragment == null) {
+                if (mNUFragment == null) {
                     mNUFragment = new NearlyUsersFragment();
                     Bundle args = new Bundle();
                     args.putInt(NearlyUsersFragment.ARG_PLANET_NUMBER, 0);
@@ -199,14 +200,14 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         mUserFrameButtons.setVisibility(View.GONE);
 
         //Like and Dislike button - init view & set onClicklistener.
-        mLeftDislike = (ImageView)  mViewRoot.findViewById(R.id.left);
+        mLeftDislike = (ImageView) mViewRoot.findViewById(R.id.left);
         mLeftDislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 left();
             }
         });
-        mRightLike = (ImageView)  mViewRoot.findViewById(R.id.right);
+        mRightLike = (ImageView) mViewRoot.findViewById(R.id.right);
         mRightLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,8 +225,10 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         mIvChatEntrance = (ImageView) mViewRoot.findViewById(R.id.right_chat_iv);
         mIvChatEntrance.setOnClickListener(this);
 
-        //Radar will be displayed at first.
-        mRadarView = (RadarScanView) mViewRoot.findViewById(R.id.radar);
+        //Searching UI will be displayed at first.
+        mSearchingPortrait = (PortraitView) mViewRoot.findViewById(R.id.searching_center_portrait);
+        mSearchingView = (RippleView) mViewRoot.findViewById(R.id.searchingView);
+        mSearchingView.start();
     }
 
     private void initData(Bundle savedInstanceState) {
@@ -235,7 +238,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         mUserFrame.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
-                if(mNearlyUserList != null && mNearlyUserList.size() > 0) {
+                if (mNearlyUserList != null && mNearlyUserList.size() > 0) {
                     synchronized (NearlyUsersFragment.class) {
                         mStrToUsrId = mNearlyUserList.get(0).getObjectId();
                         mDeleletedUserList.add(mNearlyUserList.remove(0));
@@ -243,12 +246,14 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                     mUserListAdapter.notifyDataSetChanged();
                 }
             }
+
             @Override
             public void onLeftCardExit(Object dataObject) {
                 if (mNearlyUserList != null && mNearlyUserList.size() == 0) {
                     //If there is no data, display radar again.
                     showRadar();
-                };
+                }
+                ;
             }
 
             @Override
@@ -263,7 +268,8 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 if (mNearlyUserList != null && mNearlyUserList.size() == 0) {
                     //If there is no data, display radar again.
                     showRadar();
-                };
+                }
+                ;
             }
 
             @Override
@@ -294,7 +300,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
         mStrFromUsrId = AVUser.getCurrentUser().getObjectId();
 
-        if(mNearlyUserList != null && mNearlyUserList.size() > 0) {
+        if (mNearlyUserList != null && mNearlyUserList.size() > 0) {
             showNearyUser();
         }
 
@@ -303,6 +309,9 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         if (!TextUtils.isEmpty(myProfileInfo.getUsrName()) && !TextUtils.isEmpty(myProfileInfo.getMobileNum())) {
             mPvPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
                     myProfileInfo.getUsrName().substring(0, 1), -1);
+
+            mSearchingPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
+                    myProfileInfo.getUsrName().substring(0, 1), -1);
         }
     }
 
@@ -310,19 +319,23 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
      * We will show radar on loading page / while there is no other data
      */
     private void showRadar() {
-        mRadarView.setVisibility(View.VISIBLE);
+        mSearchingView.start();
+        mSearchingView.setVisibility(View.VISIBLE);
+        mSearchingPortrait.setVisibility(View.VISIBLE);
 
         mUserFrameButtons.setVisibility(View.GONE);
         mUserFrame.setVisibility(View.GONE);
     }
 
     private void showNearyUser() {
-        mRadarView.setVisibility(View.GONE);
+        mSearchingView.stop();
+        mSearchingView.setVisibility(View.GONE);
+        mSearchingPortrait.setVisibility(View.GONE);
 
         mUserFrame.setVisibility(View.VISIBLE);
         mUserFrameButtons.setVisibility(View.VISIBLE);
 
-        if(mUserListAdapter != null) {
+        if (mUserListAdapter != null) {
             mUserListAdapter.notifyDataSetChanged();
         }
     }
@@ -337,18 +350,19 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
     private void addCacheContact(String userId) {
         for (ContactInfo contact : mDeleletedUserList) {
-            if(contact.getObjectId().equalsIgnoreCase(userId)) {
+            if (contact.getObjectId().equalsIgnoreCase(userId)) {
                 //TODO: maybe we should new a contact to save data.
                 ContactsManager.getInstance(getActivity().getApplicationContext()).addContactInfo(contact);
                 break;
             }
         }
     }
+
     /*
      * Say hello to people who you like and he/she also like you .
      */
     private void sayHello(String userId) {
-        if(TextUtils.isEmpty(userId)) {
+        if (TextUtils.isEmpty(userId)) {
             logger.d("The user id is empty. Failed to say Hello!");
             return;
         }

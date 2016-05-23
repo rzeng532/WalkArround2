@@ -83,18 +83,38 @@
                 app:rotation_degrees="15.5"/>
 
         <include layout="@layout/main_nearly_user_buttons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
                  android:layout_centerHorizontal="true"
                  android:layout_alignParentBottom="true"
                  android:id="@+id/userFrameButtons"/>
 
-        <com.example.walkarround.radar.RadarScanView
+        <!--
+                <com.example.walkarround.radar.RadarScanView
                 android:id="@+id/radar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-        </com.example.walkarround.radar.RadarScanView>
+                </com.example.walkarround.radar.RadarScanView>
+        com.example.walkarround.base.view
+        -->
+        <RelativeLayout
+                android:id="@+id/rlSearching"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <com.example.walkarround.base.view.RippleView
+                    android:id="@+id/searchingView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            <com.example.walkarround.base.view.PortraitView
+                    android:id="@+id/searching_center_portrait"
+                    android:layout_centerInParent="true"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"/>
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
 </LinearLayout>

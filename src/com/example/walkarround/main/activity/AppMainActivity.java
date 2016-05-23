@@ -323,7 +323,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+        //mDrawerToggle.syncState();
     }
 
     @Override

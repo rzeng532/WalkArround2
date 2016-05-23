@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import com.example.walkarround.R;
 
@@ -16,16 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO: description
+ * Description: A public view for APP to display ripple UI result.
  * Date: 2016-05-19
  *
  * @author Richard
  */
 public class RippleView extends View {
 
-    private static final int INIT_CIRCLE_RADIUS_EXTEND_VALUE = 100;
-    private static final int INIT_CIRCLE_RADIUS_STEP_VALUE = 2;
-    private static final int CIRCLE_COUNT = 5;
+    private static final int INIT_CIRCLE_RADIUS_EXTEND_VALUE = 200;
+    private static final int INIT_CIRCLE_RADIUS_STEP_VALUE = 1;
+    private static final int INIT_CIRCLE_ALPHA_STEP_VALUE = 1;
+    private static final int CIRCLE_COUNT = 6;
 
     private Paint paint;
     private int maxRadius = 255;
@@ -54,10 +54,21 @@ public class RippleView extends View {
 
     private void init() {
         paint = new Paint();
-        // 设置博文的颜色
+        // 设置颜色
         paint.setColor(getResources().getColor(R.color.ripple_line_cor));
-        alphaList.add(255);// 圆心的不透明度
+        alphaList.add(0);// 圆心的不透明度
         radiusList.add(0);
+    }
+
+    /*
+     * This method should be invoked before starting.
+     */
+    public void setInitColor(int color) {
+        if(isStarting == true || paint == null) {
+            return;
+        }
+
+        paint.setColor(getResources().getColor(color));
     }
 
     @Override
@@ -65,7 +76,7 @@ public class RippleView extends View {
         super.onDraw(canvas);
         maxRadius = getWidth() / 2 - INIT_CIRCLE_RADIUS_EXTEND_VALUE;
         //mMaxRadiusListSize = maxRadius
-        Log.d("RippleView", "getWidth() = " + getWidth() + ", maxWid = " + maxRadius);
+        //Log.d("RippleView", "getWidth() = " + getWidth() + ", maxWid = " + maxRadius);
         setBackgroundColor(Color.TRANSPARENT);// 颜色：完全透明
         // 依次绘制同心圆
         int alpha;
@@ -75,12 +86,7 @@ public class RippleView extends View {
             // 圆半径
             int startWidth = radiusList.get(i);
 
-            //圆圈透明度
-            if (i == 0 && (startWidth + (maxRadius / CIRCLE_COUNT)) >= maxRadius) {
-                paint.setAlpha(0);
-            } else {
-                paint.setAlpha(alpha);
-            }
+            paint.setAlpha(alpha);
 
             // 画出当前圆圈
             canvas.drawCircle(getWidth() / 2, getHeight() / 2,
@@ -88,17 +94,27 @@ public class RippleView extends View {
                     paint);
             // 准备下一个圆圈参数：半径 + 透明度（递减）
             if (isStarting && alpha > 0) {
-                if (startWidth < (maxRadius - INIT_CIRCLE_RADIUS_STEP_VALUE)) {
-                    iNextAlpha = alpha - 1;
-                } else if (startWidth >= (maxRadius - INIT_CIRCLE_RADIUS_STEP_VALUE)) {
-                    iNextAlpha = 0;
+                iNextAlpha = alpha - INIT_CIRCLE_ALPHA_STEP_VALUE;
+                if(iNextAlpha > 0) {
+                    alphaList.set(i, iNextAlpha);
+                } else {
+                    alphaList.set(i, 0);
                 }
-                alphaList.set(i, iNextAlpha);
                 radiusList.set(i, startWidth + INIT_CIRCLE_RADIUS_STEP_VALUE);
-                Log.d("RippleView", "Set next circle " + startWidth);
+                //Log.d("RippleView", "Set next circle " + startWidth);
+            } else if(isStarting && alpha == 0 && alphaList.size() == 1) {
+                if(maxRadius - INIT_CIRCLE_RADIUS_EXTEND_VALUE > 255) {
+                    alphaList.set(i, 255);
+                } else {
+                    alphaList.set(i, maxRadius - INIT_CIRCLE_RADIUS_EXTEND_VALUE);
+                }
             }
+        }
 
-            Log.d("RippleView", "alphaList i = " + i + ", startWidth = " + radiusList.get(i));
+        // 同心圆数量达到Max，删除最外层圆
+        if (isStarting && radiusList.size() == (CIRCLE_COUNT + 1)) {
+            radiusList.remove(0);
+            alphaList.remove(0);
         }
 
         //半径永远都是偶数，必须确保每个圆圈间隔也是偶数值
@@ -108,23 +124,32 @@ public class RippleView extends View {
         }
         if (isStarting
                 && radiusList.get(radiusList.size() - 1) == iTemp) {
-            alphaList.add(255);
+            //Log.d("RippleView", "maxRadius - INIT_CIRCLE_RADIUS_EXTEND_VALUE : " + (maxRadius - INIT_CIRCLE_RADIUS_EXTEND_VALUE));
+            //alphaList.add(255);
+            if(maxRadius > 255) {
+                alphaList.add(255);
+            } else {
+                alphaList.add(maxRadius);
+            }
             radiusList.add(0);
         }
 
-        // 同心圆数量达到Max，删除最外层圆
-        if (isStarting && radiusList.size() == (CIRCLE_COUNT + 1)) {
-            Log.d("RippleView", " Remove Ripple circle.");
-            radiusList.remove(0);
-            alphaList.remove(0);
-        }
         // 刷新界面
-        Log.d("RippleView", " Ripple invalidate.");
         invalidate();
     }
 
-    // 执行动画
+    // 从上一次结束的地方开始执行动画
     public void start() {
+        isStarting = true;
+    }
+
+    //重新开始执行动画
+    public void reStart() {
+        radiusList.clear();
+        radiusList.add(0);
+        alphaList.clear();
+        alphaList.add(0);
+
         isStarting = true;
     }
 
