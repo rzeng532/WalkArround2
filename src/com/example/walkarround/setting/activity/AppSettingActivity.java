@@ -45,7 +45,7 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
         }
     };
 
-    private void assignViews() {
+    private void initView() {
         //Title
         View title = findViewById(R.id.title);
         title.findViewById(R.id.back_rl).setOnClickListener(this);
@@ -69,7 +69,7 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        assignViews();
+        initView();
     }
 
     @Override

@@ -215,7 +215,7 @@
     <string name="max_input_length">最多可以输入%1$s个字</string>
     <string name="msg_max_input_length">文字超出限制</string>
     <string name="message_receiver_hint">收件人</string>
-    <string name="loading">加载中</string>
+    <string name="loading">加载中...</string>
     <string name="load_fail">加载失败，请稍后重试</string>
     <string name="pull_up_load_more">上拉加载更多</string>
     <string name="pull_down_load_more">下拉加载更多</string>
@@ -234,6 +234,9 @@
     <string name="msg_record_chat_title">聊天记录</string>
     <string name="msg_say_hello">Hi</string>
     <string name="msg_select_walkarround_place">选择10分钟走走地点</string>
+    <string name="msg_select_place_title">见面地点</string>
+    <string name="msg_confirm_walk_place">去这附近走走</string>
+    <string name="msg_location_search_failed">搜索失败</string>
 
     <!-- Pull refresh string -->
     <string name="pull_to_refresh_pull_label">下拉以刷新...</string>

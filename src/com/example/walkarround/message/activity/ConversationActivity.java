@@ -331,6 +331,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
             Bundle dataBundle = new Bundle();
             int what = -1;
+            logger.d("onResultListener, onResult, resultCode = " + resultCode);
             if (resultCode == TaskResult.FAILED || resultCode == TaskResult.ERROR) {
                 if (!requestCode.equals(MessageConstant.MSG_OPERATION_ADD_BLACKLIST)) {
                     what = MSG_OPERATION_NOT_SUCCEED;
@@ -406,6 +407,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
 
     private void initData() {
         // 获取所有联系人
+        logger.d("initData");
         getAllContacts();
 
         // 加载数据
@@ -888,6 +890,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         if (mLoadingDialog == null) {
             mLoadingDialog = DialogFactory.getLoadingDialog(this, true, null);
         }
+        logger.d("Show dialog.");
         mLoadingDialog.show();
     }
 
@@ -895,6 +898,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
      * 取消等待Dialog
      */
     private void dismissCircleDialog() {
+        logger.d("Dismiss dialog.");
         if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
             mLoadingDialog.dismiss();
         }

@@ -117,7 +117,6 @@ public class ThreadPoolManager {
      * @描述：向任务队列中添加任务
      * @param task
      * @输出：String threadId
-     * @作者：shijunfeng
      *
      */
     public String addAsyncTask(HttpTaskBase task) {
@@ -141,7 +140,6 @@ public class ThreadPoolManager {
      * @描述：向任务队列中添加延时任务
      * @param task
      * @输出：String threadId
-     * @作者：shijunfeng
      *
      */
     private String addDelayTask(HttpTaskBase task) {
@@ -187,7 +185,6 @@ public class ThreadPoolManager {
      * @描述：从任务队列中提取任务
      * @return
      * @输出：ThreadPoolTaskBase
-     * @作者：shijunfeng
      *
      */
     private HttpTaskBase getAsyncTask() {
@@ -207,10 +204,10 @@ public class ThreadPoolManager {
      * @方法名：start
      * @描述：开启线程池轮询
      * @输出：void
-     * @作者：shijunfeng
      *
      */
-    public void start() {
+    public synchronized void start() {
+        logger.i("TreadPoolManager start.");
         if (mPoolThread == null) {
             mPoolThread = new Thread(new PoolRunnable());
             mPoolThread.start();
@@ -222,10 +219,10 @@ public class ThreadPoolManager {
      * @方法名：stop
      * @描述：结束轮询，关闭线程池
      * @输出：void
-     * @作者：shijunfeng
      *
      */
-    public void stop() {
+    public synchronized void stop() {
+        logger.i("TreadPoolManager stop.");
         if (mPoolThread != null) {
             mPoolThread.interrupt();
             mPoolThread = null;
@@ -275,9 +272,9 @@ public class ThreadPoolManager {
 
                     try{
                         if (mAsyncTasks.isEmpty() && mDelayedTasks.isEmpty()){
-                            logger.i("working list is empty, try to stop thread pool");
                             Thread.sleep(SLEEP_TIME*2);
-                            mThreadPool.shutdown();
+                            logger.i("working list is empty, try to stop thread pool");
+                            //mThreadPool.shutdown();
                         }
                     }catch (InterruptedException e) {
                         Thread.currentThread().interrupt();

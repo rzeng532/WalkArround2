@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
-import com.example.walkarround.base.TestActivity;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.base.view.RippleView;
 import com.example.walkarround.flingswipe.SwipeFlingAdapterView;
@@ -23,6 +22,7 @@ import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.LikeSomeOneTask;
 import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.message.activity.ConversationActivity;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.myself.manager.ProfileManager;
@@ -182,8 +182,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.right_chat_iv:
                 //Start build message activity
-                //startActivity(new Intent(getActivity(), ConversationActivity.class));
-                startActivity(new Intent(getActivity(), TestActivity.class));
+                startActivity(new Intent(getActivity(), ConversationActivity.class));
                 break;
             default:
                 break;
@@ -230,6 +229,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         mSearchingView = (RippleView) mViewRoot.findViewById(R.id.searchingView);
         mSearchingView.start();
     }
+
 
     private void initData(Bundle savedInstanceState) {
         mUserListAdapter = new NearlyUserListAdapter(getActivity(), mNearlyUserList);

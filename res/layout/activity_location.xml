@@ -4,35 +4,11 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <RelativeLayout
-            android:id="@+id/location_title_panel"
+    <include
+            android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/title_bar_height"
-            android:background="@drawable/header_title_bg">
-
-        <TextView android:id="@+id/back_tv"
-                  android:layout_width="wrap_content"
-                  android:layout_height="match_parent"
-                  android:gravity="center_vertical"
-                  android:drawableLeft="@drawable/public_icon_titlebar_back"
-                  android:drawablePadding="10dp"
-                  android:paddingLeft="16dp"
-                  android:text="@string/map_select_pos_title"
-                  android:textColor="@color/fontcor3"
-                  android:textSize="@dimen/font_size2_dp"/>
-
-        <TextView
-                android:id="@+id/location_send_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:text="@string/map_control_send"
-                android:textColor="@color/fontcor3"
-                android:textSize="@dimen/font_size2_dp"/>
-    </RelativeLayout>
+            android:layout_height="@dimen/title_height"
+            layout="@layout/activity_title_common"/>
 
     <RelativeLayout
             android:id="@+id/location_search_bar"
@@ -90,9 +66,9 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
             android:id="@+id/normal_layout"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical"
             android:visibility="visible">
@@ -103,13 +79,29 @@
                 android:layout_width="fill_parent"
                 android:layout_height="260dp"/>
 
+        <!-- useless for list now
+        android:layout_height="fill_parent"
+         -->
         <ListView
                 android:id="@+id/location_listView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:listSelector="@drawable/item_select_bg"
+                android:layout_below="@+id/map"
+                android:layout_above="@+id/confirm_place"
                 android:divider="@null"/>
-    </LinearLayout>
+
+        <TextView
+                android:id="@+id/confirm_place"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/font_size2"
+                android:gravity="center"
+                android:text="@string/msg_confirm_walk_place"
+                android:textColor="@color/fontcor3"
+                android:background="@color/emerald_green"
+                android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 
     <ListView
             android:id="@+id/search_result_listView"

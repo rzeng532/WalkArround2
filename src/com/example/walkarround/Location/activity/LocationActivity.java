@@ -80,7 +80,7 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
 
     private Button searchButton;
     private ListView searchResultListView;
-    private LinearLayout normalLayout;
+    private RelativeLayout normalLayout;
     private ImageView cancelSearchImage;
     private EditText searchEditText;
 
@@ -169,13 +169,13 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
         //设置是否返回地址信息（默认返回地址信息）
         mLocationOption.setNeedAddress(true);
         //设置是否只定位一次,默认为false
-        mLocationOption.setOnceLocation(false);
+        mLocationOption.setOnceLocation(true);
         //设置是否强制刷新WIFI，默认为强制刷新
         mLocationOption.setWifiActiveScan(true);
         //设置是否允许模拟位置,默认为false，不允许模拟位置
         mLocationOption.setMockEnable(false);
         //设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(2000);
+        //mLocationOption.setInterval(2000);
         //给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
         //启动定位
@@ -185,10 +185,15 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
     private boolean isUserClick = false;
 
     private void initView() {
-        // 返回
-        findViewById(R.id.back_tv).setOnClickListener(this);
-        // 发送
-        findViewById(R.id.location_send_textView).setOnClickListener(this);
+        //Init title
+        View title = findViewById(R.id.title);
+        //Left
+        title.findViewById(R.id.back_rl).setOnClickListener(this);
+        //Right
+        title.findViewById(R.id.more_rl).setVisibility(View.GONE);
+        //Title text
+        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.msg_select_place_title);
+        findViewById(R.id.confirm_place).setOnClickListener(this);
         locationListView = (ListView) findViewById(R.id.location_listView);
         locationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -209,7 +214,7 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
         searchEditText = (EditText) findViewById(R.id.location_search_editText);
         searchButton = (Button) findViewById(R.id.search_button);
         searchResultListView = (ListView) findViewById(R.id.search_result_listView);
-        normalLayout = (LinearLayout) findViewById(R.id.normal_layout);
+        normalLayout = (RelativeLayout) findViewById(R.id.normal_layout);
         cancelSearchImage = (ImageView) findViewById(R.id.cancel_location_search_imageView);
 
         searchEditText.addTextChangedListener(new TextWatcher() {
@@ -252,11 +257,11 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
             }
         });
 
-        locationItems = new ArrayList<LocationItem>();
+        locationItems = new ArrayList<>();
         adapter = new LocationAdapter(LocationActivity.this, locationItems, AROUND_SEARCH);
         locationListView.setAdapter(adapter);
 
-        searchResults = new ArrayList<LocationItem>();
+        searchResults = new ArrayList<>();
         searchResultAdapter = new LocationAdapter(LocationActivity.this, searchResults, KEY_SEARCH);
         searchResultListView.setAdapter(searchResultAdapter);
     }
@@ -282,13 +287,10 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
                     return;
                 } else {
                     if (!arg0.target.equals(formerLatLng)) {
-
                         locationItems.clear();
-
+                        adapter.notifyDataSetChanged();
                         regeocoder(arg0.target, AROUND_SEARCH, "");
-
                         formerLatLng = arg0.target;
-
                     }
                 }
             }
@@ -453,7 +455,7 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
 
                 case AROUND_SEARCH_ERROR:
                     hideDialog();
-                    Toast.makeText(LocationActivity.this, "搜索失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LocationActivity.this, getString(R.string.msg_location_search_failed), Toast.LENGTH_SHORT).show();
                     break;
                 case AROUND_SEARCH_SUC:
                     hideDialog();
@@ -464,7 +466,7 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
                     break;
                 case KEY_SEARCH_ERROR:
                     hideDialog();
-                    Toast.makeText(LocationActivity.this, "搜索失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LocationActivity.this, getString(R.string.msg_location_search_failed), Toast.LENGTH_SHORT).show();
                     break;
                 case KEY_SEARCH_SUC:
                     hideDialog();
@@ -564,7 +566,7 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
                         formerCheckedIndex = 0;
                         item.setLatitude(latLng.latitude);
                         item.setLongitude(latLng.longitude);
-                        item.setTitle("[位置]");
+                        item.setTitle(getString(R.string.msg_session_location));
                         item.setSubtitle(regeocodeAddress.getFormatAddress());
                         locationItems.add(item);
                     }
@@ -593,7 +595,7 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
 
     private void showDialog() {
         if (loadDialog == null) {
-            loadDialog = DialogFactory.getLoadingDialog(this, "加载中...", false, null);
+            loadDialog = DialogFactory.getLoadingDialog(this, getResources().getString(R.string.loading), false, null);
         }
         if (!loadDialog.isShowing()) {
             loadDialog.show();
@@ -609,10 +611,10 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.location_send_textView:
+            case R.id.confirm_place:
                 aMap.getMapScreenShot(LocationActivity.this);
                 break;
-            case R.id.back_tv:
+            case R.id.back_rl:
                 finish();
                 break;
             case R.id.cancel_location_search_imageView:
