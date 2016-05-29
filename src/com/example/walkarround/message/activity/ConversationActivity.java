@@ -312,7 +312,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 if (firstNotify != null) {
                     item.setData(firstNotify.getData());
                     item.setLastTime(firstNotify.getLastTime());
-                    item.unReadCount = WalkArroundMsgManager.getInstance(mContext).getAllNotifyMsgUnreadCount();
+                    item.unReadCount = WalkArroundMsgManager.getInstance(mContext).getMsgUnreadCount(Long.toString(item.getThreadId()));
                 } else {
                     item.setData("");
                     item.setLastTime(-1);

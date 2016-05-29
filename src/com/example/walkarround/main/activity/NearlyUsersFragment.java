@@ -1,7 +1,10 @@
 package com.example.walkarround.main.activity;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +28,7 @@ import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.activity.ConversationActivity;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.util.Logger;
@@ -50,6 +54,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private PortraitView mPvPortrait;
     //private View mTvTitle;
     private ImageView mIvChatEntrance;
+    private ImageView mIvUnreadIcon;
 
     //For nearly user list.
     private SwipeFlingAdapterView mUserFrame;
@@ -74,6 +79,17 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private static NearlyUsersFragment mNUFragment;
 
     private NearlyUserListAdapter mUserListAdapter;
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED.equals(action)) {
+                // 新到消息
+                mIvUnreadIcon.setVisibility(View.VISIBLE);
+            }
+        }
+    };
 
     private HttpTaskBase.onResultListener mLikeSomeoneListener = new HttpTaskBase.onResultListener() {
         @Override
@@ -171,6 +187,26 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        setUnreadState();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (null != mMessageReceiver) {
+            getActivity().unregisterReceiver(mMessageReceiver);
+            mMessageReceiver = null;
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_title_portrait:
@@ -223,6 +259,8 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         //Right icon
         mIvChatEntrance = (ImageView) mViewRoot.findViewById(R.id.right_chat_iv);
         mIvChatEntrance.setOnClickListener(this);
+
+        mIvUnreadIcon = (ImageView) mViewRoot.findViewById(R.id.unread_msg_iv);
 
         //Searching UI will be displayed at first.
         mSearchingPortrait = (PortraitView) mViewRoot.findViewById(R.id.searching_center_portrait);
@@ -313,6 +351,13 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             mSearchingPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
                     myProfileInfo.getUsrName().substring(0, 1), -1);
         }
+
+        //For unread msg icon
+        setUnreadState();
+        // 收到新的message消息
+        IntentFilter commandFilter = new IntentFilter();
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
+        getActivity().registerReceiver(mMessageReceiver, commandFilter);
     }
 
     /*
@@ -355,6 +400,16 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 ContactsManager.getInstance(getActivity().getApplicationContext()).addContactInfo(contact);
                 break;
             }
+        }
+    }
+
+    private void setUnreadState() {
+        //For unread msg icon
+        int unreadCount = WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).getAllUnreadCount();
+        if(unreadCount <= 0) {
+            mIvUnreadIcon.setVisibility(View.GONE);
+        } else {
+            mIvUnreadIcon.setVisibility(View.VISIBLE);
         }
     }
 

@@ -57,6 +57,15 @@
                 android:layout_centerVertical="true"
                 android:paddingRight="8dp"
                 android:src="@drawable/icon_chat_title_right"/>
+
+        <ImageView
+                android:id="@+id/unread_msg_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/right_chat_iv"
+                android:layout_alignTop="@id/right_chat_iv"
+                android:paddingRight="3dp"
+                android:src="@drawable/message_unread_count_bg"/>
     </RelativeLayout>
 
     <!-- Divide line -->

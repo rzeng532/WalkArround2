@@ -8,6 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 import com.avos.avoscloud.AVException;
@@ -33,18 +37,41 @@ public class MessageReceiver extends BroadcastReceiver {
 
     private static final String DEFAULT_NOTIFICATION_ID = "12345";
     private static final Logger sLogger = Logger.getLogger(MessageReceiver.class.getSimpleName());
+    Context mContext;
+    private static final int MSG_UPDATE_NOTIFICATION = 0;
+    private static final String MSG_UPDATE_NOTIFICATION_MSG_ID = "msg_id";
+
+    private Handler mNotifyHandler = new android.os.Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_UPDATE_NOTIFICATION:
+                    Bitmap photo = (Bitmap) msg.obj;
+                    Bundle extra = msg.getData();
+                    if (extra == null) {
+                        return;
+                    }
+                    Long msgId = extra.getLong(MSG_UPDATE_NOTIFICATION_MSG_ID);
+                    doNotification(mContext, msgId, photo);
+                    mContext = null;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
        if (MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED.equals(action)) {
-            // 新到一对一消息
+            // Get new 1v1 chat message.
             long messageId = intent.getLongExtra(MsgBroadcastConstants.BC_VAR_MSG_ID, 0);
             String contact = intent.getStringExtra(MsgBroadcastConstants.BC_VAR_CONTACT); //User object id
 
             long threadId = intent.getLongExtra(MsgBroadcastConstants.BC_VAR_THREAD_ID,
                     BuildMessageActivity.CONVERSATION_DEFAULT_THREAD_ID);
-            onReceivedNewImMsg(context, threadId, messageId, contact);
+            onReceivedNewImMsg(context, messageId, contact);
         }
     }
 
@@ -54,43 +81,64 @@ public class MessageReceiver extends BroadcastReceiver {
      * @param context
      * @param messageId
      */
-    private void onReceivedNewImMsg(Context context, long threadId, long messageId, String contact) {
+    private void onReceivedNewImMsg(Context context, long messageId, String userId) {
         if (BuildMessageActivity.sCurrentReceiverNum != null
-                && BuildMessageActivity.sCurrentReceiverNum.equals(contact)) {
+                && BuildMessageActivity.sCurrentReceiverNum.equals(userId)) {
             return;
         }
 
-        // 没有打开会话页面，通知bar显示
+        //If there is no build message activity on foreground.
         if (MessageUtil.isNewMsgNotifyReceive()) {
-            ChatMsgBaseInfo message = WalkArroundMsgManager.getInstance(context).getMessageById(messageId);
-            notification(context, message);
+            mContext = context;
+            notification(context, userId, messageId);
         }
     }
 
-    private void notification(Context context, ChatMsgBaseInfo message) {
-        //Get contact infor if local data doesn't contain this user.
-        ContactInfo contact = ContactsManager.getInstance(context).getContactByUsrObjId(message.getContact());
+    private void notification(Context context, String userId, long msgId) {
+        //Get contact infor from server if local data doesn't contain this user.
+        ContactInfo contact = ContactsManager.getInstance(context).getContactByUsrObjId(userId);
         if (contact != null) {
-            doNotification(context, contact, message);
-        } else {
-            ContactsManager.getInstance(context).getContactFromServer(message.getContact(), new AsyncTaskListener() {
+            //Get portrait and display notification.
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Bitmap srcPhoto = null;
+                    if(contact != null) {
+                        srcPhoto = ImageLoaderManager.getSyncImage(contact.getPortrait().getUrl());
+                    }
+                    Bundle data = new Bundle();
+                    Message msg = mNotifyHandler.obtainMessage();
+                    msg.what = MSG_UPDATE_NOTIFICATION;
+                    data.putLong(MSG_UPDATE_NOTIFICATION_MSG_ID, msgId);
+                    if (srcPhoto != null) {
+                        msg.obj = (Object) srcPhoto;
+                    }
+                    msg.setData(data);
+                    mNotifyHandler.sendMessage(msg);
+                }
+            }).start();
+        } else if(!TextUtils.isEmpty(userId)) {
+            //Get contact infor from server.
+            ContactsManager.getInstance(context).getContactFromServer(userId, new AsyncTaskListener() {
                 @Override
                 public void onSuccess(Object data) {
+                    //Got contact infor & try to get contact portrait.
                     ContactsManager.getInstance(context).addContactInfo((ContactInfo) data);
-                    doNotification(context, (ContactInfo) data, message);
+                    notification(context, userId, msgId);
                 }
 
                 @Override
                 public void onFailed(AVException e) {
-                    doNotification(context, null, message);
+                    //If we failed to get contact information, we will use default portrait.
+                    doNotification(context, msgId, null);
                 }
             });
         }
     }
 
-    private void initNotifyView(Context context, RemoteViews panelView, ChatMsgBaseInfo message, ContactInfo contact) {
+    //Init notification UI.
+    private void initNotifyView(Context context, RemoteViews panelView, ChatMsgBaseInfo message, ContactInfo contact, Bitmap srcPhoto) {
         if (contact != null) {
-            Bitmap srcPhoto = ImageLoaderManager.getSyncImage(contact.getPortrait().getUrl());
             Bitmap photo = ImageLoaderManager.createCircleImage(srcPhoto);
             if (srcPhoto != null) {
                 srcPhoto.recycle();
@@ -122,10 +170,18 @@ public class MessageReceiver extends BroadcastReceiver {
                 TimeFormattedUtil.getDetailDisplayTime(context, message.getTime()));
     }
 
-    private void doNotification(Context context, ContactInfo contact, ChatMsgBaseInfo message) {
+
+    //Prepare notification data and display it.
+    private void doNotification(Context context, Long messageId, Bitmap srcPhoto) {
+
+        ChatMsgBaseInfo message = WalkArroundMsgManager.getInstance(context).getMessageById(messageId);
+
         if (message == null) {
             return;
         }
+
+        ContactInfo contact = ContactsManager.getInstance(context).getContactByUsrObjId(message.getContact());
+
         Intent intent = new Intent();
         intent.setClass(context.getApplicationContext(), BuildMessageActivity.class);
         intent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
@@ -159,7 +215,7 @@ public class MessageReceiver extends BroadcastReceiver {
         notification.contentIntent = contentIntent;
         notification.contentView = new RemoteViews(context.getPackageName(), R.layout.msg_notify_panel);
 //        notification.defaults=Notification.DEFAULT_SOUND;
-        initNotifyView(context, notification.contentView, message, contact);
+        initNotifyView(context, notification.contentView, message, contact, srcPhoto);
         try {
             String number = (contact == null ? DEFAULT_NOTIFICATION_ID : contact.getMobilePhoneNumber());
             int startPos = number.length() > 5 ? number.length() - 5 : 0;

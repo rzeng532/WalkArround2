@@ -815,6 +815,24 @@ public class WalkArroundMsgManager {
         return null;
     }
 
+    public int getAllUnreadCount() {
+        try {
+            return mInstance.mMsgManager.getAllUnreadCount();
+        } catch (Exception e) {
+            logger.e("getAllNotifyMsgUnreadCount Exception:" + e.getMessage());
+        }
+        return 0;
+    }
+
+    public int getMsgUnreadCount(String strThreadId) {
+        try {
+            return mInstance.mMsgManager.getMsgUnreadCount(strThreadId);
+        } catch (Exception e) {
+            logger.e("getAllNotifyMsgUnreadCount Exception:" + e.getMessage());
+        }
+        return 0;
+    }
+
     private MessageSessionBaseModel getLatestMsgSessionByThreadId(long threadId) {
         try {
             return mInstance.mMsgManager.getLatestSessionById(threadId);
