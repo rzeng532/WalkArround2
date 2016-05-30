@@ -10,6 +10,7 @@ import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.Location.activity.LocationActivity;
@@ -19,10 +20,12 @@ import com.example.walkarround.R;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 
-public class ShowLocationActivity extends Activity implements View.OnClickListener{
+public class ShowLocationActivity extends Activity implements View.OnClickListener {
 
     private MapView mapView;
     private AMap aMap;
+    private Marker mCurMarker;
+    private Marker mTargetMarker;
 
     AsyncTaskListener mMyPositionListener = new AsyncTaskListener() {
         @Override
@@ -30,10 +33,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             GeoData geoData = LocationManager.getInstance(getApplicationContext()).getCurrentLoc();
 
             if(geoData != null) {
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(new LatLng(geoData.getLatitude(), geoData.getLatitude()));
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.current_position));
-                aMap.addMarker(markerOptions).setDraggable(false);
+                mCurMarker.setPosition(new LatLng(geoData.getLatitude(), geoData.getLongitude()));
             }
         }
 
@@ -95,10 +95,14 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
         aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
         aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.message_icon_map_position));
         markerOptions.title(intent.getStringExtra(LocationActivity.ADDRESS));
-        aMap.addMarker(markerOptions);
+        mTargetMarker = aMap.addMarker(markerOptions);
+        mTargetMarker.setPosition(latLng);
+
+        MarkerOptions curMarkerOptions = new MarkerOptions();
+        curMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.current_position));
+        mCurMarker = aMap.addMarker(curMarkerOptions);
     }
 
     @Override
