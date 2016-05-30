@@ -4,19 +4,44 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.MarkerOptions;
+import com.avos.avoscloud.AVException;
 import com.example.walkarround.Location.activity.LocationActivity;
+import com.example.walkarround.Location.manager.LocationManager;
+import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
+import com.example.walkarround.util.AppConstant;
+import com.example.walkarround.util.AsyncTaskListener;
 
-public class ShowLocationActivity extends Activity {
+public class ShowLocationActivity extends Activity implements View.OnClickListener{
 
     private MapView mapView;
     private AMap aMap;
+
+    AsyncTaskListener mMyPositionListener = new AsyncTaskListener() {
+        @Override
+        public void onSuccess(Object data) {
+            GeoData geoData = LocationManager.getInstance(getApplicationContext()).getCurrentLoc();
+
+            if(geoData != null) {
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(new LatLng(geoData.getLatitude(), geoData.getLatitude()));
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.current_position));
+                aMap.addMarker(markerOptions).setDraggable(false);
+            }
+        }
+
+        @Override
+        public void onFailed(AVException e) {
+            //TODO:
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +50,7 @@ public class ShowLocationActivity extends Activity {
         initView();
         mapView.onCreate(savedInstanceState);
         initMap();
+        LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mMyPositionListener);
     }
 
     @Override
@@ -56,6 +82,12 @@ public class ShowLocationActivity extends Activity {
     }
 
     void initMap() {
+        //Title
+        View title = findViewById(R.id.title);
+        title.findViewById(R.id.back_rl).setOnClickListener(this);
+        title.findViewById(R.id.more_rl).setVisibility(View.GONE);
+        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.msg_select_place_title);
+
         aMap = mapView.getMap();
         Intent intent = getIntent();
         LatLng latLng = new LatLng(intent.getDoubleExtra(LocationActivity.LATITUDE, 0),
@@ -69,7 +101,10 @@ public class ShowLocationActivity extends Activity {
         aMap.addMarker(markerOptions);
     }
 
-    public void showLocationBack(View view) {
-        this.finish();
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.back_rl){
+            finish();
+        }
     }
 }

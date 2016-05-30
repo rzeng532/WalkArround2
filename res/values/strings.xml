@@ -237,6 +237,8 @@
     <string name="msg_select_place_title">见面地点</string>
     <string name="msg_confirm_walk_place">去这附近走走</string>
     <string name="msg_location_search_failed">搜索失败</string>
+    <string name="msg_accept_walk_position">就去这走走</string>
+    <string name="msg_let_me_select_position">我来挑地点</string>
 
     <!-- Pull refresh string -->
     <string name="pull_to_refresh_pull_label">下拉以刷新...</string>

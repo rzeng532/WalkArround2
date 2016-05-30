@@ -68,6 +68,7 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
     private AMap aMap;
     private MapView mapView;
     private Marker marker;
+    private Marker mCurMarker;
 
     private int formerCheckedIndex = -1;
     private LatLng formerLatLng;
@@ -144,6 +145,7 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
                     amapLocation.getCityCode();//城市编码
                     amapLocation.getAdCode();//地区编码
                     */
+                        mCurMarker.setPosition(new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude()));
                         aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude())));
                         aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
                     } else {
@@ -275,6 +277,12 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.message_icon_map_position));
         marker = aMap.addMarker(markerOptions);
+
+        MarkerOptions curMarkerOptions = new MarkerOptions();
+        curMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.current_position));
+        mCurMarker = aMap.addMarker(curMarkerOptions);
+        mCurMarker.setDraggable(false);
+
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
 
             @Override
@@ -283,7 +291,12 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
                 slogger.d("isUserClick:" + isUserClick);
                 if (isUserClick) {
                     isUserClick = false;
-                    marker.setPosition(new LatLng(arg0.target.latitude, arg0.target.longitude));
+                    LatLng curPosition = mCurMarker.getPosition();
+                    if(curPosition == null
+                            || mCurMarker.getPosition().latitude != arg0.target.latitude
+                            || mCurMarker.getPosition().longitude != arg0.target.longitude) {
+                        marker.setPosition(new LatLng(arg0.target.latitude, arg0.target.longitude));
+                    }
                     return;
                 } else {
                     if (!arg0.target.equals(formerLatLng)) {
@@ -299,7 +312,12 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
             public void onCameraChange(CameraPosition arg0) {
                 slogger.d("onCameraChange");
                 if (!isUserClick) {
-                    marker.setPosition(new LatLng(arg0.target.latitude, arg0.target.longitude));
+                    LatLng curPosition = mCurMarker.getPosition();
+                    if(curPosition == null
+                            ||mCurMarker.getPosition().latitude != arg0.target.latitude
+                            || mCurMarker.getPosition().longitude != arg0.target.longitude) {
+                        marker.setPosition(new LatLng(arg0.target.latitude, arg0.target.longitude));
+                    }
                 }
             }
         });
