@@ -63,4 +63,5 @@ public class AppConstant {
      * Key value for map location listener.
      */
     public static final String KEY_MAP_ASYNC_LISTERNER_MAIN = "main_activity_get_key";
+    public static final String KEY_MAP_ASYNC_LISTERNER_SHOW_LOCATION = "show_location_activity_get_key";
 }

@@ -115,6 +115,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     private static final int REQUEST_CODE_CAMERA = 9;
     /* 查看视频 */
     private static final int REQUEST_CODE_PREVIEW_VIDEO = 10;
+    /* 查看发送的地图 */
+    private static final int REQUEST_CODE_SHOW_LOCATION = 11;
 
     /* 当前编辑状态：默认、已经有输入、语音、更多、表情 */
     private static final int MESSAGE_EDIT_STATE_DEFAULT = 0;
@@ -712,6 +714,15 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             long msgId = data.getLongExtra(PlayVideoActivity.INTENT_MESSAGE_ID, -1);
             mMessageDetailAdapter.deleteRcsMessage(msgId);
             mMessageDetailAdapter.notifyDataSetChanged();
+        } else if(requestCode == REQUEST_CODE_SHOW_LOCATION) {
+            //There are two results from show location activity: normal finish & goto another
+            if (resultCode == RESULT_CANCELED) {
+                //normal finish
+                return;
+            }
+            //Start location activity to select another place.
+            Intent intent = new Intent(this, LocationActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_MAP);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -2591,7 +2602,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         intent.putExtra(LocationActivity.LATITUDE, selectChat.getLatitude());
         intent.putExtra(LocationActivity.LONGITUDE, selectChat.getLongitude());
         intent.putExtra(LocationActivity.ADDRESS, selectChat.getLocationLabel());
-        startActivity(intent);
+        intent.putExtra(LocationActivity.SENDER_OR_RECEIVER, selectChat.getSendReceive());
+        startActivityForResult(intent, REQUEST_CODE_SHOW_LOCATION);
     }
 
     /**
