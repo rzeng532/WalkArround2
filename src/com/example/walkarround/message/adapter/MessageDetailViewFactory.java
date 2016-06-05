@@ -366,7 +366,12 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
         } else {
             viewHolder = (MapLocationViewHolder) convertView.getTag();
         }
-        viewHolder.contentShowTv.setText(message.getLocationLabel());
+        String[] address = message.getLocationLabel().split(MessageUtil.MAP_DETAIL_INFOR_SPLIT);
+        String addressInfo = null;
+        if(address.length > 1) {
+            addressInfo = address[1];
+        }
+        viewHolder.contentShowTv.setText(addressInfo);
         ImageLoaderManager.displayImage(message.getFilepath(), message.getFileUrlPath(),
                 R.drawable.message_icon_chat_position, viewHolder.mapView);
         return convertView;

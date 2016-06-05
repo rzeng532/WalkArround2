@@ -14,9 +14,47 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/map"
         android:layout_below="@+id/title"
-        android:layout_above="@+id/normal_layout"
+        android:layout_above="@+id/detail_infor"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
+
+    <ImageView
+            android:id="@+id/locate_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/map"
+            android:paddingBottom="7dp"
+            android:paddingLeft="8dp"
+            android:src="@drawable/show_my_location"/>
+
+    <RelativeLayout
+            android:id="@+id/detail_infor"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_above="@+id/normal_layout">
+        <TextView
+                android:id="@+id/detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dp"
+                android:textSize="@dimen/font_size2"
+                android:text="@string/msg_accept_walk_position"
+                android:textColor="@color/fontcor1"/>
+
+        <TextView
+                android:id="@+id/full_infor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="1dp"
+                android:paddingLeft="7dp"
+                android:layout_below="@+id/detail"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/font_size5"
+                android:text="@string/msg_accept_walk_position"
+                android:textColor="@color/fontcor10"/>
+
+        </RelativeLayout>>
+
 
     <RelativeLayout
             android:id="@+id/normal_layout"

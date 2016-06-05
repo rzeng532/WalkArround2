@@ -44,6 +44,7 @@ public class MessageUtil {
     public static final String VCARD_FILE_UNICODE = "UTF-8";
     private static final Logger logger = Logger.getLogger(MessageUtil.class.getSimpleName());
     private static final String GIF_FILE_EXT = "gif";
+    public static final String MAP_DETAIL_INFOR_SPLIT = "#";
 
     /**
      * 判断是否gif文件
@@ -266,20 +267,6 @@ public class MessageUtil {
             msgInfo.setDuration((int)(((AVIMAudioMessage) cmMessage).getDuration()));
             msgInfo.setFileName(((AVIMAudioMessage) cmMessage).getLocalFilePath()); //Check
             msgInfo.setFileUrlPath(((AVIMAudioMessage) cmMessage).getFileUrl());
-        } else if (cmMessage instanceof AVIMImageMessage) {
-//            msgInfo.setFileSize(((ImageMessageBody) messageBody).getFileLength());
-//            msgInfo.setFileName(((ImageMessageBody) messageBody).getFileName());
-//            msgInfo.setFileUrlPath(((ImageMessageBody) messageBody).getOriginalUri());
-//            msgInfo.setThumbUrlPath(((ImageMessageBody) messageBody).getSmallUri());
-//            msgInfo.setImageWidth(((ImageMessageBody) messageBody).getWidth());
-//            msgInfo.setImageHeight(((ImageMessageBody) messageBody).getHeight());
-//            msgInfo.setData(msgInfo.getImageWidth() + LittleCDbManager.IMAGE_SIZE_SEPARATOR + msgInfo.getImageHeight());
-        } else if (cmMessage instanceof AVIMVideoMessage) {
-//            msgInfo.setDuration(((VideoMessageBody) messageBody).getDuration());
-//            msgInfo.setFileSize(((VideoMessageBody) messageBody).getFileLength());
-//            msgInfo.setFileName(((VideoMessageBody) messageBody).getFileName());
-//            msgInfo.setFileUrlPath(((VideoMessageBody) messageBody).getOriginalUri());
-//            msgInfo.setThumbUrlPath(((VideoMessageBody) messageBody).getThumbnailUrl());
         } else if (cmMessage instanceof AVIMLocationMessage) {
             msgInfo.setMsgType(MessageType.MSG_TYPE_MAP);
             msgInfo.setLocationLabel(((AVIMLocationMessage) cmMessage).getText());
@@ -289,9 +276,6 @@ public class MessageUtil {
                 msgInfo.setLatitute(temp.getLatitude());
                 msgInfo.setLongitude(temp.getLongitude());
             }
-//            msgInfo.setFileSize(((LocationMessageBody) messageBody).getFileLength());
-//            msgInfo.setFileName(((LocationMessageBody) messageBody).getFileName());
-//            msgInfo.setFileUrlPath(((LocationMessageBody) messageBody).getOriginalUri());
         } else if (cmMessage instanceof AVIMTextMessage) {
             msgInfo.setMsgType(MessageType.MSG_TYPE_TEXT);
             msgInfo.setData(((AVIMTextMessage)cmMessage).getText());

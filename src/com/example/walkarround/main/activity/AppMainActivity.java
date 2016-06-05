@@ -80,11 +80,15 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
+            amLogger.d("Query nearly user done.");
             if (object != null &&
                     WalkArroundJsonResultParser.parseReturnCode((String) object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
                 List<ContactInfo> nearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String) object);
                 if (!isFinishing() && nearlyUserList != null && nearlyUserList.size() > 0) {
+                    amLogger.d("Query nearly user successful and user list size = " + nearlyUserList.size());
                     NearlyUsersFragment.getInstance().updateNearlyUserList(nearlyUserList);
+                } else {
+                    amLogger.d("Query nearly user successful and user list is empty.");
                 }
             }
 
@@ -124,7 +128,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         @Override
         public void onSuccess(Object data) {
             mMyGeo = LocationManager.getInstance(getApplicationContext()).getCurrentLoc();
-
+            amLogger.d("Get loc infor done.");
             if (mMyGeo != null) {
                 //Update user dynamic data - online state & GEO.
                 ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(mMyGeo, true, 1), mDynUpdateListener);

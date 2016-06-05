@@ -9,6 +9,7 @@ import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
+import com.example.walkarround.util.Logger;
 
 import java.util.List;
 
@@ -19,6 +20,9 @@ import java.util.List;
  * @author Administrator
  */
 public class ProfileApiImpl extends ProfileApiAbstract {
+
+    private Logger mLogger = Logger.getLogger(ProfileApiImpl.class.getSimpleName());
+
     @Override
     public void updateGendle(String value) throws Exception {
         AVUser user = AVUser.getCurrentUser();
@@ -37,8 +41,10 @@ public class ProfileApiImpl extends ProfileApiAbstract {
             @Override
             public void done(AVException e) {
                 if (e == null) {
+                    mLogger.d("Update user signature successful.");
                     listener.onSuccess(null);
                 } else {
+                    mLogger.d("Update user signature failed.");
                     listener.onFailed(e);
                 }
             }
@@ -64,12 +70,15 @@ public class ProfileApiImpl extends ProfileApiAbstract {
             public void done(AVException e) {
                 if (e == null) {
                     //user.setUsername(username);
+                    mLogger.d("Update user signature successful.");
                     listener.onSuccess(null);
                 } else {
                     int code = e.getCode();
                     if (code == 0) {
+                        mLogger.d("Update user signature successful.");
                         listener.onSuccess(null);
                     } else {
+                        mLogger.d("Update user signature failed.");
                         listener.onFailed(e);
                     }
                 }
@@ -105,8 +114,11 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     @Override
     public void updateDynamicData(MyDynamicInfo dynamicInfo, AsyncTaskListener listener) throws Exception {
         if (dynamicInfo == null) {
+            mLogger.w("updateDynamicData infor is NULL.");
             return;
         }
+
+        mLogger.w("updateDynamicData start.");
 
         //Query dynamic data at first
         AVQuery<AVObject> query = new AVQuery<AVObject>(AppConstant.TABLE_DYNAMIC_USER_DATA);
@@ -114,9 +126,10 @@ public class ProfileApiImpl extends ProfileApiAbstract {
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
-
+                mLogger.d("Update user dynamic information done.");
                 if (e == null) {
                     //Query success
+                    mLogger.d("Update user dynamic information successful.");
                     AVObject objLocation = null;
                     if (list != null && list.size() > 0) {
                         //There is record, update original one.
@@ -136,6 +149,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                     objLocation.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException e) {
+                            mLogger.d("Update user dynamic information successful.");
                             if (listener == null) {
                                 return;
                             }
@@ -165,6 +179,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                     });
                 } else {
                     if (listener != null) {
+                        mLogger.d("Update user dynamic information failed.");
                         listener.onFailed(e);
                     }
                 }

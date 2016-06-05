@@ -24,6 +24,7 @@ import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
+import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
@@ -336,9 +337,10 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 return;
             }
 
+            String[] address = data.getStringExtra(LocationActivity.ADDRESS).split(MessageUtil.MAP_DETAIL_INFOR_SPLIT);
             GeoData location = new GeoData(data.getDoubleExtra(LocationActivity.LATITUDE, 0),
                     data.getDoubleExtra(LocationActivity.LONGITUDE, 0),
-                    data.getStringExtra(LocationActivity.ADDRESS));
+                    address[1]);
 
             ProfileManager.getInstance().updateUserLocation(location, mUpdateListener);
         } else if (requestCode == REQUEST_CODE_EDIT_STR) {

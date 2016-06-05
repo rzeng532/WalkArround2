@@ -33,6 +33,7 @@ import com.example.walkarround.Location.model.LocationItem;
 import com.example.walkarround.R;
 import com.example.walkarround.base.WalkArroundApp;
 import com.example.walkarround.base.view.DialogFactory;
+import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 
@@ -377,7 +378,8 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
             LocationItem temp = locationItems.get(formerCheckedIndex);
             Intent resultIntent = new Intent();
             Bundle dataBundle = new Bundle();
-            dataBundle.putString(ADDRESS, temp.getSubtitle());
+            //title + "#" + subtitle
+            dataBundle.putString(ADDRESS, temp.getTitle() + MessageUtil.MAP_DETAIL_INFOR_SPLIT + temp.getSubtitle());
             dataBundle.putString(IMAGE_PATH, filePath);
             //dataBundle.putString(MAP_SCREEN_SHOT_URL, mapScreenShotUrl);
             dataBundle.putDouble(LATITUDE, temp.getLatitude());
