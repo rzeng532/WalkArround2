@@ -78,6 +78,14 @@
                 android:id="@+id/map"
                 android:layout_width="fill_parent"
                 android:layout_height="260dp"/>
+        <ImageView
+                android:id="@+id/locate_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/map"
+                android:paddingBottom="7dp"
+                android:paddingLeft="8dp"
+                android:src="@drawable/show_my_location"/>
 
         <!-- useless for list now
         android:layout_height="fill_parent"

@@ -87,9 +87,9 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
     private RelativeLayout normalLayout;
     private ImageView cancelSearchImage;
     private EditText searchEditText;
+    private ImageView mIvLocateIcon;
 
     //Map values
-    //Map options
     public AMapLocationClientOption mLocationOption = null;
     //Define location listener
     public AMapLocationListener mLocationListener = null;
@@ -99,7 +99,6 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
     private List<LocationItem> locationItems;
     private List<LocationItem> searchResults;
     private LocationAdapter searchResultAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,6 +268,10 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
         searchResults = new ArrayList<>();
         searchResultAdapter = new LocationAdapter(LocationActivity.this, searchResults, KEY_SEARCH);
         searchResultListView.setAdapter(searchResultAdapter);
+
+        //Location icon
+        mIvLocateIcon = (ImageView)findViewById(R.id.locate_iv);
+        mIvLocateIcon.setOnClickListener(this);
     }
 
     private void initMap(Bundle savedInstanceState) {
@@ -647,6 +650,10 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
                 searchResultListView.setVisibility(View.VISIBLE);
                 searchResults.clear();
                 regeocoder(formerLatLng, KEY_SEARCH, searchEditText.getText().toString());
+            case R.id.locate_iv:
+                locate();
+                //mBUserSelect = true;
+                //LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_SHOW_LOCATION, mMyPositionListener);
             default:
                 break;
         }
