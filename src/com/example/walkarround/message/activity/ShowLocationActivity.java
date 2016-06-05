@@ -19,6 +19,7 @@ import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
 import com.example.walkarround.message.util.MessageUtil;
+import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 
@@ -32,6 +33,9 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
     private AMap aMap;
     private Marker mCurMarker;
     private Marker mTargetMarker;
+
+    private TextView mTvSelectPosition;
+    private TextView mTvAcceptPosition;
 
     AsyncTaskListener mMyPositionListener = new AsyncTaskListener() {
         @Override
@@ -61,7 +65,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
         initView();
         mapView.onCreate(savedInstanceState);
         initMap();
-        LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mMyPositionListener);
+        LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_SHOW_LOCATION, mMyPositionListener);
     }
 
     @Override
@@ -90,6 +94,17 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
 
     void initView() {
         mapView = (MapView) findViewById(R.id.map);
+
+        int sender = getIntent().getIntExtra(LocationActivity.SENDER_OR_RECEIVER, 0);
+        if(sender == MessageConstant.MessageSendReceive.MSG_RECEIVE) {
+            findViewById(R.id.bottom_layout).setVisibility(View.VISIBLE);
+            mTvSelectPosition = (TextView)findViewById(R.id.select_another);
+            mTvSelectPosition.setOnClickListener(this);
+            mTvAcceptPosition = (TextView)findViewById(R.id.accept_place);
+            mTvAcceptPosition.setOnClickListener(this);
+        } else {
+            findViewById(R.id.bottom_layout).setVisibility(View.GONE);
+        }
 
         //Detail information
         mTvDetailInfor = (TextView)findViewById(R.id.detail);
@@ -136,11 +151,25 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.back_rl){
-            finish();
-        } else if(v.getId() == R.id.locate_iv) {
-            mBUserSelect = true;
-            LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mMyPositionListener);
+        switch (v.getId()) {
+            case R.id.back_rl:
+                setResult(RESULT_CANCELED);
+                finish();
+                break;
+            case R.id.select_another:
+                //Select another place
+                setResult(RESULT_OK);
+                finish();
+                break;
+            case R.id.accept_place:
+                //Accept current place
+                break;
+            case R.id.locate_iv:
+                mBUserSelect = true;
+                LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_SHOW_LOCATION, mMyPositionListener);
+                break;
+            default:
+                break;
         }
     }
 }

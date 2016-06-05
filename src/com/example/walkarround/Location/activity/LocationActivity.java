@@ -74,11 +74,13 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
     private int formerCheckedIndex = -1;
     private LatLng formerLatLng;
 
+    //TODO: we should move those code to a util file.
     public static final String ADDRESS = "address";
     public static final String IMAGE_PATH = "imagePath";
     // public static final String MAP_SCREEN_SHOT_URL = "map_screen_shot_url";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
+    public static final String SENDER_OR_RECEIVER = "sender";
 
     private Button searchButton;
     private ListView searchResultListView;
