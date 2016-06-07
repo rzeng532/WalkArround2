@@ -4,42 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/mail_write_attachment_photo"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/title_bar_height"
-        android:background="@drawable/header_title_bg" >
-
-        <TextView
-            android:id="@+id/attachment_photo_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:paddingLeft="16dp"
-            android:background="@drawable/btn_pre_bg_light"
-            android:drawableLeft="@drawable/public_icon_titlebar_back"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/public_icon_titlebar_back"
-            android:gravity="center_vertical"
-            android:text="@string/img_select_picture"
-            android:textColor="@color/fontcor3"
-            android:textSize="@dimen/font_size2" />
-
-        <Button
-            android:id="@+id/choose_ok_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:paddingRight="16dp"
-            android:paddingLeft="5dp"
-            android:background="@null"
-            android:text="@string/com_select"
-            android:textColor="@color/fontcor3"
-            android:textSize="@dimen/font_size2"
-            android:visibility="visible" />
-    </RelativeLayout>
+    <include
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            layout="@layout/activity_title_common"/>
 
     <RelativeLayout
         android:id="@+id/bottomLayout"
@@ -115,7 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottomLayout"
-        android:layout_below="@id/mail_write_attachment_photo"
+        android:layout_below="@id/title"
         android:background="@null"
         android:horizontalSpacing="8dp"
         android:numColumns="3"

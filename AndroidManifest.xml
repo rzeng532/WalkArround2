@@ -75,8 +75,6 @@
         <activity android:name=".message.activity.BuildMessageActivity"/>
         <activity android:name=".message.activity.ConversationActivity"/>
         <activity android:name=".message.activity.ChatDetailActivity"/>
-        <activity android:name=".message.activity.ImageBrowserActivity"/>
-        <activity android:name=".message.activity.ImageChooseActivity"/>
         <activity android:name=".message.activity.ImageViewerActivity"/>
         <activity android:name=".message.activity.ShowLocationActivity"/>
         <activity android:name=".message.activity.PlaintTextDetailActivity"/>

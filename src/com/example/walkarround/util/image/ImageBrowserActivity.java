@@ -1,12 +1,5 @@
 package com.example.walkarround.util.image;
 
-import java.io.File;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,15 +9,20 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.photoview.HackyViewPager;
 import com.example.walkarround.base.view.photoview.PhotoView;
 import com.example.walkarround.util.Logger;
+
+import java.io.File;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Created by Richard on 2015/12/12.
@@ -61,7 +59,7 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
     /*原图和选中是否勾选CheckBox*/
     private CheckBox mPicFullSizeCb, mPicSelectCb;
 
-    private Button mBtnSend;
+    private TextView mBtnSend;
 
     /*发送原图*/
     private HashSet<String> mOriginCheckedMap = new HashSet<String>();
@@ -103,9 +101,16 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
     }
 
     private void initView() {
-        mBackHintView = (TextView) findViewById(R.id.browser_tv_back);
-        mBtnSend = (Button) findViewById(R.id.ok_btn);
+        //Title
+        View title = findViewById(R.id.title);
+        title.findViewById(R.id.back_rl).setOnClickListener(this);
+        title.findViewById(R.id.more_rl).findViewById(R.id.more_iv).setVisibility(View.GONE);
+        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.img_pic_browser);
+
+        mBackHintView = (TextView)title.findViewById(R.id.back_rl).findViewById(R.id.left_tx);
+        mBtnSend = (TextView) title.findViewById(R.id.more_rl).findViewById(R.id.right_tx);
         mBtnSend.setOnClickListener(this);
+
         if(mIsDisableOKBtn) {
             mBtnSend.setVisibility(View.GONE);
         } else {
@@ -171,7 +176,7 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
 
         switch (mViewType) {
             case _TYPE_FROM_MSG:
-                findViewById(R.id.gallery_action_bar).setVisibility(View.GONE);
+                findViewById(R.id.title).setVisibility(View.GONE);
                 findViewById(R.id.gallery_tool_bar_preview).setVisibility(View.GONE);
                 break;
             case _TYPE_FROM_CAMERA:
@@ -251,10 +256,10 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.browser_tv_back:
+            case R.id.back_rl:
                 onBackPressed();
                 break;
-            case R.id.ok_btn:
+            case R.id.right_tx:
                 switch (mViewType) {
                     case _TYPE_FROM_MSG:
                         break;

@@ -61,6 +61,7 @@ import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.image.ImageBrowserActivity;
+import com.example.walkarround.util.image.ImageChooseActivity;
 import com.example.walkarround.util.network.NetWorkManager;
 
 import java.io.File;

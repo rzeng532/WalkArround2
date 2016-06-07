@@ -8,44 +8,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top|center_horizontal"
-        android:background="#000000"
+        android:background="@color/bgcor1"
         android:gravity="center"
-        android:scaleType="fitCenter"
-         />
-    <RelativeLayout
-        android:id="@+id/gallery_action_bar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/title_bar_height"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="top"
-        android:alpha="0.8"
-        android:background="@drawable/header_title_bg" >
+        android:layout_below="@+id/title"
+        android:scaleType="fitCenter"/>
 
-        <TextView
-            android:id="@+id/browser_tv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="16dp"
-            android:background="@drawable/btn_pre_bg_light"
-            android:drawableLeft="@drawable/public_icon_titlebar_back"
-            android:drawablePadding="10dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/fontcor3"
-            android:text="@string/img_pic_browser"
-            android:textSize="@dimen/font_size2" />
-        <Button
-            android:id="@+id/ok_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="5dp"
-            android:paddingRight="16dp"
-            android:background="@drawable/btn_pre_bg_light"
-            android:text="@string/img_pic_complete"
-            android:textColor="@color/fontcor3"
-            android:textSize="@dimen/font_size2"/>
-    </RelativeLayout>
+    <include
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            layout="@layout/activity_title_common"/>
 
     <RelativeLayout
         android:id="@+id/gallery_tool_bar_preview"
@@ -53,7 +25,7 @@
         android:layout_height="@dimen/title_bar_height"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:background="@drawable/header_title_bg" >
+        android:background="@color/bgcor1">
 
         <CheckBox
             android:id="@+id/pic_full_size_btn"

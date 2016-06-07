@@ -1,12 +1,5 @@
 package com.example.walkarround.util.image;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,18 +11,13 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.example.walkarround.R;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
+
+import java.io.File;
+import java.util.*;
 
 /**
  * Created by Richard on 2015/12/12.
@@ -71,7 +59,7 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
     /* 预览按钮 */
     private Button mPreviewBtn;
     /* 选择确定按钮 */
-    private Button mChoseOkBtn;
+    private TextView mChoseOkBtn;
 
     /* 选择文件夹 */
     private PopupWindow mDirectoryPopup;
@@ -133,12 +121,18 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
      * 初始化画面
      */
     private void initBaseView() {
-        // 头部返回按钮
-        findViewById(R.id.attachment_photo_back).setOnClickListener(this);
+        //Title
+        View title = findViewById(R.id.title);
+        title.findViewById(R.id.back_rl).setOnClickListener(this);
+        title.findViewById(R.id.more_rl).setVisibility(View.GONE);
+        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.img_select_picture);
+
         // 选择确定按钮
-        mChoseOkBtn = (Button) findViewById(R.id.choose_ok_btn);
+        mChoseOkBtn = (TextView) title.findViewById(R.id.more_rl).findViewById(R.id.right_tx);
+        mChoseOkBtn.setOnClickListener(this);
         // 预览按钮
         mPreviewBtn = (Button) findViewById(R.id.preview_btn);
+
         switch (mViewType) {
             case FROM_MESSAGE_CODE:
                 mChoseOkBtn.setVisibility(View.VISIBLE);
@@ -270,12 +264,12 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.attachment_photo_back:
+            case R.id.back_rl:
                 // 返回
                 setResult(RESULT_CANCELED);
                 finish();
                 break;
-            case R.id.choose_ok_btn:
+            case R.id.right_tx:
                 // 发送
                 sendImages(mImageListAdapter.getCheckedList());
                 break;
