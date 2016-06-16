@@ -44,28 +44,40 @@
         <RelativeLayout android:id="@+id/msg_item_bg_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/chat_to_bg"
+            android:background="@drawable/msg_loc_from_bg"
             android:paddingLeft="4dp"
             android:paddingTop="4dp"
             android:paddingRight="16dp"
             android:paddingBottom="4dp">
             <ImageView android:id="@+id/map_position_iv"
-                android:layout_width="200dp"
-                android:layout_height="150dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/message_icon_chat_position"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:layout_alignParentLeft="true"
+                android:paddingLeft="20dp"
+                android:paddingTop="15dp"
+                android:src="@drawable/message_loc_from_icon"/>
             <TextView
                 android:id="@+id/msg_content_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/map_position_iv"
-                android:layout_alignRight="@id/map_position_iv"
-                android:layout_alignBottom="@id/map_position_iv"
-                android:background="@color/transparent0.6"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:textColor="@color/fontcor3"
+                android:layout_toRightOf="@+id/map_position_iv"
+                android:paddingLeft="30dp"
+                android:paddingTop="15dp"
+                android:text="xxx"
+                android:textColor="@color/fontcor1"
                 android:textSize="@dimen/font_size6" />
+            <TextView
+                    android:id="@+id/msg_detail_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/map_position_iv"
+                    android:layout_below="@+id/msg_content_tv"
+                    android:paddingLeft="30dp"
+                    android:paddingTop="2dp"
+                    android:text="xxx"
+                    android:textColor="@color/fontcor5"
+                    android:textSize="@dimen/font_size6" />
         </RelativeLayout>
         <com.example.walkarround.base.view.PhotoView
             android:id="@+id/msg_contact_profile_pv"

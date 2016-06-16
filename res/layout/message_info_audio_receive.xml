@@ -92,19 +92,19 @@
                         android:layout_marginTop="6dp"
                         android:background="@drawable/chatting_income_playing_audio"
                         android:gravity="center" />
-                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/msg_audio_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginStart="12dp"
-                    android:background="@null"
-                    android:gravity="center_vertical"
-                    android:text="12&apos;"
-                    android:textColor="@color/fontcor5"
-                    android:textSize="@dimen/font_size3" />
+                    <TextView
+                            android:id="@+id/msg_audio_duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginStart="12dp"
+                            android:background="@null"
+                            android:gravity="center_vertical"
+                            android:text="12&apos;"
+                            android:textColor="@color/fontcor5"
+                            android:textSize="@dimen/font_size3" />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/msg_audio_unread"

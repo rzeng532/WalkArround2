@@ -52,15 +52,6 @@
             android:scaleType="centerInside"
             android:src="@drawable/chat_msg_status_fail" />
 
-        <TextView
-            android:id="@+id/msg_audio_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:gravity="center_vertical"
-            android:text="12&apos;"
-            android:textColor="@color/fontcor5"
-            android:textSize="@dimen/font_size3" />
 
         <LinearLayout
             android:id="@+id/msg_item_bg_layout"
@@ -74,6 +65,15 @@
             android:orientation="horizontal"
             android:paddingLeft="12dp"
             android:paddingRight="24dp" >
+            <TextView
+                    android:id="@+id/msg_audio_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:text="12&apos;"
+                    android:textColor="@color/fontcor3"
+                    android:textSize="@dimen/font_size3" />
 
             <ImageView
                 android:id="@+id/msg_audio_voice"
@@ -88,6 +88,7 @@
                 android:background="@drawable/chatting_outgo_playing_audio"
                 android:gravity="center" />
         </LinearLayout>
+
         <com.example.walkarround.base.view.PhotoView
             android:id="@+id/msg_contact_profile_pv"
             android:layout_marginLeft="5dp"

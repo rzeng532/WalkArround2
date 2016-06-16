@@ -356,7 +356,8 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             viewHolder.sendTimeTv = (TextView) convertView.findViewById(R.id.msg_send_time_tv);
             viewHolder.sendNameTv = (TextView) convertView.findViewById(R.id.msg_contact_name_tv);
             viewHolder.contentShowTv = (TextView) convertView.findViewById(R.id.msg_content_tv);
-            viewHolder.mapView = (ImageView) convertView.findViewById(R.id.map_position_iv);
+            viewHolder.detailShowTv = (TextView) convertView.findViewById(R.id.msg_detail_tv);
+            //viewHolder.mapView = (ImageView) convertView.findViewById(R.id.map_position_iv);
             viewHolder.msgStatusIv = (ImageView) convertView.findViewById(R.id.msg_status_fail_iv);
             viewHolder.clickAreaView = convertView.findViewById(R.id.msg_item_bg_layout);
             viewHolder.clickAreaView.setOnClickListener(this);
@@ -371,9 +372,10 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
         if(address.length > 1) {
             addressInfo = address[1];
         }
-        viewHolder.contentShowTv.setText(addressInfo);
-        ImageLoaderManager.displayImage(message.getFilepath(), message.getFileUrlPath(),
-                R.drawable.message_icon_chat_position, viewHolder.mapView);
+        viewHolder.contentShowTv.setText(address[0]);
+        viewHolder.detailShowTv.setText(addressInfo);
+        //ImageLoaderManager.displayImage(message.getFilepath(), message.getFileUrlPath(),
+        //        R.drawable.message_icon_chat_position, viewHolder.mapView);
         return convertView;
     }
 
@@ -452,7 +454,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             viewHolder = (AudioViewHolder) convertView.getTag();
         }
         int audioDurationSec = message.getDuration();
-        viewHolder.audioDurationTv.setText(audioDurationSec + "'");
+        viewHolder.audioDurationTv.setText(audioDurationSec + "''");
 
         int audioWidth = (AUDIO_BUBBLE_MAX_WIDTH - AUDIO_BUBBLE_MIN_WIDTH) *
                 audioDurationSec / PressTalkTouchListener.MAX_VOICE_DURATION + AUDIO_BUBBLE_MIN_WIDTH;
@@ -642,6 +644,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
      */
     public class MapLocationViewHolder extends BaseViewHolder {
         TextView contentShowTv;
+        TextView detailShowTv;
         ImageView mapView;
     }
 
