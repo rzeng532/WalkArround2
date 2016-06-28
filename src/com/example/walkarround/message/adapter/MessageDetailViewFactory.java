@@ -140,6 +140,9 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             case MessageDetailListAdapter.MESSAGE_TYPE_AUDIO_REC:
                 convertView = initAudioView(mContext, convertView, messageInfo);
                 break;
+            case MessageDetailListAdapter.MESSAGE_TYPE_SYSTEM:
+                convertView = initSysMsgView(mContext, convertView, messageInfo);
+                return convertView;
             default:
                 convertView = new LinearLayout(mContext);
                 return convertView;
@@ -152,6 +155,32 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
 
         return convertView;
     }
+
+    private View initSysMsgView(Context context, View convertView, ChatMsgBaseInfo message) {
+        SysMsgViewHolder viewHolder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.message_info_system_text_rec, null, false);
+
+            viewHolder = new SysMsgViewHolder();
+            viewHolder.checkedTextView = (CheckedTextView) convertView.findViewById(R.id.select_check_ctv);
+            viewHolder.photoView = (PhotoView) convertView.findViewById(R.id.msg_contact_profile_pv);
+            viewHolder.sendTimeTv = (TextView) convertView.findViewById(R.id.msg_send_time_tv);
+            viewHolder.sendNameTv = (TextView) convertView.findViewById(R.id.msg_contact_name_tv);
+            viewHolder.msgTextTv = (TextView) convertView.findViewById(R.id.msg_content_tv);
+            convertView.setOnClickListener(this);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (SysMsgViewHolder) convertView.getTag();
+        }
+
+        viewHolder.msgTextTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        viewHolder.msgTextTv.setText(message.getData());
+
+        setDateElement(context, message.getTime(), viewHolder.sendTimeTv);
+
+        return convertView;
+    }
+
 
     /**
      * 初始化文本消息
@@ -623,6 +652,12 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
         ImageView msgStatusIv;
         View clickAreaView;
     }
+
+    public class SysMsgViewHolder extends BaseViewHolder {
+        TextView msgTextTv;
+        TextView msgHintTv;
+    }
+
 
     /**
      * 纯文本消息

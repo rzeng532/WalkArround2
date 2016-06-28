@@ -27,6 +27,7 @@ import com.example.walkarround.message.model.MessageSessionBaseModel;
 import com.example.walkarround.message.task.FileDownLoadAsyncTask;
 import com.example.walkarround.message.util.MessageConstant.MessageState;
 import com.example.walkarround.message.util.MessageConstant.MessageType;
+import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.AppConstant;
@@ -39,6 +40,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +93,13 @@ public class LittleCMsgManager extends MessageAbstractManger {
         AVIMTextMessage msg = new AVIMTextMessage();
         msg.setText(text);
 
+        if(!TextUtils.isEmpty(extraInfo)) {
+            //Set extra information
+            Map<String, Object> extra = new HashMap<>();
+            extra.put(MessageUtil.EXTRA_INFOR_KEY, (Object)extraInfo);
+            msg.setAttrs(extra);
+        }
+
         if (TextUtils.isEmpty(text)) {
             sendMessage(recipientInfo, -1, msg, false, extraInfo);
             return -1;
@@ -119,6 +128,11 @@ public class LittleCMsgManager extends MessageAbstractManger {
         msgInfo.setThreadId(recipientInfo.getThreadId());
         msgInfo.setChatType(recipientInfo.getConversationType());
         msgInfo.setIsBurnAfter(isBurnAfter);
+        if(!TextUtils.isEmpty(extraInfo)) {
+            msgInfo.setExtraInfo(extraInfo);
+            msgInfo.setMsgType(MessageType.MSG_TYPE_NOTIFICATION);
+        }
+
         Uri insertUri = messageDbManager.addMessage(msgInfo);
         if (insertUri == null) {
             logger.e("insert to message db fail");

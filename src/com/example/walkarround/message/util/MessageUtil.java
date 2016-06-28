@@ -28,10 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * 消息相关的工具类
@@ -45,6 +42,11 @@ public class MessageUtil {
     private static final Logger logger = Logger.getLogger(MessageUtil.class.getSimpleName());
     private static final String GIF_FILE_EXT = "gif";
     public static final String MAP_DETAIL_INFOR_SPLIT = "#";
+
+    //Message extra information key
+    public static final String EXTRA_INFOR_KEY = "extra_key";
+    public static final String CONTENT_AGREEMENT_2_WALKARROUND = "我已经同意了你的走走请求.";
+    public static final String EXTRA_AGREEMENT_2_WALKARROUND = "extra_agree_place";
 
     /**
      * 判断是否gif文件
@@ -185,9 +187,9 @@ public class MessageUtil {
             case MessageType.MSG_TYPE_MAP:
                 displayStr = context.getString(R.string.msg_session_location);
                 break;
-            //case MessageConstant.MessageType.MSG_TYPE_NOTIFICATION:
-            //    displayStr = MessageUtil.getGroupInfo(context, message.getData(), null);
-            //    break;
+            case MessageConstant.MessageType.MSG_TYPE_NOTIFICATION:
+                displayStr = context.getString(R.string.msg_session_sys_msg);
+                break;
             default:
                 displayStr = message.getData();
                 break;
@@ -279,6 +281,14 @@ public class MessageUtil {
         } else if (cmMessage instanceof AVIMTextMessage) {
             msgInfo.setMsgType(MessageType.MSG_TYPE_TEXT);
             msgInfo.setData(((AVIMTextMessage)cmMessage).getText());
+            Map<String, Object> attri = ((AVIMTextMessage)cmMessage).getAttrs();
+            if(attri != null) {
+                String extroInfor = (String)attri.get(MessageUtil.EXTRA_INFOR_KEY);
+                if(!TextUtils.isEmpty(extroInfor)) {
+                    msgInfo.setExtraInfo(extroInfor);
+                    msgInfo.setMsgType(MessageType.MSG_TYPE_NOTIFICATION);
+                }
+            }
         }
 
         return msgInfo;

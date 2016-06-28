@@ -332,6 +332,9 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 case MessageConstant.MessageType.MSG_TYPE_MAP:
                     displayStr = mContext.getString(R.string.msg_session_location);
                     break;
+                case MessageConstant.MessageType.MSG_TYPE_NOTIFICATION:
+                    displayStr = mContext.getString(R.string.msg_session_sys_msg);
+                    break;
                 default:
                     displayStr = listDO.getData();
                     break;

@@ -56,27 +56,42 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/chat_from_bg"
-                android:paddingLeft="16dp"
                 android:paddingTop="4dp"
                 android:paddingRight="4dp"
                 android:paddingBottom="4dp">
-                <ImageView android:id="@+id/map_position_iv"
-                    android:layout_width="200dp"
-                    android:layout_height="150dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/message_icon_chat_position"/>
+
                 <TextView
                     android:id="@+id/msg_content_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/map_position_iv"
-                    android:layout_alignRight="@id/map_position_iv"
-                    android:layout_alignBottom="@id/map_position_iv"
-                    android:background="@color/transparent0.6"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
-                    android:textColor="@color/fontcor3"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="30dp"
+                    android:paddingTop="4dp"
+                    android:text="xxx"
+                    android:textColor="@color/fontcor1"
                     android:textSize="@dimen/font_size6" />
+
+                <TextView
+                        android:id="@+id/msg_detail_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/msg_content_tv"
+                        android:paddingLeft="30dp"
+                        android:paddingTop="2dp"
+                        android:text="xxx"
+                        android:textColor="@color/fontcor5"
+                        android:textSize="@dimen/font_size6" />
+
+                <ImageView android:id="@+id/map_position_iv"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_toRightOf="@+id/msg_content_tv"
+                           android:scaleType="center"
+                           android:paddingLeft="10dp"
+                           android:paddingRight="10dp"
+                           android:paddingTop="4dp"
+                           android:src="@drawable/message_loc_from_icon"/>
             </RelativeLayout>
         </LinearLayout>
 

@@ -166,12 +166,12 @@ public class WalkArroundMsgManager {
         recipientInfo.setThreadId(threadId);
 
         //Send message via msg manager.
-        return sendTextMsg(recipientInfo, content);
+        return sendTextMsg(recipientInfo, content, null);
     }
 
-    public long sendTextMsg(MessageRecipientInfo receiver, String content) {
+    public long sendTextMsg(MessageRecipientInfo receiver, String content, String extraInfor) {
         try {
-            return mInstance.mMsgManager.sendPlainMessage(receiver, content, false, 0, null);
+            return mInstance.mMsgManager.sendPlainMessage(receiver, content, false, 0, extraInfor);
         } catch (Exception e) {
             e.printStackTrace();
             return -1;

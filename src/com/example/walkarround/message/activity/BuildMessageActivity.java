@@ -56,6 +56,7 @@ import com.example.walkarround.message.util.MessageConstant.ChatType;
 import com.example.walkarround.message.util.MessageConstant.MessageSendReceive;
 import com.example.walkarround.message.util.MessageConstant.MessageState;
 import com.example.walkarround.message.util.MessageConstant.MessageType;
+import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.CommonUtils;
@@ -720,10 +721,14 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             if (resultCode == RESULT_CANCELED) {
                 //normal finish
                 return;
+            } else if(resultCode == RESULT_FIRST_USER) {
+                //Send a agreement IM message
+                sendAgreement2WalkArround();
+            } else if(resultCode == RESULT_OK) {
+                //Start location activity to select another place.
+                Intent intent = new Intent(this, LocationActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_MAP);
             }
-            //Start location activity to select another place.
-            Intent intent = new Intent(this, LocationActivity.class);
-            startActivityForResult(intent, REQUEST_CODE_MAP);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -1664,12 +1669,23 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
         mSendMessageEditView.setText("");
         mTimeSendView.setVisibility(View.GONE);
-        long lastMessageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo, msg);
+        long lastMessageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo, msg, null);
         transferToDetailView(lastMessageId, false);
         int emojiVisibility = mEmojiPanel == null ? View.GONE : mEmojiPanel.getVisibility();
         mCurrentMessageEditState = emojiVisibility == View.VISIBLE ?
                 MESSAGE_EDIT_STATE_MORE_EMOJI : MESSAGE_EDIT_STATE_DEFAULT;
         switchBottomPanelView(mCurrentMessageEditState);
+    }
+
+    /*
+     * Send agreement
+     */
+    private void sendAgreement2WalkArround() {
+        long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo,
+                MessageUtil.CONTENT_AGREEMENT_2_WALKARROUND,
+                MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND);
+        transferToDetailView(messageId, false);
+        logger.d("Send agreement result: " + messageId);
     }
 
     /**
@@ -2202,6 +2218,11 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     @Override
     public void messageItemOnClick(View clickedItemView, ChatMsgBaseInfo clickedMessage) {
+
+        if(clickedMessage == null) {
+            return;
+        }
+
         // 点击了消息
         switch (clickedMessage.getMsgType()) {
         case MessageType.MSG_TYPE_TEXT:

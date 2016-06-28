@@ -77,7 +77,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private void sendPlainText(Context context, MessageRecipientInfo recipientInfo, ChatMsgBaseInfo message) {
         logger.d("send PlainText message");
         // 目前只支持发送纯文本定时消息
-        long messageId = WalkArroundMsgManager.getInstance(context).sendTextMsg(recipientInfo, message.getData());
+        long messageId = WalkArroundMsgManager.getInstance(context).sendTextMsg(recipientInfo, message.getData(), null);
 
         Intent intent = new Intent();
         intent.setAction(ACTION_TIME_MSG_SEND);
