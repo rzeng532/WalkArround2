@@ -18,7 +18,7 @@ import com.example.walkarround.util.AsyncTaskListener;
 public class ProfileManager {
     private static ProfileManager mProfileManager;
     private static ProfileApiAbstract mProfileApi;
-
+    private int mUserDateState = -1;
     public static ProfileManager getInstance() {
         if (mProfileManager == null) {
             synchronized (LoginManager.class) {
@@ -168,5 +168,13 @@ public class ProfileManager {
         } else {
             return null;
         }
+    }
+
+    public int getCurUsrDateState() {
+        return mUserDateState;
+    }
+
+    public void setCurUsrDateState(int state) {
+        this.mUserDateState = state;
     }
 }

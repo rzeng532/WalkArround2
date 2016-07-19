@@ -115,6 +115,9 @@
     <string name="map_position_requesting">获取中...</string>
     <string name="requesting_address">正在获取地址，暂时无法发送。</string>
 
+    <!-- Friend list -->
+    <string name="friends_title">好友列表</string>
+
     <!-- Main activity strings -->
     <string name="main_title">走走</string>
 

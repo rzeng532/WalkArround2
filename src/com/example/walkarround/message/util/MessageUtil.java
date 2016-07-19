@@ -48,6 +48,14 @@ public class MessageUtil {
     public static final String CONTENT_AGREEMENT_2_WALKARROUND = "我已经同意了你的走走请求.";
     public static final String EXTRA_AGREEMENT_2_WALKARROUND = "extra_agree_place";
 
+    //Get friend list count. If count is 4, it means server response 4 friends every time.
+    public static final int GET_FRIENDS_LIST_COUNT = 4;
+
+    private List<Integer> mFriendColArray = Arrays.asList(R.color.friend_col_1,
+            R.color.friend_col_2, R.color.friend_col_3,
+            R.color.friend_col_4, R.color.friend_col_5,
+            R.color.friend_col_6,R.color.friend_col_7);
+
     /**
      * 判断是否gif文件
      *
@@ -362,4 +370,11 @@ public class MessageUtil {
         }
         return success;
     }
+
+    public int getFriendColorByThreadId(long threadId) {
+        int colIndex = (int)threadId % 7;
+
+        return mFriendColArray.get(colIndex);
+    }
+
 }

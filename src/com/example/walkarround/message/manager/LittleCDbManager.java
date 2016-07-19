@@ -685,7 +685,6 @@ public class LittleCDbManager {
         return mContext.getContentResolver().update(Message.CONTENT_URI, values, where, args);
     }
 
-    // 如下代码位置需要调整，放这不行
     public int getConversationUnreadCount(long threadId) {
         if (threadId < 0) {
             logger.i("conversationId is error");
@@ -876,6 +875,82 @@ public class LittleCDbManager {
             }
             cur.close();
         }
+    }
+
+    public void updateConversationStatus(long threadId, int newState) {
+
+        if (threadId < 0) {
+            logger.i("conversationId is error");
+            return;
+        }
+
+        String where = Conversation._ID + "=?";
+        String[] arg = new String[]{threadId + ""};
+        ContentValues conversationValues = new ContentValues();
+        conversationValues.put(Conversation._CONVERSATION_STATUS, newState);
+
+        mContext.getContentResolver().update(Conversation.CONTENT_URI, conversationValues, where, arg);
+    }
+
+    public void updateConversationColor(long threadId, int newColor) {
+
+        if (threadId < 0) {
+            logger.i("conversationId is error");
+            return;
+        }
+
+        String where = Conversation._ID + "=?";
+        String[] arg = new String[]{threadId + ""};
+        ContentValues conversationValues = new ContentValues();
+        conversationValues.put(Conversation._COLOR, newColor);
+
+        mContext.getContentResolver().update(Conversation.CONTENT_URI, conversationValues, where, arg);
+    }
+
+    public int getConversationStatus(long threadId) {
+
+        if (threadId < 0) {
+            logger.i("conversationId is error");
+            return 0;
+        }
+        int result = 0;
+        ContentResolver resolver = mContext.getContentResolver();
+        Uri uri = Conversation.CONTENT_URI;
+        String[] projection = new String[]{Conversation._CONVERSATION_STATUS};
+        String selection = Conversation._ID + " = ? ";
+        String[] selectionArgs = new String[]{String.valueOf(threadId)};
+        Cursor c = resolver.query(uri, projection, selection, selectionArgs, null);
+        if (c != null) {
+            if (c.moveToNext()) {
+                result = c.getInt(c.getColumnIndex(Conversation._CONVERSATION_STATUS));
+            }
+            c.close();
+        }
+
+        return result;
+    }
+
+    public int getConversationColor(long threadId) {
+
+        if (threadId < 0) {
+            logger.i("conversationId is error");
+            return 0;
+        }
+        int result = 0;
+        ContentResolver resolver = mContext.getContentResolver();
+        Uri uri = Conversation.CONTENT_URI;
+        String[] projection = new String[]{Conversation._COLOR};
+        String selection = Conversation._ID + " = ? ";
+        String[] selectionArgs = new String[]{String.valueOf(threadId)};
+        Cursor c = resolver.query(uri, projection, selection, selectionArgs, null);
+        if (c != null) {
+            if (c.moveToNext()) {
+                result = c.getInt(c.getColumnIndex(Conversation._COLOR));
+            }
+            c.close();
+        }
+
+        return result;
     }
 
     /**

@@ -842,6 +842,42 @@ public class WalkArroundMsgManager {
         return null;
     }
 
+    public int getConversationColor(long threadId) {
+        try {
+            return mInstance.mMsgManager.getIntentConversationColor(threadId);
+        } catch (Exception e) {
+            logger.e("getConversationColor Exception:" + e.getMessage());
+        }
+        return 0;
+    }
+
+    public int getConversationStatus(long threadId) {
+        try {
+            return mInstance.mMsgManager.getIntentConversationStatus(threadId);
+        } catch (Exception e) {
+            logger.e("getConversationStatus Exception:" + e.getMessage());
+        }
+        return 0;
+    }
+
+    public void updateConversationColor(long threadId, int newColor) {
+        try {
+            mInstance.mMsgManager.updateConversationColor(threadId, newColor);
+        } catch (Exception e) {
+            logger.e("getConversationStatus Exception:" + e.getMessage());
+        }
+        return ;
+    }
+
+    public void updateConversationStatus(long threadId, int newStatus) {
+        try {
+            mInstance.mMsgManager.updateConversationColor(threadId, newStatus);
+        } catch (Exception e) {
+            logger.e("getConversationStatus Exception:" + e.getMessage());
+        }
+        return ;
+    }
+
     /**
      * 设置所有发送中的消息状态为发送失败
      */

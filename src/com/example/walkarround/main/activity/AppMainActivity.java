@@ -25,9 +25,11 @@ import com.example.walkarround.R;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
+import com.example.walkarround.main.task.GetFriendListTask;
 import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.myself.activity.DetailInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyDynamicInfo;
@@ -60,6 +62,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
      * UI elements on main activity
      */
     private View mViewSetting;
+    private View mViewFriends;
     private RelativeLayout mViewPortrait;
     private LinearLayout mViewLeftMenu;
     private PortraitView mPvPortrait;
@@ -103,6 +106,29 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         }
     };
 
+
+    private onResultListener mGetFriendsTaskListener = new onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
+            amLogger.d("Get friend list done.");
+            if (object != null &&
+                    WalkArroundJsonResultParser.parseReturnCode((String) object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
+                amLogger.d("There is friend: " + (String)object);
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
+
     AsyncTaskListener mDynUpdateListener = new AsyncTaskListener() {
         @Override
         public void onSuccess(Object data) {
@@ -114,6 +140,14 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                     HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS,
                     HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS,
                     QueryNearlyUsers.getParams((String) data),
+                    TaskUtil.getTaskHeader()));
+
+            String userId = ProfileManager.getInstance().getCurUsrObjId();
+            ThreadPoolManager.getPoolManager().addAsyncTask(new GetFriendListTask(getApplicationContext(),
+                    mGetFriendsTaskListener,
+                    HttpUtil.HTTP_FUNC_GET_FRIEND_LIST,
+                    HttpUtil.HTTP_TASK_GET_FRIEND_LIST,
+                    GetFriendListTask.getParams(userId, MessageUtil.GET_FRIENDS_LIST_COUNT),
                     TaskUtil.getTaskHeader()));
         }
 
@@ -268,6 +302,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         mViewSetting = (RelativeLayout) findViewById(R.id.rl_slide_setting);
         mViewSetting.setOnClickListener(this);
 
+        mViewFriends = (RelativeLayout) findViewById(R.id.rl_slide_friends);
+        mViewFriends.setOnClickListener(this);
+
         mViewLeftMenu = (LinearLayout) findViewById(R.id.left_drawer);
         //mViewLeftMenu.setOnClickListener(this);
 
@@ -341,6 +378,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_slide_setting://goto setting activity
+                startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
+                break;
+            case R.id.rl_slide_friends://goto friend list activity
                 startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
                 break;
             case R.id.menu_portrait://goto setting activity

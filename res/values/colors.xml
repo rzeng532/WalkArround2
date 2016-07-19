@@ -80,4 +80,12 @@
     <color name="emerald_green_50">#f92AC8D7</color>
     <color name="red_button">#fe7379</color>
     <color name="ripple_line_cor">#002AC8D7</color>
+
+    <color name="friend_col_1">#fe7379</color>
+    <color name="friend_col_2">#f92AC8D7</color>
+    <color name="friend_col_3">#c0ffff00</color>
+    <color name="friend_col_4">#006699</color>
+    <color name="friend_col_5">#e2a129</color>
+    <color name="friend_col_6">#a3f773</color>
+    <color name="friend_col_7">#a2bbcc</color>
 </resources>

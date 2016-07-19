@@ -822,6 +822,26 @@ public class LittleCMsgManager extends MessageAbstractManger {
     }
 
     @Override
+    public void updateConversationStatus(long threadid, int status) throws Exception {
+        messageDbManager.updateConversationStatus(threadid, status);
+    }
+
+    @Override
+    public int getIntentConversationStatus(long threadid) throws Exception {
+        return messageDbManager.getConversationStatus(threadid);
+    }
+
+    @Override
+    public void updateConversationColor(long threadid, int color) throws Exception {
+        messageDbManager.updateConversationColor(threadid, color);
+    }
+
+    @Override
+    public int getIntentConversationColor(long threadid) throws Exception {
+        return messageDbManager.getConversationColor(threadid);
+    }
+
+    @Override
     public MessageSessionBaseModel getLatestNotifySession() throws Exception {
         return messageDbManager.getLatestNotifySession();
     }
@@ -835,7 +855,6 @@ public class LittleCMsgManager extends MessageAbstractManger {
     public Uri saveMessage(ChatMsgBaseInfo message) {
         return messageDbManager.addMessage(message);
     }
-
 
     private void onSendSuccess(long messageId) {
         String filePath = null;

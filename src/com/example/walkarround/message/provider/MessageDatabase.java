@@ -90,7 +90,8 @@ public class MessageDatabase extends SQLiteOpenHelper {
         public static final String _DATE = "_date";
         public static final String _DRAFT_MSG_CONTENT = "_draft_content";
         public static final String _DRAFT_MSG_TIME = "_draft_msg_time";
-
+        public static final String _CONVERSATION_STATUS = "_conversation_status";
+        public static final String _COLOR = "_color";
 
         /*冗余字段便于以后扩充*/
         public static final String _DATA1 = "_data1"; // 是否通知类号码会话
@@ -154,7 +155,7 @@ public class MessageDatabase extends SQLiteOpenHelper {
 //        public static final String _INVITER = "_inviter";
 //        public static final String _JOIN_STATUS = "_join_status";
 //        public static final String _TIME = "_time";
-//        public static final String _STATUS = "_status";// 已读未读
+//        public static final String _CONVERSATION_STATUS = "_status";// 已读未读
 //
 //        /*冗余字段便于以后扩充*/
 //        public static final String _DATA1 = "_data1";
@@ -235,6 +236,8 @@ public class MessageDatabase extends SQLiteOpenHelper {
                 + Conversation._TOTAL_COUNT + " INTEGER DEFAULT 0, "
                 + Conversation._READ + " INTEGER DEFAULT " + Message.MSG_READ + ", "
                 + Conversation._UNREAD_COUNT + " INTEGER DEFAULT 0, "
+                + Conversation._CONVERSATION_STATUS + " INTEGER DEFAULT 0, "
+                + Conversation._COLOR + " INTEGER DEFAULT 0, "
                 + Conversation._DATE + " INTEGER DEFAULT 0, "
                 + Conversation._DATA1 + " TEXT DEFAULT " + Conversation.COMMON_MSG + ", "
                 + Conversation._DATA2 + " TEXT, "

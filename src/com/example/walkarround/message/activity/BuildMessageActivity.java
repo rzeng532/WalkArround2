@@ -1,6 +1,5 @@
 package com.example.walkarround.message.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.NotificationManager;
@@ -1430,6 +1429,17 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         View moreView = detailHeaderView.findViewById(R.id.message_title_more_iv);
         moreView.setOnClickListener(this);
 
+        //Get color and set image view.
+        int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
+        ImageView mImvDistance = (ImageView) detailHeaderView.findViewById(R.id.iv_show_distance);
+        mImvDistance.setOnClickListener(this);
+        if(color == 0) {
+            mImvDistance.setVisibility(View.GONE);
+        } else {
+            mImvDistance.setImageResource(color);
+            mImvDistance.setVisibility(View.VISIBLE);
+        }
+
         int conversationType = mRecipientInfo.getConversationType();
         String receiverNameStr = mRecipientInfo.getDisplayName();
         String receiverNumStr = null;
@@ -1930,6 +1940,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             Intent intent = new Intent(this, LocationActivity.class);
             startActivityForResult(intent, REQUEST_CODE_MAP);
             break;
+        case R.id.iv_show_distance:
+            //startActivity(new Intent(BuildMessageActivity.this, ));
+        break;
         default:
             break;
         }
@@ -2057,165 +2070,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
     }
 
-    /**
-     * 备份联系人
-     */
-//    private void onSelectedContacts(List<ContactInfo> contactsInfo) {
-//        String vcardStr = MessageUtil.saveContactsToVcfString(contactsInfo);
-//        if (vcardStr == null) {
-//            // 将联系人保存为vcf文件失败
-//            logger.e("saving contacts to vcf failed");
-//            return;
-//        }
-//        // 显示名
-//        StringBuilder displayName = new StringBuilder();
-//        for (ContactInfo contact : contactsInfo) {
-//            displayName.append(contact.getFirstName());
-//            displayName.append("、");
-//        }
-//        // 发送联系人名片
-//        long messageId = MessageManager.getService().sendVCardInfo(mRecipientInfo, vcardStr,
-//                displayName.substring(0, displayName.length() - 1));
-//        if (messageId < 0) {
-//            // 发送失败
-//            return;
-//        }
-//        transferToDetailView(messageId, true);
-//    }
-
-    /**
-     * 获取vCard文件中的联系人信息
-     * 
-     * @param vcardStr
-     *            vCard文件路径
-     * @return 文件中存在的联系人信息
-     * @throws Exception
-     */
-//    public List<ContactInfo> restoreContacts(String vcardStr) throws Exception {
-//        if (TextUtils.isEmpty(vcardStr)) {
-//            throw new VCardException("vcardStr is empty ");
-//        }
-//        VDataBuilder builder = new VDataBuilder();
-//        VCardParser parse = new VCardParser();
-//        boolean parsed = parse.parse(vcardStr, MessageUtil.VCARD_FILE_UNICODE, builder);
-//        if (!parsed) {
-//            throw new VCardException("Could not parse vCard file: " + vcardStr);
-//        }
-//
-//        List<ContactInfo> contactInfoList = new ArrayList<ContactInfo>();
-//
-//        List<VNode> pimContacts = builder.vNodeList;
-//        for (VNode contact : pimContacts) {
-//            ContactStruct contactStruct = ContactStruct.constructContactFromVNode(contact, 1);
-//            // 获取备份文件中的联系人电话信息
-//            List<ContactStruct.PhoneData> phoneDataList = contactStruct.phoneList;
-//            List<String> phoneInfoList = new ArrayList<String>();
-//            if (phoneDataList != null) {
-//                for (ContactStruct.PhoneData phoneData : phoneDataList) {
-//                    phoneInfoList.add(phoneData.data);
-//                }
-//            }
-//
-//            ContactInfo info = new ContactInfo();
-//            List<ContactStruct.ContactMethod> extInfoList = contactStruct.contactmethodList;
-//            if (null != extInfoList) {
-//                for (ContactStruct.ContactMethod contactMethod : extInfoList) {
-//                    if (Contacts.KIND_EMAIL == contactMethod.kind) {
-//                        // 存在 Email 信息, 获取备份文件中的联系人邮箱信息
-//                        List<String> emailList = new ArrayList<String>();
-//                        emailList.add(contactMethod.data);
-//                        info.setEmailList(emailList);
-//                        break;
-//                    }
-//                }
-//            }
-//            List<OrganizationData> organizationList = contactStruct.organizationList;
-//            if (null != organizationList) {
-//                ArrayList<OrganizationInfo> orInfosList = new ArrayList<OrganizationInfo>();
-//                for (OrganizationData contactMethod : organizationList) {
-//                    OrganizationInfo orInfo = new OrganizationInfo();
-//                    // 公司信息
-//                    orInfo.setCompanyName(contactMethod.companyName);
-//                    // 职位信息
-//                    orInfo.setCompanyDuty(contactMethod.positionName);
-//                    orInfosList.add(orInfo);
-//                }
-//                info.setOrInfosList(orInfosList);
-//            }
-//
-//            info.setFirstName(contactStruct.name.trim());
-//            info.setPhoneNumList(phoneInfoList);
-//
-//            char firstNamePinYin = PinYinUtil.getPinyinFirstLetter(contactStruct.name.substring(0, 1));
-//            info.setHeadColorText(String.valueOf(firstNamePinYin));
-//            contactInfoList.add(info);
-//        }
-//
-//        return contactInfoList;
-//    }
-
-    /**
-     * 发送定时短信
-     */
-    @SuppressLint("SimpleDateFormat")
-    private long sendTimeMessage(final String msg) {
-//        String sendTime = mTimeSendView.getText().toString();
-//        Date sendDate;
-//        try {
-//            DateFormat df = new SimpleDateFormat(DatePickerView.TIME_FORMAT);
-//            sendDate = df.parse(sendTime);
-//        } catch (ParseException e) {
-//            logger.e(e.getMessage());
-//            return -1;
-//        }
-//
-//        Calendar currentTime = Calendar.getInstance();
-//        currentTime.add(Calendar.MINUTE, AlarmReceiver.MINIMAL_SEND_INTERVAL);
-//        Calendar sendMsgTime = Calendar.getInstance();
-//        sendMsgTime.setTime(sendDate);
-//        if (sendMsgTime.before(currentTime)) {
-//            DialogFactory.ConfirmDialogClickListener clickListener = new DialogFactory.ConfirmDialogClickListener() {
-//                @Override
-//                public void onConfirmDialogConfirmClick() {
-//                    long messageId = MessageManager.getService().sendPlainText(mRecipientInfo, msg);
-//                    // update UI
-//                    mTimeSendView.setVisibility(View.GONE);
-//                    mSendMessageEditView.setText("");
-//                    transferToDetailView(messageId, false);
-//                    switchBottomPanelView();
-//                }
-//            };
-//            mConfirmDialog = DialogFactory.getConfirmDialog(this, R.string.chatting_time_send_too_short,
-//                    R.string.chatting_send, clickListener);
-//            mConfirmDialog.show();
-//            return 0;
-//        }
-//
-//        // 消息插入数据库/
-//        long msgId = MessageManager.getService().sendTimePlainText(mRecipientInfo, msg, sendDate.getTime());
-//        if (msgId <= 0) {
-//            // 插入数据库失败
-//            return -1;
-//        }
-//        if (mRecipientInfo.getThreadId() < 0) {
-//            long threadId = MessageManager.getService().createConversationId(mRecipientInfo.getConversationType(),
-//                    mRecipientInfo.getRecipientList());
-//            mRecipientInfo.setThreadId(threadId);
-//        }
-//        // 定时
-//        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        Intent intent = new Intent(this, AlarmReceiver.class);
-//        intent.setAction(AlarmReceiver.ACTION_SEND_MESSAGE_ALARM);
-//        intent.putExtra(AlarmReceiver.INTENT_TIME_MSG_ID, msgId);
-//        intent.putExtra(AlarmReceiver.INTENT_MSG_SENDER, ProfileManager.getInstance().getCurUsrObjId());
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) msgId, intent, 0);
-//        manager.set(AlarmManager.RTC, sendDate.getTime(), pendingIntent);
-//
-//        return msgId;
-
-        return 0L;
-    }
-
     @Override
     public void messageItemOnClick(View clickedItemView, ChatMsgBaseInfo clickedMessage) {
 
@@ -2226,14 +2080,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         // 点击了消息
         switch (clickedMessage.getMsgType()) {
         case MessageType.MSG_TYPE_TEXT:
-        //case MessageType.MSG_TYPE_SMS:
             // 纯文本消息;
             onPlainTextClick(clickedMessage);
             break;
-//        case MessageType.MSG_TYPE_CONTACT:
-//            // 名片;
-//            onStartVcardActivity(clickedMessage);
-//            break;
         case MessageType.MSG_TYPE_AUDIO:
             // 语音消息;
             if (clickedMessage.isBurnAfterMsg()) {

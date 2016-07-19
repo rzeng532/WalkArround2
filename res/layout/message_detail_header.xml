@@ -22,10 +22,24 @@
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
+
+        <com.example.walkarround.base.view.photoview.RoundImageView
+                android:id="@+id/iv_show_distance"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@color/bgcor9"
+                android:scaleType="fitXY"
+                android:background="@drawable/iv_bld_msg_title_circle"
+                android:visibility="gone"/>
+
         <com.example.walkarround.base.view.PhotoView
                 android:id="@+id/message_title_profile_pv"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@+id/iv_show_distance"
                 android:layout_centerVertical="true"/>
 
         <TextView

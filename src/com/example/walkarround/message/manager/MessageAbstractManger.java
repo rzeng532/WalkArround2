@@ -277,6 +277,20 @@ public abstract class MessageAbstractManger {
     public void updateConversationMsgNotifyFlag() throws Exception {
     }
 
+    public void updateConversationStatus(long threadid, int status) throws Exception {
+    }
+
+    public int getIntentConversationStatus(long threadid) throws Exception {
+        return 0;
+    }
+
+    public void updateConversationColor(long threadid, int color) throws Exception {
+    }
+
+    public int getIntentConversationColor(long threadid) throws Exception {
+        return 0;
+    }
+
     public MessageSessionBaseModel getLatestNotifySession() throws Exception {
         return null;
     }

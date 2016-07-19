@@ -19,6 +19,8 @@ public class HttpUtil {
     public static final String HTTP_FUNC_LIKE_SOMEONE = "likeSomeone";
     public static final String HTTP_FUNC_GO_TOGETHER = "goTogether";
     public static final String HTTP_FUNC_QUERY_SPEED_DATE = "querySpeedDate";
+    public static final String HTTP_FUNC_ADD_FRIEND = "addFriend";
+    public static final String HTTP_FUNC_GET_FRIEND_LIST = "friendList";
 
     //Public HTTP tasks
     private static final String HTTP_TASK_PRE = HTTP_BASE_URL + HTTP_BASE_SPLIT_SYM +
@@ -36,11 +38,19 @@ public class HttpUtil {
     public static final String HTTP_TASK_QUERY_SPEED_DATE = HTTP_TASK_PRE +
             HTTP_FUNC_QUERY_SPEED_DATE;
 
+    public static final String HTTP_TASK_ADD_FRIEND = HTTP_TASK_PRE +
+            HTTP_FUNC_ADD_FRIEND;
+
+    public static final String HTTP_TASK_GET_FRIEND_LIST = HTTP_TASK_PRE +
+            HTTP_FUNC_GET_FRIEND_LIST;
+
     public static final String HTTP_PARAM_QUERY_NEARLY_USERS_ID = "userDynamicDataId";
     public static final String HTTP_PARAM_LIKE_SOMEONE_FROM = "fromUserId";
     public static final String HTTP_PARAM_LIKE_SOMEONE_TO = "toUserId";
     public static final String HTTP_PARAM_SPEED_DATA_ID = "speedDateId";
     public static final String HTTP_PARAM_USER_ID = "userId";
+    public static final String HTTP_PARAM_FRIEND_USER_ID = "friendUserId";
+    public static final String HTTP_PARAM_FRIEND_LIST_COUNT = "count";
 
     //Request header parameters
     public static final String HTTP_REQ_HEADER_LC_ID = "X-LC-Id";

@@ -25,6 +25,7 @@ import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
+import com.example.walkarround.main.task.AddFriendTask;
 import com.example.walkarround.main.task.GoTogetherTask;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
@@ -50,6 +51,8 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
     private AMap aMap;
     private Marker mCurMarker;
     private Marker mTargetMarker;
+
+    private String mStrFriendObjId = null;
 
     private static final Logger logger = Logger.getLogger(ShowLocationActivity.class.getSimpleName());
 
@@ -98,6 +101,33 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
         }
     };
 
+    private HttpTaskBase.onResultListener mAddFriendTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
+                //Get status & Get TO user.
+                logger.d("add friend success: \r\n" + (String) object);
+
+                mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_SUC);
+            } else {
+                logger.d("add friend  response failed");
+                mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_FAIL);
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
+
     //Listener for go together API.
     private HttpTaskBase.onResultListener mGoTogetherListener = new HttpTaskBase.onResultListener() {
         @Override
@@ -111,7 +141,17 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_GO_TOGETHER)) {
                 //Get status & Get TO user.
                 logger.d("go together response success: \r\n" + (String) object);
-                mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_SUC);
+
+                if(!TextUtils.isEmpty(mStrFriendObjId)) {
+                    ThreadPoolManager.getPoolManager().addAsyncTask(new AddFriendTask(getApplicationContext(),
+                            mAddFriendTaskListener,
+                            HttpUtil.HTTP_FUNC_ADD_FRIEND,
+                            HttpUtil.HTTP_TASK_ADD_FRIEND,
+                            AddFriendTask.getParams(ProfileManager.getInstance().getCurUsrObjId(), mStrFriendObjId),
+                            TaskUtil.getTaskHeader()));
+                } else {
+                    mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_FAIL);
+                }
             } else {
                 logger.d("go together response failed");
                 mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_FAIL);
@@ -137,6 +177,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
                 //Get status & Get TO user.
                 String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
                 if(!TextUtils.isEmpty(strSpeedDateId)) {
+                    mStrFriendObjId = strSpeedDateId;
                     logger.d("Query speed date id response success: " + strSpeedDateId);
                     ThreadPoolManager.getPoolManager().addAsyncTask(new GoTogetherTask(getApplicationContext(),
                             mGoTogetherListener,
