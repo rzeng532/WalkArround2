@@ -149,4 +149,5 @@ public class MessageSessionModelInfo extends MessageSessionBaseModel {
     public void setNotifyConversation(boolean isNotify) {
         isNotifyConversaton = isNotify;
     }
+
 }

@@ -815,6 +815,8 @@ public class LittleCDbManager {
         long msgId = cur.getLong(cur.getColumnIndex(Conversation._MSG_ID));
         int msgStatus = cur.getInt(cur.getColumnIndex(Conversation._MSG_STATUS));
         int hide = cur.getInt(cur.getColumnIndex(Conversation._HIDE));
+        int conversationState = cur.getInt(cur.getColumnIndex(Conversation._CONVERSATION_STATUS));
+        int colorIndex = cur.getInt(cur.getColumnIndex(Conversation._COLOR));
         int msgType = cur.getInt(cur.getColumnIndex(Conversation._MSG_CONTENT_TYPE));
         String draftMsg = cur.getString(cur.getColumnIndex(Conversation._DRAFT_MSG_CONTENT));
         if (!TextUtils.isEmpty(draftMsg)) {
@@ -846,6 +848,10 @@ public class LittleCDbManager {
         model.msgId = msgId;
         model.msgStatus = msgStatus;
         model.unReadCount = unread_count;
+
+        model.status = conversationState;
+        model.colorIndex = colorIndex;
+
         return model;
     }
 

@@ -23,6 +23,7 @@ import com.example.walkarround.message.model.MessageSessionBaseModel;
 import com.example.walkarround.message.util.MessageComparator;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageConstant.MessageState;
+import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
@@ -844,7 +845,8 @@ public class WalkArroundMsgManager {
 
     public int getConversationColor(long threadId) {
         try {
-            return mInstance.mMsgManager.getIntentConversationColor(threadId);
+            int index = mInstance.mMsgManager.getIntentConversationColor(threadId);
+            return MessageUtil.getFriendColor(index);
         } catch (Exception e) {
             logger.e("getConversationColor Exception:" + e.getMessage());
         }

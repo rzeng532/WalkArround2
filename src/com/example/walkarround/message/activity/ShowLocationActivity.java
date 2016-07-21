@@ -25,7 +25,6 @@ import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
-import com.example.walkarround.main.task.AddFriendTask;
 import com.example.walkarround.main.task.GoTogetherTask;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
@@ -141,17 +140,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_GO_TOGETHER)) {
                 //Get status & Get TO user.
                 logger.d("go together response success: \r\n" + (String) object);
-
-                if(!TextUtils.isEmpty(mStrFriendObjId)) {
-                    ThreadPoolManager.getPoolManager().addAsyncTask(new AddFriendTask(getApplicationContext(),
-                            mAddFriendTaskListener,
-                            HttpUtil.HTTP_FUNC_ADD_FRIEND,
-                            HttpUtil.HTTP_TASK_ADD_FRIEND,
-                            AddFriendTask.getParams(ProfileManager.getInstance().getCurUsrObjId(), mStrFriendObjId),
-                            TaskUtil.getTaskHeader()));
-                } else {
-                    mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_FAIL);
-                }
+                mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_SUC);
             } else {
                 logger.d("go together response failed");
                 mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_FAIL);
@@ -302,7 +291,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             setResult(RESULT_OK);
             finish();
         } else if(v.getId() == R.id.accept_place) {
-            //Get speed data id && go together.
+            //Get speed data id & go together.
             getSpeedDataId();
         }
     }

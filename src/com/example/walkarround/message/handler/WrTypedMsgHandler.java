@@ -79,6 +79,7 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
                                 msgInfo.setMsgId(ContentUris.parseId(msgUri));
                                 WalkArroundMsgManager.getInstance(mContext).addMsgUnreadCountByThreadId(msgInfo.getMsgThreadId());
                                 WalkArroundMsgManager.getInstance(mContext).onLoadMsgResult(msgInfo, null, true);
+                                updateConversationInfor(msgInfo);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -113,6 +114,28 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
                 if (isSuccess) {
                     msg.setFilePath(localFilePath);
                     msg.setMsgState(MessageState.MSG_STATE_RECEIVED);
+                }
+            }
+        }
+    }
+
+    /*
+     * If msg type is notificaiton and there is extra information.
+     * It means another user accept your place and agree to walk arround.
+     * So we should update local conversation state and set color.
+     */
+    private void updateConversationInfor(ChatMsgBaseInfo msgInfo) {
+        logger.d("msgInfor msg type: " + msgInfo.getMsgType());
+        if(msgInfo.getMsgType() == MessageType.MSG_TYPE_NOTIFICATION) {
+            String extra = msgInfo.getExtraInfo();
+            logger.d("msgInfor extra: " + extra);
+            if(!TextUtils.isEmpty(extra)) {
+                String[] extraArray = extra.split(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND_SPLIT);
+                if(extraArray != null && extraArray.length > 1) {
+                    logger.d("msgInfor array 1: " + extraArray[1]);
+                    int color = Integer.parseInt(extraArray[1]);
+                    WalkArroundMsgManager.getInstance(mContext).updateConversationColor(msgInfo.getMsgThreadId(), color);
+                    WalkArroundMsgManager.getInstance(mContext).updateConversationStatus(msgInfo.getMsgThreadId(), MessageUtil.WalkArroundState.STATE_WALK);
                 }
             }
         }

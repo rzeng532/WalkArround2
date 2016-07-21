@@ -105,7 +105,15 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 //Get status & Get TO user.
                 String strState = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_STATUS);
                 if (strState.equalsIgnoreCase(TaskUtil.RESPONSE_USR_STATUS_ACCEPT)) {
-                    String strUser = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_TO_USER);
+                    String strUser = null;
+                    String strToUser = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_TO_USER);
+                    String strFromUser = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_FROM_USER);
+                    if(strToUser.equalsIgnoreCase(ProfileManager.getInstance().getCurUsrObjId())) {
+                        strUser = strFromUser;
+                    } else {
+                        strUser = strToUser;
+                    }
+
                     addCacheContact(strUser);
                     sayHello(strUser);
                 }

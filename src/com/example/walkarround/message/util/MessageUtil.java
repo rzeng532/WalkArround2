@@ -45,16 +45,25 @@ public class MessageUtil {
 
     //Message extra information key
     public static final String EXTRA_INFOR_KEY = "extra_key";
-    public static final String CONTENT_AGREEMENT_2_WALKARROUND = "我已经同意了你的走走请求.";
+    public static final String CONTENT_AGREEMENT_2_WALKARROUND = "已经同意了你的走走请求.";
     public static final String EXTRA_AGREEMENT_2_WALKARROUND = "extra_agree_place";
+    public static final String EXTRA_AGREEMENT_2_WALKARROUND_SPLIT = "#";
 
     //Get friend list count. If count is 4, it means server response 4 friends every time.
     public static final int GET_FRIENDS_LIST_COUNT = 4;
 
-    private List<Integer> mFriendColArray = Arrays.asList(R.color.friend_col_1,
+    private static final List<Integer> mFriendColArray = Arrays.asList(R.color.friend_col_1,
             R.color.friend_col_2, R.color.friend_col_3,
             R.color.friend_col_4, R.color.friend_col_5,
             R.color.friend_col_6,R.color.friend_col_7);
+
+    public interface WalkArroundState {
+        public static int STATE_INIT = 1;
+        public static int STATE_IM = 2;
+        public static int STATE_WALK = 3;
+        public static int STATE_IMPRESSION = 4;
+
+    }
 
     /**
      * 判断是否gif文件
@@ -371,10 +380,17 @@ public class MessageUtil {
         return success;
     }
 
-    public int getFriendColorByThreadId(long threadId) {
+    public static int getFriendColorIndex(long threadId) {
         int colIndex = (int)threadId % 7;
-
-        return mFriendColArray.get(colIndex);
+        logger.d("colIndex = " + colIndex);
+        return mFriendColArray.get(colIndex).intValue();
     }
 
+    public static int getFriendColor(int index) {
+        if(index >= 0 && index < mFriendColArray.size()) {
+            return mFriendColArray.get(index).intValue();
+        } else {
+            return 0;
+        }
+    }
 }

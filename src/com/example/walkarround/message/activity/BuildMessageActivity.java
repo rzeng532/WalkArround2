@@ -157,6 +157,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /* 编辑联系人 */
     private EditText mReceiverEditView;
+    /* 进入双方距离界面按钮 */
+    ImageView mImvDistance;
 
     /* 底部消息编辑区域 */
     private View mMessageBottomView;
@@ -274,7 +276,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 messageStateChanged(messageId, status);
             } else if (action.equals(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED)) {
                 // 新到一对一消息
-                if (!isBlackContact) {                    int count = intent.getIntExtra(MsgBroadcastConstants.BC_VAR_MSG_COUNT, 0);
+                if (!isBlackContact) {
+                    int count = intent.getIntExtra(MsgBroadcastConstants.BC_VAR_MSG_COUNT, 0);
                     long[] idList = intent.getLongArrayExtra(MsgBroadcastConstants.BC_VAR_MSG_ID_LIST);
                     onReceiveMsg(messageId, count, idList);
                 }
@@ -1371,6 +1374,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 mUiHandler.sendMessage(msg);
             }
         }
+
+        updateHeaderAreaOnRecMsg(message);
     }
 
     /**
@@ -1431,7 +1436,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
         //Get color and set image view.
         int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
-        ImageView mImvDistance = (ImageView) detailHeaderView.findViewById(R.id.iv_show_distance);
+        mImvDistance = (ImageView) detailHeaderView.findViewById(R.id.iv_show_distance);
         mImvDistance.setOnClickListener(this);
         if(color == 0) {
             mImvDistance.setVisibility(View.GONE);
@@ -1475,7 +1480,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         int conversationType = recipientInfo.getConversationType();
         if (conversationType == ChatType.CHAT_TYPE_ONE2ONE) {
             try {
-                String number = recipientInfo.getRecipientList().get(0);
+                ContactInfo contact = ContactsManager.getInstance(getApplicationContext()).getContactByUsrObjId(recipientInfo.getRecipientList().get(0));
+                String number = contact.getMobilePhoneNumber();
                 int startPos = number.length() > 5 ? number.length() - 5 : 0;
                 int id = Integer.parseInt(number.substring(startPos));
                 NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -1570,36 +1576,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             }
             canSend = true;
             break;
-//        case MESSAGE_EDIT_STATE_MORE_EMOJI:
-//            if (mEmojiPanel == null) {
-//                ViewStub emojiView = (ViewStub) mMessageBottomView.findViewById(R.id.emoji_vs);
-//                emojiView.inflate();
-//                mEmojiPanel = (EmojiPanelView) findViewById(R.id.emoji_panel_epv);
-//                mEmojiPanel.setOnEmojiClickListener(this);
-//            }
-//            //emjio.setImageResource(R.drawable.message_btn_smile);
-//            mSendMessageEditView.setHint("");
-//            hideSoftInput();
-//            emojiVisibility = View.VISIBLE;
-//            if(mTimeSendView.getVisibility() == View.VISIBLE){
-//                rightViewResId = R.drawable.message_btn_close;
-//            }
-//            break;
-//        case MESSAGE_EDIT_STATE_MORE_OPERATE:
-//            if (mMoreToolsPanel == null) {
-//                ViewStub chatView = (ViewStub) mMessageBottomView.findViewById(R.id.chat_tools_vs);
-//                chatView.inflate();
-//                mMoreToolsPanel = (ChatAssistToolsView) findViewById(R.id.chat_tools_layout);
-//                mMoreToolsPanel.setToolsOnClickListener(this);
-//                setToolsViewEnable();
-//            }
-//            //emjio.setImageResource(R.drawable.message_btn_smile);
-//            //emjio.setSelected(false);
-//            mSendMessageEditView.setHint("");
-//            hideSoftInput();
-//            rightViewResId = R.drawable.message_btn_close;
-//            toolsPanelVisibility = View.VISIBLE;
-//            break;
+
         case MESSAGE_EDIT_STATE_VOICE:
             mVoiceListener.setAudioStatusIcon(R.drawable.public_btn_enterbar_voicebtn,
                     R.drawable.public_btn_enterbar_voicebtn2, R.drawable.progress_voice_duration);
@@ -1617,15 +1594,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
 
         mBottomLeftView.setImageResource(leftViewResId);
-//        if (canSend) {
-//            ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.VISIBLE);
-//            //((ImageView) mBottomRightView.getTag(R.id.right_change_iv)).setVisibility(View.INVISIBLE);
-//        } else {
-//            ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.GONE);
-//            //ImageView rightBtn = (ImageView) mBottomRightView.getTag(R.id.right_change_iv);
-//            //rightBtn.setImageResource(rightViewResId);
-//            //rightBtn.setVisibility(View.VISIBLE);
-//        }
 
         mVoicePanel.setVisibility(voicePanelVisibility);
         voicePanelVisibility = voicePanelVisibility == View.VISIBLE ? View.GONE : View.VISIBLE;
@@ -1691,9 +1659,21 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      * Send agreement
      */
     private void sendAgreement2WalkArround() {
+        long threadId = mRecipientInfo.getThreadId();
+        int colorIndex = MessageUtil.getFriendColorIndex(threadId);
+        logger.d("send agreement, the color index is " + colorIndex);
+        String extraInfor = MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND +
+                            MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND_SPLIT +
+                            colorIndex;
+        logger.d("send agreement, the extra is: " + extraInfor);
         long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo,
                 MessageUtil.CONTENT_AGREEMENT_2_WALKARROUND,
-                MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND);
+                extraInfor);
+
+        //Update conversation state & color
+        WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationColor(threadId, colorIndex);
+        WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(threadId, MessageUtil.WalkArroundState.STATE_WALK);
+
         transferToDetailView(messageId, false);
         logger.d("Send agreement result: " + messageId);
     }
@@ -1941,7 +1921,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             startActivityForResult(intent, REQUEST_CODE_MAP);
             break;
         case R.id.iv_show_distance:
-            //startActivity(new Intent(BuildMessageActivity.this, ));
+            Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);
+            intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
+            startActivity(intentShowDistance);
         break;
         default:
             break;
@@ -2883,5 +2865,14 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    private void updateHeaderAreaOnRecMsg(ChatMsgBaseInfo msg) {
+        if(msg.getMsgType() == MessageType.MSG_TYPE_NOTIFICATION) {
+            int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
+            if(color > 0) {
+                mImvDistance.setImageResource(color);
+            }
+        }
     }
 }

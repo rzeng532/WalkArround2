@@ -10,9 +10,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,7 +103,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     /*添加黑名单按钮*/
     private TextView tvAddBlackList;
 
-    private EditText mSearchEditText;
+    //private EditText mSearchEditText;
     private View mSearchEditClearView;
     private View mSearchBarView;
     private View mNetStatusView;
@@ -451,7 +448,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     public void onBackPressed() {
         if (mPageState == PageState.NOTIFY_SEARCH_PAGE
                 || mPageState == PageState.NORMAL_SEARCH_PAGE) {
-            mSearchEditText.setText("");
+//            mSearchEditText.setText("");
             return;
         }
         if (mPageState != PageState.NORMAL) {
@@ -465,10 +462,10 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     public void onResume() {
         super.onResume();
 
-        if (!TextUtils.isEmpty(mSearchEditText.getText())) {
-            mSearchTask = searchMessageWithKey(mSearchEditText.getText().toString(),
-                    mPageState == PageState.NOTIFY_SEARCH_PAGE);
-        }
+//        if (!TextUtils.isEmpty(mSearchEditText.getText())) {
+//            mSearchTask = searchMessageWithKey(mSearchEditText.getText().toString(),
+//                    mPageState == PageState.NOTIFY_SEARCH_PAGE);
+//        }
         //mConversationAdapter.updateGroupInvitationCount();
         mNotifyMsgAdapter.clearCacheDisplayName();
         mNotifyMsgAdapter.notifyDataSetChanged();
@@ -546,10 +543,10 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 }
                 batchDealMsg(MessageConstant.MSG_OPERATION_SET_READ);
                 break;
-            case R.id.bt_cancel_search:
-                mSearchEditText.setText("");
-                mSearchEditText.requestFocus();
-                break;
+//            case R.id.bt_cancel_search:
+//                mSearchEditText.setText("");
+//                mSearchEditText.requestFocus();
+//                break;
             default:
                 break;
         }
@@ -814,46 +811,46 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         mSearchEditClearView = findViewById(R.id.bt_cancel_search);
         mSearchEditClearView.setOnClickListener(this);
         mSearchBarView = findViewById(R.id.ll_search_bar);
-        mSearchEditText = (EditText) findViewById(R.id.et_search);
-        mSearchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(final Editable s) {
-                if (mSearchTask != null) {
-                    // 任务不为空
-                    mSearchTask.setCancelled(true);
-                    mSearchTask.cancel();
-                }
-                if (s.toString().length() > 0 && s.toString().length() <= 32) {
-                    if (mTimer == null) {
-                        mTimer = new Timer();
-                    }
-                    mSearchEditClearView.setVisibility(View.VISIBLE);
-                    boolean isNotify = (mPageState == PageState.NOTIFY_PAGE)
-                            || (mPageState == PageState.NOTIFY_SEARCH_PAGE);
-                    mSearchTask = searchMessageWithKey(s.toString(), isNotify);
-                    mTimer.schedule(mSearchTask, SEARCH_TASK_DELAY);
-                } else if (s.toString().length() > 32) {
-                    mSearchEditClearView.setVisibility(View.VISIBLE);
-                    Toast.makeText(ConversationActivity.this, R.string.msg_search_to_long_notices, Toast.LENGTH_LONG).show();
-                } else {
-                    mSearchEditClearView.setVisibility(View.GONE);
-                    // 显示消息列表
-                    PageState state = PageState.NORMAL;
-                    if (mPageState == PageState.NOTIFY_PAGE || mPageState == PageState.NOTIFY_SEARCH_PAGE) {
-                        state = PageState.NOTIFY_PAGE;
-                    }
-                    onPageStateChanged(state, mPageState);
-                }
-            }
-        });
+        //mSearchEditText = (EditText) findViewById(R.id.et_search);
+//        mSearchEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            }
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void afterTextChanged(final Editable s) {
+//                if (mSearchTask != null) {
+//                    // 任务不为空
+//                    mSearchTask.setCancelled(true);
+//                    mSearchTask.cancel();
+//                }
+//                if (s.toString().length() > 0 && s.toString().length() <= 32) {
+//                    if (mTimer == null) {
+//                        mTimer = new Timer();
+//                    }
+//                    mSearchEditClearView.setVisibility(View.VISIBLE);
+//                    boolean isNotify = (mPageState == PageState.NOTIFY_PAGE)
+//                            || (mPageState == PageState.NOTIFY_SEARCH_PAGE);
+//                    mSearchTask = searchMessageWithKey(s.toString(), isNotify);
+//                    mTimer.schedule(mSearchTask, SEARCH_TASK_DELAY);
+//                } else if (s.toString().length() > 32) {
+//                    mSearchEditClearView.setVisibility(View.VISIBLE);
+//                    Toast.makeText(ConversationActivity.this, R.string.msg_search_to_long_notices, Toast.LENGTH_LONG).show();
+//                } else {
+//                    mSearchEditClearView.setVisibility(View.GONE);
+//                    // 显示消息列表
+//                    PageState state = PageState.NORMAL;
+//                    if (mPageState == PageState.NOTIFY_PAGE || mPageState == PageState.NOTIFY_SEARCH_PAGE) {
+//                        state = PageState.NOTIFY_PAGE;
+//                    }
+//                    onPageStateChanged(state, mPageState);
+//                }
+//            }
+//        });
     }
 
     /**

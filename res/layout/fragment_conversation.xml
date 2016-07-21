@@ -16,7 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/network_status_rl"
-        android:background="@color/bgcor1">
+        android:background="@color/bgcor1"
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/et_search"

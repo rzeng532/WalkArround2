@@ -152,9 +152,11 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
 
             LoginManager.getInstance().setPhoneNum(mStrPhoneNum);
             LoginManager.getInstance().setPassword(pass);
-            //LoginManager.getInstance().doRegister(mAccountManagerListener);
-            Intent intent = new Intent(PhoneAndPasswordActivity.this, CheckSMSCodeActivity.class);
-            startActivityForResult(intent, CHECKSMSCODE);
+            LoginManager.getInstance().doRegister(mAccountManagerListener);
+
+            //Following code are test code.
+            //Intent intent = new Intent(PhoneAndPasswordActivity.this, CheckSMSCodeActivity.class);
+            //startActivityForResult(intent, CHECKSMSCODE);
         } else if (v.getId() == R.id.back_rl) {
             setResult(CommonUtils.ACTIVITY_FINISH_BACK);
             finish();

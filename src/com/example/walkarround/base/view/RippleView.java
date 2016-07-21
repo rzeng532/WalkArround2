@@ -35,6 +35,8 @@ public class RippleView extends View {
     private List<Integer> alphaList = new ArrayList<>();
     private List<Integer> radiusList = new ArrayList<>();
 
+    private int mInitAlphaValue = 0;
+
     public RippleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
@@ -56,7 +58,7 @@ public class RippleView extends View {
         paint = new Paint();
         // 设置颜色
         paint.setColor(getResources().getColor(R.color.ripple_line_cor));
-        alphaList.add(0);// 圆心的不透明度
+        alphaList.add(mInitAlphaValue);// 圆心的不透明度
         radiusList.add(0);
     }
 
@@ -69,6 +71,19 @@ public class RippleView extends View {
         }
 
         paint.setColor(getResources().getColor(color));
+    }
+
+    /*
+     * Input parameters: 0xff (255) means transparent and 0 means NO-transparent.
+     * Comments: this API should be invoked before start method.
+     */
+    public void setInitAlphaValue(int alpha) {
+        mInitAlphaValue = alpha;
+
+        if(alphaList != null && alphaList.size() >= 1) {
+            alphaList.remove(alphaList.size() - 1);
+            alphaList.add(mInitAlphaValue);
+        }
     }
 
     @Override

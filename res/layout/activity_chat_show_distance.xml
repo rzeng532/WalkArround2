@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            layout="@layout/activity_title_common"/>
+
+    <RelativeLayout
+            android:id="@+id/rlSearching"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <com.example.walkarround.base.view.RippleView
+                android:id="@+id/searchingView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        <com.example.walkarround.base.view.PortraitView
+                android:id="@+id/searching_center_portrait"
+                android:layout_centerInParent="true"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+
+        <TextView android:id="@+id/tv_search_desc"
+                  android:layout_width="100dp"
+                  android:layout_height="100dp"
+                  android:gravity="center"
+                  android:layout_centerInParent="true"
+                  android:text="@string/xiu_yi_xiu"
+                  android:textColor="@color/fontcor1"
+                  android:textSize="@dimen/font_size2_dp" />
+    </RelativeLayout>
+
+</LinearLayout>
