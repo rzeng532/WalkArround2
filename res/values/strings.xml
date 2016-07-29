@@ -253,6 +253,10 @@
     <string name="pull_to_refresh_from_bottom_release_label">@string/pull_to_refresh_release_label</string>
     <string name="pull_to_refresh_from_bottom_refreshing_label">@string/pull_to_refresh_refreshing_label</string>
 
+    <!-- Countdown string -->
+    <string name="countdown_walk_with_who">您正在和%1$s一起走走</string>
+    <string name="countdown_complete_walk">结束走走</string>
+
     <!-- Other strings  -->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

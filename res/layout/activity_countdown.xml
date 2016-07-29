@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:android_custom="http://schemas.android.com/apk/res/com.example.walkarround"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/emerald_green">
+
+    <!-- Walk with xxx -->
+    <TextView android:id="@+id/tv_walk_description"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentTop="true"
+              android:layout_marginTop="60dp"
+              android:layout_centerHorizontal="true"
+              android:gravity="center"
+              android:text="@string/countdown_walk_with_who"
+              android:textColor="@color/fontcor3"
+              android:textSize="@dimen/font_size2_dp" />
+
+    <!-- Portrait -->
+    <com.example.walkarround.base.view.PhotoView
+            android:id="@+id/pv_countdown"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/tv_walk_description"
+            android:layout_centerHorizontal="true"/>
+
+    <!-- Countdown view
+        <ImageView
+            android:id="@+id/iv_countdown"
+            android:layout_height="300dp"
+            android:layout_width="300dp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/pv_countdown"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
+    -->
+
+    <com.example.walkarround.base.view.RoundProgressBar
+            android:id="@+id/iv_countdown"
+            android:layout_height="300dp"
+            android:layout_width="300dp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/pv_countdown"
+            android:layout_centerHorizontal="true"
+            android_custom:roundColor="@color/linecor2"
+            android_custom:roundProgressColor="@color/linecor3"
+            android_custom:roundWidth="2dp" />
+
+
+    <!-- finish walk button -->
+    <TextView android:id="@+id/tv_complete_walk"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/iv_countdown"
+              android:layout_marginTop="16dp"
+              android:paddingTop="5dp"
+              android:paddingBottom="10dp"
+              android:paddingRight="30dp"
+              android:paddingLeft="30dp"
+              android:layout_centerHorizontal="true"
+              android:gravity="center"
+              android:text="@string/countdown_complete_walk"
+              android:textColor="@color/fontcor3"
+              android:textSize="@dimen/font_size2_dp"
+              android:background="@drawable/btn_countdown_finish"/>
+
+</RelativeLayout>
