@@ -718,15 +718,15 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             long msgId = data.getLongExtra(PlayVideoActivity.INTENT_MESSAGE_ID, -1);
             mMessageDetailAdapter.deleteRcsMessage(msgId);
             mMessageDetailAdapter.notifyDataSetChanged();
-        } else if(requestCode == REQUEST_CODE_SHOW_LOCATION) {
+        } else if (requestCode == REQUEST_CODE_SHOW_LOCATION) {
             //There are two results from show location activity: normal finish & goto another
             if (resultCode == RESULT_CANCELED) {
                 //normal finish
                 return;
-            } else if(resultCode == RESULT_FIRST_USER) {
+            } else if (resultCode == RESULT_FIRST_USER) {
                 //Send a agreement IM message
                 sendAgreement2WalkArround();
-            } else if(resultCode == RESULT_OK) {
+            } else if (resultCode == RESULT_OK) {
                 //Start location activity to select another place.
                 Intent intent = new Intent(this, LocationActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_MAP);
@@ -1275,12 +1275,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     }
 
     /**
-     *
      * 消息状态变化
      *
      * @param messageId
      * @param status
-     *
      */
     private void messageStateChanged(long messageId, int status) {
         if (mMessageDetailAdapter == null) {
@@ -1395,7 +1393,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     /**
      * 更新联系人信息
      */
-    private void updateContactInfo(){
+    private void updateContactInfo() {
         if (mRecipientInfo.getConversationType() != ChatType.CHAT_TYPE_ONE2ONE) {
             return;
         }
@@ -1438,7 +1436,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
         mImvDistance = (ImageView) detailHeaderView.findViewById(R.id.iv_show_distance);
         mImvDistance.setOnClickListener(this);
-        if(color == 0) {
+        if (color == 0) {
             mImvDistance.setVisibility(View.GONE);
         } else {
             mImvDistance.setImageResource(color);
@@ -1561,36 +1559,36 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         boolean canSend = false;
         //ImageView emjio = (ImageView) mMessageBottomView.findViewById(R.id.emoji_iv);
         switch (currentState) {
-        case MESSAGE_EDIT_STATE_DEFAULT:
-            mSendMessageEditView.setHint("");
-            mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.VISIBLE);
-            //emjio.setImageResource(R.drawable.message_btn_smile);
-            if (mTimeSendView.getVisibility() == View.VISIBLE) {
-                rightViewResId = R.drawable.message_btn_close;
-            }
-            break;
-        case MESSAGE_EDIT_STATE_HAS_INPUT:
-            //emjio.setImageResource(R.drawable.message_btn_smile);
-            if (mTimeSendView.getVisibility() == View.VISIBLE) {
-                rightViewResId = R.drawable.message_btn_close;
-            }
-            canSend = true;
-            break;
+            case MESSAGE_EDIT_STATE_DEFAULT:
+                mSendMessageEditView.setHint("");
+                mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.VISIBLE);
+                //emjio.setImageResource(R.drawable.message_btn_smile);
+                if (mTimeSendView.getVisibility() == View.VISIBLE) {
+                    rightViewResId = R.drawable.message_btn_close;
+                }
+                break;
+            case MESSAGE_EDIT_STATE_HAS_INPUT:
+                //emjio.setImageResource(R.drawable.message_btn_smile);
+                if (mTimeSendView.getVisibility() == View.VISIBLE) {
+                    rightViewResId = R.drawable.message_btn_close;
+                }
+                canSend = true;
+                break;
 
-        case MESSAGE_EDIT_STATE_VOICE:
-            mVoiceListener.setAudioStatusIcon(R.drawable.public_btn_enterbar_voicebtn,
-                    R.drawable.public_btn_enterbar_voicebtn2, R.drawable.progress_voice_duration);
-            //emjio.setImageResource(R.drawable.message_btn_smile);
-            hideSoftInput();
-            mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.GONE);
-            voicePanelVisibility = View.VISIBLE;
-            leftViewResId = R.drawable.message_btn_keybroad;
-            if (mTimeSendView.getVisibility() == View.VISIBLE) {
-                rightViewResId = R.drawable.message_btn_close;
-            }
-            break;
-        default:
-            break;
+            case MESSAGE_EDIT_STATE_VOICE:
+                mVoiceListener.setAudioStatusIcon(R.drawable.public_btn_enterbar_voicebtn,
+                        R.drawable.public_btn_enterbar_voicebtn2, R.drawable.progress_voice_duration);
+                //emjio.setImageResource(R.drawable.message_btn_smile);
+                hideSoftInput();
+                mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.GONE);
+                voicePanelVisibility = View.VISIBLE;
+                leftViewResId = R.drawable.message_btn_keybroad;
+                if (mTimeSendView.getVisibility() == View.VISIBLE) {
+                    rightViewResId = R.drawable.message_btn_close;
+                }
+                break;
+            default:
+                break;
         }
 
         mBottomLeftView.setImageResource(leftViewResId);
@@ -1663,8 +1661,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         int colorIndex = MessageUtil.getFriendColorIndex(threadId);
         logger.d("send agreement, the color index is " + colorIndex);
         String extraInfor = MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND +
-                            MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND_SPLIT +
-                            colorIndex;
+                MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND_SPLIT +
+                colorIndex;
         logger.d("send agreement, the extra is: " + extraInfor);
         long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo,
                 MessageUtil.CONTENT_AGREEMENT_2_WALKARROUND,
@@ -1755,21 +1753,21 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-        case R.id.back_iv:
-            // 返回
-            saveDraftMessage();
-            finish();
-            break;
-        case R.id.send_message_tv:
-            // 发送
-            onSend();
-            break;
+            case R.id.back_iv:
+                // 返回
+                saveDraftMessage();
+                finish();
+                break;
+            case R.id.send_message_tv:
+                // 发送
+                onSend();
+                break;
 //        case R.id.build_message_receiver_rl:
 //            // 编辑联系人状态
 //            changeToReceiverEditState();
 //            break;
-        case R.id.emoji_iv:
-            // 表情/阅后即焚图片按钮
+            case R.id.emoji_iv:
+                // 表情/阅后即焚图片按钮
 //            if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER) {
 //                view.setSelected(false);
 //                hideSoftInput();
@@ -1792,25 +1790,25 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 //                    switchBottomPanelView(mCurrentMessageEditState);
 //                }
 //                view.setSelected(!view.isSelected());
-            //}
-            break;
-        case R.id.msg_popup_menu_layout:
-            mBurnMsgTypeChoosePopup.dismiss();
-            break;
-        case R.id.left_change_iv:
-            // 消息编辑左侧按钮
-            if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_VOICE
-                    || mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_VOICE) {
-                showSoftInput();
-                switchBottomPanelView();
-            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER) {
-                mCurrentMessageEditState = MESSAGE_EDIT_STATE_BURN_VOICE;
-                switchBottomPanelView(mCurrentMessageEditState);
-            } else {
-                mCurrentMessageEditState = MESSAGE_EDIT_STATE_VOICE;
-                switchBottomPanelView(mCurrentMessageEditState);
-            }
-            break;
+                //}
+                break;
+            case R.id.msg_popup_menu_layout:
+                mBurnMsgTypeChoosePopup.dismiss();
+                break;
+            case R.id.left_change_iv:
+                // 消息编辑左侧按钮
+                if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_VOICE
+                        || mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_VOICE) {
+                    showSoftInput();
+                    switchBottomPanelView();
+                } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER) {
+                    mCurrentMessageEditState = MESSAGE_EDIT_STATE_BURN_VOICE;
+                    switchBottomPanelView(mCurrentMessageEditState);
+                } else {
+                    mCurrentMessageEditState = MESSAGE_EDIT_STATE_VOICE;
+                    switchBottomPanelView(mCurrentMessageEditState);
+                }
+                break;
 //        case R.id.right_change_iv:
 //            // 消息编辑右侧按钮
 //            if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_VOICE
@@ -1844,21 +1842,21 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 //                }
 //            }
 //            break;
-        case R.id.message_title_more_iv:
-            //case R.id.message_profile_group_iv:
-            // 更多
-            // titleContactsMore(view);
-            //showChatDetail();
-            break;
-        case R.id.select_all_rl:
-            // 全选或取消全选
-            if (view.getTag() == null || (Boolean) view.getTag()) {
-                // 全选
-                mMessageDetailAdapter.setSelectForAll(true);
-            } else {
-                mMessageDetailAdapter.setSelectForAll(false);
-            }
-            break;
+            case R.id.message_title_more_iv:
+                //case R.id.message_profile_group_iv:
+                // 更多
+                // titleContactsMore(view);
+                //showChatDetail();
+                break;
+            case R.id.select_all_rl:
+                // 全选或取消全选
+                if (view.getTag() == null || (Boolean) view.getTag()) {
+                    // 全选
+                    mMessageDetailAdapter.setSelectForAll(true);
+                } else {
+                    mMessageDetailAdapter.setSelectForAll(false);
+                }
+                break;
 //        case R.id.msg_mark_collect_tv:
 //            // 收藏
 //            List<ChatMsgBaseInfo> selectMsg = mMessageDetailAdapter.getSelectedMsgList();
@@ -1875,19 +1873,19 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 //            mMessageDetailAdapter.setInSelectMode(false);
 //            mMessageDetailAdapter.notifyDataSetChanged();
 //            break;
-        case R.id.msg_detail_delete_tv:
-            // 删除
-            List<ChatMsgBaseInfo> delMsgList = mMessageDetailAdapter.getSelectedMsgList();
-            WalkArroundMsgManager.getInstance(getApplicationContext()).deleteMessages(this, delMsgList);
-            if (!WalkArroundMsgManager.getInstance(getApplicationContext()).isConversationExist(mRecipientInfo.getThreadId())) {
-                mRecipientInfo.setThreadId(-1);
-            }
-            mMessageDetailAdapter.deleteSelectedMessage();
-            mMessageDetailAdapter.setInSelectMode(false);
-            mMessageDetailAdapter.notifyDataSetChanged();
-            break;
-        case R.id.msg_mark_foward_tv:
-            // 转发
+            case R.id.msg_detail_delete_tv:
+                // 删除
+                List<ChatMsgBaseInfo> delMsgList = mMessageDetailAdapter.getSelectedMsgList();
+                WalkArroundMsgManager.getInstance(getApplicationContext()).deleteMessages(this, delMsgList);
+                if (!WalkArroundMsgManager.getInstance(getApplicationContext()).isConversationExist(mRecipientInfo.getThreadId())) {
+                    mRecipientInfo.setThreadId(-1);
+                }
+                mMessageDetailAdapter.deleteSelectedMessage();
+                mMessageDetailAdapter.setInSelectMode(false);
+                mMessageDetailAdapter.notifyDataSetChanged();
+                break;
+            case R.id.msg_mark_foward_tv:
+                // 转发
 //            Intent forwardIntent = new Intent(this, SelectContactActivity.class);
 //            forwardIntent.putExtra(SelectContactActivity.SELECT_TYPE,
 //                    SelectContactActivity.TYPE_SELECT_CONTACTS_WITH_NUM);
@@ -1895,42 +1893,45 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 //            forwardIntent.putExtra(SelectContactActivity.INTENT_CONFIRM_SELECTION, true);
 ////            forwardIntent.putExtra(SelectContactActivity.INTENT_DISABLE_NOT_RCS_NUMBER, true);
 //            startActivityForResult(forwardIntent, REQUEST_CODE_FORWARD_MSG);
-            break;
-        case R.id.msg_mark_copy_tv:
-            // 拷贝
-            List<ChatMsgBaseInfo> msgList = mMessageDetailAdapter.getSelectedMsgList();
-            StringBuilder text = new StringBuilder();
-            for (ChatMsgBaseInfo message : msgList) {
-                text.append(message.getData());
-                text.append("\n");
-            }
-            ClipData clip = ClipData.newPlainText("message", text.toString());
-            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(clip);
-            mMessageDetailAdapter.setInSelectMode(false);
-            mMessageDetailAdapter.notifyDataSetChanged();
-            break;
-        case R.id.special_message_ahead_tv:
-            if (!TextUtils.isEmpty(mTimeSendView.getText())) {
-                //onSetTimeOnClick();
-                hideSoftInput();
-            }
-            break;
-        case R.id.tv_select_position:
-            Intent intent = new Intent(this, LocationActivity.class);
-            startActivityForResult(intent, REQUEST_CODE_MAP);
-            break;
-        case R.id.iv_show_distance:
+                break;
+            case R.id.msg_mark_copy_tv:
+                // 拷贝
+                List<ChatMsgBaseInfo> msgList = mMessageDetailAdapter.getSelectedMsgList();
+                StringBuilder text = new StringBuilder();
+                for (ChatMsgBaseInfo message : msgList) {
+                    text.append(message.getData());
+                    text.append("\n");
+                }
+                ClipData clip = ClipData.newPlainText("message", text.toString());
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboard.setPrimaryClip(clip);
+                mMessageDetailAdapter.setInSelectMode(false);
+                mMessageDetailAdapter.notifyDataSetChanged();
+                break;
+            case R.id.special_message_ahead_tv:
+                if (!TextUtils.isEmpty(mTimeSendView.getText())) {
+                    //onSetTimeOnClick();
+                    hideSoftInput();
+                }
+                break;
+            case R.id.tv_select_position:
+                Intent intent = new Intent(this, LocationActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_MAP);
+                break;
+            case R.id.iv_show_distance:
 //            Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);
 //            intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
 //            startActivity(intentShowDistance);
 
-            Intent intentShowDistance = new Intent(BuildMessageActivity.this, CountdownnActivity.class);
-            intentShowDistance.putExtra(CountdownnActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
-            startActivity(intentShowDistance);
-        break;
-        default:
-            break;
+//            Intent intentShowDistance = new Intent(BuildMessageActivity.this, CountdownnActivity.class);
+//            intentShowDistance.putExtra(CountdownnActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
+//            startActivity(intentShowDistance);
+
+                //WalkArroundRuleActivity
+                startActivity(new Intent(BuildMessageActivity.this, WalkArroundRuleActivity.class));
+                break;
+            default:
+                break;
         }
     }
 
@@ -2003,9 +2004,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /**
      * 选择好时间
-     * 
-     * @param pickedTime
-     *            选择的时间
+     *
+     * @param pickedTime 选择的时间
      */
     private void onSelectedTime(String pickedTime) {
         mTimeSelectPanel.setVisibility(View.GONE);
@@ -2019,11 +2019,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /**
      * 选择了发送的图片
-     * 
-     * @param picPathList
-     *            选择的所有图片路径
-     * @param fullSizedMap
-     *            原图发送图片的路径
+     *
+     * @param picPathList  选择的所有图片路径
+     * @param fullSizedMap 原图发送图片的路径
      */
     private void onSelectedPictures(ArrayList<String> picPathList, HashSet<String> fullSizedMap, boolean isBurn) {
         for (int i = 0; i < picPathList.size(); i++) {
@@ -2059,39 +2057,39 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     @Override
     public void messageItemOnClick(View clickedItemView, ChatMsgBaseInfo clickedMessage) {
 
-        if(clickedMessage == null) {
+        if (clickedMessage == null) {
             return;
         }
 
         // 点击了消息
         switch (clickedMessage.getMsgType()) {
-        case MessageType.MSG_TYPE_TEXT:
-            // 纯文本消息;
-            onPlainTextClick(clickedMessage);
-            break;
-        case MessageType.MSG_TYPE_AUDIO:
-            // 语音消息;
-            if (clickedMessage.isBurnAfterMsg()) {
-                // 阅后即焚
+            case MessageType.MSG_TYPE_TEXT:
+                // 纯文本消息;
                 onPlainTextClick(clickedMessage);
-            } else {
-                onStartAudio(clickedMessage);
-            }
-            break;
-        case MessageType.MSG_TYPE_VIDEO:
-            // 视频;
-            downVideoOrPlay(clickedMessage);
-            break;
-        case MessageType.MSG_TYPE_IMAGE:
-            // 图片消息;
-            onStartPicture(clickedMessage);
-            break;
-        case MessageType.MSG_TYPE_MAP:
-            // 定位消息
-            onStartMapActivity(clickedMessage);
-            break;
-        default:
-            break;
+                break;
+            case MessageType.MSG_TYPE_AUDIO:
+                // 语音消息;
+                if (clickedMessage.isBurnAfterMsg()) {
+                    // 阅后即焚
+                    onPlainTextClick(clickedMessage);
+                } else {
+                    onStartAudio(clickedMessage);
+                }
+                break;
+            case MessageType.MSG_TYPE_VIDEO:
+                // 视频;
+                downVideoOrPlay(clickedMessage);
+                break;
+            case MessageType.MSG_TYPE_IMAGE:
+                // 图片消息;
+                onStartPicture(clickedMessage);
+                break;
+            case MessageType.MSG_TYPE_MAP:
+                // 定位消息
+                onStartMapActivity(clickedMessage);
+                break;
+            default:
+                break;
         }
     }
 
@@ -2241,7 +2239,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             selectionPos = mMessageDetailAdapter.getCount() + 1;
         }
 
-        if(mMessageListView != null) {
+        if (mMessageListView != null) {
             mMessageListView.setSelection(selectionPos);
             mMessageListView.setTag(false);
         }
@@ -2289,7 +2287,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /**
      * 发送位置信息
-     * 
+     *
      * @param dLat
      * @param dLng
      * @param strAddr
@@ -2325,13 +2323,11 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 //    }
 
     /**
-     * 
+     * @param message
      * @方法名：onStartPicture
      * @描述：打开浏览图片的Activity
-     * @param message
      * @输出：void
      * @作者：史卓君
-     * 
      */
     private void onStartPicture(ChatMsgBaseInfo message) {
         Intent intent = new Intent(this, ImageViewerActivity.class);
@@ -2345,7 +2341,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /**
      * 播放音频消息
-     * 
+     *
      * @param message
      */
     private void onStartAudio(ChatMsgBaseInfo message) {
@@ -2410,7 +2406,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /**
      * 禁止或恢复背景音乐
-     * 
+     *
      * @param bMute
      * @return
      */
@@ -2432,9 +2428,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /**
      * 点击了视频消息
-     * 
+     *
      * @param message
-     * 
      */
     private void downVideoOrPlay(ChatMsgBaseInfo message) {
         Intent intent = new Intent(this, PlayVideoActivity.class);
@@ -2465,7 +2460,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /**
      * 拨打电话
-     * 
+     *
      * @param anchor
      *            显示的相对位置view
      */
@@ -2485,9 +2480,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /**
      * 头部右侧更多操作
-     * 
-     * @param anchor
-     *            显示的相对位置view
+     *
+     * @param anchor 显示的相对位置view
      */
     private void titleContactsMore(View anchor) {
         if (mPopupWindow == null) {
@@ -2511,7 +2505,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /**
      * 创建阅后即焚类型选择
-     * 
+     *
      * @return
      */
 //    private PopupWindow createPopupWindow() {
@@ -2574,8 +2568,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 //            }
         } else if (type == PopupListAdapter.TYPE_MESSAGE_MORE) {
             switch (position) {
-            case MORE_TYPE_LOOK_CONTACT:
-                //TODO
+                case MORE_TYPE_LOOK_CONTACT:
+                    //TODO
 //                // 查看联系人详情
 //                Intent contactDetailIntent = new Intent(this, NewContactsDetailActivity.class);
 //                String phone = CommonUtil.getPhoneNum(mRecipientInfo.getRecipientList().get(0));
@@ -2583,8 +2577,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 ////                contactDetailIntent.putExtra(NewContactsDetailActivity.TYPE_CHOOSE_CARD,
 ////                        NewContactsDetailActivity.VIEWPAGER_INFORMATION_ITEM);
 //                startActivity(contactDetailIntent);
-                break;
-            case MORE_TYPE_LOOK_DYNAMIC:
+                    break;
+                case MORE_TYPE_LOOK_DYNAMIC:
 //                // 查看友圈
 //                Intent intent = new Intent(this, NewContactsDetailActivity.class);
 //                String number = CommonUtil.getPhoneNum(mRecipientInfo.getRecipientList().get(0));
@@ -2592,17 +2586,17 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 ////                intent.putExtra(NewContactsDetailActivity.TYPE_CHOOSE_CARD,
 ////                        NewContactsDetailActivity.VIEWPAGER_SOCIAL_INFO_ITEM);
 //                startActivity(intent);
-                break;
-            case MORE_TYPE_TO_BLACK:
-                // 加入黑名单
+                    break;
+                case MORE_TYPE_TO_BLACK:
+                    // 加入黑名单
 //                if (NewContactManager.getInstance(getApplicationContext()).addBlackNumber(mRecipientInfo.getRecipientList().get(0)) == 0) {
 //                    Toast.makeText(this, R.string.add_black_success, Toast.LENGTH_SHORT).show();
 //                } else {
 //                    Toast.makeText(this, R.string.add_black_failure, Toast.LENGTH_SHORT).show();
 //                }
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -2653,7 +2647,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /**
      * 转发消息
-     * 
+     *
      * @param selectedContacts
      */
 //    private void forwardSelectedMsg(List<ContactInfo> selectedContacts) {
@@ -2872,9 +2866,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     }
 
     private void updateHeaderAreaOnRecMsg(ChatMsgBaseInfo msg) {
-        if(msg.getMsgType() == MessageType.MSG_TYPE_NOTIFICATION) {
+        if (msg.getMsgType() == MessageType.MSG_TYPE_NOTIFICATION) {
             int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
-            if(color > 0) {
+            if (color > 0) {
                 mImvDistance.setImageResource(color);
             }
         }

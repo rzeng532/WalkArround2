@@ -40,22 +40,51 @@
 
     <com.example.walkarround.base.view.RoundProgressBar
             android:id="@+id/iv_countdown"
-            android:layout_height="300dp"
-            android:layout_width="300dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="280dp"
+            android:layout_width="280dp"
+            android:layout_marginTop="23dp"
             android:layout_below="@+id/pv_countdown"
             android:layout_centerHorizontal="true"
             android_custom:roundColor="@color/linecor2"
             android_custom:roundProgressColor="@color/linecor3"
+            android_custom:roundWidth="3dp"
+            android_custom:textColor="@color/transparent"/>
+
+    <com.example.walkarround.base.view.RoundProgressBar
+            android:layout_height="294dp"
+            android:layout_width="294dp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/pv_countdown"
+            android:layout_centerHorizontal="true"
+            android_custom:roundColor="@color/bgcor15"
             android_custom:roundWidth="2dp" />
 
+    <com.example.walkarround.base.view.RoundProgressBar
+            android:layout_height="308dp"
+            android:layout_width="308dp"
+            android:layout_marginTop="9dp"
+            android:layout_below="@+id/pv_countdown"
+            android:layout_centerHorizontal="true"
+            android_custom:roundColor="@color/bgcor16"
+            android_custom:roundWidth="1dp" />
+
+    <TextView android:id="@+id/tv_countdown_time"
+              android:layout_height="308dp"
+              android:layout_width="308dp"
+              android:layout_marginTop="9dp"
+              android:layout_below="@+id/pv_countdown"
+              android:layout_centerHorizontal="true"
+              android:gravity="center"
+              android:text="00:00"
+              android:textColor="@color/fontcor3"
+              android:textSize="@dimen/font_size_40dp" />
 
     <!-- finish walk button -->
     <TextView android:id="@+id/tv_complete_walk"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_below="@+id/iv_countdown"
-              android:layout_marginTop="16dp"
+              android:layout_marginTop="30dp"
               android:paddingTop="5dp"
               android:paddingBottom="10dp"
               android:paddingRight="30dp"

@@ -19,6 +19,8 @@ import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.util.Logger;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,6 +37,7 @@ public class CountdownnActivity extends Activity implements View.OnClickListener
 
     private TextView mTvDescription;
     private TextView mTvComplete;
+    private TextView mTvCountdownTime;
     private PhotoView mPvPortrait;
     private ImageView mIvCountdown;
     private RoundProgressBar timeProgress;
@@ -57,9 +60,11 @@ public class CountdownnActivity extends Activity implements View.OnClickListener
                     mCurTime++;
                     if(mCurTime >= COUNTDOWN_TOTOL_TIME) {
                         timeProgress.setProgress(100);
+                        setTvCountdownTimeUI(0);
                         timer.cancel();
                     } else {
                         timeProgress.setProgress(( 100 * mCurTime / COUNTDOWN_TOTOL_TIME));
+                        setTvCountdownTimeUI(COUNTDOWN_TOTOL_TIME - mCurTime);
                         //timer.schedule(task,1000, 1000);
                     }
 
@@ -96,6 +101,11 @@ public class CountdownnActivity extends Activity implements View.OnClickListener
         mTvComplete = (TextView)findViewById(R.id.tv_complete_walk);
         mTvComplete.setOnClickListener(this);
         mPvPortrait = (PhotoView)findViewById(R.id.pv_countdown);
+
+        //Init countdown time text.
+        mTvCountdownTime = (TextView)findViewById(R.id.tv_countdown_time);
+        setTvCountdownTimeUI(COUNTDOWN_TOTOL_TIME);
+
         //mIvCountdown = (ImageView)findViewById(R.id.iv_countdown);
         timeProgress = (RoundProgressBar) findViewById(R.id.iv_countdown);
         timeProgress.setProgress(0);
@@ -129,6 +139,14 @@ public class CountdownnActivity extends Activity implements View.OnClickListener
                 break;
             default:
                 break;
+        }
+    }
+
+    private void setTvCountdownTimeUI(int timeSec) {
+        if(mTvCountdownTime != null && timeSec > 0l) {
+            SimpleDateFormat sdf = new SimpleDateFormat( "mm:ss");
+            String time = sdf.format(new Date((timeSec * 1000L)));
+            mTvCountdownTime.setText(time);
         }
     }
 }
