@@ -1923,12 +1923,12 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 //            intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
 //            startActivity(intentShowDistance);
 
-//            Intent intentShowDistance = new Intent(BuildMessageActivity.this, CountdownnActivity.class);
-//            intentShowDistance.putExtra(CountdownnActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
+            Intent intentShowDistance = new Intent(BuildMessageActivity.this, EvaluateActivity.class);
+            intentShowDistance.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
 //            startActivity(intentShowDistance);
 
                 //WalkArroundRuleActivity
-                startActivity(new Intent(BuildMessageActivity.this, WalkArroundRuleActivity.class));
+                startActivity(intentShowDistance);
                 break;
             default:
                 break;

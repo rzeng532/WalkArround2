@@ -83,6 +83,7 @@
         <activity android:name=".message.activity.ShowDistanceActivity"/>
         <activity android:name=".message.activity.CountdownnActivity"/>
         <activity android:name=".message.activity.WalkArroundRuleActivity"/>
+        <activity android:name=".message.activity.EvaluateActivity"/>
         <activity android:name=".base.TestActivity"/>
 
         <!-- Clean cloud SDK elements -->
