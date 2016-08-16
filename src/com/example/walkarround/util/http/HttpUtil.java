@@ -21,6 +21,7 @@ public class HttpUtil {
     public static final String HTTP_FUNC_QUERY_SPEED_DATE = "querySpeedDate";
     public static final String HTTP_FUNC_ADD_FRIEND = "addFriend";
     public static final String HTTP_FUNC_GET_FRIEND_LIST = "friendList";
+    public static final String HTTP_FUNC_EVALUATE_EACH = "evaluationEach";
 
     //Public HTTP tasks
     private static final String HTTP_TASK_PRE = HTTP_BASE_URL + HTTP_BASE_SPLIT_SYM +
@@ -44,6 +45,9 @@ public class HttpUtil {
     public static final String HTTP_TASK_GET_FRIEND_LIST = HTTP_TASK_PRE +
             HTTP_FUNC_GET_FRIEND_LIST;
 
+    public static final String HTTP_TASK_EVALUATION_EACH = HTTP_TASK_PRE +
+            HTTP_FUNC_EVALUATE_EACH;
+
     public static final String HTTP_PARAM_QUERY_NEARLY_USERS_ID = "userDynamicDataId";
     public static final String HTTP_PARAM_LIKE_SOMEONE_FROM = "fromUserId";
     public static final String HTTP_PARAM_LIKE_SOMEONE_TO = "toUserId";
@@ -51,6 +55,11 @@ public class HttpUtil {
     public static final String HTTP_PARAM_USER_ID = "userId";
     public static final String HTTP_PARAM_FRIEND_USER_ID = "friendUserId";
     public static final String HTTP_PARAM_FRIEND_LIST_COUNT = "count";
+
+    public static final String HTTP_PARAM_EVALUATE_HONEST = "honesty";
+    public static final String HTTP_PARAM_EVALUATE_TALK_STYLE = "talkative";
+    public static final String HTTP_PARAM_EVALUATE_TEMPERAMENT = "temperament";
+    public static final String HTTP_PARAM_EVALUATE_SEDUCTIVE = "seductive";
 
     //Request header parameters
     public static final String HTTP_REQ_HEADER_LC_ID = "X-LC-Id";

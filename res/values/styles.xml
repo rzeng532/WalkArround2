@@ -107,7 +107,7 @@
         <!--指向.xml文件 -->
         <item name="android:progressDrawable">@drawable/rating_bar_evaluate</item>
         <item name="android:minHeight">20dp</item>
-        <item name="android:maxHeight">80dp</item>
+        <item name="android:maxHeight">100dp</item>
         <!-- 是否不支持用户交互，只应作为指标。 -->
         <item name="android:isIndicator">false</item>
     </style>

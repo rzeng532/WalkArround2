@@ -282,5 +282,8 @@
     <string name="evaluate_appearance">养眼</string>
     <string name="evaluate_temperament">气质</string>
     <string name="evaluate_complete">完成</string>
+    <string name="evaluate_please_rating">请完成各项评分，1星表示最低，5星表示最高</string>
+    <string name="evaluate_send_impression2server_fail">评价失败,请稍后再试.</string>
+    <string name="evaluate_send_impression2server_suc">评价完成.</string>
 
 </resources>
