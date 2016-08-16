@@ -47,6 +47,8 @@ public class WalkArroundMsgManager {
     private Context mContext = null;
     private HashMap<String, AVIMConversation> mConversationMap = new HashMap<>();
 
+    private static byte[] mMsgClientLock = new byte[] {};
+
     private WalkArroundMsgManager(Context context) {
         this.mContext = context;
     }
@@ -65,11 +67,25 @@ public class WalkArroundMsgManager {
     }
 
     public void open(String clientId, AVIMClientCallback callback) {
-        mInstance.mAvimClient = AVIMClient.getInstance(clientId);
-        mInstance.mAvimClient.open(callback);
+        if(mInstance.mAvimClient == null) {
+            synchronized (mMsgClientLock) {
+                if(mInstance.mAvimClient == null) {
+                    mInstance.mAvimClient = AVIMClient.getInstance(clientId);
+                    mInstance.mAvimClient.open(callback);
+                }
+            }
+        }
     }
 
     public AVIMClient getMsgClient() {
+        if(mInstance.mAvimClient == null) {
+            synchronized (mMsgClientLock) {
+                if(mInstance.mAvimClient == null) {
+                    open(getClientId(), null);
+                }
+            }
+        }
+
         return mInstance.mAvimClient;
     }
 
