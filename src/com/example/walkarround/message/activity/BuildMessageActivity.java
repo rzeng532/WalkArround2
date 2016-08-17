@@ -27,6 +27,7 @@ import android.widget.*;
 import com.example.walkarround.Location.activity.LocationActivity;
 import com.example.walkarround.R;
 import com.example.walkarround.base.WalkArroundApp;
+import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.EmojiPanelView;
 import com.example.walkarround.base.view.EmojiPanelView.EmojiListener;
 import com.example.walkarround.base.view.PhotoView;
@@ -1923,12 +1924,13 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 //            intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
 //            startActivity(intentShowDistance);
 
-            Intent intentShowDistance = new Intent(BuildMessageActivity.this, EvaluateActivity.class);
-            intentShowDistance.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
+//            Intent intentShowDistance = new Intent(BuildMessageActivity.this, EvaluateActivity.class);
+//            intentShowDistance.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
 //            startActivity(intentShowDistance);
 
                 //WalkArroundRuleActivity
-                startActivity(intentShowDistance);
+                //startActivity(intentShowDistance);
+                DialogFactory.getWalkRuleDialog(this).show();
                 break;
             default:
                 break;
