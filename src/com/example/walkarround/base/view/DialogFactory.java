@@ -3,27 +3,19 @@
  */
 package com.example.walkarround.base.view;
 
-import java.util.Calendar;
-
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.*;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckedTextView;
-import android.widget.DatePicker;
+import android.widget.*;
 import android.widget.DatePicker.OnDateChangedListener;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.example.walkarround.R;
 import com.example.walkarround.util.Logger;
 
-import static android.app.AlertDialog.*;
+import static android.app.AlertDialog.Builder;
 
 /**
  * TODO: description
@@ -229,7 +221,44 @@ public class DialogFactory {
         return dialog;
     }
 
+    public static Dialog getWalkRuleDialog(Context context) {
+        final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_walk_rule, null);
+        dialog.setContentView(dialogView);
 
+        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+        DisplayMetrics mDisplayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
+        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(layoutParams);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        dialogView.findViewById(R.id.tv_i_see).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialogView.findViewById(R.id.iv_finish_icon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+//        dialogView.findViewById(R.id.dialog_ok_btn).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dialog.dismiss();
+//                if (listener != null) {
+//                    listener.onConfirmDialogConfirmClick();
+//                }
+//            }
+//        });
+        return dialog;
+    }
 
     public interface NoticeDialogCancelClickListener extends NoticeDialogClickListener {
         /**

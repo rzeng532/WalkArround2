@@ -275,6 +275,7 @@
     <string name="walk_rule_content_3">&#183; 首次见面不能问对方尴尬问题</string>
     <string name="walk_rule_content_4">&#183; 不允许使用非文明用语</string>
     <string name="walk_rule_content_5">&#183; 不允许无故纠缠对方</string>
+    <string name="walk_rule_i_see">知道了</string>
 
     <!-- Evaluate strings -->
     <string name="evaluate_honest">诚实</string>
