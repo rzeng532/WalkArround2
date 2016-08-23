@@ -140,9 +140,6 @@ public class MessageReceiver extends BroadcastReceiver {
     private void initNotifyView(Context context, RemoteViews panelView, ChatMsgBaseInfo message, ContactInfo contact, Bitmap srcPhoto) {
         if (contact != null) {
             Bitmap photo = ImageLoaderManager.createCircleImage(srcPhoto);
-            if (srcPhoto != null) {
-                srcPhoto.recycle();
-            }
             if (photo != null) {
                 panelView.setViewVisibility(R.id.notify_profile_logogram_tv, View.GONE);
                 panelView.setViewVisibility(R.id.notify_profile_iv, View.VISIBLE);

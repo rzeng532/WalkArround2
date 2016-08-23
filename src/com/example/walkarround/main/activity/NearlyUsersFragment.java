@@ -28,6 +28,7 @@ import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.activity.ConversationActivity;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
@@ -105,15 +106,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 //Get status & Get TO user.
                 String strState = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_STATUS);
                 if (strState.equalsIgnoreCase(TaskUtil.RESPONSE_USR_STATUS_ACCEPT)) {
-                    String strUser = null;
-                    String strToUser = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_TO_USER);
-                    String strFromUser = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_FROM_USER);
-                    if(strToUser.equalsIgnoreCase(ProfileManager.getInstance().getCurUsrObjId())) {
-                        strUser = strFromUser;
-                    } else {
-                        strUser = strToUser;
-                    }
-
+                    String strUser = MessageUtil.getFriendIdFromServerData((String) object);
                     addCacheContact(strUser);
                     sayHello(strUser);
                 }
@@ -122,6 +115,29 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 logger.d("like someone response: \r\n" + (String) object);
             } else if (TaskResult.FAILED == resultCode) {
                 logger.d("like someone response failed");
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
+    private HttpTaskBase.onResultListener mAddFriendTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
+                //If add friend ok, update friend list.
+
+            } else {
+                logger.d("add friend  response failed");
             }
         }
 
@@ -404,7 +420,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private void addCacheContact(String userId) {
         for (ContactInfo contact : mDeleletedUserList) {
             if (contact.getObjectId().equalsIgnoreCase(userId)) {
-                //TODO: maybe we should new a contact to save data.
+                //TODO: maybe we should create new a contact to save data.
                 ContactsManager.getInstance(getActivity().getApplicationContext()).addContactInfo(contact);
                 break;
             }

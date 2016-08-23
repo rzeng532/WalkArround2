@@ -8,6 +8,7 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.*;
 import com.example.walkarround.R;
 import com.example.walkarround.base.WalkArroundApp;
+import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.message.model.ChatMessageInfo;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.util.MessageConstant.MessageType;
@@ -15,6 +16,7 @@ import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AppSharedPreference;
 import com.example.walkarround.util.Logger;
+import com.example.walkarround.util.http.HttpUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -390,7 +392,28 @@ public class MessageUtil {
         if(index >= 0 && index < mFriendColArray.size()) {
             return mFriendColArray.get(index).intValue();
         } else {
-            return 0;
+            return -1;
         }
+    }
+
+    /*
+     * Compare my obj id with "toUsr" and "fromUsr" and find friend's obj ID.
+     */
+    public static String getFriendIdFromServerData(String serverData) {
+        String strUser = null;
+
+        if(TextUtils.isEmpty(serverData)) {
+            return strUser;
+        }
+
+        String strToUser = WalkArroundJsonResultParser.parseRequireCode(serverData, HttpUtil.HTTP_RESPONSE_KEY_LIKE_TO_USER);
+        String strFromUser = WalkArroundJsonResultParser.parseRequireCode(serverData, HttpUtil.HTTP_RESPONSE_KEY_LIKE_FROM_USER);
+        if(strToUser.equalsIgnoreCase(ProfileManager.getInstance().getCurUsrObjId())) {
+            strUser = strFromUser;
+        } else {
+            strUser = strToUser;
+        }
+
+        return strUser;
     }
 }

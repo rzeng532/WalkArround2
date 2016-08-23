@@ -27,8 +27,11 @@ import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.GetFriendListTask;
 import com.example.walkarround.main.task.QueryNearlyUsers;
+import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.myself.activity.DetailInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
@@ -38,11 +41,13 @@ import com.example.walkarround.setting.activity.AppSettingActivity;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
+import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpTaskBase.onResultListener;
 import com.example.walkarround.util.http.HttpUtil;
 import com.example.walkarround.util.http.ThreadPoolManager;
 import com.example.walkarround.util.network.NetWorkManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.walkarround.util.http.HttpTaskBase.TaskResult;
@@ -106,7 +111,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         }
     };
 
-
     private onResultListener mGetFriendsTaskListener = new onResultListener() {
         @Override
         public void onPreTask(String requestCode) {
@@ -128,7 +132,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         }
     };
 
-
     AsyncTaskListener mDynUpdateListener = new AsyncTaskListener() {
         @Override
         public void onSuccess(Object data) {
@@ -140,14 +143,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                     HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS,
                     HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS,
                     QueryNearlyUsers.getParams((String) data),
-                    TaskUtil.getTaskHeader()));
-
-            String userId = ProfileManager.getInstance().getCurUsrObjId();
-            ThreadPoolManager.getPoolManager().addAsyncTask(new GetFriendListTask(getApplicationContext(),
-                    mGetFriendsTaskListener,
-                    HttpUtil.HTTP_FUNC_GET_FRIEND_LIST,
-                    HttpUtil.HTTP_TASK_GET_FRIEND_LIST,
-                    GetFriendListTask.getParams(userId, MessageUtil.GET_FRIENDS_LIST_COUNT),
                     TaskUtil.getTaskHeader()));
         }
 
@@ -174,6 +169,48 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             //TODO:
         }
     };
+
+    private HttpTaskBase.onResultListener mGetSpeedIdTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE)) {
+                //Get status & Get TO user.
+                String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
+                String strUser = MessageUtil.getFriendIdFromServerData((String) object);
+                amLogger.d("Speed date id is: " + (String) object);
+                if(!TextUtils.isEmpty(strSpeedDateId) && !TextUtils.isEmpty(strUser)) {
+                    List<String> lRecipientList = new ArrayList<>();
+                    lRecipientList.add(strUser);
+
+                    //Add contact infor if local DB does not contain this friend
+                    ContactInfo friend = ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactByUsrObjId(strUser);
+                    if(friend == null) {
+                        ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactFromServer(strUser);
+                    }
+                    //Check local chatting IM record and create chat record if there is no record on local DB.
+                    long chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
+                            lRecipientList);
+                    if(chattingThreadId < 0) {
+                        WalkArroundMsgManager.getInstance(getApplicationContext()).createConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, lRecipientList);
+                    }
+                }
+            } else {
+                amLogger.d("Failed to get speed date id!!!");
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,6 +270,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                         }
                     }
                 });
+
+        //Get speed data id and check local conversation later.
+        getConversationDataFromServer();
     }
 
     @Override
@@ -397,5 +437,34 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         mDynUpdateListener = null;
         mQueryNearUserListener = null;
         LocationManager.getInstance(getApplicationContext()).onDestroy();
+    }
+
+    /*
+     * This API will get speed data id (chatting record) and friend list from server.
+     * And those data from server will compare with local DB record.
+     * If server record > local record number, will create conversation on local DB.
+     */
+    private void getConversationDataFromServer() {
+        String userObjId = ProfileManager.getInstance().getCurUsrObjId();
+
+        if(TextUtils.isEmpty(userObjId)) {
+            return;
+        }
+
+        //Get speed date id.
+        ThreadPoolManager.getPoolManager().addAsyncTask(new QuerySpeedDateIdTask(getApplicationContext(),
+                mGetSpeedIdTaskListener,
+                HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE,
+                HttpUtil.HTTP_TASK_QUERY_SPEED_DATE,
+                QuerySpeedDateIdTask.getParams(userObjId),
+                TaskUtil.getTaskHeader()));
+
+        //Get friend list.
+        ThreadPoolManager.getPoolManager().addAsyncTask(new GetFriendListTask(getApplicationContext(),
+                mGetFriendsTaskListener,
+                HttpUtil.HTTP_FUNC_GET_FRIEND_LIST,
+                HttpUtil.HTTP_TASK_GET_FRIEND_LIST,
+                GetFriendListTask.getParams(userObjId, MessageUtil.GET_FRIENDS_LIST_COUNT),
+                TaskUtil.getTaskHeader()));
     }
 }

@@ -940,9 +940,9 @@ public class LittleCDbManager {
 
         if (threadId < 0) {
             logger.i("conversationId is error");
-            return 0;
+            return -1;
         }
-        int result = 0;
+        int result = -1;
         ContentResolver resolver = mContext.getContentResolver();
         Uri uri = Conversation.CONTENT_URI;
         String[] projection = new String[]{Conversation._COLOR};

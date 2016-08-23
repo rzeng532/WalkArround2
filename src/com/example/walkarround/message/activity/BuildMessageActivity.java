@@ -1436,7 +1436,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
         mImvDistance = (ImageView) detailHeaderView.findViewById(R.id.iv_show_distance);
         mImvDistance.setOnClickListener(this);
-        if (color == 0) {
+        if (color == -1) {
             mImvDistance.setVisibility(View.GONE);
         } else {
             mImvDistance.setImageResource(color);
@@ -1479,6 +1479,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         if (conversationType == ChatType.CHAT_TYPE_ONE2ONE) {
             try {
                 ContactInfo contact = ContactsManager.getInstance(getApplicationContext()).getContactByUsrObjId(recipientInfo.getRecipientList().get(0));
+                if(contact == null) {
+                    return;
+                }
                 String number = contact.getMobilePhoneNumber();
                 int startPos = number.length() > 5 ? number.length() - 5 : 0;
                 int id = Integer.parseInt(number.substring(startPos));

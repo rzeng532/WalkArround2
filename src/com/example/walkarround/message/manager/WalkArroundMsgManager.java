@@ -866,7 +866,7 @@ public class WalkArroundMsgManager {
         } catch (Exception e) {
             logger.e("getConversationColor Exception:" + e.getMessage());
         }
-        return 0;
+        return -1;
     }
 
     public int getConversationStatus(long threadId) {

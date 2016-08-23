@@ -288,7 +288,7 @@ public abstract class MessageAbstractManger {
     }
 
     public int getIntentConversationColor(long threadid) throws Exception {
-        return 0;
+        return -1;
     }
 
     public MessageSessionBaseModel getLatestNotifySession() throws Exception {
