@@ -65,12 +65,12 @@ public class RippleView extends View {
     /*
      * This method should be invoked before starting.
      */
-    public void setInitColor(int color) {
+    public void setInitColor(int colorResId) {
         if(isStarting == true || paint == null) {
             return;
         }
 
-        paint.setColor(getResources().getColor(color));
+        paint.setColor(getResources().getColor(colorResId));
     }
 
     /*

@@ -76,7 +76,8 @@ import static com.example.walkarround.message.activity.ChatAssistToolsView.Tools
 
 public class BuildMessageActivity extends Activity implements OnClickListener, ToolsViewOnClick,
         MessageItemListener, MessageLoadListener, VoiceManager, PopupListItemListener, EmojiListener,
-        OnRefreshListener2<ListView>, SensorEventListener, LoadSearchResultMessageTask.SearchMessageLoadListener {
+        OnRefreshListener2<ListView>, SensorEventListener, LoadSearchResultMessageTask.SearchMessageLoadListener,
+        DialogFactory.ConfirmDialogClickListener {
 
     /* 收信人是否可编辑 */
     public static final String INTENT_RECEIVER_EDITABLE = "receiverEditable";
@@ -226,6 +227,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     private String mPhotoImagePath;
 
     private PopupWindow mBurnMsgTypeChoosePopup;
+
+    private Dialog mStart2walkDialog = null;
 
     /*搜索结果定位*/
     private boolean isEnablePullDownLoad = false;
@@ -1092,6 +1095,16 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         mMessageListView.setTag(false);
     }
 
+    @Override
+    public void onConfirmDialogConfirmClick() {
+        //TODO:
+        if(mStart2walkDialog != null) {
+            mStart2walkDialog.dismiss();
+            mStart2walkDialog = null;
+            logger.d("Start 2 walkarround.");
+        }
+    }
+
 //    @Override
 //    public void onDownMessageLoaded(ChatMsgAndSMSReturn result) {
 //        if (mMessageListView != null) {
@@ -1923,9 +1936,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 startActivityForResult(intent, REQUEST_CODE_MAP);
                 break;
             case R.id.iv_show_distance:
-//            Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);
-//            intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
-//            startActivity(intentShowDistance);
+            Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);
+            intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
+            startActivity(intentShowDistance);
 
 //            Intent intentShowDistance = new Intent(BuildMessageActivity.this, EvaluateActivity.class);
 //            intentShowDistance.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
@@ -1933,7 +1946,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
                 //WalkArroundRuleActivity
                 //startActivity(intentShowDistance);
-                DialogFactory.getWalkRuleDialog(this).show();
+                //DialogFactory.getWalkRuleDialog(this).show();
+//                mStart2walkDialog = DialogFactory.getStart2WalkDialog(this, mRecipientInfo.getRecipientList().get(0), this);
+//                mStart2walkDialog.show();
                 break;
             default:
                 break;

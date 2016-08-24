@@ -13,6 +13,8 @@ import android.view.*;
 import android.widget.*;
 import android.widget.DatePicker.OnDateChangedListener;
 import com.example.walkarround.R;
+import com.example.walkarround.main.model.ContactInfo;
+import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.util.Logger;
 
 import static android.app.AlertDialog.Builder;
@@ -257,6 +259,50 @@ public class DialogFactory {
 //                }
 //            }
 //        });
+        return dialog;
+    }
+
+    public static Dialog getStart2WalkDialog(Context context, String usrObjId, final ConfirmDialogClickListener listener) {
+        final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_start_2_walk, null);
+        dialog.setContentView(dialogView);
+
+        PortraitView portrait = (PortraitView)dialogView.findViewById(R.id.pv_start2walk);
+        final ContactInfo usr = ContactsManager.getInstance(context).getContactByUsrObjId(usrObjId);
+        portrait.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
+                usr.getUsername().substring(0, 1), -1);
+
+        TextView tvName = (TextView)dialogView.findViewById(R.id.tv_friend_name);
+        tvName.setText(usr.getUsername());
+
+        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+        DisplayMetrics mDisplayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
+        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(layoutParams);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        dialogView.findViewById(R.id.iv_finish_icon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialogView.findViewById(R.id.tv_start2walk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogView.findViewById(R.id.tv_start2walk).setVisibility(View.GONE);
+                dialogView.findViewById(R.id.tv_wait_response).setVisibility(View.VISIBLE);
+                ((TextView)(dialogView.findViewById(R.id.tv_wait_response))).setText(context.getString(R.string.walk_rule_wait_for_response, usr.getUsername()));
+                if (listener != null) {
+                    listener.onConfirmDialogConfirmClick();
+                }
+            }
+        });
         return dialog;
     }
 

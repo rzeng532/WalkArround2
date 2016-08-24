@@ -10,7 +10,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.example.walkarround.R;
+import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.base.view.RippleView;
+import com.example.walkarround.main.model.ContactInfo;
+import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.MessageSessionBaseModel;
 import com.example.walkarround.message.util.MessageUtil;
@@ -27,6 +30,8 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     private Logger logger = Logger.getLogger(ShowDistanceActivity.class.getSimpleName());
     private RippleView mSearchingView;
     private RelativeLayout mRlSearchArea;
+    private PortraitView mPvFriend;
+    private TextView mTvPleaseClickPortrait;
 
     public static final String PARAMS_THREAD_ID = "thread_id";
 
@@ -49,27 +54,52 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         View title = findViewById(R.id.title);
         title.findViewById(R.id.back_rl).setOnClickListener(this);
         title.findViewById(R.id.more_rl).setVisibility(View.GONE);
-        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.setting_title);
+        ((TextView) (title.findViewById(R.id.display_name))).setText(R.string.setting_title);
 
-        mSearchingView = (RippleView)findViewById(R.id.searchingView);
+        mSearchingView = (RippleView) findViewById(R.id.searchingView);
+        mRlSearchArea = (RelativeLayout) findViewById(R.id.rlSearching);
+        mPvFriend = (PortraitView) findViewById(R.id.pv_friend_portrait);
+        mPvFriend.setOnClickListener(this);
+        mTvPleaseClickPortrait = (TextView)findViewById(R.id.tv_click_portrait);
 
-        mRlSearchArea = (RelativeLayout)findViewById(R.id.rlSearching);
+        setPortraitViewVisible(View.GONE);
     }
 
     private void initData() {
         Intent intent = getIntent();
-        if(intent != null) {
+        if (intent != null) {
+            //Get conversation color
             long threadId = intent.getLongExtra(PARAMS_THREAD_ID, 0l);
             MessageSessionBaseModel conversation = WalkArroundMsgManager.getInstance(getApplicationContext()).getSessionByThreadId(threadId);
             int colorIndex = conversation.colorIndex;
-            if(colorIndex >= 0) {
-                //mRlSearchArea.setBackgroundColor(MessageUtil.getFriendColor(colorIndex));
-                mSearchingView.setInitColor(MessageUtil.getFriendColor(colorIndex));
-                //mSearchingView.setInitAlphaValue(100);
+
+            //Init background color
+            if (colorIndex >= 0) {
+                //Activity body color
+                mRlSearchArea.setBackgroundColor(MessageUtil.getFriendColor(colorIndex));
+
+                //Title color
+                RelativeLayout rlTitle = (RelativeLayout) (findViewById(R.id.title));
+                if (rlTitle != null) {
+                    rlTitle.setBackgroundColor(MessageUtil.getFriendColor(colorIndex));
+                }
+
                 logger.d("init  color index is :" + colorIndex);
             }
 
-            conversation.getContact();
+            //Set searching circle color
+            mSearchingView.setInitColor(R.color.bgcor15);
+
+            //Init portrait
+            String usrObjId = conversation.getContact();
+            ContactInfo usr = ContactsManager.getInstance(this.getApplicationContext()).getContactByUsrObjId(usrObjId);
+            if (usr != null) {
+                mPvFriend.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
+                        usr.getUsername().substring(0, 1), -1);
+
+                //Init bottom indication text
+                mTvPleaseClickPortrait.setText(getString(R.string.walk_rule_please_click_portrait, usr.getUsername()));
+            }
         }
     }
 
@@ -79,8 +109,25 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
             case R.id.back_rl:
                 finish();
                 break;
+            case R.id.pv_friend_portrait:
+                //finish();
+                break;
             default:
                 break;
+        }
+    }
+
+    /*
+     * True: visible
+     * False: gone
+     */
+    private void setPortraitViewVisible(int visibility) {
+        if(mPvFriend != null) {
+            mPvFriend.setVisibility(visibility);
+        }
+
+        if(mTvPleaseClickPortrait != null) {
+            mTvPleaseClickPortrait.setVisibility(visibility);
         }
     }
 }

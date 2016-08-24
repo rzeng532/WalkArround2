@@ -276,6 +276,9 @@
     <string name="walk_rule_content_4">&#183; 不允许使用非文明用语</string>
     <string name="walk_rule_content_5">&#183; 不允许无故纠缠对方</string>
     <string name="walk_rule_i_see">知道了</string>
+    <string name="walk_rule_start2walk">一起走走</string>
+    <string name="walk_rule_wait_for_response">等待%1$s的回应...</string>
+    <string name="walk_rule_please_click_portrait">如果和%1$s见面了，请点击头像</string>
 
     <!-- Evaluate strings -->
     <string name="evaluate_honest">诚实</string>
