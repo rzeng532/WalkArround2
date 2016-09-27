@@ -57,6 +57,32 @@ public class WalkArroundJsonResultParser {
         return "";
     }
 
+    public static int parseRequireIntCode(String source, String reqCode) {
+        if (TextUtils.isEmpty(source)){
+            return -1;
+        }
+
+        try {
+            JSONObject jsonObject = JSONObject.parseObject(source);
+            if (jsonObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT)) {
+
+                JSONObject jsonResultObject = jsonObject.getJSONObject(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT);
+                if(jsonResultObject != null && jsonResultObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA)) {
+
+                    JSONObject subResultObject = jsonResultObject.getJSONObject(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA);
+                    if (subResultObject != null && subResultObject.containsKey(reqCode)) {
+                        return subResultObject.getInteger(reqCode);
+                    }
+                    //String data = jsonResultObject.getJSONArray(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA).toJSONString();
+                    //return JSONObject.parseArray(data, ContactInfo.class);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public static List<ContactInfo> parse2NearlyUserModelList(String str) {
         if (TextUtils.isEmpty(str)){
             return null;

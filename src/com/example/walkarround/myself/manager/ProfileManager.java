@@ -19,6 +19,7 @@ public class ProfileManager {
     private static ProfileManager mProfileManager;
     private static ProfileApiAbstract mProfileApi;
     private int mUserDateState = -1;
+    private String mSpeedDateId;
     public static ProfileManager getInstance() {
         if (mProfileManager == null) {
             synchronized (LoginManager.class) {
@@ -176,5 +177,11 @@ public class ProfileManager {
 
     public void setCurUsrDateState(int state) {
         this.mUserDateState = state;
+    }
+
+    public String getSpeedDateId() { return mSpeedDateId; }
+
+    public void setSpeedDateId(String speedDateId) {
+        this.mSpeedDateId = speedDateId;
     }
 }

@@ -47,7 +47,6 @@ public class MessageUtil {
 
     //Message extra information key
     public static final String EXTRA_INFOR_KEY = "extra_key";
-    public static final String CONTENT_AGREEMENT_2_WALKARROUND = "已经同意了你的走走请求.";
     public static final String EXTRA_AGREEMENT_2_WALKARROUND = "extra_agree_place";
     public static final String EXTRA_AGREEMENT_2_WALKARROUND_SPLIT = "#";
 
@@ -385,7 +384,7 @@ public class MessageUtil {
     public static int getFriendColorIndex(long threadId) {
         int colIndex = (int)threadId % 7;
         logger.d("colIndex = " + colIndex);
-        return mFriendColArray.get(colIndex).intValue();
+        return colIndex;
     }
 
     public static int getFriendColor(int index) {

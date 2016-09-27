@@ -837,6 +837,11 @@ public class LittleCMsgManager extends MessageAbstractManger {
     }
 
     @Override
+    public void updateConversationStatusAndColor(long threadid, int state, int color) throws Exception {
+        messageDbManager.updateConversationStatusAndColor(threadid, state, color);
+    }
+
+    @Override
     public int getIntentConversationColor(long threadid) throws Exception {
         return messageDbManager.getConversationColor(threadid);
     }

@@ -287,6 +287,10 @@ public abstract class MessageAbstractManger {
     public void updateConversationColor(long threadid, int color) throws Exception {
     }
 
+    public void updateConversationStatusAndColor(long threadid, int state, int color) throws Exception {
+    }
+
+
     public int getIntentConversationColor(long threadid) throws Exception {
         return -1;
     }

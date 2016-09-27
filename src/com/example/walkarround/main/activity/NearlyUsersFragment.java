@@ -440,13 +440,13 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     /*
      * Say hello to people who you like and he/she also like you .
      */
-    private void sayHello(String userId) {
+    private long sayHello(String userId) {
         if (TextUtils.isEmpty(userId)) {
             logger.d("The user id is empty. Failed to say Hello!");
-            return;
+            return -1;
         }
 
         //TODO: Check if there is conversation.
-        WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).sayHello(userId, getString(R.string.msg_say_hello));
+        return WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).sayHello(userId, getString(R.string.msg_say_hello));
     }
 }

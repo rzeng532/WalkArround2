@@ -117,19 +117,21 @@ public class WalkArroundMsgManager {
         }
     }
 
-    public void sayHello(String receiver, String content) {
+    public long sayHello(String receiver, String content) {
+
+        long threadId = -1;
 
         if(TextUtils.isEmpty(receiver) || TextUtils.isEmpty(content)) {
-            return;
+            return threadId;
         }
 
         List<String> recipient = new ArrayList<String>();
         recipient.add(receiver);
 
-        long threadId = mInstance.mMsgManager.getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, recipient);
+        threadId = mInstance.mMsgManager.getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, recipient);
         if (threadId > 0) {
             //If there is already a conversation, we just skip it.
-            return;
+            return -1;
         }
 
         //Check current conversation is correct or not
@@ -149,9 +151,9 @@ public class WalkArroundMsgManager {
             }
         }
 
-        //We need a listener here to send Hello while we get conversation.
-        //WalkArroundMsgManager.getInstance(mContext).getConversation(receiver, null);
         sendTextMsg(receiver, content);
+
+        return threadId;
     }
 
     /*
@@ -880,6 +882,7 @@ public class WalkArroundMsgManager {
 
     public void updateConversationColor(long threadId, int newColor) {
         try {
+            logger.e("getConversationStatus new color:" + newColor + ", id :" + threadId);
             mInstance.mMsgManager.updateConversationColor(threadId, newColor);
         } catch (Exception e) {
             logger.e("getConversationStatus Exception:" + e.getMessage());
@@ -889,7 +892,17 @@ public class WalkArroundMsgManager {
 
     public void updateConversationStatus(long threadId, int newStatus) {
         try {
-            mInstance.mMsgManager.updateConversationColor(threadId, newStatus);
+            logger.e("getConversationStatus threadId :" + threadId + ", status :" + newStatus);
+            mInstance.mMsgManager.updateConversationStatus(threadId, newStatus);
+        } catch (Exception e) {
+            logger.e("getConversationStatus Exception:" + e.getMessage());
+        }
+        return ;
+    }
+
+    public void updateConversationStatusAndColor(long threadId, int newStatus, int newColor) {
+        try {
+            mInstance.mMsgManager.updateConversationStatusAndColor(threadId, newStatus, newColor);
         } catch (Exception e) {
             logger.e("getConversationStatus Exception:" + e.getMessage());
         }

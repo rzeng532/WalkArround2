@@ -134,8 +134,7 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
                 if(extraArray != null && extraArray.length > 1) {
                     logger.d("msgInfor array 1: " + extraArray[1]);
                     int color = Integer.parseInt(extraArray[1]);
-                    WalkArroundMsgManager.getInstance(mContext).updateConversationColor(msgInfo.getMsgThreadId(), color);
-                    WalkArroundMsgManager.getInstance(mContext).updateConversationStatus(msgInfo.getMsgThreadId(), MessageUtil.WalkArroundState.STATE_WALK);
+                    WalkArroundMsgManager.getInstance(mContext).updateConversationStatusAndColor(msgInfo.getMsgThreadId(), MessageUtil.WalkArroundState.STATE_WALK, color);
                 }
             }
         }

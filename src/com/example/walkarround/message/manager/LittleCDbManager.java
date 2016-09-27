@@ -913,6 +913,23 @@ public class LittleCDbManager {
         mContext.getContentResolver().update(Conversation.CONTENT_URI, conversationValues, where, arg);
     }
 
+    public void updateConversationStatusAndColor(long threadId, int newStatus, int newColor) {
+
+        if (threadId < 0) {
+            logger.i("conversationId is error");
+            return;
+        }
+
+        String where = Conversation._ID + "=?";
+        String[] arg = new String[]{threadId + ""};
+        ContentValues conversationValues = new ContentValues();
+        conversationValues.put(Conversation._COLOR, newColor);
+        conversationValues.put(Conversation._CONVERSATION_STATUS, newStatus);
+
+        mContext.getContentResolver().update(Conversation.CONTENT_URI, conversationValues, where, arg);
+    }
+
+
     public int getConversationStatus(long threadId) {
 
         if (threadId < 0) {

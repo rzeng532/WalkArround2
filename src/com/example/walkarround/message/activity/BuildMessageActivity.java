@@ -35,6 +35,8 @@ import com.example.walkarround.handmark.PullToRefreshBase;
 import com.example.walkarround.handmark.PullToRefreshBase.OnRefreshListener2;
 import com.example.walkarround.handmark.PullToRefreshListView;
 import com.example.walkarround.main.model.ContactInfo;
+import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.main.task.UpdateSpeedDateColorTask;
 import com.example.walkarround.message.adapter.MessageDetailListAdapter;
 import com.example.walkarround.message.adapter.PopupListAdapter;
 import com.example.walkarround.message.adapter.PopupListAdapter.PopupListItemListener;
@@ -58,9 +60,13 @@ import com.example.walkarround.message.util.MessageConstant.MessageState;
 import com.example.walkarround.message.util.MessageConstant.MessageType;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
+import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
+import com.example.walkarround.util.http.HttpTaskBase;
+import com.example.walkarround.util.http.HttpUtil;
+import com.example.walkarround.util.http.ThreadPoolManager;
 import com.example.walkarround.util.image.ImageBrowserActivity;
 import com.example.walkarround.util.image.ImageChooseActivity;
 import com.example.walkarround.util.network.NetWorkManager;
@@ -315,6 +321,28 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             }
         }
     };
+
+    private HttpTaskBase.onResultListener mUpdateSpeedDateColorListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode) {
+                logger.d("mUpdateSpeedDateColorListener success");
+            } else if (HttpTaskBase.TaskResult.FAILED == resultCode) {
+                logger.d("mUpdateSpeedDateColorListener failed");
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1682,12 +1710,19 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 colorIndex;
         logger.d("send agreement, the extra is: " + extraInfor);
         long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo,
-                MessageUtil.CONTENT_AGREEMENT_2_WALKARROUND,
+                getString(R.string.agree_2_walkarround),
                 extraInfor);
 
         //Update conversation state & color
-        WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationColor(threadId, colorIndex);
-        WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(threadId, MessageUtil.WalkArroundState.STATE_WALK);
+        WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(threadId, MessageUtil.WalkArroundState.STATE_WALK, colorIndex);
+
+        //Update color to Server
+        ThreadPoolManager.getPoolManager().addAsyncTask(new UpdateSpeedDateColorTask(getApplicationContext(),
+                mUpdateSpeedDateColorListener,
+                HttpUtil.HTTP_FUNC_UPDATE_SPEEDDATE_COLOR,
+                HttpUtil.HTTP_TASK_UPDATE_SPEEDDATE_COLOR,
+                UpdateSpeedDateColorTask.getParams(ProfileManager.getInstance().getSpeedDateId(), String.valueOf(colorIndex)),
+                TaskUtil.getTaskHeader()));
 
         transferToDetailView(messageId, false);
         logger.d("Send agreement result: " + messageId);

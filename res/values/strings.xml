@@ -267,6 +267,7 @@
     <string name="gender_men">男</string>
     <string name="gender_female">女</string>
     <string name="xiu_yi_xiu">咻一咻</string>
+    <string name="agree_2_walkarround">已经同意了你的走走请求.</string>
 
     <!-- walk rule strings -->
     <string name="walk_rule_title">《走走守则》</string>

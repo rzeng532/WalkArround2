@@ -183,10 +183,17 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                 //Get status & Get TO user.
                 String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
                 String strUser = MessageUtil.getFriendIdFromServerData((String) object);
+                String strColor = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_COLOR);
+                int iStatus = WalkArroundJsonResultParser.parseRequireIntCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_STATUS);
                 amLogger.d("Speed date id is: " + (String) object);
+                amLogger.d("Speed date color is: " + strColor);
+                amLogger.d("Speed date status is: " + iStatus);
                 if(!TextUtils.isEmpty(strSpeedDateId) && !TextUtils.isEmpty(strUser)) {
                     List<String> lRecipientList = new ArrayList<>();
                     lRecipientList.add(strUser);
+
+                    //Save speed date id
+                    ProfileManager.getInstance().setSpeedDateId(strSpeedDateId);
 
                     //Add contact infor if local DB does not contain this friend
                     ContactInfo friend = ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactByUsrObjId(strUser);
@@ -197,7 +204,15 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                     long chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
                             lRecipientList);
                     if(chattingThreadId < 0) {
-                        WalkArroundMsgManager.getInstance(getApplicationContext()).createConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, lRecipientList);
+                        chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).createConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, lRecipientList);
+                        if(chattingThreadId >= 0 && !TextUtils.isEmpty(strColor)) {
+                            //Update conversation color & state.
+                            WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(chattingThreadId, iStatus, Integer.parseInt(strColor));
+                            amLogger.d("update conversation color index: " + Integer.parseInt(strColor) + ", status : " + iStatus);
+
+                            //Test, check if update successful.
+                            amLogger.d("get conversation state: " + WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(chattingThreadId));
+                        }
                     }
                 }
             } else {

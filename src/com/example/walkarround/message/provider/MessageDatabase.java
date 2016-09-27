@@ -236,7 +236,7 @@ public class MessageDatabase extends SQLiteOpenHelper {
                 + Conversation._TOTAL_COUNT + " INTEGER DEFAULT 0, "
                 + Conversation._READ + " INTEGER DEFAULT " + Message.MSG_READ + ", "
                 + Conversation._UNREAD_COUNT + " INTEGER DEFAULT 0, "
-                + Conversation._CONVERSATION_STATUS + " INTEGER DEFAULT 2, " //Default: MessageUtil.WalkArroundState.STATE_IM
+                + Conversation._CONVERSATION_STATUS + " INTEGER DEFAULT -1, " //Default: MessageUtil.WalkArroundState.STATE_IM
                 + Conversation._COLOR + " INTEGER DEFAULT -1, "
                 + Conversation._DATE + " INTEGER DEFAULT 0, "
                 + Conversation._DATA1 + " TEXT DEFAULT " + Conversation.COMMON_MSG + ", "
