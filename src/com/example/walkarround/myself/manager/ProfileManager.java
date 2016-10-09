@@ -18,8 +18,8 @@ import com.example.walkarround.util.AsyncTaskListener;
 public class ProfileManager {
     private static ProfileManager mProfileManager;
     private static ProfileApiAbstract mProfileApi;
-    private int mUserDateState = -1;
-    private String mSpeedDateId;
+    private static MyProfileInfo myProfileInfo;
+
     public static ProfileManager getInstance() {
         if (mProfileManager == null) {
             synchronized (LoginManager.class) {
@@ -33,12 +33,14 @@ public class ProfileManager {
         return mProfileManager;
     }
 
-    /*
-     * Get current user profile information
-     */
-    public MyProfileInfo getMyProfile() {
-        MyProfileInfo myProfileInfo = new MyProfileInfo();
+    private void initMyProfile() {
+
         AVUser avUser = AVUser.getCurrentUser();
+        if(avUser == null) {
+            return;
+        }
+
+        myProfileInfo = new MyProfileInfo();
 
         //Set the mobile number as user name while user name is empty
         if(TextUtils.isEmpty(avUser.getUsername())) {
@@ -68,6 +70,20 @@ public class ProfileManager {
         myProfileInfo.setSignature(avUser.getString(ProfileUtil.REG_KEY_SIGNATURE));
 
         myProfileInfo.setLocation(new GeoData((AVObject) avUser.get(ProfileUtil.REG_KEY_LOCATION_EX)));
+    }
+
+    /*
+     * Get current user profile information
+     */
+    public MyProfileInfo getMyProfile() {
+
+        if (myProfileInfo == null) {
+            synchronized (LoginManager.class) {
+                if (myProfileInfo == null) {
+                    initMyProfile();
+                }
+            }
+        }
 
         return myProfileInfo;
     }
@@ -172,16 +188,30 @@ public class ProfileManager {
     }
 
     public int getCurUsrDateState() {
-        return mUserDateState;
+        if(myProfileInfo == null) {
+            return -1;
+        }
+        return myProfileInfo.getUserDateState();
     }
 
     public void setCurUsrDateState(int state) {
-        this.mUserDateState = state;
+        if(myProfileInfo == null) {
+            return ;
+        }
+        myProfileInfo.setUserDateState(state);
     }
 
-    public String getSpeedDateId() { return mSpeedDateId; }
+    public String getSpeedDateId() {
+        if(myProfileInfo == null) {
+            return null;
+        }
+        return myProfileInfo.getSpeedDateId();
+    }
 
     public void setSpeedDateId(String speedDateId) {
-        this.mSpeedDateId = speedDateId;
+        if(myProfileInfo == null) {
+            return;
+        }
+        myProfileInfo.setSpeedDateId(speedDateId);
     }
 }

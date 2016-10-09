@@ -15,6 +15,8 @@ public class MyProfileInfo {
     String mMobileNum = null;
     String mGendle = null; //0: men, 1: female
     GeoData mLocation = null;
+    private String mSpeedDateId;
+    private int mUserDateState = -1;
 
     public String getMobileNum() {
         return mMobileNum;
@@ -73,4 +75,19 @@ public class MyProfileInfo {
         this.mLocation = mLocation;
     }
 
+    public String getSpeedDateId() {
+        return mSpeedDateId;
+    }
+
+    public void setSpeedDateId(String speedDateId) {
+        this.mSpeedDateId = speedDateId;
+    }
+
+    public int getUserDateState() {
+        return mUserDateState;
+    }
+
+    public void setUserDateState(int newState) {
+        this.mUserDateState = newState;
+    }
 }
