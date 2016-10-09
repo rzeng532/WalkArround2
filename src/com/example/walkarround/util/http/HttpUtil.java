@@ -59,6 +59,7 @@ public class HttpUtil {
     public static final String HTTP_PARAM_USER_ID = "userId";
     public static final String HTTP_PARAM_FRIEND_USER_ID = "friendUserId";
     public static final String HTTP_PARAM_FRIEND_LIST_COUNT = "count";
+    public static final String HTTP_PARAM_SPEEDDATE_COLOR = "color";
 
     public static final String HTTP_PARAM_EVALUATE_HONEST = "honesty";
     public static final String HTTP_PARAM_EVALUATE_TALK_STYLE = "talkative";

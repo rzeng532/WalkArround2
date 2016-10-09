@@ -40,7 +40,7 @@ public class UpdateSpeedDateColorTask extends HttpTaskPost {
 
         JSONObject param = new JSONObject();
         param.put(HttpUtil.HTTP_PARAM_SPEED_DATA_ID, speedDateId);
-        param.put(HttpUtil.HTTP_PARAM_LIKE_SOMEONE_TO, colorIndex);
+        param.put(HttpUtil.HTTP_PARAM_SPEEDDATE_COLOR, colorIndex);
 
         return param.toString();
     }
