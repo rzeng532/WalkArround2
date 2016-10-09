@@ -67,7 +67,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
      * UI elements on main activity
      */
     private View mViewSetting;
-    private View mViewFriends;
     private RelativeLayout mViewPortrait;
     private LinearLayout mViewLeftMenu;
     private PortraitView mPvPortrait;
@@ -357,9 +356,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         mViewSetting = (RelativeLayout) findViewById(R.id.rl_slide_setting);
         mViewSetting.setOnClickListener(this);
 
-        mViewFriends = (RelativeLayout) findViewById(R.id.rl_slide_friends);
-        mViewFriends.setOnClickListener(this);
-
         mViewLeftMenu = (LinearLayout) findViewById(R.id.left_drawer);
         //mViewLeftMenu.setOnClickListener(this);
 
@@ -433,9 +429,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_slide_setting://goto setting activity
-                startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
-                break;
-            case R.id.rl_slide_friends://goto friend list activity
                 startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
                 break;
             case R.id.menu_portrait://goto setting activity
