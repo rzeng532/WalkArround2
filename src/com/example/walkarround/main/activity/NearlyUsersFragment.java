@@ -214,6 +214,16 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     public void onResume() {
         super.onResume();
         setUnreadState();
+
+        MyProfileInfo myProfileInfo = ProfileManager.getInstance().getMyProfile();
+
+        if (!TextUtils.isEmpty(myProfileInfo.getUsrName()) && !TextUtils.isEmpty(myProfileInfo.getMobileNum())) {
+            mPvPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
+                    myProfileInfo.getUsrName().substring(0, 1), -1);
+
+            mSearchingPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
+                    myProfileInfo.getUsrName().substring(0, 1), -1);
+        }
     }
 
     @Override
@@ -430,7 +440,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private void setUnreadState() {
         //For unread msg icon
         int unreadCount = WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).getAllUnreadCount();
-        if(unreadCount <= 0) {
+        if (unreadCount <= 0) {
             mIvUnreadIcon.setVisibility(View.GONE);
         } else {
             mIvUnreadIcon.setVisibility(View.VISIBLE);

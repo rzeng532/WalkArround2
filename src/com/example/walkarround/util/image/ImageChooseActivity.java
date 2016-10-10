@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -47,6 +49,9 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
     public static final int REQUEST_CODE_PREVIEW_IMAGE = 2;
     /* 浏览相机刚拍的图片 */
     public static final int REQUEST_CODE_PREVIEW_CAMERA = 3;
+    /* 浏览 & 裁剪  */
+    public static final int REQUEST_CODE_PREVIEW_AND_CUT = 4;
+    public static final int REQUEST_CODE_PICTURE_CUT = 5;
 
     /* 最多9张图片*/
     public static final int MAX_SELECTED_COUNT = 9;
@@ -107,14 +112,13 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
             mCameraImagePath = savedInstanceState.getString(CAMERA_IMAGE_PATH, "");
         } else if (intent != null) {
             mViewType = intent.getIntExtra(IMAGE_CHOOSE_TYPE, FROM_MESSAGE_CODE);
-            int imagecount = intent.getIntExtra(IMAGE_COUNT,MAX_SELECTED_COUNT);
+            int imagecount = intent.getIntExtra(IMAGE_COUNT, MAX_SELECTED_COUNT);
             int num = intent.getIntExtra(HAVE_CHOSEN_NUM, 0);
             mMaxNum = imagecount - num;
             mIsFullSizeOption = intent.getBooleanExtra(IS_FULL_SIZE_OPTION, false);
         }
-        if (mViewType == FROM_MESSAGE_CODE) {
-            isNeedPreView = true;
-        }
+
+        isNeedPreView = true;
     }
 
     /**
@@ -125,7 +129,7 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
         View title = findViewById(R.id.title);
         title.findViewById(R.id.back_rl).setOnClickListener(this);
         title.findViewById(R.id.more_rl).setVisibility(View.GONE);
-        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.img_select_picture);
+        ((TextView) (title.findViewById(R.id.display_name))).setText(R.string.img_select_picture);
 
         // 选择确定按钮
         mChoseOkBtn = (TextView) title.findViewById(R.id.more_rl).findViewById(R.id.right_tx);
@@ -141,7 +145,7 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
                 mPreviewBtn.setOnClickListener(this);
                 break;
             case FROM_MORE_CONFIG:
-                findViewById(R.id.bottomLayout).setVisibility(View.GONE);
+                findViewById(R.id.bottomLayout).setVisibility(View.VISIBLE);
                 mChoseOkBtn.setVisibility(View.GONE);
                 break;
             default:
@@ -226,6 +230,13 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
                 sendingList.addAll(pathList);
                 sendImages(sendingList);
             }
+        } else if (requestCode == REQUEST_CODE_PICTURE_CUT) {
+
+            File newPortrait = new File(Environment.getExternalStorageDirectory(), "/portrait.jpg");
+            if(newPortrait != null && newPortrait.exists()) {
+                setResult(RESULT_OK);
+                finish();
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -236,8 +247,8 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
      */
     private void initPopupViewDir(View popupContentView) {
         DirectoryFilterAdapter filterAdapter = new DirectoryFilterAdapter(ImageChooseActivity.this, initAdapterList(),
-                new String[] { "firstpath", "directoryname", "count" }, new int[] { R.id.album_image,
-                R.id.album_title_textView, R.id.album_child_count_textView });
+                new String[]{"firstpath", "directoryname", "count"}, new int[]{R.id.album_image,
+                R.id.album_title_textView, R.id.album_child_count_textView});
         ListView filterListView = (ListView) popupContentView.findViewById(R.id.image_chooser_listView);
         filterListView.setOnItemClickListener(ImageChooseActivity.this);
         filterListView.setAdapter(filterAdapter);
@@ -287,16 +298,7 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
                 break;
             case R.id.preview_btn:
                 // 预览
-                Intent intent = new Intent();
-                intent.setClass(ImageChooseActivity.this, ImageBrowserActivity.class);
-                ArrayList<String> selectedList = mImageListAdapter.getCheckedList();
-                intent.putExtra(ImageBrowserActivity.INTENT_CHOSE_PATHLIST, selectedList);
-                intent.putExtra(ImageBrowserActivity.INTENT_ORIGIN_PATHLIST, selectedList);
-                intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_FULLSIZED, mFullSizedMap);
-                intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_FROM_TYPE, ImageBrowserActivity._TYPE_FROM_PIC_SELECT);
-                intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_IS_FULL_SIZE_OPTION, mIsFullSizeOption);
-                intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_MAX_NUM, mMaxNum);
-                startActivityForResult(intent, REQUEST_CODE_PREVIEW_IMAGE);
+                startPreviewImageActivity(REQUEST_CODE_PREVIEW_IMAGE);
                 break;
             default:
                 break;
@@ -336,6 +338,43 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
         Uri fileUri = Uri.fromFile(new File(mCameraImagePath));
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         startActivityForResult(intent, REQUEST_CODE_OPEN_CAMERA);
+    }
+
+    @Override
+    public void startOnPreview(String imageUrl) {
+        //NOTE: This API just can be invoked while user try to select one pic as portrait.
+        //startPreviewImageActivity(REQUEST_CODE_PREVIEW_AND_CUT);
+        String imagePath = imageUrl;
+        if (!TextUtils.isEmpty(imagePath)) {
+            File fPic = new File(imagePath);
+            if (fPic != null && fPic.exists()) {
+                Intent intent = new Intent("com.android.camera.action.CROP");
+                intent.setDataAndType(Uri.fromFile(fPic), "image/*");
+                intent.putExtra("crop", "true");
+                // 裁剪框的比例，1：1
+                intent.putExtra("aspectX", 1);
+                intent.putExtra("aspectY", 1);
+                // 裁剪后输出图片的尺寸大小
+                intent.putExtra("outputX", 250);
+                intent.putExtra("outputY", 250);
+                // 图片格式
+                intent.putExtra("noFaceDetection", false);// 取消人脸识别
+                intent.putExtra("return-data", false);// true:不返回URI，false：返回URI
+                if (CommonUtils.hasSdcard()) {
+                    File profileheadTemp = new File(Environment.getExternalStorageDirectory(), "/portrait.jpg");
+                    if(profileheadTemp.exists()) {
+                        profileheadTemp.delete();
+                    }
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(profileheadTemp));
+                }
+                intent.putExtra("scale", true);// 黑边
+                intent.putExtra("scaleUpIfNeeded", true);// 黑边
+                // intent.putExtra("outputFormat", "JPEG");
+                intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+
+                startActivityForResult(intent, REQUEST_CODE_PICTURE_CUT);
+            }
+        }
     }
 
     @Override
@@ -396,7 +435,7 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
             String[] Colums;
             switch (resource) {
                 case ALL:
-                    Colums = new String[] { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.TITLE, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATE_ADDED };
+                    Colums = new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.TITLE, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATE_ADDED};
                     cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Colums, null, null,
                             MediaStore.Images.Media.DATE_ADDED + " DESC");
                     if (cursor != null) {
@@ -413,7 +452,7 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
                 case ONLY_CAMERA:
                     // photoDirManager = new PhotoDirectoryManager();
                     // list = photoDirManager.getFiles();
-                    Colums = new String[] { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.TITLE, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATE_ADDED };
+                    Colums = new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.TITLE, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATE_ADDED};
                     cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Colums,
                             MediaStore.Images.Media.DATA + " like '%DCIM%'" + " OR " + MediaStore.Images.Media.DATA + " like '%Camera%' ", null,
                             MediaStore.Images.Media.DATE_ADDED);
@@ -464,6 +503,19 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
             }
             return false;
         }
+    }
+
+    private void startPreviewImageActivity(int request) {
+        Intent intent = new Intent();
+        intent.setClass(ImageChooseActivity.this, ImageBrowserActivity.class);
+        ArrayList<String> selectedList = mImageListAdapter.getCheckedList();
+        intent.putExtra(ImageBrowserActivity.INTENT_CHOSE_PATHLIST, selectedList);
+        intent.putExtra(ImageBrowserActivity.INTENT_ORIGIN_PATHLIST, selectedList);
+        intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_FULLSIZED, mFullSizedMap);
+        intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_FROM_TYPE, ImageBrowserActivity._TYPE_FROM_PIC_SELECT);
+        intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_IS_FULL_SIZE_OPTION, mIsFullSizeOption);
+        intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_MAX_NUM, mMaxNum);
+        startActivityForResult(intent, request);
     }
 
 }

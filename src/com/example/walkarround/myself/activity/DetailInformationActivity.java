@@ -19,6 +19,8 @@ import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVUser;
 import com.example.walkarround.Location.activity.LocationActivity;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
@@ -87,10 +89,19 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         public void handleMessage(Message msg) {
             if (msg.what == UPDATE_PORTRAIT_OK) {
                 dismissDialog();
-                initData();
+                //Update portrait URL
+                AVUser usr = AVUser.getCurrentUser();
+                AVFile portraitURL = usr.getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
+                if(portraitURL != null && !TextUtils.isEmpty(portraitURL.getUrl())) {
+                    myProfileInfo.setPortraitPath(portraitURL.getUrl());
+                }
+                mMyPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(), myProfileInfo.getUsrName().substring(0, 1), -1);
+
+                //ProfileManager.getInstance().getMyProfile().setPortraitPath(usr.get);
+                //initData();
             } else if (msg.what == UPDATE_PORTRAIT_FAIL) {
                 dismissDialog();
-                Toast.makeText(getApplicationContext(), getString(R.string.err_location_update_fail), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.err_img_update_fail), Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -288,7 +299,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         intent.putExtra(ImageChooseActivity.IMAGE_COUNT, 1);
         intent.putExtra(ImageChooseActivity.IS_FULL_SIZE_OPTION, false);
 
-        intent.putExtra(ImageChooseActivity.IMAGE_CHOOSE_TYPE, ImageChooseActivity.FROM_MESSAGE_CODE);
+        intent.putExtra(ImageChooseActivity.IMAGE_CHOOSE_TYPE, ImageChooseActivity.FROM_MORE_CONFIG);
         startActivityForResult(intent, REQUEST_CODE_PICTURE_CHOOSE);
 
         //REQUEST_CODE_PICTURE_CHOOSE
@@ -304,20 +315,21 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 return;
             }
 
-            String imagePath = null;
-            ArrayList<String> pathList = data.getExtras()
-                    .getStringArrayList(ImageBrowserActivity.INTENT_CHOSE_PATHLIST);
-
-            if (pathList != null && pathList.size() > 0) {
-                imagePath = pathList.get(0);
-                if (!TextUtils.isEmpty(imagePath)) {
-                    File fPic = new File(imagePath);
-                    if (fPic != null && fPic.exists()) {
-                        crop(Uri.fromFile(fPic));
-                    } else {
-                        Toast.makeText(this, getString(R.string.err_file_donot_exist), Toast.LENGTH_LONG).show();
-                    }
+            //if user select cancel, the resule will be 0;
+            if (CommonUtils.hasSdcard()) {
+                profileheadTemp = new File(Environment.getExternalStorageDirectory(), "/portrait.jpg");
+                if (profileheadTemp.exists()) {
+                    headUri = Uri.fromFile(profileheadTemp);
                 }
+            }
+
+            //TODO: should add listener on update portrait method!!!
+            showDialog();
+            ProfileManager.getInstance().updatePortrait(headUri.getPath(), mUpdateListener);
+
+            if (profileheadTemp != null && profileheadTemp.exists()) {
+                profileheadTemp.delete();
+                headUri = null;
             }
         } else if (requestCode == REQUEST_CODE_PICTURE_CUT) {
             //if user select cancel, the resule will be 0;
@@ -360,36 +372,6 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_MAX_NUM, 1);
         intent.putExtra(ImageBrowserActivity.INTENT_DISABLE_OK_BTN, true);
         startActivity(intent);
-    }
-
-    /**
-     * @param uri 图片路径(裁剪头像以后如果回传data某些机型会内存溢出，通过URI回传)
-     * @方法名：crop
-     * @描述：剪切图片
-     * @输出：void
-     * @作者：Administrator
-     */
-    private void crop(Uri uri) {
-        // 裁剪图片意图
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("crop", "true");
-        // 裁剪框的比例，1：1
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // 裁剪后输出图片的尺寸大小
-        intent.putExtra("outputX", 250);
-        intent.putExtra("outputY", 250);
-        // 图片格式
-        intent.putExtra("noFaceDetection", false);// 取消人脸识别
-        intent.putExtra("return-data", false);// true:不返回URI，false：返回URI
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, headUri);
-        intent.putExtra("scale", true);// 黑边
-        intent.putExtra("scaleUpIfNeeded", true);// 黑边
-        // intent.putExtra("outputFormat", "JPEG");
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-
-        startActivityForResult(intent, REQUEST_CODE_PICTURE_CUT);
     }
 
     /**

@@ -1,9 +1,5 @@
 package com.example.walkarround.util.image;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -13,13 +9,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.example.walkarround.R;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Richard on 2015/12/12.
@@ -228,6 +227,10 @@ public class ImageListAdapter extends BaseAdapter implements View.OnClickListene
                     if (mImageListener != null) {
                         mImageListener.onChoseCountChange(mChoseImageList.size());
                     }
+
+                    if(!bShowCheckBox) {
+                        mImageListener.startOnPreview(imagePath);
+                    }
                 }
                 break;
             default:
@@ -246,6 +249,11 @@ public class ImageListAdapter extends BaseAdapter implements View.OnClickListene
          *
          */
         public void onCameraClick();
+
+        /*
+         *
+         */
+        public void startOnPreview(String imageUrl);
     }
 
 }
