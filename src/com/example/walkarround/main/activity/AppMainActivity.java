@@ -208,9 +208,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                             //Update conversation color & state.
                             WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(chattingThreadId, iStatus, Integer.parseInt(strColor));
                             amLogger.d("update conversation color index: " + Integer.parseInt(strColor) + ", status : " + iStatus);
-
-                            //Test, check if update successful.
-                            amLogger.d("get conversation state: " + WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(chattingThreadId));
                         }
                     }
                 }

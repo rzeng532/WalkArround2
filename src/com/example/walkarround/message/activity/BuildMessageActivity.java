@@ -1475,7 +1475,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         moreView.setOnClickListener(this);
 
         //Get color and set image view.
+        logger.d("thread id is: " + mRecipientInfo.getThreadId());
         int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
+        logger.d("color is: " + color);
         mImvDistance = (ImageView) detailHeaderView.findViewById(R.id.iv_show_distance);
         mImvDistance.setOnClickListener(this);
         if (color == -1) {
@@ -1971,19 +1973,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 startActivityForResult(intent, REQUEST_CODE_MAP);
                 break;
             case R.id.iv_show_distance:
-            Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);
-            intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
-            startActivity(intentShowDistance);
-
-//            Intent intentShowDistance = new Intent(BuildMessageActivity.this, EvaluateActivity.class);
-//            intentShowDistance.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
-//            startActivity(intentShowDistance);
-
-                //WalkArroundRuleActivity
-                //startActivity(intentShowDistance);
-                //DialogFactory.getWalkRuleDialog(this).show();
-//                mStart2walkDialog = DialogFactory.getStart2WalkDialog(this, mRecipientInfo.getRecipientList().get(0), this);
-//                mStart2walkDialog.show();
+                Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);
+                intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
+                startActivity(intentShowDistance);
                 break;
             default:
                 break;

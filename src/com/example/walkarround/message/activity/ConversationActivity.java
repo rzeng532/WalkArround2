@@ -206,14 +206,17 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     break;
                 case MSG_OPERATION_REMOVE_SUCCESS:
                     // 删除成功
-                    if (mPageState == PageState.NOTIFY_BATCH_PAGE) {
-                        mNotifyMsgAdapter.deleteSelectedDeletedItem();
-                        refreshNotifyEntrance();
-                        onPageStateChanged(PageState.NOTIFY_PAGE, mPageState);
-                    } else if (mPageState == PageState.NORMAL_BATCH_PAGE) {
-                        mConversationAdapter.deleteSelectedDeletedItem();
-                        onPageStateChanged(PageState.NORMAL, mPageState);
-                    }
+//                    if (mPageState == PageState.NOTIFY_BATCH_PAGE) {
+//                        mNotifyMsgAdapter.deleteSelectedDeletedItem();
+//                        refreshNotifyEntrance();
+//                        onPageStateChanged(PageState.NOTIFY_PAGE, mPageState);
+//                    } else if (mPageState == PageState.NORMAL_BATCH_PAGE) {
+//                        mConversationAdapter.deleteSelectedDeletedItem();
+//                        onPageStateChanged(PageState.NORMAL, mPageState);
+//                    }
+                    mConversationAdapter.deleteSelectedDeletedItem();
+                    mConversationAdapter.notifyDataSetChanged();
+                    dismissCircleDialog();
                     break;
                 case MSG_OPERATION_SET_READ_SUCCESS:
                     // 设置为已读
@@ -365,7 +368,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             Message msg = mUIHandler.obtainMessage(what);
             dataBundle.putString(MSG_OPERATION_KEY_REQUEST, requestCode);
             msg.setData(dataBundle);
-            mUIHandler.sendMessage(msg);
+            mUIHandler.sendMessageDelayed(msg, 1000);
         }
 
         @Override
@@ -530,10 +533,14 @@ public class ConversationActivity extends Activity implements ConversationItemLi
 
                             @Override
                             public void onNoticeDialogConfirmClick(boolean isChecked, Object value) {
-                                batchDealMsg(MessageConstant.MSG_OPERATION_REMOVE);
+                                if (mConversationAdapter != null) {
+                                    MessageSessionBaseModel listItem = mConversationAdapter.getItem(((BaseConversationListAdapter.ViewHolder) (view.getTag())).position);
+                                    deleteConvMsg(listItem);
+                                }
                             }
                         }, true
                 );
+
                 deleteConfirmDialog.show();
                 break;
             case R.id.tv_sign_read:
@@ -572,6 +579,23 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 mAsysResultListener);
         ThreadPoolManager.getPoolManager().addAsyncTask(mTaskOperation);
         showHorizontalDialog(listAdapter.getChosenItemCount());
+    }
+
+    private void deleteConvMsg(MessageSessionBaseModel delItem) {
+
+        if (delItem == null) {
+            mAsysResultListener.onResult(null, TaskResult.FAILED, MessageConstant.MSG_OPERATION_REMOVE, null);
+        }
+
+        List<MessageSessionBaseModel> list = new ArrayList<>();
+        list.add(delItem);
+
+        mTaskOperation = new AsyncTaskOperation(mContext,
+                MessageConstant.MSG_OPERATION_REMOVE, list,
+                mAsysResultListener);
+        ThreadPoolManager.getPoolManager().addAsyncTask(mTaskOperation);
+
+        showCircleDialog();
     }
 
     /**
@@ -764,7 +788,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
      *
      * @param
      */
-    private void findView( ) {
+    private void findView() {
 
         //Title
         View title = findViewById(R.id.title);
@@ -1072,6 +1096,27 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         if (isInSelectMode) {
             refreshBatchPanel();
         }
+    }
+
+    @Override
+    public void onDeleteConversationItem(MessageSessionBaseModel listDO) {
+        Dialog deleteConfirmDialog = DialogFactory.getNoticeDialog(
+                ConversationActivity.this, getString(R.string.msg_delete_conversations_confirm,
+                        1),
+                new DialogFactory.NoticeDialogClickListener() {
+
+                    @Override
+                    public void onNoticeDialogConfirmClick(boolean isChecked, Object value) {
+                        //batchDealMsg(MessageConstant.MSG_OPERATION_REMOVE);
+                        if (mConversationAdapter != null) {
+                            //MessageSessionBaseModel listItem = mConversationAdapter.getItem(((BaseConversationListAdapter.ViewHolder) (view.getTag())).position);
+                            mConversationAdapter.put2ChoosenList(listDO);
+                            deleteConvMsg(listDO);
+                        }
+                    }
+                }, true
+        );
+        deleteConfirmDialog.show();
     }
 
     /**

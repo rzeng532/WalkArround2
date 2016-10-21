@@ -13,6 +13,7 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.PhotoView;
@@ -164,7 +165,9 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.conversation_item, null);
             holder = new ViewHolder();
+            holder.rlConversation = (RelativeLayout) convertView.findViewById(R.id.conv_rl);
             holder.ivPortrait = (PhotoView) convertView.findViewById(R.id.conv_portrait);
+            holder.ivDelIcon = (ImageView) convertView.findViewById(R.id.conversation_item_del_icon);
             //holder.ivPortrait.setCheckBoxResId(R.drawable.public_icon_list_checkbox_on,
             //        R.drawable.public_icon_list_checkbox_off);
             //holder.ivPortrait.setCheckBoxClickable(false);
@@ -172,10 +175,19 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder.tvMessage = (TextView) convertView.findViewById(R.id.conv_note);
             holder.tvTime = (TextView) convertView.findViewById(R.id.conv_date);
             holder.tvUnreadCount = (TextView) convertView.findViewById(R.id.conv_count);
+            holder.tvMappingFlag = (TextView) convertView.findViewById(R.id.conv_mapping_flag);
             holder.ivTopSign = (ImageView) convertView.findViewById(R.id.conversation_item_top_sign);
+
+            holder.ivDelIcon.setTag(holder);
+            holder.ivDelIcon.setOnClickListener(this);
+
+            holder.rlConversation.setTag(holder);
+            holder.rlConversation.setOnClickListener(this);
+
             convertView.setTag(holder);
-            convertView.setOnClickListener(this);
-            convertView.setOnLongClickListener(this);
+//            convertView.setOnClickListener(this);
+            //Disable long click here.
+            //convertView.setOnLongClickListener(this);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
@@ -197,6 +209,31 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         setItemTop(holder, listDO);
         setItemRead(holder, listDO);
         setItemMessage(holder, listDO);
+
+        //Init flags
+        int convState = listDO.status;
+        logger.d("color index is: " + listDO.colorIndex);
+        logger.d("color is: " + MessageUtil.getFriendColor(listDO.colorIndex));
+
+        //Invalide value, just return.
+        if(convState == -1) {
+            return;
+        }
+
+        if(convState ==  MessageUtil.WalkArroundState.STATE_IM) {
+            holder.tvMappingFlag.setVisibility(View.VISIBLE);
+            holder.tvMappingFlag.setText(R.string.msg_conversation_mapping);
+            holder.ivDelIcon.setVisibility(View.VISIBLE);
+        } else if(convState >  MessageUtil.WalkArroundState.STATE_IM && position <= 1) {
+            holder.tvMappingFlag.setVisibility(View.VISIBLE);
+            holder.tvMappingFlag.setText(R.string.msg_conversation_walking_friends);
+            holder.ivDelIcon.setVisibility(View.GONE);
+            holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
+        } else {
+            holder.tvMappingFlag.setVisibility(View.GONE);
+            holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
+            holder.ivDelIcon.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -377,17 +414,15 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
 
     @Override
     public void onClick(View view) {
+
         if (mItemListener != null) {
             ViewHolder holder = (ViewHolder) view.getTag();
             MessageSessionBaseModel item = getItem(holder.position);
-            if (mIsBatchOperation && canSelectable(item)) {
-                if (mChosenPositionList.containsKey(item.getThreadId())) {
-                    mChosenPositionList.remove(item.getThreadId());
-                } else {
-                    mChosenPositionList.put(item.getThreadId(), getItem(holder.position));
-                }
-                mItemListener.conversationItemOnClick(getItem(holder.position));
-            } else if (!mIsBatchOperation) {
+
+            if(view != null && view.getId() == R.id.conversation_item_del_icon) {
+                mItemListener.onDeleteConversationItem(getItem(holder.position));
+                return;
+            } else if(view != null && view.getId() == R.id.conv_rl) {
                 mItemListener.conversationItemOnClick(getItem(holder.position));
             }
         }
@@ -412,14 +447,27 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         return true;
     }
 
+    public void put2ChoosenList(MessageSessionBaseModel item) {
+        if(item == null) {
+            return;
+        }
+
+        if (canSelectable(item)) {
+            mChosenPositionList.put(item.getThreadId(), item);
+        }
+    }
+
     public class ViewHolder {
-        int position;
+        public int position;
         public PhotoView ivPortrait;
+        RelativeLayout rlConversation;
         ImageView ivTopSign;
+        ImageView ivDelIcon;
         TextView tvName;
         TextView tvMessage;
         TextView tvTime;
         TextView tvUnreadCount;
+        TextView tvMappingFlag;
     }
 
     private boolean isChosenPosition(long threadId) {

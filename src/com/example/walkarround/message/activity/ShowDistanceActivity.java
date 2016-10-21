@@ -62,26 +62,26 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         mPvFriend.setOnClickListener(this);
         mTvPleaseClickPortrait = (TextView)findViewById(R.id.tv_click_portrait);
 
-        setPortraitViewVisible(View.GONE);
+        //setPortraitViewVisible(View.GONE);
     }
 
     private void initData() {
         Intent intent = getIntent();
         if (intent != null) {
-            //Get conversation color
+            //Get conversation color, default is color index 1.
             long threadId = intent.getLongExtra(PARAMS_THREAD_ID, 0l);
             MessageSessionBaseModel conversation = WalkArroundMsgManager.getInstance(getApplicationContext()).getSessionByThreadId(threadId);
             int colorIndex = conversation.colorIndex;
-
+            int color = MessageUtil.getFriendColor(colorIndex);
             //Init background color
-            if (colorIndex >= 0) {
+            if (color >= 0) {
                 //Activity body color
-                mRlSearchArea.setBackgroundColor(MessageUtil.getFriendColor(colorIndex));
+                mRlSearchArea.setBackgroundColor(getResources().getColor(color));
 
                 //Title color
                 RelativeLayout rlTitle = (RelativeLayout) (findViewById(R.id.title));
                 if (rlTitle != null) {
-                    rlTitle.setBackgroundColor(MessageUtil.getFriendColor(colorIndex));
+                    rlTitle.setBackgroundColor(getResources().getColor(color));
                 }
 
                 logger.d("init  color index is :" + colorIndex);
