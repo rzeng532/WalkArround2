@@ -2946,6 +2946,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                         //Agree to walk, build msg UI add distance button.
                         int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
                         if (color > 0) {
+                            mImvDistance.setVisibility(View.VISIBLE);
                             mImvDistance.setImageResource(color);
                         }
                     }

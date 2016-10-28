@@ -60,6 +60,12 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
             String clientID = (avUser == null ? null : avUser.getObjectId());
             if (clientID != null && client.getClientId().equals(clientID)) {
                 logger.d("get message from " + message.getFrom());
+
+                if(clientID.equalsIgnoreCase(message.getFrom())) {
+                    logger.d("get message from myself on another device. Abort.");
+                    return;
+                }
+
                 //Start a new thread to receive message.
                 Runnable saveMsg = new Runnable() {
                     @Override
