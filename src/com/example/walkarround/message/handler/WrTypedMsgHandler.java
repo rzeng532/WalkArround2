@@ -28,6 +28,7 @@ import java.util.List;
  * TODO: description
  * Date: 2016-02-14
  * WalkArround
+ *
  * @author Richard
  */
 public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
@@ -40,9 +41,9 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
     }
 
     public static WrTypedMsgHandler getMsgHandlerInstance(Context context) {
-        if(mInstance == null) {
+        if (mInstance == null) {
             synchronized (WrTypedMsgHandler.class) {
-                if(mInstance == null) {
+                if (mInstance == null) {
                     mInstance = new WrTypedMsgHandler(context);
                 }
             }
@@ -97,9 +98,9 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
     }
 
     private void downloadMsgFile(ChatMsgBaseInfo msg) {
-        if(!TextUtils.isEmpty(msg.getFileUrlPath())) {
-            if(msg.getMsgType() == MessageType.MSG_TYPE_AUDIO
-                || msg.getMsgType() == MessageType.MSG_TYPE_MAP) {
+        if (!TextUtils.isEmpty(msg.getFileUrlPath())) {
+            if (msg.getMsgType() == MessageType.MSG_TYPE_AUDIO
+                    || msg.getMsgType() == MessageType.MSG_TYPE_MAP) {
 
                 String filePath = msg.getFileUrlPath();
 
@@ -126,15 +127,20 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
      */
     private void updateConversationInfor(ChatMsgBaseInfo msgInfo) {
         logger.d("msgInfor msg type: " + msgInfo.getMsgType());
-        if(msgInfo.getMsgType() == MessageType.MSG_TYPE_NOTIFICATION) {
+        if (msgInfo.getMsgType() == MessageType.MSG_TYPE_NOTIFICATION) {
             String extra = msgInfo.getExtraInfo();
             logger.d("msgInfor extra: " + extra);
-            if(!TextUtils.isEmpty(extra)) {
-                String[] extraArray = extra.split(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND_SPLIT);
-                if(extraArray != null && extraArray.length > 1) {
-                    logger.d("msgInfor array 1: " + extraArray[1]);
-                    int color = Integer.parseInt(extraArray[1]);
-                    WalkArroundMsgManager.getInstance(mContext).updateConversationStatusAndColor(msgInfo.getMsgThreadId(), MessageUtil.WalkArroundState.STATE_WALK, color);
+            if (!TextUtils.isEmpty(extra)) {
+                String[] extraArray = extra.split(MessageUtil.EXTRA_INFOR_SPLIT);
+                if (extraArray != null && extraArray.length > 1) {
+                    if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND)) {
+                        //Friend agree to walk arround.
+                        logger.d("msgInfor array 1: " + extraArray[1]);
+                        int color = Integer.parseInt(extraArray[1]);
+                        WalkArroundMsgManager.getInstance(mContext).updateConversationStatusAndColor(msgInfo.getMsgThreadId(), MessageUtil.WalkArroundState.STATE_WALK, color);
+                    } else if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALKARROUND)) {
+
+                    }
                 }
             }
         }

@@ -1,366 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
-    android:oneshot="false" >
+                android:oneshot="false" >
 
-    <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_001"
-            android:gravity="left" />
-    </item>
-    <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_002"
-            android:gravity="left" />
-    </item>
-    <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_003"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_004"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_005"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_006"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_007"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_008"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_009"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_010"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_011"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_012"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_013"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_014"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_015"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_016"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_017"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_018"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_019"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_020"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_021"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_022"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_023"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_024"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_025"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_026"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_027"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_028"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_029"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_030"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_031"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_032"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_033"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_034"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_035"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_036"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_037"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_038"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_039"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_040"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_041"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_042"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_043"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_044"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_045"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_046"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_047"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_048"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_049"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_050"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_051"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_052"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_053"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_054"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_055"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_056"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_057"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_058"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_059"
-            android:gravity="left" />
-    </item>
-     <item android:duration="33">
-        <clip
-            android:clipOrientation="horizontal"
-            android:drawable="@drawable/loading_white_060"
-            android:gravity="left" />
-    </item>
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_001"/>
 
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_002"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_003"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_004"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_005"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_006"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_007"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_008"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_009"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_010"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_011"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_012"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_013"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_014"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_015"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_016"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_017"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_018"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_019"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_020"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_021"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_022"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_023"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_024"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_025"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_026"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_027"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_028"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_029"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_030"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_031"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_032"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_033"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_034"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_035"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_036"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_037"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_038"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_039"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_040"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_041"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_042"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_043"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_044"/>
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_045"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_046"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_047"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_048"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_049"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_050"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_051"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_052"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_053"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_054"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_055"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_056"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_057"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_058"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_059"/>
+
+    <item android:duration="33"
+          android:drawable="@drawable/loading_white_060"/>
 </animation-list>

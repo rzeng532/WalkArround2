@@ -214,8 +214,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     /* 当前正在播放的音频消息 */
     private ChatMsgBaseInfo mCurrentPlayAudioMsg;
 
-    /* 定时发送时确认对话框 */
-    private Dialog mConfirmDialog;
+    /* 回复走走请求对话框 */
+    private Dialog mWalkReplyDialog;
 
     /*消息状态更新*/
     private HashMap<Long, Integer> mMessageStatus = new HashMap<Long, Integer>();
@@ -408,9 +408,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         if (mPopupWindow != null && mPopupWindow.isShowing()) {
             mPopupWindow.dismiss();
         }
-        if (mConfirmDialog != null && mConfirmDialog.isShowing()) {
-            mConfirmDialog.dismiss();
-        }
+
         if (mMessageDetailAdapter != null) {
             mMessageDetailAdapter.dismissDialog();
             mMessageListView.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -1400,7 +1398,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             }
         }
         mMessageDetailAdapter.addMessage(message);
-        mMessageDetailAdapter.notifyDataSetChanged();
         if (mMessageListView.getRefreshableView().getLastVisiblePosition() >= mMessageDetailAdapter.getCount() - 1) {
             Message msg = Message.obtain();
             msg.what = UI_WHAT_SCROLL;
@@ -1414,7 +1411,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 mUiHandler.sendMessage(msg);
             }
         }
-
+        mMessageDetailAdapter.notifyDataSetChanged();
         updateHeaderAreaOnRecMsg(message);
     }
 
@@ -1708,7 +1705,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         int colorIndex = MessageUtil.getFriendColorIndex(threadId);
         logger.d("send agreement, the color index is " + colorIndex);
         String extraInfor = MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND +
-                MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND_SPLIT +
+                MessageUtil.EXTRA_INFOR_SPLIT +
                 colorIndex;
         logger.d("send agreement, the extra is: " + extraInfor);
         long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo,
@@ -2135,6 +2132,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 // 定位消息
                 onStartMapActivity(clickedMessage);
                 break;
+            case MessageType.MSG_TYPE_NOTIFICATION:
+                onHandleNotifyMsg(clickedMessage);
+                break;
             default:
                 break;
         }
@@ -2505,25 +2505,40 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         startActivityForResult(intent, REQUEST_CODE_SHOW_LOCATION);
     }
 
-    /**
-     * 拨打电话
-     *
-     * @param anchor
-     *            显示的相对位置view
-     */
-//    private void doCall(View anchor) {
-//        if (!NetworkUtils.isNetworkAvailable(this)) {
-//            // 普通通话
-//            Toast.makeText(this, R.string.msg_check_network_settings, Toast.LENGTH_SHORT).show();
-//            CallRelatedUtil.normalCall(this, mRecipientInfo.getRecipientList().get(0));
-//            return;
-//        }
-//        Intent intent = new Intent(this, CallTypeChooseActivity.class);
-//        String receiverNumStr = mRecipientInfo.getRecipientList().get(0);
-//        ContactInfo contact = NewContactManager.getInstance(getApplicationContext()).getDetailByPhoneNumber(receiverNumStr);
-//        intent.putExtra(CallTypeChooseActivity.CONTACTINFO,contact);
-//        startActivity(intent);
-//    }
+    private void onHandleNotifyMsg(ChatMsgBaseInfo chat) {
+        if(chat != null) {
+            if(chat.getSendReceive() == MessageSendReceive.MSG_RECEIVE && !TextUtils.isEmpty(chat.getExtraInfo())) {
+                String[] extraArray = chat.getExtraInfo().split(MessageUtil.EXTRA_INFOR_SPLIT);
+                if(extraArray != null && extraArray.length >= 2) {
+                    if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REQUEST)) {
+                        long msgTime = chat.getTime();
+                        long curTime = System.currentTimeMillis();
+                        //Valide time is : current time - msg time <= 60s
+                        if(curTime - msgTime > 60 * 1000) {
+                            Toast.makeText(this, R.string.msg_walk_req_time_out, Toast.LENGTH_SHORT).show();
+                        } else {
+                            if(mWalkReplyDialog == null) {
+                                createWalkReplyDialog();
+                                mWalkReplyDialog.show();
+                            }
+                        }
+                    } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_OK)) {
+                        long msgTime = chat.getTime();
+                        long curTime = System.currentTimeMillis();
+                        //Valide time is : current time - msg time <= 60s
+                        if(curTime - msgTime > 60 * 1000) {
+                            Toast.makeText(this, R.string.msg_walk_req_time_out, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Intent intentShowDistance = new Intent(BuildMessageActivity.this, CountdownnActivity.class);
+                            intentShowDistance.putExtra(CountdownnActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
+                            startActivity(intentShowDistance);
+                            BuildMessageActivity.this.finish();
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * 头部右侧更多操作
@@ -2914,10 +2929,63 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     private void updateHeaderAreaOnRecMsg(ChatMsgBaseInfo msg) {
         if (msg.getMsgType() == MessageType.MSG_TYPE_NOTIFICATION) {
-            int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
-            if (color > 0) {
-                mImvDistance.setImageResource(color);
+            if(!TextUtils.isEmpty(msg.getExtraInfo())) {
+                String[] extraArray = msg.getExtraInfo().split(MessageUtil.EXTRA_INFOR_SPLIT);
+                if(extraArray != null && extraArray.length >= 2 && !TextUtils.isEmpty(extraArray[0])) {
+                    if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REQUEST)) {
+                        //Show dialog directly.
+                        if(mWalkReplyDialog == null) {
+                            createWalkReplyDialog();
+                            mWalkReplyDialog.show();
+                        }
+                    } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_OK)) {
+
+                    } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME)) {
+
+                    } else if(extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND)) {
+                        //Agree to walk, build msg UI add distance button.
+                        int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
+                        if (color > 0) {
+                            mImvDistance.setImageResource(color);
+                        }
+                    }
+                }
             }
         }
+    }
+
+    /*
+     * Create a dialog for user to select.
+     */
+    private void createWalkReplyDialog() {
+        mWalkReplyDialog = DialogFactory.getStart2WalkReplyDialog(this, mRecipientInfo.getRecipientList().get(0), new DialogFactory.NoticeDialogCancelClickListener() {
+            @Override
+            public void onNoticeDialogCancelClick() {
+                String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
+                        MessageUtil.EXTRA_INFOR_SPLIT +
+                        MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME;
+                WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo.getRecipientList().get(0),
+                        getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
+
+                mWalkReplyDialog.dismiss();
+                mWalkReplyDialog = null;
+            }
+
+            @Override
+            public void onNoticeDialogConfirmClick(boolean isChecked, Object value) {
+                String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
+                        MessageUtil.EXTRA_INFOR_SPLIT +
+                        MessageUtil.EXTRA_START_2_WALK_REPLY_OK;
+                WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo.getRecipientList().get(0),
+                        getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
+
+                mWalkReplyDialog.dismiss();
+                mWalkReplyDialog = null;
+
+                Intent intent = new Intent(BuildMessageActivity.this, CountdownnActivity.class);
+                intent.putExtra(CountdownnActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
+                BuildMessageActivity.this.startActivity(intent);
+            }
+        });
     }
 }

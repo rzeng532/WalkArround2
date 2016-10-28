@@ -220,7 +220,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             return;
         }
 
-        if(convState ==  MessageUtil.WalkArroundState.STATE_IM) {
+        if(convState <=  MessageUtil.WalkArroundState.STATE_IM) {
             holder.tvMappingFlag.setVisibility(View.VISIBLE);
             holder.tvMappingFlag.setText(R.string.msg_conversation_mapping);
             holder.ivDelIcon.setVisibility(View.VISIBLE);

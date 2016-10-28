@@ -246,6 +246,14 @@
     <string name="msg_agree_to_walkarround_fail">操作失败,请稍后再试或选择自己发起走走地点.</string>
     <string name="msg_conversation_mapping">配对中</string>
     <string name="msg_conversation_walking_friends">走伴</string>
+    <string name="msg_walk_req_time_indicate">请求一分钟内有效，请耐心等待。</string>
+    <string name="msg_walk_req_time_out">一分钟内有效，该见面请求已过期</string>
+    <string name="msg_walk_req_sender_text">你发起了一个碰面请求</string>
+    <string name="msg_walk_req_receiver_text">你收到了一个碰面请求\r\n可点击回复该请求</string>
+    <string name="msg_walk_reply_receiver_ok">对方已经同意碰面请求</string>
+    <string name="msg_walk_reply_sender_ok">你同意了对方的碰面请求</string>
+    <string name="msg_walk_reply_receiver_next_time">很遗憾，对方下次再和你走走</string>
+    <string name="msg_walk_reply_sender_next_time">你拒绝了对方的碰面请求</string>
 
     <!-- Pull refresh string -->
     <string name="pull_to_refresh_pull_label">下拉以刷新...</string>
@@ -270,6 +278,10 @@
     <string name="gender_female">女</string>
     <string name="xiu_yi_xiu">咻一咻</string>
     <string name="agree_2_walkarround">已经同意了你的走走请求.</string>
+    <string name="agree_2_walk_face_2_face_req">一起见个面？</string>
+    <string name="agree_2_walk_invitation_description">%1$s想和你一起走走</string>
+    <string name="agree_2_walk_reply_ok">愿意</string>
+    <string name="agree_2_walk_reply_next_time">下次吧</string>
 
     <!-- walk rule strings -->
     <string name="walk_rule_title">《走走守则》</string>

@@ -4,19 +4,30 @@
 package com.example.walkarround.message.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.example.walkarround.R;
+import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.base.view.RippleView;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.model.MessageSessionBaseModel;
 import com.example.walkarround.message.util.MessageUtil;
+import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.util.Logger;
 
 /**
@@ -31,9 +42,70 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     private RippleView mSearchingView;
     private RelativeLayout mRlSearchArea;
     private PortraitView mPvFriend;
+    private Dialog mWalkRequestDialog;
     private TextView mTvPleaseClickPortrait;
-
+    private String mStrFriendId;
     public static final String PARAMS_THREAD_ID = "thread_id";
+
+    private final int MSG_FRIEND_REPLY_OK = 1;
+    private final int MSG_FRIEND_REPLY_NEXT_TIME = 2;
+
+    private Handler mUiHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_FRIEND_REPLY_OK:
+                    logger.d("ShowDistance: friend reply ok");
+                    if(mWalkRequestDialog != null) {
+                        mWalkRequestDialog.dismiss();
+                        mWalkRequestDialog = null;
+                    }
+
+                    Intent intentShowDistance = new Intent(ShowDistanceActivity.this, CountdownnActivity.class);
+                    intentShowDistance.putExtra(CountdownnActivity.PARAMS_FRIEND_OBJ_ID, mStrFriendId);
+                    startActivity(intentShowDistance);
+                    ShowDistanceActivity.this.finish();
+                    break;
+                case MSG_FRIEND_REPLY_NEXT_TIME:
+                    logger.d("ShowDistance: friend reply next time.");
+                    if(mWalkRequestDialog != null && mWalkRequestDialog.isShowing()) {
+                        mWalkRequestDialog.dismiss();
+                        mWalkRequestDialog = null;
+                    }
+                    Toast.makeText(ShowDistanceActivity.this, getString(R.string.msg_walk_reply_receiver_next_time), Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    /* 消息状态监听 */
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            long messageId = intent.getLongExtra(MsgBroadcastConstants.BC_VAR_MSG_ID, 0);
+            if (action.equals(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED)) {
+                // 新到一对一消息
+                ChatMsgBaseInfo message = WalkArroundMsgManager.getInstance(getApplicationContext()).getMessageById(messageId);
+                if(message != null && mStrFriendId != null && mStrFriendId.equalsIgnoreCase(message.getContact())) {
+                    if(!TextUtils.isEmpty(message.getExtraInfo())) {
+                        String[] extraArray = message.getExtraInfo().split(MessageUtil.EXTRA_INFOR_SPLIT);
+                        if(extraArray != null && extraArray.length >= 2 && !TextUtils.isEmpty(extraArray[0])) {
+                            if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_OK)) {
+                                mUiHandler.sendEmptyMessage(MSG_FRIEND_REPLY_OK);
+                            } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME)) {
+                                mUiHandler.sendEmptyMessage(MSG_FRIEND_REPLY_NEXT_TIME);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +118,19 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
 
         initData();
 
+        initRegisterforNewMsg();
+
         mSearchingView.start();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        try {
+            unregisterReceiver(mMessageReceiver);
+            //unRegisterContactReceiver();
+        } catch (Exception e) {
+        }
     }
 
     private void initView() {
@@ -91,8 +175,8 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
             mSearchingView.setInitColor(R.color.bgcor15);
 
             //Init portrait
-            String usrObjId = conversation.getContact();
-            ContactInfo usr = ContactsManager.getInstance(this.getApplicationContext()).getContactByUsrObjId(usrObjId);
+            mStrFriendId = conversation.getContact();
+            ContactInfo usr = ContactsManager.getInstance(this.getApplicationContext()).getContactByUsrObjId(mStrFriendId);
             if (usr != null) {
                 mPvFriend.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
                         usr.getUsername().substring(0, 1), -1);
@@ -103,6 +187,14 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         }
     }
 
+    private void initRegisterforNewMsg() {
+        // 监听新消息及消息状态变化
+        IntentFilter commandFilter = new IntentFilter();
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
+
+        registerReceiver(mMessageReceiver, commandFilter);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -110,7 +202,18 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                 finish();
                 break;
             case R.id.pv_friend_portrait:
-                //finish();
+                mWalkRequestDialog = DialogFactory.getStart2WalkDialog(this, mStrFriendId, new DialogFactory.ConfirmDialogClickListener() {
+
+                    @Override
+                    public void onConfirmDialogConfirmClick() {
+                        //Send walk invitation 2 friend.
+                        String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
+                                MessageUtil.EXTRA_INFOR_SPLIT +
+                                MessageUtil.EXTRA_START_2_WALK_REQUEST;
+                        WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId, getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
+                    }
+                });
+                mWalkRequestDialog.show();
                 break;
             default:
                 break;

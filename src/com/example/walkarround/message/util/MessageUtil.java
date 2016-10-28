@@ -47,8 +47,13 @@ public class MessageUtil {
 
     //Message extra information key
     public static final String EXTRA_INFOR_KEY = "extra_key";
+    public static final String EXTRA_INFOR_SPLIT = "#";
     public static final String EXTRA_AGREEMENT_2_WALKARROUND = "extra_agree_place";
-    public static final String EXTRA_AGREEMENT_2_WALKARROUND_SPLIT = "#";
+    public static final String EXTRA_START_2_WALKARROUND = "extra_start_2_walk";
+    public static final String EXTRA_START_2_WALK_REQUEST = "extra_start_2_walk_request";
+    public static final String EXTRA_START_2_WALK_REPLY_OK = "extra_start_2_walk_reply_ok";
+    public static final String EXTRA_START_2_WALK_REPLY_NEXT_TIME = "extra_start_2_walk_reply_next_time";
+
 
     //Get friend list count. If count is 4, it means server response 4 friends every time.
     public static final int GET_FRIENDS_LIST_COUNT = 4;

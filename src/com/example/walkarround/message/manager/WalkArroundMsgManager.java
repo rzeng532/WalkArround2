@@ -151,7 +151,7 @@ public class WalkArroundMsgManager {
             }
         }
 
-        sendTextMsg(receiver, content);
+        sendTextMsg(receiver, content, null);
 
         return threadId;
     }
@@ -159,7 +159,7 @@ public class WalkArroundMsgManager {
     /*
      * Send text message
      */
-    public long sendTextMsg(String receiver, String content) {
+    public long sendTextMsg(String receiver, String content, String extraInfor) {
 
         //Check environment.
         if (mInstance == null || mInstance.mMsgManager == null) {
@@ -185,7 +185,7 @@ public class WalkArroundMsgManager {
         recipientInfo.setThreadId(threadId);
 
         //Send message via msg manager.
-        return sendTextMsg(recipientInfo, content, null);
+        return sendTextMsg(recipientInfo, content, extraInfor);
     }
 
     public long sendTextMsg(MessageRecipientInfo receiver, String content, String extraInfor) {

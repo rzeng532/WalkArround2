@@ -223,7 +223,7 @@ public class DialogFactory {
         return dialog;
     }
 
-    public static Dialog getWalkRuleDialog(Context context) {
+    public static Dialog getWalkRuleDialog(Context context, final ConfirmDialogClickListener listener) {
         final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_walk_rule, null);
@@ -241,24 +241,19 @@ public class DialogFactory {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                if (listener != null) {
+                    listener.onConfirmDialogConfirmClick();
+                }
             }
         });
 
-        dialogView.findViewById(R.id.iv_finish_icon).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-//        dialogView.findViewById(R.id.dialog_ok_btn).setOnClickListener(new View.OnClickListener() {
+//        dialogView.findViewById(R.id.iv_finish_icon).setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
 //                dialog.dismiss();
-//                if (listener != null) {
-//                    listener.onConfirmDialogConfirmClick();
-//                }
 //            }
 //        });
+
         return dialog;
     }
 
@@ -297,9 +292,56 @@ public class DialogFactory {
             public void onClick(View view) {
                 dialogView.findViewById(R.id.tv_start2walk).setVisibility(View.GONE);
                 dialogView.findViewById(R.id.tv_wait_response).setVisibility(View.VISIBLE);
+                Toast.makeText(context, R.string.msg_walk_req_time_indicate, Toast.LENGTH_SHORT).show();
                 ((TextView)(dialogView.findViewById(R.id.tv_wait_response))).setText(context.getString(R.string.walk_rule_wait_for_response, usr.getUsername()));
                 if (listener != null) {
                     listener.onConfirmDialogConfirmClick();
+                }
+            }
+        });
+        return dialog;
+    }
+
+    public static Dialog getStart2WalkReplyDialog(Context context, String usrObjId, final NoticeDialogCancelClickListener listener) {
+        final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_start_2_walk_reply, null);
+        dialog.setContentView(dialogView);
+
+        PortraitView portrait = (PortraitView)dialogView.findViewById(R.id.pv_start2walk);
+        final ContactInfo usr = ContactsManager.getInstance(context).getContactByUsrObjId(usrObjId);
+        portrait.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
+                usr.getUsername().substring(0, 1), -1);
+
+        TextView tvName = (TextView)dialogView.findViewById(R.id.tv_friend_name);
+        tvName.setText(usr.getUsername());
+
+        TextView tvInvitationDesc = (TextView)dialogView.findViewById(R.id.tv_friend_invitation);
+        tvInvitationDesc.setText(context.getString(R.string.agree_2_walk_invitation_description, usr.getUsername()));
+
+        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+        DisplayMetrics mDisplayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
+        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(layoutParams);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        dialogView.findViewById(R.id.tv_next_time).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onNoticeDialogCancelClick();
+                }
+            }
+        });
+
+        dialogView.findViewById(R.id.tv_agree).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onNoticeDialogConfirmClick(true, null);
                 }
             }
         });

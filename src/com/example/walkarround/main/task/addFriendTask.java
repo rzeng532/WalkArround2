@@ -24,15 +24,16 @@ public class AddFriendTask extends HttpTaskPost {
     /*
      * Return JSON parameters to String style.
      */
-    public static String getParams(String userId, String friendId) {
+    public static String getParams(String userId, String friendId, String colorIndex) {
 
-        if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(friendId)) {
+        if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(friendId) || TextUtils.isEmpty(colorIndex)) {
             return null;
         }
 
         JSONObject param = new JSONObject();
         param.put(HttpUtil.HTTP_PARAM_USER_ID, userId);
         param.put(HttpUtil.HTTP_PARAM_FRIEND_USER_ID, friendId);
+        param.put(HttpUtil.HTTP_PARAM_SPEEDDATE_COLOR, colorIndex);
 
         return param.toString();
     }

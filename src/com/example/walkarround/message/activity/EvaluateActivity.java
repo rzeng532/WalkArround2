@@ -20,15 +20,22 @@ import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PhotoView;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
+import com.example.walkarround.main.task.AddFriendTask;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.manager.ContactsManager;
+import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.task.EvaluateFriendTask;
+import com.example.walkarround.message.util.MessageConstant;
+import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpUtil;
 import com.example.walkarround.util.http.ThreadPoolManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TODO: description
@@ -64,10 +71,51 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         @Override
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
             myLogger.d("EvaluateFriend done.");
-            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH)) {
-                myLogger.d("EvaluateFriend success.");
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH) && mFriend != null) {
+                myLogger.d("EvaluateFriend success, next step is add friend");
 
+                //Get colorIndex
+                List<String> recipient = new ArrayList<>();
+                recipient.add(mFriend.getObjectId());
+                long msgThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
+                        recipient);
+                if(msgThreadId >= 0) {
+                    int colorIndex = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(msgThreadId);
+                    WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, MessageUtil.WalkArroundState.STATE_IMPRESSION);
+                    ThreadPoolManager.getPoolManager().addAsyncTask(new AddFriendTask(getApplicationContext(),
+                            mAddFriendTaskListener,
+                            HttpUtil.HTTP_FUNC_ADD_FRIEND,
+                            HttpUtil.HTTP_TASK_ADD_FRIEND,
+                            AddFriendTask.getParams(ProfileManager.getInstance().getCurUsrObjId(),(mFriend != null) ? mFriend.getObjectId() : null, "" + colorIndex),
+                            TaskUtil.getTaskHeader()));
+                } else {
+                    mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
+                }
+            } else if(HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH)) {
+                myLogger.d("EvaluateFriend failed.");
+                mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
+    private HttpTaskBase.onResultListener mAddFriendTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
                 mUIHandler.sendEmptyMessage(MSG_EVALUATE_SUCCESS);
+            } else if(HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
+                mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
             }
         }
 
@@ -124,12 +172,15 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                     //Send I agree to walk arround.
                     //Use RESULT_FIRST_USER as agreement for prior activity.
                     //setResult(RESULT_FIRST_USER);
+                    ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_IMPRESSION);
                     Toast.makeText(EvaluateActivity.this, R.string.evaluate_send_impression2server_suc, Toast.LENGTH_LONG).show();
                     dismissCircleDialog();
                     finish();
                     break;
                 case MSG_EVALUATE_FAILED:
                     dismissCircleDialog();
+                    EvaluateActivity.this.finish();
+                    //TODO: We should indicate user details by different server response.Like this friend already be evaluated, time out...
                     Toast.makeText(EvaluateActivity.this, R.string.evaluate_send_impression2server_fail, Toast.LENGTH_LONG).show();
                     break;
                 default:

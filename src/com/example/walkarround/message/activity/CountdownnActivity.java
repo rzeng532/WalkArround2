@@ -13,16 +13,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.walkarround.R;
+import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PhotoView;
 import com.example.walkarround.base.view.RoundProgressBar;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.manager.ContactsManager;
+import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.util.MessageConstant;
+import com.example.walkarround.message.util.MessageUtil;
+import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.Logger;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 
 /**
@@ -92,8 +95,25 @@ public class CountdownnActivity extends Activity implements View.OnClickListener
         initData();
 
         initView();
-        timer = new Timer(true);
-        timer.schedule(task,1000, 1000);
+
+        if(mFriend != null) {
+            List<String> recipient = new ArrayList<>();
+            recipient.add(mFriend.getObjectId());
+            long msgThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
+                    recipient);
+            if(msgThreadId >= 0) {
+                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, MessageUtil.WalkArroundState.STATE_WALK);
+                //TODO: update speed data id state to server.
+            }
+        }
+
+        DialogFactory.getWalkRuleDialog(this, new DialogFactory.ConfirmDialogClickListener() {
+            @Override
+            public void onConfirmDialogConfirmClick() {
+                timer = new Timer(true);
+                timer.schedule(task,1000, 1000);
+            }
+        }).show();
     }
 
     private void initView() {
@@ -135,7 +155,20 @@ public class CountdownnActivity extends Activity implements View.OnClickListener
 
         switch (v.getId()) {
             case R.id.tv_complete_walk:
-                finish();
+                if(timer != null) {
+                    timer.cancel();
+                    timer = null;
+                }
+
+                //We need a popup here
+                //Start Evaluate activity
+                if(mFriend != null) {
+                    Intent intent = new Intent(CountdownnActivity.this, EvaluateActivity.class);
+                    intent.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, mFriend.getObjectId());
+                    startActivity(intent);
+                }
+                ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_WALK);
+                this.finish();
                 break;
             default:
                 break;

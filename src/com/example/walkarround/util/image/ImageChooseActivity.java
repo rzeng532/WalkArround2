@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.*;
 import com.example.walkarround.R;
 import com.example.walkarround.util.CommonUtils;
@@ -83,6 +84,7 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_choose);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         // 数据
         initIntentData(savedInstanceState, getIntent());
         // 初始化画面固定部分
@@ -290,6 +292,7 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
                     View menu = getLayoutInflater().inflate(R.layout.image_chooser_menu_popup, null, true);
                     initPopupViewDir(menu);
                     mDirectoryPopup = new PopupWindow(menu, LinearLayout.LayoutParams.MATCH_PARENT, 1000, true);
+                    mDirectoryPopup.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                     mDirectoryPopup.setBackgroundDrawable(getResources().getDrawable(R.drawable.public_bg_light_nm));
                 }
                 if (!mDirectoryPopup.isShowing()) {

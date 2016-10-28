@@ -142,6 +142,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
                 break;
             case MessageDetailListAdapter.MESSAGE_TYPE_SYSTEM:
                 convertView = initSysMsgView(mContext, convertView, messageInfo);
+                convertView.setTag(R.id.msg_item_bg_layout, messageInfo);
                 return convertView;
             default:
                 convertView = new LinearLayout(mContext);
@@ -167,6 +168,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             viewHolder.sendTimeTv = (TextView) convertView.findViewById(R.id.msg_send_time_tv);
             viewHolder.sendNameTv = (TextView) convertView.findViewById(R.id.msg_contact_name_tv);
             viewHolder.msgTextTv = (TextView) convertView.findViewById(R.id.msg_content_tv);
+            viewHolder.clickAreaView = convertView.findViewById(R.id.msg_item_bg_layout);
             convertView.setOnClickListener(this);
             convertView.setTag(viewHolder);
         } else {
@@ -174,13 +176,37 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
         }
 
         viewHolder.msgTextTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        viewHolder.msgTextTv.setText(message.getData());
+        viewHolder.msgTextTv.setText(getNotifyMsgContentText(context, message));
 
         setDateElement(context, message.getTime(), viewHolder.sendTimeTv);
 
         return convertView;
     }
 
+    private String getNotifyMsgContentText(Context context, ChatMsgBaseInfo msg) {
+        String result = null;
+
+        if(msg == null) {
+            return result;
+        }
+
+        result = msg.getData();
+
+        if(!TextUtils.isEmpty(msg.getExtraInfo())) {
+            String[] extraArray = msg.getExtraInfo().split(MessageUtil.EXTRA_INFOR_SPLIT);
+            if(extraArray != null && extraArray.length >= 2 && !TextUtils.isEmpty(extraArray[0])) {
+                if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REQUEST)) {
+                    result = context.getString(msg.getSendReceive() == MessageSendReceive.MSG_RECEIVE ? R.string.msg_walk_req_receiver_text : R.string.msg_walk_req_sender_text);
+                } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_OK)) {
+                    result = context.getString(msg.getSendReceive() == MessageSendReceive.MSG_RECEIVE ? R.string.msg_walk_reply_receiver_ok : R.string.msg_walk_reply_sender_ok);
+                } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME)) {
+                    result = context.getString(msg.getSendReceive() == MessageSendReceive.MSG_RECEIVE ? R.string.msg_walk_reply_receiver_next_time : R.string.msg_walk_reply_sender_next_time);
+                }
+            }
+        }
+
+        return result;
+    }
 
     /**
      * 初始化文本消息
