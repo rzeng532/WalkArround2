@@ -3,6 +3,7 @@ package com.example.walkarround.main.parser;
 import android.text.TextUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.example.walkarround.main.model.ContactInfo;
+import com.example.walkarround.main.model.FriendInfo;
 import com.example.walkarround.util.http.HttpUtil;
 
 import java.util.List;
@@ -102,6 +103,30 @@ public class WalkArroundJsonResultParser {
         }catch (Exception e){
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public static List<FriendInfo> parse2FriendList(String str) {
+        if (TextUtils.isEmpty(str)){
+            return null;
+        }
+
+        try {
+            JSONObject jsonObject = JSONObject.parseObject(str);
+
+            if (jsonObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT)) {
+
+                JSONObject jsonResultObject = jsonObject.getJSONObject(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT);
+
+                if(jsonResultObject != null && jsonResultObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA)) {
+                    String data = jsonResultObject.getJSONArray(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA).toJSONString();
+                    return JSONObject.parseArray(data, FriendInfo.class);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return null;
     }
 }

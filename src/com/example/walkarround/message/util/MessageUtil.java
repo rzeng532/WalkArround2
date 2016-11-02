@@ -68,7 +68,6 @@ public class MessageUtil {
         public static int STATE_IM = 2;
         public static int STATE_WALK = 3;
         public static int STATE_IMPRESSION = 4;
-
     }
 
     /**
@@ -396,7 +395,7 @@ public class MessageUtil {
         if(index >= 0 && index < mFriendColArray.size()) {
             return mFriendColArray.get(index).intValue();
         } else {
-            return -1;
+            return R.color.bgcor1;
         }
     }
 

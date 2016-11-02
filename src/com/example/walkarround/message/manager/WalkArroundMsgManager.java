@@ -863,10 +863,18 @@ public class WalkArroundMsgManager {
 
     public int getConversationColor(long threadId) {
         try {
-            int index = mInstance.mMsgManager.getIntentConversationColor(threadId);
-            return MessageUtil.getFriendColor(index);
+            return MessageUtil.getFriendColor(getConversationColorIndex(threadId));
         } catch (Exception e) {
             logger.e("getConversationColor Exception:" + e.getMessage());
+        }
+        return -1;
+    }
+
+    public int getConversationColorIndex(long threadId) {
+        try {
+            return mInstance.mMsgManager.getIntentConversationColor(threadId);
+        } catch (Exception e) {
+            logger.e("getConversationColorIndex Exception:" + e.getMessage());
         }
         return -1;
     }

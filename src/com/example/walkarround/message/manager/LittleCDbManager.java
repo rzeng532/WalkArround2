@@ -895,6 +895,11 @@ public class LittleCDbManager {
         ContentValues conversationValues = new ContentValues();
         conversationValues.put(Conversation._CONVERSATION_STATUS, newState);
 
+        //If conversation state == WalkArroundState.IMPRESSION
+        if(newState == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+            conversationValues.put(Conversation._TOP, Conversation.NOT_TOP);
+        }
+
         mContext.getContentResolver().update(Conversation.CONTENT_URI, conversationValues, where, arg);
     }
 
@@ -925,6 +930,11 @@ public class LittleCDbManager {
         ContentValues conversationValues = new ContentValues();
         conversationValues.put(Conversation._COLOR, newColor);
         conversationValues.put(Conversation._CONVERSATION_STATUS, newStatus);
+
+        //If conversation state == WalkArroundState.IMPRESSION
+        if(newStatus == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+            conversationValues.put(Conversation._TOP, Conversation.NOT_TOP);
+        }
 
         mContext.getContentResolver().update(Conversation.CONTENT_URI, conversationValues, where, arg);
     }

@@ -80,8 +80,11 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 long msgThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
                         recipient);
                 if(msgThreadId >= 0) {
-                    int colorIndex = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(msgThreadId);
+                    int colorIndex = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColorIndex(msgThreadId);
                     WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, MessageUtil.WalkArroundState.STATE_IMPRESSION);
+
+                    myLogger.d("AddFriendTask, color index is: " + colorIndex);
+
                     ThreadPoolManager.getPoolManager().addAsyncTask(new AddFriendTask(getApplicationContext(),
                             mAddFriendTaskListener,
                             HttpUtil.HTTP_FUNC_ADD_FRIEND,

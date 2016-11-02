@@ -20,7 +20,7 @@ public abstract class MessageSessionBaseModel {
     public String nameLastC;/*名字的最后一个字符*/
     public String profile;/*头像地址*/
     public int defaultResId;/*默认头像*/
-    public int status; //会话状态
+    public int status; //会话状态, IM, 走走，评价等
     public int colorIndex;  //颜色索引
 
     private int conversationType = ConversationType.GENERAL;

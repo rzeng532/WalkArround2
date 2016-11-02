@@ -24,6 +24,7 @@ import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.main.model.ContactInfo;
+import com.example.walkarround.main.model.FriendInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.GetFriendListTask;
 import com.example.walkarround.main.task.QueryNearlyUsers;
@@ -110,6 +111,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         }
     };
 
+    /**
+     * 解析服务器返回的朋友列表，如果有朋友，则判断当前DB 是否有该会话，如无则创建。
+     */
     private onResultListener mGetFriendsTaskListener = new onResultListener() {
         @Override
         public void onPreTask(String requestCode) {
@@ -121,6 +125,44 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             amLogger.d("Get friend list done.");
             if (object != null &&
                     WalkArroundJsonResultParser.parseReturnCode((String) object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
+                List<FriendInfo> friendList = WalkArroundJsonResultParser.parse2FriendList((String) object);
+                if(friendList != null && friendList.size() > 0) {
+
+                    //TODO: Start a async task later.
+                    String curUsrId = ProfileManager.getInstance().getCurUsrObjId();
+                    String friendId;
+                    long chattingThreadId;
+                    List<String> lRecipientList = new ArrayList<>();
+                    for(FriendInfo entity : friendList) {
+                        if(entity != null) {
+                            if(!TextUtils.isEmpty(curUsrId) && curUsrId.equalsIgnoreCase(entity.getUserId())) {
+                                friendId = entity.getFriendUserId();
+                                if(!TextUtils.isEmpty(friendId)) {
+                                    //Check contact infor by contact manager.
+                                    ContactInfo friend = ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactByUsrObjId(friendId);
+                                    if(friend == null) {
+                                        ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactFromServer(friendId);
+                                    }
+
+                                    //Check msg DB - conversation table.
+                                    lRecipientList.clear();
+                                    lRecipientList.add(friendId);
+                                    chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
+                                            lRecipientList);
+                                    if(chattingThreadId < 0) {
+                                        chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).createConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, lRecipientList);
+                                        if(chattingThreadId >= 0 && !TextUtils.isEmpty(entity.getColor())) {
+                                            //Update conversation color & state (set friend conversation state as: STATE_IMPRESSION).
+                                            WalkArroundMsgManager.getInstance(getApplicationContext()).
+                                                    updateConversationStatusAndColor(chattingThreadId, MessageUtil.WalkArroundState.STATE_IMPRESSION, Integer.parseInt(entity.getColor()));
+                                            amLogger.d("Add friend: update conversation color index: " + Integer.parseInt(entity.getColor()));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 amLogger.d("There is friend: " + (String)object);
             }
         }

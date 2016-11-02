@@ -192,18 +192,18 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder = (ViewHolder) convertView.getTag();
         }
         holder.position = position;
-        initViewHolder(holder, listDO, position);
+        initViewHolder(holder, listDO, position, (position <= 0 ? false : mListData.get(position - 1).status < MessageUtil.WalkArroundState.STATE_IMPRESSION));
         return convertView;
     }
 
     /**
+     *
      * @param holder
-     * @方法名：initHolder
-     * @描述：实例化holder内容
-     * @输出：void
-     * @作者：Administrator
+     * @param listDO
+     * @param position
+     * @param isThereMappingConv， 判断上一个item是否是mapping 关系
      */
-    private void initViewHolder(ViewHolder holder, MessageSessionBaseModel listDO, int position) {
+    private void initViewHolder(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean isThereMappingConv) {
         setItemContactInfo(holder, listDO);
         setItemTime(holder, listDO);
         setItemTop(holder, listDO);
@@ -216,15 +216,18 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         logger.d("color is: " + MessageUtil.getFriendColor(listDO.colorIndex));
 
         //Invalide value, just return.
+        logger.d("color is: " + convState);
         if(convState == -1) {
             return;
         }
 
-        if(convState <=  MessageUtil.WalkArroundState.STATE_IM) {
+        if(convState <  MessageUtil.WalkArroundState.STATE_IMPRESSION) {
             holder.tvMappingFlag.setVisibility(View.VISIBLE);
             holder.tvMappingFlag.setText(R.string.msg_conversation_mapping);
             holder.ivDelIcon.setVisibility(View.VISIBLE);
-        } else if(convState >  MessageUtil.WalkArroundState.STATE_IM && position <= 1) {
+            //Set correct text font color for this case.
+            holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
+        } else if(convState ==  MessageUtil.WalkArroundState.STATE_IMPRESSION && position <= 1 && !isThereMappingConv) {
             holder.tvMappingFlag.setVisibility(View.VISIBLE);
             holder.tvMappingFlag.setText(R.string.msg_conversation_walking_friends);
             holder.ivDelIcon.setVisibility(View.GONE);
@@ -319,11 +322,12 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
      * @param listDO
      */
     private void setItemTop(ViewHolder holder, MessageSessionBaseModel listDO) {
-        if (listDO.getTop() == TopState.TOP) {
-            holder.ivTopSign.setVisibility(View.VISIBLE);
-        } else {
-            holder.ivTopSign.setVisibility(View.GONE);
-        }
+        //We don't need UI flag now.
+//        if (listDO.getTop() == TopState.TOP) {
+//            holder.ivTopSign.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.ivTopSign.setVisibility(View.GONE);
+//        }
     }
 
     private void setItemRead(ViewHolder holder, MessageSessionBaseModel listDO) {
