@@ -47,6 +47,7 @@ public class EditStrProfileInfoActivity extends Activity implements View.OnClick
             if (msg.what == UPDATE_OK) {
                 dismissDialog();
                 Toast.makeText(getApplicationContext(), getString(R.string.profile_infor_update_ok), Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
                 finish();
             } else if (msg.what == UPDATE_FAIL) {
                 dismissDialog();
@@ -58,6 +59,14 @@ public class EditStrProfileInfoActivity extends Activity implements View.OnClick
     private AsyncTaskListener updateProfileListener = new AsyncTaskListener() {
         @Override
         public void onSuccess(Object data) {
+
+            //Update local profile information.
+            if(mEditType == ProfileUtil.REG_TYPE_USER_NAME) {
+                ProfileManager.getInstance().getMyProfile().setUsrName(mEtInput.getText().toString());
+            } else if(mEditType == ProfileUtil.REG_TYPE_SIGNATURE) {
+                ProfileManager.getInstance().getMyProfile().setSignature(mEtInput.getText().toString());
+            }
+
             Message msg = Message.obtain();
             msg.what = UPDATE_OK;
             mUpdateProfileHandler.sendMessageDelayed(msg, 0);

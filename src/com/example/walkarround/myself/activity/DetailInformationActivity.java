@@ -131,6 +131,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                     mProfileGendle = (which == 0) ? CommonUtils.PROFILE_GENDER_MEN : CommonUtils.PROFILE_GENDER_FEMALE;
                     myProfileInfo.setGendle(mProfileGendle);
                     ProfileManager.getInstance().updateGendle(mProfileGendle);
+                    mTvGendle.setText(getGenderDisplayName(myProfileInfo.getGendle()));
                 }
             };
 
@@ -359,6 +360,8 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             if (resultCode != RESULT_OK) {
                 return;
             }
+            mTvUserName.setText(ProfileManager.getInstance().getMyProfile().getUsrName());
+            mTvSignature.setText(ProfileManager.getInstance().getMyProfile().getSignature());
         }
     }
 
@@ -418,9 +421,11 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, monthOfYear, dayOfMonth);
                 SimpleDateFormat format = new SimpleDateFormat(
-                        "yyyy年MM月dd日  HH:mm");
-                Toast.makeText(DetailInformationActivity.this,
-                        format.format(calendar.getTime()), Toast.LENGTH_SHORT).show();
+                        "yyyy年MM月dd日");
+                String birth = format.format(calendar.getTime());
+                myProfileInfo.setBirthday(birth);
+                mTvBirth.setText(birth);
+                //Toast.makeText(DetailInformationActivity.this, birth, Toast.LENGTH_SHORT).show();
             }
         });
 
