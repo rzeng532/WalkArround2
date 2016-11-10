@@ -305,4 +305,6 @@
     <string name="evaluate_send_impression2server_fail">评价失败,请稍后再试.</string>
     <string name="evaluate_send_impression2server_suc">评价完成.</string>
 
+    <!-- Wheel picker -->
+    <string name="action_settings">Settings</string>
 </resources>

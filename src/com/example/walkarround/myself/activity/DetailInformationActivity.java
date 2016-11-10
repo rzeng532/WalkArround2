@@ -13,9 +13,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.DatePicker.OnDateChangedListener;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.avos.avoscloud.AVException;
@@ -26,6 +26,7 @@ import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
+import com.example.walkarround.base.view.wheelpicker.core.AbstractWheelPicker;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
@@ -38,9 +39,7 @@ import com.example.walkarround.util.image.ImageBrowserActivity;
 import com.example.walkarround.util.image.ImageChooseActivity;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Created by Richard on 2015/12/9.
@@ -64,6 +63,9 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     private View mVSignature;
     private View mVLocation;
 
+    //For wheel picker.
+    private String mStrBirthday;
+
     private final int REQUEST_CODE_PICTURE_CHOOSE = 100;
     private final int REQUEST_CODE_PICTURE_CUT = 101;
     private final int REQUEST_CODE_LOCATION = 102;
@@ -80,9 +82,8 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     private final int HANDLER_MSG_DELAY = 1000; //1 second
 
     private Dialog mLoadingDialog;
-    private Dialog mGendleSelectDialog;
-    private Dialog mDatePickerDialog;
-
+    private BirthdayDialog dlgBirthday;
+    private Dialog mGenderDialog;
 
     private Handler mUpdateHandler = new Handler() {
         @Override
@@ -124,16 +125,6 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
     //Listener for gendle single choice
     private String mProfileGendle;
-    private DialogInterface.OnClickListener mGendleSingleListener =
-            new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int which) {
-                    mProfileGendle = (which == 0) ? CommonUtils.PROFILE_GENDER_MEN : CommonUtils.PROFILE_GENDER_FEMALE;
-                    myProfileInfo.setGendle(mProfileGendle);
-                    ProfileManager.getInstance().updateGendle(mProfileGendle);
-                    mTvGendle.setText(getGenderDisplayName(myProfileInfo.getGendle()));
-                }
-            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,6 +198,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             mTvMobile.setText(myProfileInfo.getMobileNum());
             mTvSignature.setText(myProfileInfo.getSignature());
             mTvGendle.setText(getGenderDisplayName(myProfileInfo.getGendle()));
+            mTvBirth.setText(myProfileInfo.getBirthday());
             if (myProfileInfo.getLocation() != null) {
                 mTvLocation.setText(myProfileInfo.getLocation().getAddrInfor());
             }
@@ -253,22 +245,16 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
             case R.id.detail_mobile:
                 logger.d("onClick, mobile.");
-
                 break;
 
             case R.id.detail_gendle:
                 logger.d("onClick, gendle.");
-                int selected = myProfileInfo.getGendle().equals(ProfileUtil.REG_GENDER_MEN) ? 0 : 1;
-                mGendleSelectDialog = DialogFactory.getSingleChoiceDialog(this,
-                        getString(R.string.profile_infor_gendle),
-                        R.array.profile_gendle, selected,
-                        mGendleSingleListener, null);
-                mGendleSelectDialog.show();
+                showGenderDlg();
                 break;
 
             case R.id.detail_birth:
                 logger.d("onClick, birth.");
-                startDatePicker();
+                showBirthdayDlg();
                 break;
 
             case R.id.detail_signature:
@@ -411,24 +397,124 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         startActivityForResult(intent, REQUEST_CODE_LOCATION);
     }
 
-    private void startDatePicker() {
+    private void showGenderDlg() {
+        if (mGenderDialog != null) {
+            mGenderDialog.show();
+            return;
+        }
+        mGenderDialog = new Dialog(this, R.style.dialog_noframe);
+        mGenderDialog.setContentView(R.layout.dlg_gender);
+        mGenderDialog.getWindow().setWindowAnimations(R.style.anim_bottom_dialog);
+        WindowManager.LayoutParams params = mGenderDialog.getWindow().getAttributes();// 得到这个dialog界面的参数对象
+        params.width = this.getResources().getDisplayMetrics().widthPixels; // 设置dialog的界面宽度
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;// 设置dialog高度为包裹内容
+        params.gravity = Gravity.BOTTOM;// 设置dialog的重心
+        mGenderDialog.getWindow().setAttributes(params);
 
-        mDatePickerDialog = DialogFactory.getDatePickerDialog(this, 2016, 1, 4, new OnDateChangedListener() {
+        TextView tvCancel = (TextView) mGenderDialog.findViewById(R.id.tvCancel);
+        tvCancel.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onDateChanged(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, monthOfYear, dayOfMonth);
-                SimpleDateFormat format = new SimpleDateFormat(
-                        "yyyy年MM月dd日");
-                String birth = format.format(calendar.getTime());
-                myProfileInfo.setBirthday(birth);
-                mTvBirth.setText(birth);
-                //Toast.makeText(DetailInformationActivity.this, birth, Toast.LENGTH_SHORT).show();
+            public void onClick(View arg0) {
+                mGenderDialog.dismiss();
+            }
+        });
+        TextView tvMale = (TextView) mGenderDialog.findViewById(R.id.tvMale);
+        tvMale.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                setGender(CommonUtils.PROFILE_GENDER_MEN);
+                mGenderDialog.dismiss();
+            }
+        });
+        TextView tvFemale = (TextView) mGenderDialog.findViewById(R.id.tvFemale);
+        tvFemale.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                setGender(CommonUtils.PROFILE_GENDER_FEMALE);
+                mGenderDialog.dismiss();
             }
         });
 
-        mDatePickerDialog.show();
+        mGenderDialog.show();
+    }
+
+    private void setGender(String gender) {
+        mProfileGendle = gender; //(which == 0) ? CommonUtils.PROFILE_GENDER_MEN : CommonUtils.PROFILE_GENDER_FEMALE;
+        myProfileInfo.setGendle(mProfileGendle);
+        ProfileManager.getInstance().updateGendle(mProfileGendle);
+        mTvGendle.setText(getGenderDisplayName(myProfileInfo.getGendle()));
+    }
+
+    private void showBirthdayDlg() {
+        if (dlgBirthday == null) {
+            dlgBirthday = new BirthdayDialog(this);
+            dlgBirthday.setOnConfirmListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String[] datas = mStrBirthday.split("-");
+                    String year = datas[0];
+                    int m = Integer.valueOf(datas[1]);
+                    String month;
+                    if (m < 10) {
+                        month = "0" + m;
+                    } else {
+                        month = m + "";
+                    }
+
+                    int d = Integer.valueOf(datas[2]);
+                    String day;
+                    if (d < 10) {
+                        day = "0" + d;
+                    } else {
+                        day = d + "";
+                    }
+                    String birth = year + "-" + month + "-" + day;
+                    ProfileManager.getInstance().updateBirthday(birth);
+                    myProfileInfo.setBirthday(birth);
+                    mTvBirth.setText(birth);
+                    dlgBirthday.dismiss();
+                }
+            });
+
+            dlgBirthday.setWheelListener(new AbstractWheelPicker.OnWheelChangeListener() {
+                @Override
+                public void onWheelScrolling(float deltaX, float deltaY) {
+
+                }
+
+                @Override
+                public void onWheelSelected(int index, String data) {
+                    mStrBirthday = data;
+                }
+
+                @Override
+                public void onWheelScrollStateChanged(int state) {
+
+                }
+            });
+
+            dlgBirthday.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    dlgBirthday = null;
+                }
+            });
+        }
+
+        //Init birthday value from prior setting.
+        String mStrBirthday = myProfileInfo.getBirthday();
+        if (!TextUtils.isEmpty(mStrBirthday)) {
+            try{
+                String[] ss = mStrBirthday.split("-");
+                dlgBirthday.setCurrentDate(Integer.valueOf(ss[0]), Integer.valueOf(ss[1]), Integer.valueOf(ss[2]));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        dlgBirthday.show();
     }
 }

@@ -91,4 +91,9 @@
     <color name="friend_col_5">#53e7c6</color>
     <color name="friend_col_6">#1ccdf2</color>
     <color name="friend_col_7">#bcaef9</color>
+
+    <!-- Wheel picker -->
+    <color name="ColorButtonRelease">#FCC689</color>
+    <color name="ColorButtonPressed">#FF7438</color>
+    <color name="ColorButtonDisable">#EEE</color>
 </resources>
