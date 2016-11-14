@@ -49,6 +49,10 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
 
     private final int MSG_FRIEND_REPLY_OK = 1;
     private final int MSG_FRIEND_REPLY_NEXT_TIME = 2;
+    private final int MSG_FRIEND_REQ_START_2_WALK = 3;
+
+    /* 回复走走请求对话框 */
+    private Dialog mWalkReplyDialog;
 
     private Handler mUiHandler = new Handler() {
         @Override
@@ -74,6 +78,17 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                     }
                     Toast.makeText(ShowDistanceActivity.this, getString(R.string.msg_walk_reply_receiver_next_time), Toast.LENGTH_SHORT).show();
                     break;
+                case MSG_FRIEND_REQ_START_2_WALK:
+                    //TODO: send agreement and goto countdown UI directly?
+                    logger.d("ShowDistance: recejve MSG_FRIEND_REQ_START_2_WALK");
+                    if(mWalkRequestDialog != null && mWalkRequestDialog.isShowing()) {
+                        logger.d("ShowDistance: dismiss old dialog.");
+                        mWalkRequestDialog.dismiss();
+                        mWalkRequestDialog = null;
+                    }
+                    createWalkReplyDialog();
+                    mWalkReplyDialog.show();
+                    break;
                 default:
                     break;
             }
@@ -96,9 +111,14 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                         String[] extraArray = message.getExtraInfo().split(MessageUtil.EXTRA_INFOR_SPLIT);
                         if(extraArray != null && extraArray.length >= 2 && !TextUtils.isEmpty(extraArray[0])) {
                             if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_OK)) {
+                                //Friend send agreement.
                                 mUiHandler.sendEmptyMessage(MSG_FRIEND_REPLY_OK);
                             } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME)) {
+                                //Friend refuse your request this time.
                                 mUiHandler.sendEmptyMessage(MSG_FRIEND_REPLY_NEXT_TIME);
+                            } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REQUEST)) {
+                                //Friend send a start to walk request at the same time.
+                                mUiHandler.sendEmptyMessage(MSG_FRIEND_REQ_START_2_WALK);
                             }
                         }
                     }
@@ -138,7 +158,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         View title = findViewById(R.id.title);
         title.findViewById(R.id.back_rl).setOnClickListener(this);
         title.findViewById(R.id.more_rl).setVisibility(View.GONE);
-        ((TextView) (title.findViewById(R.id.display_name))).setText(R.string.setting_title);
+        ((TextView) (title.findViewById(R.id.display_name))).setText(R.string.main_title);
 
         mSearchingView = (RippleView) findViewById(R.id.searchingView);
         mRlSearchArea = (RelativeLayout) findViewById(R.id.rlSearching);
@@ -233,4 +253,37 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
             mTvPleaseClickPortrait.setVisibility(visibility);
         }
     }
+
+    private void createWalkReplyDialog() {
+        mWalkReplyDialog = DialogFactory.getStart2WalkReplyDialog(this, mStrFriendId, new DialogFactory.NoticeDialogCancelClickListener() {
+            @Override
+            public void onNoticeDialogCancelClick() {
+                String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
+                        MessageUtil.EXTRA_INFOR_SPLIT +
+                        MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME;
+                WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId,
+                        getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
+
+                mWalkReplyDialog.dismiss();
+                mWalkReplyDialog = null;
+            }
+
+            @Override
+            public void onNoticeDialogConfirmClick(boolean isChecked, Object value) {
+                String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
+                        MessageUtil.EXTRA_INFOR_SPLIT +
+                        MessageUtil.EXTRA_START_2_WALK_REPLY_OK;
+                WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId,
+                        getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
+
+                mWalkReplyDialog.dismiss();
+                mWalkReplyDialog = null;
+
+                Intent intent = new Intent(ShowDistanceActivity.this, CountdownnActivity.class);
+                intent.putExtra(CountdownnActivity.PARAMS_FRIEND_OBJ_ID, mStrFriendId);
+                ShowDistanceActivity.this.startActivity(intent);
+            }
+        });
+    }
+
 }

@@ -163,6 +163,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     /* 收信人是否可编辑 */
     protected boolean isReceiverEditable = true;
 
+    protected boolean isActivityOnForground = false;
+
     /* 编辑联系人 */
     private EditText mReceiverEditView;
     /* 进入双方距离界面按钮 */
@@ -552,6 +554,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     @Override
     protected void onResume() {
         super.onResume();
+
+        isActivityOnForground = true;
+
         if (mMaskView.getVisibility() == View.VISIBLE) {
             mMaskView.setVisibility(View.GONE);
         }
@@ -585,6 +590,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     @Override
     protected void onPause() {
         super.onPause();
+
+        isActivityOnForground = false;
+
         mOnPauseSavedReceiverNum = sCurrentReceiverNum;
         sCurrentReceiverNum = null;
         if (mAudioMediaPlayer != null && mAudioMediaPlayer.isPlaying()) {
@@ -2933,8 +2941,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 String[] extraArray = msg.getExtraInfo().split(MessageUtil.EXTRA_INFOR_SPLIT);
                 if(extraArray != null && extraArray.length >= 2 && !TextUtils.isEmpty(extraArray[0])) {
                     if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REQUEST)) {
-                        //Show dialog directly.
-                        if(mWalkReplyDialog == null) {
+                        //Show dialog directly if activity on foreground
+                        if(mWalkReplyDialog == null && isActivityOnForground) {
                             createWalkReplyDialog();
                             mWalkReplyDialog.show();
                         }

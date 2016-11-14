@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.*;
 import android.widget.*;
-import android.widget.DatePicker.OnDateChangedListener;
 import com.example.walkarround.R;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.manager.ContactsManager;
@@ -488,37 +487,4 @@ public class DialogFactory {
         dialog.setContentView(contentView);
         return dialog;
     }
-
-    public static Dialog getSingleChoiceDialog(Context context, String title, int arrayID,int selected,
-                                                DialogInterface.OnClickListener singleListener,
-                                                DialogInterface.OnClickListener confirmListener) {
-        if(context == null) {
-            return null;
-        }
-
-        if(selected < 0 || selected >= context.getResources().getTextArray(arrayID).length) {
-            selected = 0;
-        }
-
-        Builder builder = new Builder(context);
-        builder.setTitle(title);
-        builder.setSingleChoiceItems(arrayID, selected, singleListener);
-        builder.setPositiveButton(R.string.common_ok, confirmListener);
-
-        return builder.create();
-    }
-
-    public static Dialog getDatePickerDialog(Context activity, int year, int month, int day,
-                                             OnDateChangedListener listener) {
-
-        Dialog dialog = new Dialog(activity, R.style.Theme_CustomDialog);
-        View contentView = LayoutInflater.from(activity).inflate(R.layout.dialog_datepicker, null);
-
-        DatePicker datePicker = (DatePicker)contentView.findViewById(R.id.datepicker);
-        datePicker.init(year, month, day, listener);
-
-        dialog.setContentView(contentView);
-        return dialog;
-    }
-
 }
