@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.example.walkarround.EntranceActivity;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PhotoView;
@@ -29,6 +30,7 @@ import com.example.walkarround.message.task.EvaluateFriendTask;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.myself.manager.ProfileManager;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpUtil;
@@ -178,13 +180,19 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                     ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_IMPRESSION);
                     Toast.makeText(EvaluateActivity.this, R.string.evaluate_send_impression2server_suc, Toast.LENGTH_LONG).show();
                     dismissCircleDialog();
-                    finish();
+                    Intent target = new Intent(getApplicationContext(), EntranceActivity.class);
+                    target.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    target.putExtra(AppConstant.KEY_START_TARGET_ACTIVITY, AppConstant.START_MAIN_ACTIVITY);
+                    startActivity(target);
+                    EvaluateActivity.this.finish();
                     break;
                 case MSG_EVALUATE_FAILED:
                     dismissCircleDialog();
-                    EvaluateActivity.this.finish();
+
                     //TODO: We should indicate user details by different server response.Like this friend already be evaluated, time out...
                     Toast.makeText(EvaluateActivity.this, R.string.evaluate_send_impression2server_fail, Toast.LENGTH_LONG).show();
+
+                    EvaluateActivity.this.finish();
                     break;
                 default:
                     break;

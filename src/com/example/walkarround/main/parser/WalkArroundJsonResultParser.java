@@ -2,6 +2,7 @@ package com.example.walkarround.main.parser;
 
 import android.text.TextUtils;
 import com.alibaba.fastjson.JSONObject;
+import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.model.FriendInfo;
 import com.example.walkarround.util.http.HttpUtil;
@@ -128,5 +129,37 @@ public class WalkArroundJsonResultParser {
         }
 
         return null;
+    }
+
+    public static GeoData parseUserCoordinate(String str) {
+        if (TextUtils.isEmpty(str)){
+            return null;
+        }
+
+        GeoData coordinateData = null;
+
+        try {
+            JSONObject jsonObject = JSONObject.parseObject(str);
+
+            if (jsonObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT)) {
+
+                JSONObject jsonResultObject = jsonObject.getJSONObject(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT);
+
+                if(jsonResultObject != null && jsonResultObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT)) {
+                    JSONObject subJsonResultObject = jsonResultObject.getJSONObject(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT);
+                    if(subJsonResultObject != null
+                            && subJsonResultObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_LATITUDE)
+                            && subJsonResultObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_LONGITUDE)) {
+                        double latitude = Double.parseDouble(subJsonResultObject.getString(HttpUtil.HTTP_RESPONSE_KEY_LATITUDE));
+                        double longtitude = Double.parseDouble(subJsonResultObject.getString(HttpUtil.HTTP_RESPONSE_KEY_LONGITUDE));
+                        coordinateData = new GeoData(latitude, longtitude, null);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return coordinateData;
     }
 }

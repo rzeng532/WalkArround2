@@ -54,6 +54,9 @@ public class EntranceActivity extends Activity {
                 Intent target = new Intent(getApplicationContext(), EntranceActivity.class);
                 startActivity(target);
                 break;
+            case AppConstant.START_MAIN_ACTIVITY:
+                startActivityForResult(new Intent(this, AppMainActivity.class), REQ_CODE_LOGIN);
+                break;
             default:
                 break;
         }

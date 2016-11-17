@@ -23,6 +23,7 @@ public class HttpUtil {
     public static final String HTTP_FUNC_GET_FRIEND_LIST = "friendList";
     public static final String HTTP_FUNC_EVALUATE_EACH = "evaluationEach";
     public static final String HTTP_FUNC_UPDATE_SPEEDDATE_COLOR = "setColor";
+    public static final String HTTP_FUNC_QUERY_USR_COORDINATE = "userCoordinate";
 
     //Public HTTP tasks
     private static final String HTTP_TASK_PRE = HTTP_BASE_URL + HTTP_BASE_SPLIT_SYM +
@@ -52,6 +53,9 @@ public class HttpUtil {
     public static final String HTTP_TASK_UPDATE_SPEEDDATE_COLOR = HTTP_TASK_PRE +
             HTTP_FUNC_UPDATE_SPEEDDATE_COLOR;
 
+    public static final String HTTP_TASK_QUERY_USR_COORDINATE = HTTP_TASK_PRE +
+            HTTP_FUNC_QUERY_USR_COORDINATE;
+
     public static final String HTTP_PARAM_QUERY_NEARLY_USERS_ID = "userDynamicDataId";
     public static final String HTTP_PARAM_LIKE_SOMEONE_FROM = "fromUserId";
     public static final String HTTP_PARAM_LIKE_SOMEONE_TO = "toUserId";
@@ -60,6 +64,7 @@ public class HttpUtil {
     public static final String HTTP_PARAM_FRIEND_USER_ID = "friendUserId";
     public static final String HTTP_PARAM_FRIEND_LIST_COUNT = "count";
     public static final String HTTP_PARAM_SPEEDDATE_COLOR = "color";
+    public static final String HTTP_PARAM_USR_COORDINATE = "userId";
 
     public static final String HTTP_PARAM_EVALUATE_HONEST = "honesty";
     public static final String HTTP_PARAM_EVALUATE_TALK_STYLE = "talkative";
@@ -86,6 +91,10 @@ public class HttpUtil {
     //Response: query speed date id
     public static final String HTTP_RESPONSE_KEY_OBJECT_ID = "objectId";
     public static final String HTTP_RESPONSE_KEY_COLOR = "color";
+
+    //Response: query user coordinate
+    public static final String HTTP_RESPONSE_KEY_LATITUDE = "latitude";
+    public static final String HTTP_RESPONSE_KEY_LONGITUDE = "longitude";
 
     private String addEntityKeyValue(String key, String value) {
         try {

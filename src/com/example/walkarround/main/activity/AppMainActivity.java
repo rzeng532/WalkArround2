@@ -94,6 +94,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                 List<ContactInfo> nearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String) object);
                 if (!isFinishing() && nearlyUserList != null && nearlyUserList.size() > 0) {
                     amLogger.d("Query nearly user successful and user list size = " + nearlyUserList.size());
+                    amLogger.d("Query nearly user successful first user: " + nearlyUserList.get(0).toString());
                     NearlyUsersFragment.getInstance().updateNearlyUserList(nearlyUserList);
                 } else {
                     amLogger.d("Query nearly user successful and user list is empty.");
@@ -202,6 +203,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             if (mMyGeo != null) {
                 //Update user dynamic data - online state & GEO.
                 ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(mMyGeo, true, 1), mDynUpdateListener);
+                ProfileManager.getInstance().getMyProfile().setLocation(mMyGeo);
             }
         }
 

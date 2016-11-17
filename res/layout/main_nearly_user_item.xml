@@ -71,12 +71,22 @@
                         android:textColor="#878787"
                         android:text="bb"
                         android:textSize="20sp" />
+                <TextView
+                        android:id="@+id/split1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_toRightOf="@id/card_name"
+                        android:textColor="#878787"
+                        android:text=","
+                        android:textSize="20sp" />
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginLeft="8dp"
-                    android:background="@drawable/card_pic" />
+                    android:background="@drawable/message_btn_more_location" />
 
                 <TextView
                     android:id="@+id/card_image_num"
@@ -87,12 +97,6 @@
                     android:text="4"
                     android:textColor="#878787"
                     android:textSize="17sp" />
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/card_des" />
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>

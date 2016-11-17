@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.walkarround.R;
 import com.example.walkarround.flingswipe.RotateTextImageView;
 import com.example.walkarround.main.model.ContactInfo;
+import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.image.ImageLoaderManager;
 
 import java.util.List;
@@ -69,11 +70,18 @@ public class NearlyUserListAdapter extends BaseAdapter {
 
         holder.mCardName.setText(mUserList.get(position).getUsername());
 
-        if (TextUtils.isEmpty(mUserList.get(position).getBirthday())) {
+        String ageByBirth = ProfileUtil.getAgeByBirth(mUserList.get(position).getBirthday());
+        if (TextUtils.isEmpty(ageByBirth)) {
             holder.mCardYear.setText("");
         } else {
-            holder.mCardYear.setText(mUserList.get(position).getBirthday());
+            holder.mCardYear.setText(ageByBirth);
         }
+
+        //有数据时显示距离，单位米
+        String distance = (mUserList.get(position).getDistance() != null && mUserList.get(position).getDistance().size() > 0)
+                ? (int)(mUserList.get(position).getDistance().get(0) * 1000) + mContext.getResources().getString(R.string.common_distance_unit)
+                    : "";
+        holder.mCardImageNum.setText(distance);
 
         return convertView;
     }

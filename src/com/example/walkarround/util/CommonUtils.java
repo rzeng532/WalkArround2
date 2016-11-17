@@ -6,6 +6,7 @@ package com.example.walkarround.util;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Environment;
 import android.text.TextUtils;
 import com.example.walkarround.R;
@@ -526,4 +527,17 @@ public class CommonUtils {
         return resId;
     }
 
+    /**
+     * Calculate distance between (lat_1, long_1) and (lat_2, long_2) and return kilometers
+     * @param lat1
+     * @param lon1
+     * @param lat2
+     * @param lon2
+     * @return
+     */
+    public static double getDistance(double lat1, double lon1, double lat2, double lon2) {
+        float[] results=new float[1];
+        Location.distanceBetween(lat1, lon1, lat2, lon2, results);
+        return results[0];
+    }
 }

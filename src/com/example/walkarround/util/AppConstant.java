@@ -55,6 +55,7 @@ public class AppConstant {
     public static final String KEY_START_TARGET_ACTIVITY = "key_start_target_activity";
     public static final int START_INVALID_VALUE = -1;
     public static final int START_LOGIN_ACTIVITY = 1000;
+    public static final int START_MAIN_ACTIVITY = 1001;
 
     public static final int ACTIVITY_RETURN_CODE_CANCEL = 100;
     public static final int ACTIVITY_RETURN_CODE_OK = 101;

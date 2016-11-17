@@ -3,9 +3,11 @@
  */
 package com.example.walkarround.myself.util;
 
+import android.text.TextUtils;
 import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
 import com.example.walkarround.Location.model.GeoData;
+
+import java.util.Calendar;
 
 /**
  * Date: 2015-12-08
@@ -27,7 +29,6 @@ public class ProfileUtil {
     public static final int REG_TYPE_BIRTH_DAY = 4; //string
     public static final int REG_TYPE_MOBILE = 5; //string
     public static final int REG_TYPE_LOCATION = 6; //geo pointer
-
 
     //Profile key
     public static final String REG_KEY_USER_NAME = "username"; //string
@@ -54,5 +55,55 @@ public class ProfileUtil {
         }
 
         return (new AVGeoPoint(data.getLatitude(), data.getLongitude()));
+    }
+
+    /**
+     * 根据日期数据计算年龄
+     * @param birth
+     * @return
+     */
+    public static String getAgeByBirth(String birth) {
+
+        if(TextUtils.isEmpty(birth)) {
+            return null;
+        }
+
+        //获取当前系统时间
+        Calendar cal = Calendar.getInstance();
+
+        //取出系统当前时间的年、月、日部分
+        int yearNow = cal.get(Calendar.YEAR);
+        int monthNow = cal.get(Calendar.MONTH);
+        int dayOfMonthNow = cal.get(Calendar.DAY_OF_MONTH);
+
+        //解析生日数据
+        String[] birthDate = birth.split("-");
+        if(birthDate == null || birthDate.length != 3) {
+            return null;
+        }
+
+        //取出出生日期的年、月、日部分
+        int yearBirth = Integer.parseInt(birthDate[0]);
+        int monthBirth = Integer.parseInt(birthDate[1]);
+        int dayOfMonthBirth = Integer.parseInt(birthDate[2]);
+
+        //当前年份与出生年份相减，初步计算年龄
+        int ageInt = yearNow - yearBirth;
+        //当前月份与出生日期的月份相比，如果月份小于出生月份，则年龄上减1，表示不满多少周岁
+        if (monthNow <= monthBirth) {
+            //如果月份相等，在比较日期，如果当前日，小于出生日，也减1，表示不满多少周岁
+            if (monthNow == monthBirth) {
+                if (dayOfMonthNow < dayOfMonthBirth) ageInt--;
+            }else{
+                ageInt--;
+            }
+        }
+
+        //非法数据
+        if(ageInt <= 0) {
+            return null;
+        }
+
+        return Integer.toString(ageInt);
     }
 }
