@@ -26,6 +26,7 @@ import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.task.EndSpeedDateTask;
 import com.example.walkarround.message.task.EvaluateFriendTask;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
@@ -118,8 +119,40 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
             //Task success.
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
-                mUIHandler.sendEmptyMessage(MSG_EVALUATE_SUCCESS);
+
+                //End speed date
+                String speedDateId = ProfileManager.getInstance().getSpeedDateId();
+                if(!TextUtils.isEmpty(speedDateId)) {
+                    ThreadPoolManager.getPoolManager().addAsyncTask(new EndSpeedDateTask(getApplicationContext(),
+                            mEndSpeedDateTaskListener,
+                            HttpUtil.HTTP_FUNC_END_SPEED_DATE,
+                            HttpUtil.HTTP_TASK_END_SPEED_DATE,
+                            EndSpeedDateTask.getParams(speedDateId),
+                            TaskUtil.getTaskHeader()));
+                }
             } else if(HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
+                mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
+    private HttpTaskBase.onResultListener mEndSpeedDateTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_END_SPEED_DATE)) {
+                mUIHandler.sendEmptyMessage(MSG_EVALUATE_SUCCESS);
+            } else if(HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_END_SPEED_DATE)) {
                 mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
             }
         }
@@ -263,7 +296,19 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                     && mRbTemperament.getRating() > 0.0f) {
                     //Get speed data id -> evaluate friend -> finish;
                 showCircleDialog();
-                getSpeedDataId();
+                String speedDateId = ProfileManager.getInstance().getSpeedDateId();
+                if(!TextUtils.isEmpty(speedDateId)) {
+                    ThreadPoolManager.getPoolManager().addAsyncTask(new EvaluateFriendTask(getApplicationContext(),
+                            mEvaluateFriendTaskListener,
+                            HttpUtil.HTTP_FUNC_EVALUATE_EACH,
+                            HttpUtil.HTTP_TASK_EVALUATION_EACH,
+                            EvaluateFriendTask.getParams((mFriend != null) ? mFriend.getObjectId() : null, (int)(mRbHonest.getRating()),
+                                    (int)(mRbConversationStyle.getRating()), (int)(mRbAppearance.getRating()),
+                                    (int)(mRbTemperament.getRating()), speedDateId),
+                            TaskUtil.getTaskHeader()));
+                } else {
+                    mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
+                }
             } else {
                 //Indicate user to evaluate
                 Toast.makeText(this, getResources().getString(R.string.evaluate_please_rating), Toast.LENGTH_SHORT).show();
