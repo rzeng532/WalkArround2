@@ -25,6 +25,7 @@ public class HttpUtil {
     public static final String HTTP_FUNC_UPDATE_SPEEDDATE_COLOR = "setColor";
     public static final String HTTP_FUNC_QUERY_USR_COORDINATE = "userCoordinate";
     public static final String HTTP_FUNC_END_SPEED_DATE = "endSpeedDate";
+    public static final String HTTP_FUNC_CANCEL_SPEED_DATE = "cancelSpeedDate";
 
     //Public HTTP tasks
     private static final String HTTP_TASK_PRE = HTTP_BASE_URL + HTTP_BASE_SPLIT_SYM +
@@ -59,6 +60,9 @@ public class HttpUtil {
 
     public static final String HTTP_TASK_END_SPEED_DATE = HTTP_TASK_PRE +
             HTTP_FUNC_END_SPEED_DATE;
+
+    public static final String HTTP_TASK_CANCEL_SPEED_DATE = HTTP_TASK_PRE +
+            HTTP_FUNC_CANCEL_SPEED_DATE;
 
     public static final String HTTP_PARAM_QUERY_NEARLY_USERS_ID = "userDynamicDataId";
     public static final String HTTP_PARAM_LIKE_SOMEONE_FROM = "fromUserId";

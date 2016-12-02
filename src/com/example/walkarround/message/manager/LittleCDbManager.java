@@ -890,13 +890,15 @@ public class LittleCDbManager {
             return;
         }
 
+        int oldState = getConversationStatus(threadId);
+
         String where = Conversation._ID + "=?";
         String[] arg = new String[]{threadId + ""};
         ContentValues conversationValues = new ContentValues();
-        conversationValues.put(Conversation._CONVERSATION_STATUS, newState);
+        conversationValues.put(Conversation._CONVERSATION_STATUS, (oldState > newState) ? oldState : newState);
 
         //If conversation state == WalkArroundState.IMPRESSION
-        if(newState == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+        if(((oldState > newState) ? oldState : newState) == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
             conversationValues.put(Conversation._TOP, Conversation.NOT_TOP);
         }
 
@@ -925,14 +927,16 @@ public class LittleCDbManager {
             return;
         }
 
+        int oldState = getConversationStatus(threadId);
+
         String where = Conversation._ID + "=?";
         String[] arg = new String[]{threadId + ""};
         ContentValues conversationValues = new ContentValues();
         conversationValues.put(Conversation._COLOR, newColor);
-        conversationValues.put(Conversation._CONVERSATION_STATUS, newStatus);
+        conversationValues.put(Conversation._CONVERSATION_STATUS, (oldState > newStatus) ? oldState : newStatus);
 
         //If conversation state == WalkArroundState.IMPRESSION
-        if(newStatus == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+        if(((oldState > newStatus) ? oldState : newStatus) == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
             conversationValues.put(Conversation._TOP, Conversation.NOT_TOP);
         }
 
@@ -1076,6 +1080,13 @@ public class LittleCDbManager {
     public int deleteConversation(long threadId) {
         String where = Conversation._ID + " = ? ";
         String[] args = new String[]{String.valueOf(threadId)};
+        int ret = mContext.getContentResolver().delete(Conversation.CONTENT_URI, where, args);
+        return ret;
+    }
+
+    public int deleteMappingConversation() {
+        String where = Conversation._CONVERSATION_STATUS + " = ? ";
+        String[] args = new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_IM)};
         int ret = mContext.getContentResolver().delete(Conversation.CONTENT_URI, where, args);
         return ret;
     }

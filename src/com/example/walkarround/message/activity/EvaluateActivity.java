@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -65,6 +66,9 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
     private Dialog mLoadingDialog;
 
+    //For playing complete music.
+    private MediaPlayer mMediaPlayer;
+
     private HttpTaskBase.onResultListener mEvaluateFriendTaskListener = new HttpTaskBase.onResultListener() {
         @Override
         public void onPreTask(String requestCode) {
@@ -82,7 +86,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 recipient.add(mFriend.getObjectId());
                 long msgThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
                         recipient);
-                if(msgThreadId >= 0) {
+                if (msgThreadId >= 0) {
                     int colorIndex = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColorIndex(msgThreadId);
                     WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, MessageUtil.WalkArroundState.STATE_IMPRESSION);
 
@@ -92,12 +96,12 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                             mAddFriendTaskListener,
                             HttpUtil.HTTP_FUNC_ADD_FRIEND,
                             HttpUtil.HTTP_TASK_ADD_FRIEND,
-                            AddFriendTask.getParams(ProfileManager.getInstance().getCurUsrObjId(),(mFriend != null) ? mFriend.getObjectId() : null, "" + colorIndex),
+                            AddFriendTask.getParams(ProfileManager.getInstance().getCurUsrObjId(), (mFriend != null) ? mFriend.getObjectId() : null, "" + colorIndex),
                             TaskUtil.getTaskHeader()));
                 } else {
                     mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
                 }
-            } else if(HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH)) {
+            } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH)) {
                 myLogger.d("EvaluateFriend failed.");
                 mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
             }
@@ -122,7 +126,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
                 //End speed date
                 String speedDateId = ProfileManager.getInstance().getSpeedDateId();
-                if(!TextUtils.isEmpty(speedDateId)) {
+                if (!TextUtils.isEmpty(speedDateId)) {
                     ThreadPoolManager.getPoolManager().addAsyncTask(new EndSpeedDateTask(getApplicationContext(),
                             mEndSpeedDateTaskListener,
                             HttpUtil.HTTP_FUNC_END_SPEED_DATE,
@@ -130,7 +134,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                             EndSpeedDateTask.getParams(speedDateId),
                             TaskUtil.getTaskHeader()));
                 }
-            } else if(HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
+            } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
                 mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
             }
         }
@@ -152,7 +156,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
             //Task success.
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_END_SPEED_DATE)) {
                 mUIHandler.sendEmptyMessage(MSG_EVALUATE_SUCCESS);
-            } else if(HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_END_SPEED_DATE)) {
+            } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_END_SPEED_DATE)) {
                 mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
             }
         }
@@ -182,9 +186,9 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                         mEvaluateFriendTaskListener,
                         HttpUtil.HTTP_FUNC_EVALUATE_EACH,
                         HttpUtil.HTTP_TASK_EVALUATION_EACH,
-                        EvaluateFriendTask.getParams((mFriend != null) ? mFriend.getObjectId() : null, (int)(mRbHonest.getRating()),
-                                (int)(mRbConversationStyle.getRating()), (int)(mRbAppearance.getRating()),
-                                (int)(mRbTemperament.getRating()), strSpeedDateId),
+                        EvaluateFriendTask.getParams((mFriend != null) ? mFriend.getObjectId() : null, (int) (mRbHonest.getRating()),
+                                (int) (mRbConversationStyle.getRating()), (int) (mRbAppearance.getRating()),
+                                (int) (mRbTemperament.getRating()), strSpeedDateId),
                         TaskUtil.getTaskHeader()));
             } else {
                 myLogger.d("Query speed date id failed");
@@ -247,38 +251,60 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
     public void onBackPressed() {
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mMediaPlayer != null) {
+            myLogger.d("onPause: stop & reset media player.");
+            mMediaPlayer.stop();
+            mMediaPlayer.reset();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     private void initData() {
         //Get data from intent, like friend objId, speed data id.
         Intent intent = getIntent();
-        if(intent != null) {
+        if (intent != null) {
             String friendId = intent.getStringExtra(PARAMS_FRIEND_OBJ_ID);
 
-            if(!TextUtils.isEmpty(friendId)) {
+            if (!TextUtils.isEmpty(friendId)) {
                 mFriend = ContactsManager.getInstance(this).getContactByUsrObjId(friendId);
             }
+        }
+
+        if (mMediaPlayer == null) {
+            createWalkArroundCompleteMusic();
         }
     }
 
     private void initView() {
-        mTvDescription = (TextView)findViewById(R.id.tv_walk_description);
-        mTvComplete = (TextView)findViewById(R.id.tv_complete_walk);
+        mTvDescription = (TextView) findViewById(R.id.tv_walk_description);
+        mTvComplete = (TextView) findViewById(R.id.tv_complete_walk);
         mTvComplete.setOnClickListener(this);
 
-        mPvPortrait = (PhotoView)findViewById(R.id.pv_evaluate);
+        mPvPortrait = (PhotoView) findViewById(R.id.pv_evaluate);
 
-        mRbHonest = (RatingBar)findViewById(R.id.rating_honest);
+        mRbHonest = (RatingBar) findViewById(R.id.rating_honest);
         mRbHonest.setOnRatingBarChangeListener(this);
 
-        mRbConversationStyle = (RatingBar)findViewById(R.id.rating_style_of_conversation);
+        mRbConversationStyle = (RatingBar) findViewById(R.id.rating_style_of_conversation);
         mRbConversationStyle.setOnRatingBarChangeListener(this);
 
-        mRbAppearance = (RatingBar)findViewById(R.id.rating_appearance);
+        mRbAppearance = (RatingBar) findViewById(R.id.rating_appearance);
         mRbAppearance.setOnRatingBarChangeListener(this);
 
-        mRbTemperament = (RatingBar)findViewById(R.id.rating_temperament);
+        mRbTemperament = (RatingBar) findViewById(R.id.rating_temperament);
         mRbTemperament.setOnRatingBarChangeListener(this);
 
-        if(mFriend != null) {
+        if (mFriend != null) {
             String friendName = mFriend.getUsername();
             mTvDescription.setText(getString(R.string.countdown_walk_with_who, friendName));
 
@@ -289,22 +315,22 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.tv_complete_walk) {
-            if(mRbHonest.getRating() > 0.0f
+        if (v.getId() == R.id.tv_complete_walk) {
+            if (mRbHonest.getRating() > 0.0f
                     && mRbConversationStyle.getRating() > 0.0f
                     && mRbAppearance.getRating() > 0.0f
                     && mRbTemperament.getRating() > 0.0f) {
-                    //Get speed data id -> evaluate friend -> finish;
+                //Get speed data id -> evaluate friend -> finish;
                 showCircleDialog();
                 String speedDateId = ProfileManager.getInstance().getSpeedDateId();
-                if(!TextUtils.isEmpty(speedDateId)) {
+                if (!TextUtils.isEmpty(speedDateId)) {
                     ThreadPoolManager.getPoolManager().addAsyncTask(new EvaluateFriendTask(getApplicationContext(),
                             mEvaluateFriendTaskListener,
                             HttpUtil.HTTP_FUNC_EVALUATE_EACH,
                             HttpUtil.HTTP_TASK_EVALUATION_EACH,
-                            EvaluateFriendTask.getParams((mFriend != null) ? mFriend.getObjectId() : null, (int)(mRbHonest.getRating()),
-                                    (int)(mRbConversationStyle.getRating()), (int)(mRbAppearance.getRating()),
-                                    (int)(mRbTemperament.getRating()), speedDateId),
+                            EvaluateFriendTask.getParams((mFriend != null) ? mFriend.getObjectId() : null, (int) (mRbHonest.getRating()),
+                                    (int) (mRbConversationStyle.getRating()), (int) (mRbAppearance.getRating()),
+                                    (int) (mRbTemperament.getRating()), speedDateId),
                             TaskUtil.getTaskHeader()));
                 } else {
                     mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
@@ -348,16 +374,16 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
      */
     private void checkRatingData() {
         //User complete rating.
-        if(mRbHonest.getRating() > 0.0f
+        if (mRbHonest.getRating() > 0.0f
                 && mRbConversationStyle.getRating() > 0.0f
                 && mRbAppearance.getRating() > 0.0f
                 && mRbTemperament.getRating() > 0.0f) {
             mTvComplete.setClickable(true);
-            GradientDrawable backGround = (GradientDrawable )mTvComplete.getBackground();
+            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
             backGround.setColor(getResources().getColor(R.color.red_button));
         } else {
             mTvComplete.setClickable(false);
-            GradientDrawable backGround = (GradientDrawable )mTvComplete.getBackground();
+            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
             backGround.setColor(getResources().getColor(R.color.transparent));
         }
     }
@@ -380,7 +406,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
     private void getSpeedDataId() {
         String userObjId = ProfileManager.getInstance().getCurUsrObjId();
 
-        if(TextUtils.isEmpty(userObjId)) {
+        if (TextUtils.isEmpty(userObjId)) {
             return;
         }
 
@@ -390,5 +416,29 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 HttpUtil.HTTP_TASK_QUERY_SPEED_DATE,
                 QuerySpeedDateIdTask.getParams(userObjId),
                 TaskUtil.getTaskHeader()));
+    }
+
+    /**
+     * 创建本地MP3播放器
+     *
+     * @return
+     */
+    public void createWalkArroundCompleteMusic() {
+
+        mUIHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mMediaPlayer = MediaPlayer.create(EvaluateActivity.this, R.raw.walk_arround_end_music);
+                mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        if(mediaPlayer != null) {
+                            mediaPlayer.reset();
+                        }
+                    }
+                });
+                mMediaPlayer.start();
+            }
+        });
     }
 }

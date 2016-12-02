@@ -146,6 +146,8 @@ public abstract class MessageAbstractManger {
 
     public abstract void deleteConversation(long threadId)  throws Exception;
 
+    public abstract int deleteMappingConversation()  throws Exception;
+
     /**
      * 获取消息内容
      *

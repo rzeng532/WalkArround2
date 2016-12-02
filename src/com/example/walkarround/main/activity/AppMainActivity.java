@@ -4,6 +4,8 @@ import android.app.*;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +24,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
+import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.model.FriendInfo;
@@ -30,6 +33,7 @@ import com.example.walkarround.main.task.GetFriendListTask;
 import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.message.activity.BuildMessageActivity;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.util.MessageConstant;
@@ -79,6 +83,23 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private final int FRAGMENT_PAGE_ID_MAIN = 0;
     private final int FRAGMENT_PAGE_ID_CONVERSATION = 1;
+
+    private final int MSG_DISPLAY_CONV_BE_DELETED = 1;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_DISPLAY_CONV_BE_DELETED:
+                    Dialog noticeDialog = DialogFactory.getConfirmDialog(AppMainActivity.this,
+                            R.string.msg_speed_date_be_canceled, R.string.common_ok, null);
+                    noticeDialog.show();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
 
     private onResultListener mQueryNearUserListener = new onResultListener() {
         @Override
@@ -253,6 +274,28 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                             WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(chattingThreadId, iStatus, Integer.parseInt(strColor));
                             amLogger.d("update conversation color index: " + Integer.parseInt(strColor) + ", status : " + iStatus);
                         }
+                    }
+
+                    //Start IM directly:
+                    Intent imItent = new Intent(AppMainActivity.this, BuildMessageActivity.class);
+                    imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_RECEIVER, strUser);
+                    imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, chattingThreadId);
+                    imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
+
+                    String friendName = "";
+                    if(friend == null) {
+                        ContactInfo friendContact = ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactByUsrObjId(strUser);
+                        friendName = (friendContact == null) ? "" : friendContact.getUsername();
+                    }
+                    imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, friendName);
+                    imItent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
+
+                    startActivity(imItent);
+                } else {
+                    //There is no speed date now.
+                    //Then delete local conversation which on mapping state & indicate user.
+                    if(WalkArroundMsgManager.getInstance(getApplicationContext()).deleteMappingConversation() > 0) {
+                        mHandler.sendEmptyMessage(MSG_DISPLAY_CONV_BE_DELETED);
                     }
                 }
             } else {

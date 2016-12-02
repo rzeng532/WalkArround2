@@ -451,6 +451,21 @@ public class WalkArroundMsgManager {
     }
 
     /**
+     * 删除状态为IM 的会话
+     *
+     * @param
+     */
+    public int deleteMappingConversation() {
+        try {
+            return mInstance.mMsgManager.deleteMappingConversation();
+        } catch (Exception e) {
+            logger.e("deleteMappingConversation Exception: " + e.getMessage());
+        }
+
+        return -1;
+    }
+
+    /**
      * 将当前消息置顶或取消置顶
      *
      * @param threadId
@@ -995,5 +1010,4 @@ public class WalkArroundMsgManager {
             mContext.sendBroadcast(intent);
         }
     }
-
 }

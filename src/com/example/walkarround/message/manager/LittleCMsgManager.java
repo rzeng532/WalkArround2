@@ -559,6 +559,11 @@ public class LittleCMsgManager extends MessageAbstractManger {
         messageDbManager.deleteConversation(threadId);
     }
 
+    @Override
+    public int deleteMappingConversation() throws Exception {
+        return messageDbManager.deleteMappingConversation();
+    }
+
     /**
      * 获取消息内容
      *

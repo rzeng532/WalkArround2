@@ -209,34 +209,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         setItemTop(holder, listDO);
         setItemRead(holder, listDO);
         setItemMessage(holder, listDO);
-
-        //Init flags
-        int convState = listDO.status;
-        logger.d("color index is: " + listDO.colorIndex);
-        logger.d("color is: " + MessageUtil.getFriendColor(listDO.colorIndex));
-
-        //Invalide value, just return.
-        logger.d("color is: " + convState);
-        if(convState == -1) {
-            return;
-        }
-
-        if(convState <  MessageUtil.WalkArroundState.STATE_IMPRESSION) {
-            holder.tvMappingFlag.setVisibility(View.VISIBLE);
-            holder.tvMappingFlag.setText(R.string.msg_conversation_mapping);
-            holder.ivDelIcon.setVisibility(View.VISIBLE);
-            //Set correct text font color for this case.
-            holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
-        } else if(convState ==  MessageUtil.WalkArroundState.STATE_IMPRESSION && position <= 1 && !isThereMappingConv) {
-            holder.tvMappingFlag.setVisibility(View.VISIBLE);
-            holder.tvMappingFlag.setText(R.string.msg_conversation_walking_friends);
-            holder.ivDelIcon.setVisibility(View.GONE);
-            holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
-        } else {
-            holder.tvMappingFlag.setVisibility(View.GONE);
-            holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
-            holder.ivDelIcon.setVisibility(View.GONE);
-        }
+        setItemFlag(holder, listDO, position, isThereMappingConv);
     }
 
     /**
@@ -393,6 +366,36 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 break;
         }
         holder.tvMessage.setText(EmojiParser.getInstance(mContext).addSmileySpans(displayStr, 0.4f));
+    }
+
+    public void setItemFlag(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean isThereMappingConv) {
+        //Init flags
+        int convState = listDO.status;
+        logger.d("color index is: " + listDO.colorIndex);
+        logger.d("color is: " + MessageUtil.getFriendColor(listDO.colorIndex));
+
+        //Invalide value, just return.
+        logger.d("color is: " + convState);
+        if(convState == -1) {
+            return;
+        }
+
+        if(convState <  MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+            holder.tvMappingFlag.setVisibility(View.VISIBLE);
+            holder.tvMappingFlag.setText(R.string.msg_conversation_mapping);
+            holder.ivDelIcon.setVisibility(View.VISIBLE);
+            //Set correct text font color for this case.
+            holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
+        } else if(convState ==  MessageUtil.WalkArroundState.STATE_IMPRESSION && position <= 1 && !isThereMappingConv) {
+            holder.tvMappingFlag.setVisibility(View.VISIBLE);
+            holder.tvMappingFlag.setText(R.string.msg_conversation_walking_friends);
+            holder.ivDelIcon.setVisibility(View.GONE);
+            holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
+        } else {
+            holder.tvMappingFlag.setVisibility(View.GONE);
+            holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
+            holder.ivDelIcon.setVisibility(View.GONE);
+        }
     }
 
     /*  置顶/消顶功能是否可用 */

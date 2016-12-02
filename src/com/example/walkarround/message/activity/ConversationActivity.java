@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.ProgressDialogHorizontal;
 import com.example.walkarround.main.model.ContactInfo;
+import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.adapter.*;
 import com.example.walkarround.message.listener.ConversationItemListener;
 import com.example.walkarround.message.listener.SearchMessageResultItemListener;
@@ -27,14 +29,15 @@ import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.model.MessageSessionBaseModel;
-import com.example.walkarround.message.task.AsyncTaskLoadSession;
-import com.example.walkarround.message.task.AsyncTaskOperation;
-import com.example.walkarround.message.task.MessageSearchTimerTask;
+import com.example.walkarround.message.task.*;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageConstant.ConversationType;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.message.util.SessionComparator;
+import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.Logger;
+import com.example.walkarround.util.http.HttpTaskBase;
+import com.example.walkarround.util.http.HttpUtil;
 import com.example.walkarround.util.http.ThreadPoolManager;
 import com.example.walkarround.util.network.NetWorkManager;
 
@@ -59,6 +62,11 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     private static final int MSG_OPERATION_LOAD_SUCCESS = 5;
     private static final int MSG_OPERATION_NOTIFY_LOAD_SUCCESS = 6;
     private static final int MSG_OPERATION_NOT_SUCCEED = 101;
+
+    /* cancel speed date event */
+    private static final int MSG_CANCEL_SPEED_DATE_OK = 102;
+    private static final int MSG_CANCEL_SPEED_DATE_FAIL = 103;
+
     /* 搜索event */
     private static final int MSG_EVENT_SEARCH_RESULT = 7;
 
@@ -163,6 +171,31 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     };
 
     /**
+     * 取消Speed data 在服务器中的状态。
+     */
+    private HttpTaskBase.onResultListener mCancelSpeedDateTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) { }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_CANCEL_SPEED_DATE)) {
+                mUIHandler.sendEmptyMessage(MSG_CANCEL_SPEED_DATE_OK);
+            } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_CANCEL_SPEED_DATE)) {
+                mUIHandler.sendEmptyMessage(MSG_CANCEL_SPEED_DATE_FAIL);
+                Toast.makeText(ConversationActivity.this, R.string.err_del_speed_date_fail, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
+
+    /**
      * 收到Rcs信息
      *
      * @param intent
@@ -206,14 +239,6 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     break;
                 case MSG_OPERATION_REMOVE_SUCCESS:
                     // 删除成功
-//                    if (mPageState == PageState.NOTIFY_BATCH_PAGE) {
-//                        mNotifyMsgAdapter.deleteSelectedDeletedItem();
-//                        refreshNotifyEntrance();
-//                        onPageStateChanged(PageState.NOTIFY_PAGE, mPageState);
-//                    } else if (mPageState == PageState.NORMAL_BATCH_PAGE) {
-//                        mConversationAdapter.deleteSelectedDeletedItem();
-//                        onPageStateChanged(PageState.NORMAL, mPageState);
-//                    }
                     mConversationAdapter.deleteSelectedDeletedItem();
                     mConversationAdapter.notifyDataSetChanged();
                     dismissCircleDialog();
@@ -286,6 +311,12 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     } else {
                         onPageStateChanged(state, mPageState);
                     }
+                    break;
+                case MSG_CANCEL_SPEED_DATE_OK:
+                    logger.d("Cancel speed date ok");
+                    break;
+                case MSG_CANCEL_SPEED_DATE_FAIL:
+                    logger.d("Cancel speed date fail");
                     break;
                 default:
                     break;
@@ -1109,9 +1140,20 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     public void onNoticeDialogConfirmClick(boolean isChecked, Object value) {
                         //batchDealMsg(MessageConstant.MSG_OPERATION_REMOVE);
                         if (mConversationAdapter != null) {
-                            //MessageSessionBaseModel listItem = mConversationAdapter.getItem(((BaseConversationListAdapter.ViewHolder) (view.getTag())).position);
-                            mConversationAdapter.put2ChoosenList(listDO);
-                            deleteConvMsg(listDO);
+                            String speedDateId = ProfileManager.getInstance().getMyProfile().getSpeedDateId();
+                            if(!TextUtils.isEmpty(speedDateId) && NetWorkManager.getInstance(mContext).isNetworkAvailable()) {
+                                ThreadPoolManager.getPoolManager().addAsyncTask(new CancelSpeedDateTask(getApplicationContext(),
+                                        mCancelSpeedDateTaskListener,
+                                        HttpUtil.HTTP_FUNC_CANCEL_SPEED_DATE,
+                                        HttpUtil.HTTP_TASK_CANCEL_SPEED_DATE,
+                                        CancelSpeedDateTask.getParams(speedDateId),
+                                        TaskUtil.getTaskHeader()));
+
+                                mConversationAdapter.put2ChoosenList(listDO);
+                                deleteConvMsg(listDO);
+                            } else {
+                                Toast.makeText(ConversationActivity.this, R.string.err_network_unavailable, Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
                 }, true

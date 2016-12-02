@@ -29,6 +29,7 @@
     <string name="err_location_update_fail">上传位置失败</string>
     <string name="err_network_unavailable">当前网络不可用</string>
     <string name="warning_hint_memory_short">内存不足</string>
+    <string name="err_del_speed_date_fail">同步服务器信息失败</string>
 
     <!-- Strings for dialog -->
     <string name="dialog_title_default">操作确认</string>
@@ -255,6 +256,7 @@
     <string name="msg_walk_reply_sender_ok">你同意了对方的碰面请求</string>
     <string name="msg_walk_reply_receiver_next_time">很遗憾，对方下次再和你走走</string>
     <string name="msg_walk_reply_sender_next_time">你拒绝了对方的碰面请求</string>
+    <string name="msg_speed_date_be_canceled">对方取消了和你的匹配，本地消息已经被删除。</string>
 
     <!-- Pull refresh string -->
     <string name="pull_to_refresh_pull_label">下拉以刷新...</string>

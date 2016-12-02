@@ -204,12 +204,7 @@ public class DialogFactory {
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         ((TextView) dialogView.findViewById(R.id.dialog_notice_tv)).setText(noticesResId);
-        dialogView.findViewById(R.id.dialog_cancel_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
+        dialogView.findViewById(R.id.dialog_cancel_btn).setVisibility(View.GONE);
         dialogView.findViewById(R.id.dialog_ok_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
