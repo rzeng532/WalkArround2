@@ -53,7 +53,7 @@ public class MessageUtil {
     public static final String EXTRA_START_2_WALK_REQUEST = "extra_start_2_walk_request";
     public static final String EXTRA_START_2_WALK_REPLY_OK = "extra_start_2_walk_reply_ok";
     public static final String EXTRA_START_2_WALK_REPLY_NEXT_TIME = "extra_start_2_walk_reply_next_time";
-
+    public static final String EXTRA_SAY_HELLO = "extra_say_hello";
 
     //Get friend list count. If count is 4, it means server response 4 friends every time.
     public static final int GET_FRIENDS_LIST_COUNT = 4;
@@ -64,10 +64,12 @@ public class MessageUtil {
             R.color.friend_col_6,R.color.friend_col_7);
 
     public interface WalkArroundState {
-        public static int STATE_INIT = 1;
-        public static int STATE_IM = 2;
-        public static int STATE_WALK = 3;
-        public static int STATE_IMPRESSION = 4;
+        public static int STATE_INIT = 1; //初始状态，无匹配关系
+        public static int STATE_IM = 2;  //匹配，并在IM 聊天状态
+        public static int STATE_WALK = 3; //IM 中相互选择地点，并且未相互评价
+        public static int STATE_IMPRESSION = 4; //完成走走，等待评价
+        public static int STATE_END = 5; //评价完成
+        public static int STATE_POP = 4; //好友堆栈溢出 （例如只能存在7个好友，你排在第八，则溢出）
     }
 
     /**

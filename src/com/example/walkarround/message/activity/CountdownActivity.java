@@ -5,10 +5,12 @@ package com.example.walkarround.message.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,9 +36,9 @@ import java.util.*;
  *
  * @author Administrator
  */
-public class CountdownnActivity extends Activity implements View.OnClickListener {
+public class CountdownActivity extends Activity implements View.OnClickListener {
 
-    private Logger logger = Logger.getLogger(CountdownnActivity.class.getSimpleName());
+    private Logger logger = Logger.getLogger(CountdownActivity.class.getSimpleName());
 
     private TextView mTvDescription;
     private TextView mTvComplete;
@@ -48,10 +50,15 @@ public class CountdownnActivity extends Activity implements View.OnClickListener
     private ContactInfo mFriend = null;
 
     private final int COUNTDOWN_TOTOL_TIME = 10 * 60;
+    //private final int COUNTDOWN_TOTOL_TIME = 1 * 60;
+    private final int MUSIC_START_TIME = 30; //it means last 30 seconds.
     private int mCurTime = 0;
     private Timer timer;
     //Input parameter for this actvity to display UI elements.
     public static final String PARAMS_FRIEND_OBJ_ID = "friend_obj_id";
+
+    //For playing complete music.
+    private MediaPlayer mMediaPlayer;
 
     private Handler handler = new Handler(){
         public void handleMessage(Message msg) {
@@ -61,14 +68,21 @@ public class CountdownnActivity extends Activity implements View.OnClickListener
                 case 1:
                     logger.d("curTime add: " + mCurTime);
                     mCurTime++;
-                    if(mCurTime >= COUNTDOWN_TOTOL_TIME) {
+                    if(mCurTime > COUNTDOWN_TOTOL_TIME) {
+                        logger.d("Set time as 0 ");
                         timeProgress.setProgress(100);
                         setTvCountdownTimeUI(0);
                         timer.cancel();
+                        jump2EvaluatePage();
+                        CountdownActivity.this.finish();
                     } else {
                         timeProgress.setProgress(( 100 * mCurTime / COUNTDOWN_TOTOL_TIME));
                         setTvCountdownTimeUI(COUNTDOWN_TOTOL_TIME - mCurTime);
-                        //timer.schedule(task,1000, 1000);
+                        if(COUNTDOWN_TOTOL_TIME - mCurTime == MUSIC_START_TIME) {
+                            if (mMediaPlayer == null) {
+                                createWalkArroundCompleteMusic();
+                            }
+                        }
                     }
 
                     break;
@@ -116,6 +130,19 @@ public class CountdownnActivity extends Activity implements View.OnClickListener
         }).show();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mMediaPlayer != null) {
+            logger.d("onPause: stop & reset media player.");
+            mMediaPlayer.stop();
+            mMediaPlayer.reset();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+    }
+
     private void initView() {
         mTvDescription = (TextView)findViewById(R.id.tv_walk_description);
         mTvComplete = (TextView)findViewById(R.id.tv_complete_walk);
@@ -161,13 +188,8 @@ public class CountdownnActivity extends Activity implements View.OnClickListener
                 }
 
                 //We need a popup here
-                //Start Evaluate activity
-                if(mFriend != null) {
-                    Intent intent = new Intent(CountdownnActivity.this, EvaluateActivity.class);
-                    intent.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, mFriend.getObjectId());
-                    startActivity(intent);
-                }
-                ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_WALK);
+                jump2EvaluatePage();
+
                 this.finish();
                 break;
             default:
@@ -176,10 +198,50 @@ public class CountdownnActivity extends Activity implements View.OnClickListener
     }
 
     private void setTvCountdownTimeUI(int timeSec) {
-        if(mTvCountdownTime != null && timeSec > 0l) {
+        if(mTvCountdownTime != null && timeSec > 30l) {
             SimpleDateFormat sdf = new SimpleDateFormat( "mm:ss");
             String time = sdf.format(new Date((timeSec * 1000L)));
             mTvCountdownTime.setText(time);
+        } else if(mTvCountdownTime != null && timeSec >= 0l) {
+            SimpleDateFormat sdf = new SimpleDateFormat( "ss");
+            String time = sdf.format(new Date((timeSec * 1000L)));
+            mTvCountdownTime.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 50);
+            mTvCountdownTime.setTextColor(getResources().getColor(R.color.cor_red));
+            mTvCountdownTime.setText(time);
         }
+    }
+
+    /**
+     * 创建本地MP3播放器
+     *
+     * @return
+     */
+    public void createWalkArroundCompleteMusic() {
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mMediaPlayer = MediaPlayer.create(CountdownActivity.this, R.raw.walk_arround_end_music);
+                mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        if(mediaPlayer != null) {
+                            mediaPlayer.reset();
+                        }
+                    }
+                });
+                mMediaPlayer.start();
+            }
+        });
+    }
+
+    private void jump2EvaluatePage() {
+        //Start Evaluate activity
+        if(mFriend != null) {
+            Intent intent = new Intent(CountdownActivity.this, EvaluateActivity.class);
+            intent.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, mFriend.getObjectId());
+            startActivity(intent);
+        }
+        ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_WALK);
     }
 }

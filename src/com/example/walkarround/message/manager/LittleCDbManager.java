@@ -897,8 +897,10 @@ public class LittleCDbManager {
         ContentValues conversationValues = new ContentValues();
         conversationValues.put(Conversation._CONVERSATION_STATUS, (oldState > newState) ? oldState : newState);
 
-        //If conversation state == WalkArroundState.IMPRESSION
-        if(((oldState > newState) ? oldState : newState) == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+        //If conversation state == WalkArroundState.STATE_END
+        logger.d("updateConversationStatus, old = " + oldState + ", newState = " + newState);
+        if(((oldState > newState) ? oldState : newState) >= MessageUtil.WalkArroundState.STATE_END) {
+            logger.d("State is END & clear top ");
             conversationValues.put(Conversation._TOP, Conversation.NOT_TOP);
         }
 
@@ -936,7 +938,9 @@ public class LittleCDbManager {
         conversationValues.put(Conversation._CONVERSATION_STATUS, (oldState > newStatus) ? oldState : newStatus);
 
         //If conversation state == WalkArroundState.IMPRESSION
-        if(((oldState > newStatus) ? oldState : newStatus) == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+        logger.d("updateConversationStatus, old = " + oldState + ", newState = " + newStatus);
+        if(((oldState > newStatus) ? oldState : newStatus) >= MessageUtil.WalkArroundState.STATE_END) {
+            logger.d("updateConversationStatus, clear top.");
             conversationValues.put(Conversation._TOP, Conversation.NOT_TOP);
         }
 
@@ -1085,10 +1089,26 @@ public class LittleCDbManager {
     }
 
     public int deleteMappingConversation() {
-        String where = Conversation._CONVERSATION_STATUS + " = ? ";
-        String[] args = new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_IM)};
-        int ret = mContext.getContentResolver().delete(Conversation.CONTENT_URI, where, args);
-        return ret;
+
+        Cursor cursor = mContext.getContentResolver().query(Conversation.CONTENT_URI,
+                new String[]{Conversation._ID}, Conversation._CONVERSATION_STATUS + " < ? ",
+                new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_END)}, null);
+
+        List<Long> threadIdList = new ArrayList<>();
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    threadIdList.add(cursor.getLong(cursor.getColumnIndex(Conversation._ID)));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+
+        if(threadIdList.size() > 0) {
+            batchDeleteMsg(threadIdList);
+        }
+
+        return threadIdList.size();
     }
 
     public void doMarkConversationReaded(int conversationId) {
@@ -1207,6 +1227,10 @@ public class LittleCDbManager {
     }
 
     public int createConversationId(int chatType, List<String> addressList) {
+        return createConversationId(chatType, addressList, MessageUtil.WalkArroundState.STATE_INIT);
+    }
+
+    public int createConversationId(int chatType, List<String> addressList, int status) {
         synchronized (sLock) {
             List<String> addresses = new ArrayList<String>();
             addresses.addAll(addressList);
@@ -1235,6 +1259,7 @@ public class LittleCDbManager {
             values.put(Conversation._MSG_CONTENT_TYPE, MessageType.MSG_TYPE_TEXT);
             values.put(Conversation._MSG_CONTENT, "");
             values.put(Conversation._MSG_STATUS, -1);
+            values.put(Conversation._CONVERSATION_STATUS, status);
 
             Uri uri = resolver.insert(Conversation.CONTENT_URI, values);
             String idString = uri.getPathSegments().get(1);

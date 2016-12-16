@@ -192,7 +192,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder = (ViewHolder) convertView.getTag();
         }
         holder.position = position;
-        initViewHolder(holder, listDO, position, (position <= 0 ? false : mListData.get(position - 1).status < MessageUtil.WalkArroundState.STATE_IMPRESSION));
+        initViewHolder(holder, listDO, position, (position <= 0 ? false : mListData.get(position - 1).status < MessageUtil.WalkArroundState.STATE_END));
         return convertView;
     }
 
@@ -380,19 +380,31 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             return;
         }
 
-        if(convState <  MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+        if(convState <  MessageUtil.WalkArroundState.STATE_END && convState >= MessageUtil.WalkArroundState.STATE_IM) {
             holder.tvMappingFlag.setVisibility(View.VISIBLE);
             holder.tvMappingFlag.setText(R.string.msg_conversation_mapping);
             holder.ivDelIcon.setVisibility(View.VISIBLE);
             //Set correct text font color for this case.
             holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
-        } else if(convState ==  MessageUtil.WalkArroundState.STATE_IMPRESSION && position <= 1 && !isThereMappingConv) {
+        } else if(convState ==  MessageUtil.WalkArroundState.STATE_END && position <= 1 && !isThereMappingConv) {
             holder.tvMappingFlag.setVisibility(View.VISIBLE);
             holder.tvMappingFlag.setText(R.string.msg_conversation_walking_friends);
             holder.ivDelIcon.setVisibility(View.GONE);
             holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
         } else {
-            holder.tvMappingFlag.setVisibility(View.GONE);
+            if(position >= 1) {
+                MessageSessionBaseModel priorModel = mListData.get(position - 1);
+                if(priorModel != null && priorModel.status == MessageUtil.WalkArroundState.STATE_INIT) {
+                    holder.tvMappingFlag.setVisibility(View.GONE);
+                } else {
+                    holder.tvMappingFlag.setVisibility(View.VISIBLE);
+                    holder.tvMappingFlag.setText(R.string.msg_conversation_unkown_friends);
+                }
+            } else if (position == 0) {
+                holder.tvMappingFlag.setVisibility(View.VISIBLE);
+                holder.tvMappingFlag.setText(R.string.msg_conversation_unkown_friends);
+            }
+
             holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
             holder.ivDelIcon.setVisibility(View.GONE);
         }

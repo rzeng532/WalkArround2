@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -65,9 +64,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
     private PhotoView mPvPortrait;
 
     private Dialog mLoadingDialog;
-
-    //For playing complete music.
-    private MediaPlayer mMediaPlayer;
+    private long mThreadId = -1l;
 
     private HttpTaskBase.onResultListener mEvaluateFriendTaskListener = new HttpTaskBase.onResultListener() {
         @Override
@@ -77,18 +74,17 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
         @Override
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
-            myLogger.d("EvaluateFriend done.");
+            myLogger.d("EvaluateFriend done." + (String)object);
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH) && mFriend != null) {
                 myLogger.d("EvaluateFriend success, next step is add friend");
 
                 //Get colorIndex
                 List<String> recipient = new ArrayList<>();
                 recipient.add(mFriend.getObjectId());
-                long msgThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
-                        recipient);
+                long msgThreadId = mThreadId;
                 if (msgThreadId >= 0) {
                     int colorIndex = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColorIndex(msgThreadId);
-                    WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, MessageUtil.WalkArroundState.STATE_IMPRESSION);
+                    WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, MessageUtil.WalkArroundState.STATE_END);
 
                     myLogger.d("AddFriendTask, color index is: " + colorIndex);
 
@@ -214,7 +210,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                     //Send I agree to walk arround.
                     //Use RESULT_FIRST_USER as agreement for prior activity.
                     //setResult(RESULT_FIRST_USER);
-                    ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_IMPRESSION);
+                    ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_END);
                     Toast.makeText(EvaluateActivity.this, R.string.evaluate_send_impression2server_suc, Toast.LENGTH_LONG).show();
                     dismissCircleDialog();
                     Intent target = new Intent(getApplicationContext(), EntranceActivity.class);
@@ -254,14 +250,6 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
     @Override
     protected void onPause() {
         super.onPause();
-
-        if (mMediaPlayer != null) {
-            myLogger.d("onPause: stop & reset media player.");
-            mMediaPlayer.stop();
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
     }
 
     @Override
@@ -280,8 +268,14 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
             }
         }
 
-        if (mMediaPlayer == null) {
-            createWalkArroundCompleteMusic();
+        if(mFriend != null) {
+            List<String> recipient = new ArrayList<>();
+            recipient.add(mFriend.getObjectId());
+            mThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
+                    recipient);
+            if(mThreadId > -1l) {
+                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(mThreadId, MessageUtil.WalkArroundState.STATE_IMPRESSION);
+            }
         }
     }
 
@@ -390,7 +384,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
     private void showCircleDialog() {
         if (mLoadingDialog == null) {
-            mLoadingDialog = DialogFactory.getLoadingDialog(this, true, null);
+            mLoadingDialog = DialogFactory.getLoadingDialog(this, false, null);
         }
         myLogger.d("Show dialog.");
         mLoadingDialog.show();
@@ -416,29 +410,5 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 HttpUtil.HTTP_TASK_QUERY_SPEED_DATE,
                 QuerySpeedDateIdTask.getParams(userObjId),
                 TaskUtil.getTaskHeader()));
-    }
-
-    /**
-     * 创建本地MP3播放器
-     *
-     * @return
-     */
-    public void createWalkArroundCompleteMusic() {
-
-        mUIHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mMediaPlayer = MediaPlayer.create(EvaluateActivity.this, R.raw.walk_arround_end_music);
-                mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        if(mediaPlayer != null) {
-                            mediaPlayer.reset();
-                        }
-                    }
-                });
-                mMediaPlayer.start();
-            }
-        });
     }
 }

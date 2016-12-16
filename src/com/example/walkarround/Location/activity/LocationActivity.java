@@ -81,6 +81,7 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String SENDER_OR_RECEIVER = "sender";
+    public static final String THREAD_ID = "thread_id";
 
     private Button searchButton;
     private ListView searchResultListView;

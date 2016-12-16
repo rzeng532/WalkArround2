@@ -3,6 +3,7 @@ package com.example.walkarround.message.task;
 import android.content.Context;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.MessageSessionBaseModel;
+import com.example.walkarround.message.model.MessageSessionModelInfo;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.SessionComparator;
 import com.example.walkarround.util.Logger;
@@ -36,8 +37,20 @@ public class AsyncTaskLoadSession extends HttpTaskBase {
         }
 
         Collections.sort(list, new SessionComparator(SessionComparator.TIME_DESC));
+        Collections.sort(list, new SessionComparator(SessionComparator.STATUS_DESC));
         Collections.sort(list, new SessionComparator(SessionComparator.TOP_DESC));
 
         doResultCallback(list, TaskResult.SUCCEESS);
+    }
+
+    /**
+     * All conversation which state is
+     * @return
+     */
+    private MessageSessionBaseModel getFixedEntrance() {
+        MessageSessionBaseModel oldFriend = new MessageSessionModelInfo();
+        oldFriend.setItemType(MessageConstant.ConversationType.OLD_FRIEND);
+
+        return oldFriend;
     }
 }

@@ -754,6 +754,11 @@ public class LittleCMsgManager extends MessageAbstractManger {
     }
 
     @Override
+    public int createConversationId(int chatType, List<String> address, int status) {
+        return messageDbManager.createConversationId(chatType, address);
+    }
+
+    @Override
     public boolean isConversationExist(long threadId) throws Exception {
         return messageDbManager.isConversationExist(threadId);
     }

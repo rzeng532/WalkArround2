@@ -18,6 +18,8 @@ public class SessionComparator implements Comparator<MessageSessionBaseModel> {
 
     public static final int PA_DESC = 4;/*public account 降序排列*/
 
+    public static final int STATUS_DESC = 5;/*Conv 状态降序排列*/
+
     private int sortOrder = TIME_DESC;
 
     public SessionComparator(int sortOrder) {
@@ -31,6 +33,8 @@ public class SessionComparator implements Comparator<MessageSessionBaseModel> {
                     .compareTo(isPubOrSysItem(lhs.getItemType()));
         } else if (sortOrder == TOP_DESC) {
             return Integer.compare(rhs.getTop(), lhs.getTop());
+        } else if (sortOrder == STATUS_DESC) {
+            return Integer.compare(rhs.status, lhs.status);
         } else {
             if (sortOrder == TIME_ASC) {
                 return Long.compare(lhs.getLastTime(), rhs.getLastTime());

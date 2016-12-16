@@ -8,7 +8,6 @@ import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.myself.task.OnlineStateTask;
 import com.example.walkarround.util.AppConstant;
-import com.example.walkarround.util.network.NetWorkManager;
 
 public class EntranceActivity extends Activity {
 
@@ -84,8 +83,6 @@ public class EntranceActivity extends Activity {
     }
 
     private void finishEntranceActivity() {
-        NetWorkManager.getInstance(getApplicationContext()).onDestroy(getApplicationContext());
-
         OnlineStateTask.getInstance(getApplicationContext()).stopTask();
 
         finish();

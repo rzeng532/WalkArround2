@@ -24,9 +24,7 @@ import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
-import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.GoTogetherTask;
-import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
@@ -50,8 +48,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
     private AMap aMap;
     private Marker mCurMarker;
     private Marker mTargetMarker;
-
-    private String mStrFriendObjId = null;
+    private int mCurThreadStatus = MessageUtil.WalkArroundState.STATE_INIT;
 
     private static final Logger logger = Logger.getLogger(ShowLocationActivity.class.getSimpleName());
 
@@ -153,40 +150,6 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
         }
     };
 
-    private HttpTaskBase.onResultListener mGetSpeedIdTaskListener = new HttpTaskBase.onResultListener() {
-        @Override
-        public void onPreTask(String requestCode) {
-
-        }
-
-        @Override
-        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
-            //Task success.
-            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE)) {
-                //Get status & Get TO user.
-                String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
-                if(!TextUtils.isEmpty(strSpeedDateId)) {
-                    mStrFriendObjId = strSpeedDateId;
-                    logger.d("Query speed date id response success: " + strSpeedDateId);
-                    ThreadPoolManager.getPoolManager().addAsyncTask(new GoTogetherTask(getApplicationContext(),
-                            mGoTogetherListener,
-                            HttpUtil.HTTP_FUNC_GO_TOGETHER,
-                            HttpUtil.HTTP_TASK_GO_TOGETHER,
-                            GoTogetherTask.getParams(strSpeedDateId),
-                            TaskUtil.getTaskHeader()));
-                }
-            } else {
-                logger.d("Query speed date id failed");
-                mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_FAIL);
-            }
-        }
-
-        @Override
-        public void onProgress(int progress, String requestCode) {
-
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -243,6 +206,8 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
         } else {
             findViewById(R.id.button_layout).setVisibility(View.GONE);
         }
+
+        mCurThreadStatus = getIntent().getIntExtra(LocationActivity.THREAD_ID, MessageUtil.WalkArroundState.STATE_INIT);
     }
 
     void initMap() {
@@ -292,25 +257,23 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             finish();
         } else if(v.getId() == R.id.accept_place) {
             //Get speed data id & go together.
-            getSpeedDataId();
+            String speedId = ProfileManager.getInstance().getSpeedDateId();
+            if(mCurThreadStatus == MessageUtil.WalkArroundState.STATE_END) {
+                //If we already be friend, we will skip some steps and send "I agreed" directly.
+                showCircleDialog();
+                mUIHandler.sendEmptyMessageDelayed(MSG_AGREE_TO_WALKARROUND_SUC, 1000);
+            } else if(!TextUtils.isEmpty(speedId)) {
+                ThreadPoolManager.getPoolManager().addAsyncTask(new GoTogetherTask(getApplicationContext(),
+                        mGoTogetherListener,
+                        HttpUtil.HTTP_FUNC_GO_TOGETHER,
+                        HttpUtil.HTTP_TASK_GO_TOGETHER,
+                        GoTogetherTask.getParams(speedId),
+                        TaskUtil.getTaskHeader()));
+            } else {
+                //If speed date id is empty.
+                mUIHandler.sendEmptyMessageDelayed(MSG_AGREE_TO_WALKARROUND_FAIL, 1000);
+            }
         }
-    }
-
-    private void getSpeedDataId() {
-        String userObjId = ProfileManager.getInstance().getCurUsrObjId();
-
-        if(TextUtils.isEmpty(userObjId)) {
-            return;
-        }
-
-        showCircleDialog();
-
-        ThreadPoolManager.getPoolManager().addAsyncTask(new QuerySpeedDateIdTask(getApplicationContext(),
-                mGetSpeedIdTaskListener,
-                HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE,
-                HttpUtil.HTTP_TASK_QUERY_SPEED_DATE,
-                QuerySpeedDateIdTask.getParams(userObjId),
-                TaskUtil.getTaskHeader()));
     }
 
     private void showCircleDialog() {

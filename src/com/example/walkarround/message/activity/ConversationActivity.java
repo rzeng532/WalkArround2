@@ -16,11 +16,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewStub;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.ProgressDialogHorizontal;
 import com.example.walkarround.main.model.ContactInfo;
+import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
+import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.adapter.*;
 import com.example.walkarround.message.listener.ConversationItemListener;
@@ -29,7 +34,10 @@ import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.model.MessageSessionBaseModel;
-import com.example.walkarround.message.task.*;
+import com.example.walkarround.message.task.AsyncTaskLoadSession;
+import com.example.walkarround.message.task.AsyncTaskOperation;
+import com.example.walkarround.message.task.CancelSpeedDateTask;
+import com.example.walkarround.message.task.MessageSearchTimerTask;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageConstant.ConversationType;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
@@ -169,6 +177,34 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             }
         }
     };
+
+    private HttpTaskBase.onResultListener mGetSpeedIdTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE)) {
+                String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
+                if(!TextUtils.isEmpty(strSpeedDateId)) {
+                    ProfileManager.getInstance().getMyProfile().setSpeedDateId(strSpeedDateId);
+                } else {
+                    logger.d("Get speed date id OK but data is EMPTY.");
+                }
+            } else {
+                logger.d("Failed to get speed date id!!!");
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
 
     /**
      * 取消Speed data 在服务器中的状态。
@@ -446,6 +482,17 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 new AsyncTaskLoadSession(mContext,
                         MessageConstant.MSG_OPERATION_LOAD, 0, Integer.MAX_VALUE, mAsysResultListener)
         );
+
+        //There is user id and there is NO speed date id. We get speed date here and set value to profile.
+        if(!TextUtils.isEmpty(ProfileManager.getInstance().getCurUsrObjId()) && TextUtils.isEmpty(ProfileManager.getInstance().getSpeedDateId())) {
+            //Check speed date id
+            ThreadPoolManager.getPoolManager().addAsyncTask(new QuerySpeedDateIdTask(getApplicationContext(),
+                    mGetSpeedIdTaskListener,
+                    HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE,
+                    HttpUtil.HTTP_TASK_QUERY_SPEED_DATE,
+                    QuerySpeedDateIdTask.getParams(ProfileManager.getInstance().getCurUsrObjId()),
+                    TaskUtil.getTaskHeader()));
+        }
     }
 
     @Override
@@ -730,8 +777,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     adapter.addListData(result);
                     adapter.sortListData(SessionComparator.TIME_DESC);
                     if (adapter instanceof ConversationListAdapter) {
+                        adapter.sortListData(SessionComparator.STATUS_DESC);
                         adapter.sortListData(SessionComparator.TOP_DESC);
-                        adapter.sortListData(SessionComparator.PA_DESC);
                     }
                     adapter.notifyDataSetChanged();
                 }
@@ -739,8 +786,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 adapter.updateItemData(item, result);
                 adapter.sortListData(SessionComparator.TIME_DESC);
                 if (adapter instanceof ConversationListAdapter) {
+                    adapter.sortListData(SessionComparator.STATUS_DESC);
                     adapter.sortListData(SessionComparator.TOP_DESC);
-                    adapter.sortListData(SessionComparator.PA_DESC);
                 }
                 adapter.notifyDataSetChanged();
             } else {
@@ -761,8 +808,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                         adapter.updateItemData(item, result);
                         adapter.sortListData(SessionComparator.TIME_DESC);
                         if (adapter instanceof ConversationListAdapter) {
+                            adapter.sortListData(SessionComparator.STATUS_DESC);
                             adapter.sortListData(SessionComparator.TOP_DESC);
-                            adapter.sortListData(SessionComparator.PA_DESC);
                         }
                         adapter.notifyDataSetChanged();
                     }
@@ -777,8 +824,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                         mConversationAdapter.updateItemData(item, result);
                     }
                     mConversationAdapter.sortListData(SessionComparator.TIME_DESC);
+                    mConversationAdapter.sortListData(SessionComparator.STATUS_DESC);
                     mConversationAdapter.sortListData(SessionComparator.TOP_DESC);
-                    mConversationAdapter.sortListData(SessionComparator.PA_DESC);
                     mConversationAdapter.notifyDataSetChanged();
                 }
             }
@@ -1138,10 +1185,10 @@ public class ConversationActivity extends Activity implements ConversationItemLi
 
                     @Override
                     public void onNoticeDialogConfirmClick(boolean isChecked, Object value) {
-                        //batchDealMsg(MessageConstant.MSG_OPERATION_REMOVE);
                         if (mConversationAdapter != null) {
                             String speedDateId = ProfileManager.getInstance().getMyProfile().getSpeedDateId();
-                            if(!TextUtils.isEmpty(speedDateId) && NetWorkManager.getInstance(mContext).isNetworkAvailable()) {
+                            if(!TextUtils.isEmpty(speedDateId) && mNetStatusView.getVisibility() == View.GONE) {
+                                //There is speed date id and there is network.
                                 ThreadPoolManager.getPoolManager().addAsyncTask(new CancelSpeedDateTask(getApplicationContext(),
                                         mCancelSpeedDateTaskListener,
                                         HttpUtil.HTTP_FUNC_CANCEL_SPEED_DATE,
@@ -1152,6 +1199,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                                 mConversationAdapter.put2ChoosenList(listDO);
                                 deleteConvMsg(listDO);
                             } else {
+                                //There is no network.
                                 Toast.makeText(ConversationActivity.this, R.string.err_network_unavailable, Toast.LENGTH_LONG).show();
                             }
                         }

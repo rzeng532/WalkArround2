@@ -79,8 +79,8 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                         mWalkRequestDialog = null;
                     }
 
-                    Intent intentShowDistance = new Intent(ShowDistanceActivity.this, CountdownnActivity.class);
-                    intentShowDistance.putExtra(CountdownnActivity.PARAMS_FRIEND_OBJ_ID, mStrFriendId);
+                    Intent intentShowDistance = new Intent(ShowDistanceActivity.this, CountdownActivity.class);
+                    intentShowDistance.putExtra(CountdownActivity.PARAMS_FRIEND_OBJ_ID, mStrFriendId);
                     startActivity(intentShowDistance);
                     ShowDistanceActivity.this.finish();
                     break;
@@ -356,8 +356,8 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                 mWalkReplyDialog.dismiss();
                 mWalkReplyDialog = null;
 
-                Intent intent = new Intent(ShowDistanceActivity.this, CountdownnActivity.class);
-                intent.putExtra(CountdownnActivity.PARAMS_FRIEND_OBJ_ID, mStrFriendId);
+                Intent intent = new Intent(ShowDistanceActivity.this, CountdownActivity.class);
+                intent.putExtra(CountdownActivity.PARAMS_FRIEND_OBJ_ID, mStrFriendId);
                 ShowDistanceActivity.this.startActivity(intent);
             }
         });

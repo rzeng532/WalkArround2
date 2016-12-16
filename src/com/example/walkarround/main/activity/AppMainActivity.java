@@ -34,8 +34,11 @@ import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.activity.BuildMessageActivity;
+import com.example.walkarround.message.activity.EvaluateActivity;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.model.MessageSessionBaseModel;
+import com.example.walkarround.message.task.AsyncTaskLoadSession;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.myself.activity.DetailInformationActivity;
@@ -81,10 +84,17 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private GeoData mMyGeo = null;
 
+    List<FriendInfo> mFriendList = new ArrayList<>();
+
     private final int FRAGMENT_PAGE_ID_MAIN = 0;
     private final int FRAGMENT_PAGE_ID_CONVERSATION = 1;
 
     private final int MSG_DISPLAY_CONV_BE_DELETED = 1;
+    private final int MSG_OPERATION_NOT_SUCCEED = 2;
+    private final int MSG_OPERATION_LOAD_SUCCESS = 3;
+    private static final String MSG_EVENT_EXTRA_LIST = "listData";
+    private static final String MSG_OPERATION_KEY_REQUEST = "msg_operation_key_request";
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -94,12 +104,53 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                             R.string.msg_speed_date_be_canceled, R.string.common_ok, null);
                     noticeDialog.show();
                     break;
+                case MSG_OPERATION_LOAD_SUCCESS:
+
+                    break;
                 default:
                     break;
             }
         }
     };
 
+    private onResultListener mAsysResultListener = new onResultListener() {
+        @Override
+        public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
+            Bundle dataBundle = new Bundle();
+            int what = -1;
+
+            if (resultCode == TaskResult.FAILED || resultCode == TaskResult.ERROR) {
+                if (!requestCode.equals(MessageConstant.MSG_OPERATION_ADD_BLACKLIST)) {
+                    what = MSG_OPERATION_NOT_SUCCEED;
+                }
+            } else {
+                if (requestCode.equals(MessageConstant.MSG_OPERATION_LOAD)) {
+                    what = MSG_OPERATION_LOAD_SUCCESS;
+                    List<MessageSessionBaseModel> friendConvList = new ArrayList<>();
+                    for(MessageSessionBaseModel conv : (List<MessageSessionBaseModel>) object) {
+                        if(conv.status >= MessageUtil.WalkArroundState.STATE_END) {
+                            friendConvList.add(conv);
+                        }
+                    }
+                    amLogger.d("Get friends: " + friendConvList.size());
+                    compareFriendListVsThreadList((friendConvList));
+                }
+            }
+            mHandler.removeMessages(what);
+            Message msg = mHandler.obtainMessage(what);
+            dataBundle.putString(MSG_OPERATION_KEY_REQUEST, requestCode);
+            msg.setData(dataBundle);
+            mHandler.sendMessage(msg);
+        }
+
+        @Override
+        public void onPreTask(String requestCode) {
+        }
+
+        @Override
+        public void onProgress(final int progress, String requestCode) {
+        }
+    };
 
     private onResultListener mQueryNearUserListener = new onResultListener() {
         @Override
@@ -147,9 +198,16 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             amLogger.d("Get friend list done.");
             if (object != null &&
                     WalkArroundJsonResultParser.parseReturnCode((String) object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
-                List<FriendInfo> friendList = WalkArroundJsonResultParser.parse2FriendList((String) object);
-                if(friendList != null && friendList.size() > 0) {
 
+                mFriendList.clear();
+                mFriendList = WalkArroundJsonResultParser.parse2FriendList((String) object);
+
+                // 加载数据
+                ThreadPoolManager.getPoolManager().addAsyncTask(
+                        new AsyncTaskLoadSession(getApplicationContext(),
+                                MessageConstant.MSG_OPERATION_LOAD, 0, Integer.MAX_VALUE, mAsysResultListener));
+                    //Start a load msg task & compare friend list vs local thread id.
+                    /*
                     //TODO: Start a async task later.
                     String curUsrId = ProfileManager.getInstance().getCurUsrObjId();
                     String friendId;
@@ -176,7 +234,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                                         if(chattingThreadId >= 0 && !TextUtils.isEmpty(entity.getColor())) {
                                             //Update conversation color & state (set friend conversation state as: STATE_IMPRESSION).
                                             WalkArroundMsgManager.getInstance(getApplicationContext()).
-                                                    updateConversationStatusAndColor(chattingThreadId, MessageUtil.WalkArroundState.STATE_IMPRESSION, Integer.parseInt(entity.getColor()));
+                                                    updateConversationStatusAndColor(chattingThreadId, MessageUtil.WalkArroundState.STATE_END, Integer.parseInt(entity.getColor()));
                                             amLogger.d("Add friend: update conversation color index: " + Integer.parseInt(entity.getColor()));
                                         }
                                     }
@@ -184,7 +242,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                             }
                         }
                     }
-                }
+                    */
                 amLogger.d("There is friend: " + (String)object);
             }
         }
@@ -267,30 +325,41 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                     //Check local chatting IM record and create chat record if there is no record on local DB.
                     long chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
                             lRecipientList);
+                    int localThreadStatus = MessageUtil.WalkArroundState.STATE_INIT;
                     if(chattingThreadId < 0) {
                         chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).createConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, lRecipientList);
                         if(chattingThreadId >= 0 && !TextUtils.isEmpty(strColor)) {
                             //Update conversation color & state.
                             WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(chattingThreadId, iStatus, Integer.parseInt(strColor));
+                            localThreadStatus = iStatus;
                             amLogger.d("update conversation color index: " + Integer.parseInt(strColor) + ", status : " + iStatus);
                         }
+                    } else {
+                        localThreadStatus = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(chattingThreadId);
+                        localThreadStatus = (localThreadStatus > iStatus) ? localThreadStatus : iStatus;
                     }
 
-                    //Start IM directly:
-                    Intent imItent = new Intent(AppMainActivity.this, BuildMessageActivity.class);
-                    imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_RECEIVER, strUser);
-                    imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, chattingThreadId);
-                    imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
+                    if(localThreadStatus == MessageUtil.WalkArroundState.STATE_IM || localThreadStatus == MessageUtil.WalkArroundState.STATE_WALK) {
+                        //Go to build message && Start IM directly:
+                        Intent imItent = new Intent(AppMainActivity.this, BuildMessageActivity.class);
+                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_RECEIVER, strUser);
+                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, chattingThreadId);
+                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
 
-                    String friendName = "";
-                    if(friend == null) {
-                        ContactInfo friendContact = ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactByUsrObjId(strUser);
-                        friendName = (friendContact == null) ? "" : friendContact.getUsername();
+                        String friendName = "";
+                        if(friend == null) {
+                            ContactInfo friendContact = ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactByUsrObjId(strUser);
+                            friendName = (friendContact == null) ? "" : friendContact.getUsername();
+                        }
+                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, friendName);
+                        imItent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
+
+                        startActivity(imItent);
+                    } else if(localThreadStatus == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+                        Intent evaItent = new Intent(AppMainActivity.this, EvaluateActivity.class);
+                        evaItent.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, strUser);
+                        startActivity(evaItent);
                     }
-                    imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, friendName);
-                    imItent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
-
-                    startActivity(imItent);
                 } else {
                     //There is no speed date now.
                     //Then delete local conversation which on mapping state & indicate user.
@@ -558,5 +627,81 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                 HttpUtil.HTTP_TASK_GET_FRIEND_LIST,
                 GetFriendListTask.getParams(userObjId, MessageUtil.GET_FRIENDS_LIST_COUNT),
                 TaskUtil.getTaskHeader()));
+    }
+
+    /**
+     * 对比服务端friend list 和本地 MSG 会话列表
+     * @param list
+     */
+    private void compareFriendListVsThreadList(List<MessageSessionBaseModel> list) {
+        List<Long> removeThreadIdList = new ArrayList<>();
+        List<FriendInfo> addThreadIdList = new ArrayList<>();
+
+        //Clear local thread list if there is no friend list on server side.
+        if(mFriendList == null || mFriendList.size() <= 0) {
+            if(list != null && list.size() > 0) {
+                for(MessageSessionBaseModel item : list) {
+                    removeThreadIdList.add(item.getThreadId());
+                }
+            }
+        }
+
+        //If there is Friend list & there is no local thread, all friend list items should be added to local.
+        if(list == null || list.size() <= 0) {
+            addThreadIdList.addAll(mFriendList);
+        }
+
+        //If there is friend list && there is local thread data, we should compare two lists.
+        if(mFriendList != null && mFriendList.size() > 0
+                && list != null && list.size() > 0) {
+
+            removeThreadIdList.clear();
+            addThreadIdList.clear();
+
+            List<MessageSessionBaseModel> removedModelList = new ArrayList<>();
+            addThreadIdList.addAll(mFriendList);
+            removedModelList.addAll(list);
+
+            String friendUsrId; //local variant
+            for(FriendInfo friend : mFriendList) {
+                if(friend != null) {
+                    friendUsrId = friend.getFriendUserId();
+                    for(MessageSessionBaseModel model : list) {
+                        if(model != null && friendUsrId.equalsIgnoreCase(model.getContact())) {
+                            addThreadIdList.remove(friend);
+                            removedModelList.remove(model);
+                        }
+                    }
+                }
+            }
+
+            //Get deleted items list.
+            if(removedModelList != null && removedModelList.size() > 0) {
+                for(MessageSessionBaseModel item : removedModelList) {
+                    removeThreadIdList.add(item.getThreadId());
+                }
+            }
+        }
+
+        //Delete conversation
+        if(removeThreadIdList != null && removeThreadIdList.size() > 0) {
+            amLogger.d("compareFriendListVsThreadList -> del conv : " + removeThreadIdList.size());
+            WalkArroundMsgManager.getInstance(getApplicationContext()).removeConversation(removeThreadIdList);
+        }
+
+        //Add conversation
+        List<String> lRecipientList = new ArrayList<>();
+        for(FriendInfo friend : addThreadIdList) {
+            if(friend != null) {
+                lRecipientList.clear();
+                lRecipientList.add(friend.getFriendUserId());
+                long chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).createConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, lRecipientList);
+                if(chattingThreadId >= 0 && !TextUtils.isEmpty(friend.getColor())) {
+                    //Update conversation color & state.
+                    WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(chattingThreadId, MessageUtil.WalkArroundState.STATE_END, Integer.parseInt(friend.getColor()));
+                    amLogger.d("compareFriendListVsThreadList -> add conv" + Integer.parseInt(friend.getColor()));
+                }
+            }
+        }
     }
 }

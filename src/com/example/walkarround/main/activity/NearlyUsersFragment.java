@@ -108,7 +108,10 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 if (strState.equalsIgnoreCase(TaskUtil.RESPONSE_USR_STATUS_ACCEPT)) {
                     String strUser = MessageUtil.getFriendIdFromServerData((String) object);
                     addCacheContact(strUser);
-                    sayHello(strUser);
+                    long convThreadId = sayHello(strUser);
+                    if(convThreadId >= 0) {
+                        WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).updateConversationStatus(convThreadId, MessageUtil.WalkArroundState.STATE_IM);
+                    }
                 }
 
                 //TODO: This log should be deleted later.
@@ -224,20 +227,24 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             mSearchingPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
                     myProfileInfo.getUsrName().substring(0, 1), -1);
         }
+
+        // 收到新的message消息
+        IntentFilter commandFilter = new IntentFilter();
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
+        getActivity().registerReceiver(mMessageReceiver, commandFilter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if (null != mMessageReceiver) {
+            getActivity().unregisterReceiver(mMessageReceiver);
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (null != mMessageReceiver) {
-            getActivity().unregisterReceiver(mMessageReceiver);
-            mMessageReceiver = null;
-        }
     }
 
     @Override
@@ -385,13 +392,6 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             mSearchingPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
                     myProfileInfo.getUsrName().substring(0, 1), -1);
         }
-
-        //For unread msg icon
-        setUnreadState();
-        // 收到新的message消息
-        IntentFilter commandFilter = new IntentFilter();
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
-        getActivity().registerReceiver(mMessageReceiver, commandFilter);
     }
 
     /*
@@ -448,7 +448,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     }
 
     /*
-     * Say hello to people who you like and he/she also like you .
+     * Say hello to people who you like and he/she also liked you .
      */
     private long sayHello(String userId) {
         if (TextUtils.isEmpty(userId)) {
@@ -456,7 +456,6 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             return -1;
         }
 
-        //TODO: Check if there is conversation.
         return WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).sayHello(userId, getString(R.string.msg_say_hello));
     }
 }

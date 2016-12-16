@@ -2510,6 +2510,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         intent.putExtra(LocationActivity.LONGITUDE, selectChat.getLongitude());
         intent.putExtra(LocationActivity.ADDRESS, selectChat.getLocationLabel());
         intent.putExtra(LocationActivity.SENDER_OR_RECEIVER, selectChat.getSendReceive());
+        intent.putExtra(LocationActivity.THREAD_ID, selectChat.getMsgThreadId());
         startActivityForResult(intent, REQUEST_CODE_SHOW_LOCATION);
     }
 
@@ -2521,7 +2522,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                     if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REQUEST)) {
                         long msgTime = chat.getTime();
                         long curTime = System.currentTimeMillis();
-                        //Valide time is : current time - msg time <= 60s
+                        //Validate time is : current time - msg time <= 60s
                         if(curTime - msgTime > 60 * 1000) {
                             Toast.makeText(this, R.string.msg_walk_req_time_out, Toast.LENGTH_SHORT).show();
                         } else {
@@ -2537,8 +2538,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                         if(curTime - msgTime > 60 * 1000) {
                             Toast.makeText(this, R.string.msg_walk_req_time_out, Toast.LENGTH_SHORT).show();
                         } else {
-                            Intent intentShowDistance = new Intent(BuildMessageActivity.this, CountdownnActivity.class);
-                            intentShowDistance.putExtra(CountdownnActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
+                            Intent intentShowDistance = new Intent(BuildMessageActivity.this, CountdownActivity.class);
+                            intentShowDistance.putExtra(CountdownActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
                             startActivity(intentShowDistance);
                             BuildMessageActivity.this.finish();
                         }
@@ -2991,8 +2992,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 mWalkReplyDialog.dismiss();
                 mWalkReplyDialog = null;
 
-                Intent intent = new Intent(BuildMessageActivity.this, CountdownnActivity.class);
-                intent.putExtra(CountdownnActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
+                Intent intent = new Intent(BuildMessageActivity.this, CountdownActivity.class);
+                intent.putExtra(CountdownActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
                 BuildMessageActivity.this.startActivity(intent);
             }
         });

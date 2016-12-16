@@ -151,9 +151,12 @@ public class WalkArroundMsgManager {
             }
         }
 
-        sendTextMsg(receiver, content, null);
+        String extraInfor = MessageUtil.EXTRA_SAY_HELLO +
+                MessageUtil.EXTRA_INFOR_SPLIT + "   ";
+         sendTextMsg(receiver, content, extraInfor);
 
-        return threadId;
+        //After sent msg, get thread id again and return.
+        return mInstance.mMsgManager.getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, recipient);
     }
 
     /*
@@ -779,6 +782,28 @@ public class WalkArroundMsgManager {
         }
         return -1;
     }
+
+    /**
+     * 删除给定的会话列表
+     *
+     * @param threadIdList
+     * @return long
+     */
+    public void removeConversation(List<Long> threadIdList) {
+        if(threadIdList == null || threadIdList.size() <= 0) {
+            return;
+        }
+
+        try {
+            mInstance.mMsgManager.batchDeleteThreadMessage(threadIdList);
+        } catch (Exception e) {
+            logger.e("removeConversation Exception:" + e.getMessage());
+            return;
+        }
+
+        return;
+    }
+
 
     public List<ChatMsgBaseInfo> searchSmsAndMsgByKey(Context context, String key, boolean isNotify, Map<String, String> numMap) {
         List<ChatMsgBaseInfo> list = new ArrayList<ChatMsgBaseInfo>();

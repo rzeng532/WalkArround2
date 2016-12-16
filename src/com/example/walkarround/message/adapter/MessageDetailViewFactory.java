@@ -201,6 +201,10 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
                     result = context.getString(msg.getSendReceive() == MessageSendReceive.MSG_RECEIVE ? R.string.msg_walk_reply_receiver_ok : R.string.msg_walk_reply_sender_ok);
                 } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME)) {
                     result = context.getString(msg.getSendReceive() == MessageSendReceive.MSG_RECEIVE ? R.string.msg_walk_reply_receiver_next_time : R.string.msg_walk_reply_sender_next_time);
+                } else if(extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND)) {
+                    result = context.getString(msg.getSendReceive() == MessageSendReceive.MSG_RECEIVE ? R.string.receive_agree_2_walkarround : R.string.agree_2_walkarround);
+                } else if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_SAY_HELLO)) {
+                    result = context.getString(msg.getSendReceive() == MessageSendReceive.MSG_RECEIVE ? R.string.msg_received_hello : R.string.msg_say_hello);
                 }
             }
         }

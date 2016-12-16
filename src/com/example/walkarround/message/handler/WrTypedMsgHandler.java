@@ -146,6 +146,8 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
                         WalkArroundMsgManager.getInstance(mContext).updateConversationStatusAndColor(msgInfo.getMsgThreadId(), MessageUtil.WalkArroundState.STATE_WALK, color);
                     } else if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALKARROUND)) {
 
+                    } else if(extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_SAY_HELLO)) {
+                        WalkArroundMsgManager.getInstance(mContext).updateConversationStatus(msgInfo.getMsgThreadId(), MessageUtil.WalkArroundState.STATE_IM);
                     }
                 }
             }

@@ -67,6 +67,7 @@ public class MessageConstant {
         int PUBLIC_ACCOUNT = 1;
         int NOTICES_MSG = 2;
         int SYSTEM = 3;
+        int OLD_FRIEND = 4;
     }
 
     public interface TopState {

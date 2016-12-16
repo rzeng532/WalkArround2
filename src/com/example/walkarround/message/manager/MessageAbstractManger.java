@@ -242,6 +242,8 @@ public abstract class MessageAbstractManger {
 
     public abstract int createConversationId(int chatType, List<String> address);
 
+    public abstract int createConversationId(int chatType, List<String> address, int convStatus);
+
     public abstract boolean isConversationExist(long threadId) throws Exception;
 
     public abstract int batchDeleteThreadMessage(List<Long> threadIdList) throws Exception;

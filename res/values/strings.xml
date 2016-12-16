@@ -238,7 +238,8 @@
     <string name="session_operation_ing_toast">请等待操作完成返回或取消操作</string>
     <string name="why_no_sms_conversations">为什么短消息页面是空的？</string>
     <string name="msg_record_chat_title">聊天记录</string>
-    <string name="msg_say_hello">Hi</string>
+    <string name="msg_say_hello">你向好友打了个招呼</string>
+    <string name="msg_received_hello">好友向你打了一个招呼</string>
     <string name="msg_select_walkarround_place">选择10分钟走走地点</string>
     <string name="msg_select_place_title">见面地点</string>
     <string name="msg_confirm_walk_place">去这附近走走</string>
@@ -248,6 +249,7 @@
     <string name="msg_agree_to_walkarround_fail">操作失败,请稍后再试或选择自己发起走走地点.</string>
     <string name="msg_conversation_mapping">配对中</string>
     <string name="msg_conversation_walking_friends">走伴</string>
+    <string name="msg_conversation_unkown_friends">其他信息</string>
     <string name="msg_walk_req_time_indicate">请求一分钟内有效，请耐心等待。</string>
     <string name="msg_walk_req_time_out">一分钟内有效，该见面请求已过期</string>
     <string name="msg_walk_req_sender_text">你发起了一个碰面请求</string>
@@ -280,7 +282,8 @@
     <string name="gender_men">男</string>
     <string name="gender_female">女</string>
     <string name="xiu_yi_xiu">咻一咻</string>
-    <string name="agree_2_walkarround">已经同意了你的走走请求.</string>
+    <string name="agree_2_walkarround">你已经同意了好友的走走请求.</string>
+    <string name="receive_agree_2_walkarround">好友已经同意了你的走走请求.</string>
     <string name="agree_2_walk_face_2_face_req">一起见个面？</string>
     <string name="agree_2_walk_invitation_description">%1$s想和你一起走走</string>
     <string name="agree_2_walk_reply_ok">愿意</string>

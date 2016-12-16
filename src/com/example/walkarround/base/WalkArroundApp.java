@@ -68,6 +68,12 @@ public class WalkArroundApp extends Application {
         ContactsManager.getInstance(getApplicationContext());
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+
+        NetWorkManager.getInstance(mWorkArroundApp).onDestroy(mWorkArroundApp);
+    }
 
     public static WalkArroundApp getInstance() {
         return mWorkArroundApp;
@@ -86,11 +92,11 @@ public class WalkArroundApp extends Application {
                             new DisplayImageOptions.Builder()
                                     // =============下面三项先暂时配置ic_lanucher
                                     .showImageOnLoading(R.drawable.default_image)
-                                            // 加载时候显示
+                                    // 加载时候显示
                                     .showImageForEmptyUri(R.drawable.default_image)
-                                            // 地址为空显示
+                                    // 地址为空显示
                                     .showImageOnFail(R.drawable.default_image)
-                                            // 加载失败显示
+                                    // 加载失败显示
                                     .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                                     .bitmapConfig(Config.RGB_565).build()).build();
 
