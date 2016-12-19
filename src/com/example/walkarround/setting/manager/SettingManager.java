@@ -4,8 +4,6 @@
 package com.example.walkarround.setting.manager;
 
 import com.example.walkarround.login.manager.LoginManager;
-import com.example.walkarround.myself.manager.ProfileApiAbstract;
-import com.example.walkarround.myself.manager.ProfileApiImpl;
 import com.example.walkarround.myself.manager.ProfileManager;
 
 /**
@@ -31,6 +29,7 @@ public class SettingManager {
     }
 
     public void doLogout() {
+        ProfileManager.onDestroy();
         LoginManager.getInstance().doLogout();
     }
 }

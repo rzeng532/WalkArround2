@@ -214,4 +214,10 @@ public class ProfileManager {
         }
         myProfileInfo.setSpeedDateId(speedDateId);
     }
+
+    public static void onDestroy() {
+        mProfileManager = null;
+        myProfileInfo = null;
+        mProfileApi = null;
+    }
 }
