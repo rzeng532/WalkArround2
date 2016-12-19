@@ -192,7 +192,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder = (ViewHolder) convertView.getTag();
         }
         holder.position = position;
-        initViewHolder(holder, listDO, position, (position <= 0 ? false : mListData.get(position - 1).status < MessageUtil.WalkArroundState.STATE_END));
+        initViewHolder(holder, listDO, position, (position <= 0 ? true : mListData.get(position - 1).status < MessageUtil.WalkArroundState.STATE_END));
         return convertView;
     }
 
@@ -368,7 +368,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         holder.tvMessage.setText(EmojiParser.getInstance(mContext).addSmileySpans(displayStr, 0.4f));
     }
 
-    public void setItemFlag(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean isThereMappingConv) {
+    public void setItemFlag(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean priorIsMappingConv) {
         //Init flags
         int convState = listDO.status;
         logger.d("color index is: " + listDO.colorIndex);
@@ -386,9 +386,13 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder.ivDelIcon.setVisibility(View.VISIBLE);
             //Set correct text font color for this case.
             holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
-        } else if(convState ==  MessageUtil.WalkArroundState.STATE_END && position <= 1 && !isThereMappingConv) {
-            holder.tvMappingFlag.setVisibility(View.VISIBLE);
-            holder.tvMappingFlag.setText(R.string.msg_conversation_walking_friends);
+        } else if(convState ==  MessageUtil.WalkArroundState.STATE_END) {
+            if(position <= 1 && priorIsMappingConv) {
+                holder.tvMappingFlag.setVisibility(View.VISIBLE);
+                holder.tvMappingFlag.setText(R.string.msg_conversation_walking_friends);
+            } else {
+                holder.tvMappingFlag.setVisibility(View.GONE);
+            }
             holder.ivDelIcon.setVisibility(View.GONE);
             holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
         } else {
