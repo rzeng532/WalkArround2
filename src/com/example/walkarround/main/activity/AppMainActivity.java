@@ -340,18 +340,17 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                         //Check local chatting IM record and create chat record if there is no record on local DB.
                         long chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
                                 lRecipientList);
-                        int localThreadStatus = MessageUtil.WalkArroundState.STATE_INIT;
+                        int localThreadStatus = iStatus;
                         if (chattingThreadId < 0) {
                             chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).createConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, lRecipientList);
-                            if (chattingThreadId >= 0 && !TextUtils.isEmpty(strColor)) {
+                            if (chattingThreadId >= 0) {
                                 //Update conversation color & state.
-                                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(chattingThreadId, iStatus, Integer.parseInt(strColor));
-                                localThreadStatus = iStatus;
+                                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(chattingThreadId, iStatus, (TextUtils.isEmpty(strColor) ? -1 : Integer.parseInt(strColor)));
                                 amLogger.d("update conversation color index: " + Integer.parseInt(strColor) + ", status : " + iStatus);
                             }
                         } else {
                             localThreadStatus = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(chattingThreadId);
-                            localThreadStatus = (localThreadStatus > iStatus) ? localThreadStatus : iStatus;
+                            localThreadStatus = (iStatus > localThreadStatus) ? iStatus : localThreadStatus;
                         }
 
                         if (localThreadStatus == MessageUtil.WalkArroundState.STATE_IM || localThreadStatus == MessageUtil.WalkArroundState.STATE_WALK) {

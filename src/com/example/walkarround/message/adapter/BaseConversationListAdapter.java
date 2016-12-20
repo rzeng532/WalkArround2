@@ -386,6 +386,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder.ivDelIcon.setVisibility(View.VISIBLE);
             //Set correct text font color for this case.
             holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
+            holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
         } else if(convState ==  MessageUtil.WalkArroundState.STATE_END) {
             if(position <= 1 && priorIsMappingConv) {
                 holder.tvMappingFlag.setVisibility(View.VISIBLE);
@@ -409,7 +410,9 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 holder.tvMappingFlag.setText(R.string.msg_conversation_unkown_friends);
             }
 
-            holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
+            holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
+            //holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
+            holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
             holder.ivDelIcon.setVisibility(View.GONE);
         }
     }

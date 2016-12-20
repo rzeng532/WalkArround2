@@ -1091,8 +1091,8 @@ public class LittleCDbManager {
     public int deleteMappingConversation() {
 
         Cursor cursor = mContext.getContentResolver().query(Conversation.CONTENT_URI,
-                new String[]{Conversation._ID}, Conversation._CONVERSATION_STATUS + " < ? ",
-                new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_END)}, null);
+                new String[]{Conversation._ID}, Conversation._CONVERSATION_STATUS + " < ? AND " + Conversation._CONVERSATION_STATUS + " >= ?",
+                new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_END), String.valueOf(MessageUtil.WalkArroundState.STATE_IM)}, null);
 
         List<Long> threadIdList = new ArrayList<>();
         if (cursor != null) {

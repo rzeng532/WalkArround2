@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.text.TextUtils;
 import com.example.walkarround.base.WalkArroundApp;
+import com.example.walkarround.util.AppSharedPreference;
 import com.example.walkarround.util.Logger;
 
 /**
@@ -216,12 +217,13 @@ public class MessageProvider extends ContentProvider {
     }
 
     private String getAccountDatabaseName() {
-        Context context = WalkArroundApp.getInstance().getApplicationContext();
-        if (context == null) {
-            return DEFAULT_DATABASE_NAME;
-        }
-        return context.getSharedPreferences(MSG_DATABASE_SHARED_PREFERENCES,
-                Context.MODE_PRIVATE).getString(MSG_DATABASE_NAME, DEFAULT_DATABASE_NAME);
+        return AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PHONE, "");
+//        Context context = WalkArroundApp.getInstance().getApplicationContext();
+//        if (context == null) {
+//            return DEFAULT_DATABASE_NAME;
+//        }
+//        return context.getSharedPreferences(MSG_DATABASE_SHARED_PREFERENCES,
+//                Context.MODE_PRIVATE).getString(MSG_DATABASE_NAME, DEFAULT_DATABASE_NAME);
     }
 
     public static void setAccountName(String account) {

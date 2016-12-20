@@ -24,7 +24,9 @@ import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
+import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.GoTogetherTask;
+import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
@@ -97,7 +99,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
         }
     };
 
-    private HttpTaskBase.onResultListener mAddFriendTaskListener = new HttpTaskBase.onResultListener() {
+    private HttpTaskBase.onResultListener mGetSpeedIdTaskListener = new HttpTaskBase.onResultListener() {
         @Override
         public void onPreTask(String requestCode) {
 
@@ -106,14 +108,24 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
         @Override
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
             //Task success.
-            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
-                //Get status & Get TO user.
-                logger.d("add friend success: \r\n" + (String) object);
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE)) {
+                String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
+                if(!TextUtils.isEmpty(strSpeedDateId)) {
+                    ProfileManager.getInstance().getMyProfile().setSpeedDateId(strSpeedDateId);
 
-                mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_SUC);
+                    ThreadPoolManager.getPoolManager().addAsyncTask(new GoTogetherTask(getApplicationContext(),
+                            mGoTogetherListener,
+                            HttpUtil.HTTP_FUNC_GO_TOGETHER,
+                            HttpUtil.HTTP_TASK_GO_TOGETHER,
+                            GoTogetherTask.getParams(strSpeedDateId),
+                            TaskUtil.getTaskHeader()));
+                } else {
+                    mUIHandler.sendEmptyMessageDelayed(MSG_AGREE_TO_WALKARROUND_FAIL, 1000);
+                    logger.d("Get speed date id OK but data is EMPTY.");
+                }
             } else {
-                logger.d("add friend  response failed");
-                mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_FAIL);
+                mUIHandler.sendEmptyMessageDelayed(MSG_AGREE_TO_WALKARROUND_FAIL, 1000);
+                logger.d("Failed to get speed date id!!!");
             }
         }
 
@@ -271,7 +283,15 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
                         TaskUtil.getTaskHeader()));
             } else {
                 //If speed date id is empty.
-                mUIHandler.sendEmptyMessageDelayed(MSG_AGREE_TO_WALKARROUND_FAIL, 1000);
+                if(!TextUtils.isEmpty(ProfileManager.getInstance().getCurUsrObjId()) && TextUtils.isEmpty(ProfileManager.getInstance().getSpeedDateId())) {
+                    //Check speed date id
+                    ThreadPoolManager.getPoolManager().addAsyncTask(new QuerySpeedDateIdTask(getApplicationContext(),
+                            mGetSpeedIdTaskListener,
+                            HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE,
+                            HttpUtil.HTTP_TASK_QUERY_SPEED_DATE,
+                            QuerySpeedDateIdTask.getParams(ProfileManager.getInstance().getCurUsrObjId()),
+                            TaskUtil.getTaskHeader()));
+                }
             }
         }
     }
