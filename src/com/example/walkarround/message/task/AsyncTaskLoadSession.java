@@ -5,6 +5,7 @@ import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.MessageSessionBaseModel;
 import com.example.walkarround.message.model.MessageSessionModelInfo;
 import com.example.walkarround.message.util.MessageConstant;
+import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.SessionComparator;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
@@ -31,6 +32,10 @@ public class AsyncTaskLoadSession extends HttpTaskBase {
 
     @Override
     public void run() {
+
+        int delNum = WalkArroundMsgManager.getInstance(null).delOtherConversionsOverParamTime(MessageUtil._24_HOURS);
+        logger.d("---------- Delete " + delNum);
+
         List<MessageSessionBaseModel> list = WalkArroundMsgManager.getInstance(null).getConversationList(isNotifyMsg, offset, count);
         if (list == null) {
             list = new ArrayList<>();

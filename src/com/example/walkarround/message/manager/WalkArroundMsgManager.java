@@ -747,6 +747,17 @@ public class WalkArroundMsgManager {
         return null;
     }
 
+    public int delOtherConversionsOverParamTime(long time) {
+        int delNum = 0;
+        try {
+            delNum =  mInstance.mMsgManager.delOtherConversionsOverParamTime(time);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return delNum;
+    }
+
     public boolean markConversationRead(Context context, MessageSessionBaseModel model) {
         int count = 0;
         try {

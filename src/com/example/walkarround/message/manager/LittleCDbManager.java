@@ -797,6 +797,41 @@ public class LittleCDbManager {
         return list;
     }
 
+    /*
+     * While (Current time)  - (Conversation last message time) > time, we will delete it.
+     * Default value is 24 hours. (24 * 60 * 60 * 1000 ms)s
+     */
+    public int delOtherConversionsOverParamTime(long time) {
+        if(time <= 0) {
+            return -1;
+        }
+
+        long curTime = System.currentTimeMillis();
+        Cursor cursor = mContext.getContentResolver().query(Conversation.CONTENT_URI,
+                new String[]{Conversation._ID, Conversation._DATE}, Conversation._CONVERSATION_STATUS + " = ? AND " + Conversation._DATE + " < ?",
+                new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_INIT), String.valueOf(curTime - time)},
+                null);
+
+        //TEST
+        long date = 0;
+
+        List<Long> threadIdList = new ArrayList<>();
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    threadIdList.add(cursor.getLong(cursor.getColumnIndex(Conversation._ID)));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+
+        if(threadIdList.size() > 0) {
+            batchDeleteMsg(threadIdList);
+        }
+
+        return threadIdList.size();
+    }
+
     /**
      * 根据cursor获取会话消息内容
      *

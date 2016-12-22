@@ -719,6 +719,11 @@ public class LittleCMsgManager extends MessageAbstractManger {
         return messageDbManager.getMsgSession(isNotifyMsg, offset, count);
     }
 
+    @Override
+    public int delOtherConversionsOverParamTime(long time) throws Exception {
+        return messageDbManager.delOtherConversionsOverParamTime(time);
+    }
+
     public int getMsgUnreadCount(String strThreadId) throws Exception {
         int count = messageDbManager.getConversationUnreadCount(Integer.parseInt(strThreadId));
         return count;

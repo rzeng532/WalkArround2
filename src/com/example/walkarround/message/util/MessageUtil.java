@@ -55,6 +55,8 @@ public class MessageUtil {
     public static final String EXTRA_START_2_WALK_REPLY_NEXT_TIME = "extra_start_2_walk_reply_next_time";
     public static final String EXTRA_SAY_HELLO = "extra_say_hello";
 
+    public static final long _24_HOURS = 24 * 60 * 60 * 1000;
+
     //Get friend list count. If count is 4, it means server response 4 friends every time.
     public static final int GET_FRIENDS_LIST_COUNT = 4;
 
