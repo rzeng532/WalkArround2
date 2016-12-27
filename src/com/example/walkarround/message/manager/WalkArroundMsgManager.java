@@ -747,6 +747,16 @@ public class WalkArroundMsgManager {
         return null;
     }
 
+    public List<MessageSessionBaseModel> getFriendsConversationList() {
+        try {
+            return mInstance.mMsgManager.getFriendsSessionList();
+        } catch (Exception e) {
+            logger.e("getFriendsConversationList Exception:" + e.getMessage());
+        }
+
+        return null;
+    }
+
     public int delOtherConversionsOverParamTime(long time) {
         int delNum = 0;
         try {

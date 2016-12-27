@@ -720,6 +720,11 @@ public class LittleCMsgManager extends MessageAbstractManger {
     }
 
     @Override
+    public List<MessageSessionBaseModel> getFriendsSessionList() throws Exception {
+        return messageDbManager.getFriendsSessionList();
+    }
+
+    @Override
     public int delOtherConversionsOverParamTime(long time) throws Exception {
         return messageDbManager.delOtherConversionsOverParamTime(time);
     }

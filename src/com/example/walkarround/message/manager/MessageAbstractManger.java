@@ -228,6 +228,8 @@ public abstract class MessageAbstractManger {
 
     public abstract List<MessageSessionBaseModel> getMessageSessionList(boolean isNotifyMsg, int offset, int count) throws Exception;
 
+    public abstract List<MessageSessionBaseModel> getFriendsSessionList() throws Exception;
+
     public abstract int delOtherConversionsOverParamTime(long time) throws Exception;
 
     public abstract int getMsgUnreadCount(String strThreadId) throws Exception;

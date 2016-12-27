@@ -26,6 +26,7 @@ import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.task.AsyncTaskLoadFriendsSession;
 import com.example.walkarround.message.task.EndSpeedDateTask;
 import com.example.walkarround.message.task.EvaluateFriendTask;
 import com.example.walkarround.message.util.MessageConstant;
@@ -130,6 +131,12 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                             EndSpeedDateTask.getParams(speedDateId),
                             TaskUtil.getTaskHeader()));
                 }
+
+                //Update local DB conversation state, set 8th conversation to INIT state and set it as inactive on server side.
+                ThreadPoolManager.getPoolManager().addAsyncTask(
+                        new AsyncTaskLoadFriendsSession(getApplicationContext(),
+                                MessageConstant.MSG_OPERATION_LOAD_FRIENDS, mLoadFriendsResultListener)
+                );
             } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
                 mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
             }
@@ -151,9 +158,11 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
             //Task success.
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_END_SPEED_DATE)) {
-                mUIHandler.sendEmptyMessage(MSG_EVALUATE_SUCCESS);
+                myLogger.d("End speed date ok.");
+                mUIHandler.sendEmptyMessageDelayed(MSG_EVALUATE_SUCCESS, 1000);
             } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_END_SPEED_DATE)) {
-                mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
+                myLogger.d("End speed date fail.");
+                mUIHandler.sendEmptyMessageDelayed(MSG_EVALUATE_FAILED, 1000);
             }
         }
 
@@ -198,8 +207,35 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         }
     };
 
+    private HttpTaskBase.onResultListener mLoadFriendsResultListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            int what = -1;
+            myLogger.d("Async load friends session, onResult, resultCode = " + resultCode);
+            if (resultCode == HttpTaskBase.TaskResult.FAILED || resultCode == HttpTaskBase.TaskResult.ERROR) {
+                if (!requestCode.equals(MessageConstant.MSG_OPERATION_ADD_BLACKLIST)) {
+                    what = MSG_OPERATION_NOT_SUCCEED;
+                }
+            } else {
+                if (requestCode.equals(MessageConstant.MSG_OPERATION_LOAD_FRIENDS)) {
+                    what = MSG_OPERATION_LOAD_FRIENDS_SUCCEED;
+                }
+            }
+            mUIHandler.removeMessages(what);
+            mUIHandler.sendEmptyMessage(what);
+        }
+
+        @Override
+        public void onPreTask(String requestCode) { }
+
+        @Override
+        public void onProgress(final int progress, String requestCode) { }
+    };
+
     private static final int MSG_EVALUATE_SUCCESS = 1;
     private static final int MSG_EVALUATE_FAILED = 2;
+    private static final int MSG_OPERATION_NOT_SUCCEED = 3;
+    private static final int MSG_OPERATION_LOAD_FRIENDS_SUCCEED = 4;
 
     private Handler mUIHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -241,6 +277,9 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         initData();
 
         initView();
+
+        //Cancel notification while jump to this UI page.
+        MessageUtil.cancelNotification(getApplicationContext(), mFriend.getObjectId(), MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
     }
 
     @Override

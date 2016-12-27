@@ -101,6 +101,7 @@ public class MessageConstant {
     public static final String MSG_OPERATION_SET_TOP = "msg_operation_set_top"; 
     public static final String MSG_OPERATION_CANCEL_TOP = "msg_operation_cancel_top"; 
     public static final String MSG_OPERATION_ADD_BLACKLIST = "msg_operation_add_blacklist";
+    public static final String MSG_OPERATION_LOAD_FRIENDS = "msg_operation_friends_list";
 
     /*  */
     public static final String MSG_NEW_MSG_NOTIFICATION_REC_SWITCH = "_csbNewMsgNotifyReceive";

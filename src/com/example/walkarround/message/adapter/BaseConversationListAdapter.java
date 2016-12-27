@@ -411,8 +411,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             }
 
             holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
-            //holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
-            holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
+            holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(R.color.bgcor14));
+            //holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
             holder.ivDelIcon.setVisibility(View.GONE);
         }
     }

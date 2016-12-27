@@ -2,7 +2,6 @@ package com.example.walkarround.message.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.content.*;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Sensor;
@@ -566,7 +565,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
         sCurrentReceiverNum = mOnPauseSavedReceiverNum;
         // 取消通知消息
-        cancelNotification(mRecipientInfo);
+        MessageUtil.cancelNotification(getApplicationContext(), mRecipientInfo.getRecipientList().get(0), MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
         boolean oldNetworkStatus = isNetworkAvailable;
         isNetworkAvailable = NetWorkManager.getInstance(this).isNetworkAvailable();
         if (oldNetworkStatus != isNetworkAvailable) {
@@ -1514,30 +1513,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             receiverName.setText(receiverNumStr);
         } else {
             receiverName.setText(receiverNameStr);
-        }
-    }
-
-    /**
-     * 取消通知消息
-     */
-    private void cancelNotification(MessageRecipientInfo recipientInfo) {
-        if (isReceiverEditable) {
-            return;
-        }
-        int conversationType = recipientInfo.getConversationType();
-        if (conversationType == ChatType.CHAT_TYPE_ONE2ONE) {
-            try {
-                ContactInfo contact = ContactsManager.getInstance(getApplicationContext()).getContactByUsrObjId(recipientInfo.getRecipientList().get(0));
-                if(contact == null) {
-                    return;
-                }
-                String number = contact.getMobilePhoneNumber();
-                int startPos = number.length() > 5 ? number.length() - 5 : 0;
-                int id = Integer.parseInt(number.substring(startPos));
-                NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                manager.cancel(number, id);
-            } catch (NumberFormatException e) {
-            }
         }
     }
 

@@ -126,14 +126,21 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             } else {
                 if (requestCode.equals(MessageConstant.MSG_OPERATION_LOAD)) {
                     what = MSG_OPERATION_LOAD_SUCCESS;
-                    List<MessageSessionBaseModel> friendConvList = new ArrayList<>();
-                    for (MessageSessionBaseModel conv : (List<MessageSessionBaseModel>) object) {
-                        if (conv.status >= MessageUtil.WalkArroundState.STATE_END) {
-                            friendConvList.add(conv);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            List<MessageSessionBaseModel> friendConvList = new ArrayList<>();
+                            for (MessageSessionBaseModel conv : (List<MessageSessionBaseModel>) object) {
+                                if (conv.status >= MessageUtil.WalkArroundState.STATE_END) {
+                                    friendConvList.add(conv);
+                                }
+                            }
+                            amLogger.d("Get friends: " + friendConvList.size());
+
+                            compareFriendListVsThreadList((friendConvList));
                         }
-                    }
-                    amLogger.d("Get friends: " + friendConvList.size());
-                    compareFriendListVsThreadList((friendConvList));
+                    }).start();
                 }
             }
             mHandler.removeMessages(what);
@@ -655,7 +662,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             if (mFriendList == null || mFriendList.size() <= 0) {
                 if (list != null && list.size() > 0) {
                     for (MessageSessionBaseModel item : list) {
-                        removeThreadIdList.add(item.getThreadId());
+                        if(item.status == MessageUtil.WalkArroundState.STATE_END) {
+                            removeThreadIdList.add(item.getThreadId());
+                        }
                     }
                 }
             }
@@ -684,6 +693,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                             if (model != null && friendUsrId.equalsIgnoreCase(model.getContact())) {
                                 addThreadIdList.remove(friend);
                                 removedModelList.remove(model);
+//                                if(model.msgStatus != MessageUtil.WalkArroundState.STATE_END) {
+//                                    updateThreadIdList.add(model.getThreadId());
+//                                }
                             }
                         }
                     }
@@ -692,7 +704,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                 //Get deleted items list.
                 if (removedModelList != null && removedModelList.size() > 0) {
                     for (MessageSessionBaseModel item : removedModelList) {
-                        removeThreadIdList.add(item.getThreadId());
+                        if(item.status == MessageUtil.WalkArroundState.STATE_END) {
+                            removeThreadIdList.add(item.getThreadId());
+                        }
                     }
                 }
             }

@@ -797,6 +797,30 @@ public class LittleCDbManager {
         return list;
     }
 
+    public List<MessageSessionBaseModel> getFriendsSessionList() {
+        String sortOrder;
+        String where;
+        String[] args;
+
+        sortOrder = Conversation._DATE + " DESC";
+        where = Conversation._DATA1 + " = ? AND " + Conversation._CONVERSATION_STATUS + " = ? ";
+        args = new String[]{Conversation.COMMON_MSG, String.valueOf(MessageUtil.WalkArroundState.STATE_END)};
+
+        Cursor cur = mContext.getContentResolver().query(Conversation.CONTENT_URI, null, where, args, sortOrder);
+
+        List<MessageSessionBaseModel> list = new ArrayList<MessageSessionBaseModel>();
+        if (cur != null) {
+            if (cur.moveToFirst()) {
+                do {
+                    list.add(getSessionByCursor(cur));
+                } while (cur.moveToNext());
+            }
+            cur.close();
+        }
+
+        return list;
+    }
+
     /*
      * While (Current time)  - (Conversation last message time) > time, we will delete it.
      * Default value is 24 hours. (24 * 60 * 60 * 1000 ms)s
@@ -930,11 +954,16 @@ public class LittleCDbManager {
         String where = Conversation._ID + "=?";
         String[] arg = new String[]{threadId + ""};
         ContentValues conversationValues = new ContentValues();
-        conversationValues.put(Conversation._CONVERSATION_STATUS, (oldState > newState) ? oldState : newState);
+
+        if(newState != MessageUtil.WalkArroundState.STATE_INIT && (oldState > newState)) {
+            newState = oldState;
+        }
+
+        conversationValues.put(Conversation._CONVERSATION_STATUS, newState);
 
         //If conversation state == WalkArroundState.STATE_END
         logger.d("updateConversationStatus, old = " + oldState + ", newState = " + newState);
-        if(((oldState > newState) ? oldState : newState) >= MessageUtil.WalkArroundState.STATE_END) {
+        if(newState >= MessageUtil.WalkArroundState.STATE_END) {
             logger.d("State is END & clear top ");
             conversationValues.put(Conversation._TOP, Conversation.NOT_TOP);
         }
@@ -970,11 +999,15 @@ public class LittleCDbManager {
         String[] arg = new String[]{threadId + ""};
         ContentValues conversationValues = new ContentValues();
         conversationValues.put(Conversation._COLOR, newColor);
-        conversationValues.put(Conversation._CONVERSATION_STATUS, (oldState > newStatus) ? oldState : newStatus);
+
+        if(newStatus != MessageUtil.WalkArroundState.STATE_INIT && (oldState > newStatus)) {
+            newStatus = oldState;
+        }
+        conversationValues.put(Conversation._CONVERSATION_STATUS, newStatus);
 
         //If conversation state == WalkArroundState.IMPRESSION
         logger.d("updateConversationStatus, old = " + oldState + ", newState = " + newStatus);
-        if(((oldState > newStatus) ? oldState : newStatus) >= MessageUtil.WalkArroundState.STATE_END) {
+        if(newStatus >= MessageUtil.WalkArroundState.STATE_END) {
             logger.d("updateConversationStatus, clear top.");
             conversationValues.put(Conversation._TOP, Conversation.NOT_TOP);
         }

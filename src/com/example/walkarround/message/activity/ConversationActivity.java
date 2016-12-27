@@ -1207,6 +1207,31 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 }, true
         );
         deleteConfirmDialog.show();
+
+        //Test, create 7 friends.
+//        List<String> lRecipientList = new ArrayList<>();
+//        List<String> friendIds = new ArrayList<>();
+//        friendIds.add("57b2d3370a2b58006337ec08");
+//        //friendIds.add("578defb81532bc0061f8d9f4");
+//        //friendIds.add("578def035bbb50005b87b9f2");
+//        friendIds.add("581414262e958a00549209a3");
+//        friendIds.add("5811e6c5c4c9710058b1ba99");
+//        //Add friends user id here
+//        //friendIds.add();
+//        int i = 0;
+//        for (String friend : friendIds) {
+//
+//            lRecipientList.clear();
+//            lRecipientList.add(friend);
+//            long chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).createConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, lRecipientList);
+//            if (chattingThreadId >= 0) {
+//                //Update conversation color & state.
+//                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(chattingThreadId, MessageUtil.WalkArroundState.STATE_END, MessageUtil.getFriendColorIndex(chattingThreadId));
+//                WalkArroundMsgManager.getInstance(getApplicationContext()).sayHello(friend, "hello");
+//            }
+//
+//            i++;
+//        }
     }
 
     /**

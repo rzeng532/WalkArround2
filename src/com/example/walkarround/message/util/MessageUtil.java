@@ -1,5 +1,6 @@
 package com.example.walkarround.message.util;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
@@ -8,7 +9,9 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.*;
 import com.example.walkarround.R;
 import com.example.walkarround.base.WalkArroundApp;
+import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
+import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.model.ChatMessageInfo;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.util.MessageConstant.MessageType;
@@ -59,6 +62,7 @@ public class MessageUtil {
 
     //Get friend list count. If count is 4, it means server response 4 friends every time.
     public static final int GET_FRIENDS_LIST_COUNT = 4;
+    public static final int FRIENDS_COUNT_ON_DB = 3;
 
     private static final List<Integer> mFriendColArray = Arrays.asList(R.color.friend_col_1,
             R.color.friend_col_2, R.color.friend_col_3,
@@ -423,4 +427,30 @@ public class MessageUtil {
 
         return strUser;
     }
+
+    /**
+     * 取消通知消息
+     */
+    public static void cancelNotification(Context context, String sender, int conversationType) {
+//        if (isReceiverEditable) {
+//            return;
+//        }
+
+        if (conversationType == MessageConstant.ChatType.CHAT_TYPE_ONE2ONE) {
+            try {
+                ContactInfo contact = ContactsManager.getInstance(context).getContactByUsrObjId(sender);
+                if(contact == null) {
+                    return;
+                }
+                String number = contact.getMobilePhoneNumber();
+                int startPos = number.length() > 5 ? number.length() - 5 : 0;
+                int id = Integer.parseInt(number.substring(startPos));
+                NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.cancel(number, id);
+            } catch (NumberFormatException e) {
+            }
+        }
+    }
+
+
 }
