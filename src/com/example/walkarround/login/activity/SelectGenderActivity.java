@@ -41,6 +41,7 @@ public class SelectGenderActivity extends Activity implements View.OnClickListen
 
         mBtnMen = (Button) findViewById(R.id.btn_men);
         mBtnMen.setOnClickListener(this);
+        mBtnMen.setBackground(getResources().getDrawable(R.drawable.btn_circle_type));
         mBtnFemale = (Button) findViewById(R.id.btn_female);
         mBtnFemale.setOnClickListener(this);
         ((GradientDrawable)mBtnFemale.getBackground()).setColor(getResources().getColor(R.color.red_button));
