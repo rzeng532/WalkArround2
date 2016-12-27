@@ -66,6 +66,14 @@ public class WalkArroundMsgManager {
         return mInstance;
     }
 
+    public static void onDestroy() {
+        synchronized (WalkArroundMsgManager.class) {
+            mInstance.mAvimClient = null;
+            mInstance.mMsgManager = null;
+            mInstance = null;
+        }
+    }
+
     public void open(String clientId, AVIMClientCallback callback) {
         if(mInstance.mAvimClient == null) {
             synchronized (mMsgClientLock) {
