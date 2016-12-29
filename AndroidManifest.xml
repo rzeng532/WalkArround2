@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
         android:name=".base.WalkArroundApp"
@@ -31,10 +32,12 @@
         android:icon="@drawable/ic_launcher"
         android:theme="@style/ActivityNoAnimation">
 
-        <!-- For map -->
+        <!-- For map start -->
         <meta-data
                 android:name="com.amap.api.v2.apikey"
                 android:value="9d6c7cac79d49a10ca2cb9640347b44b"/>
+        <!-- For map end -->
+
         <service android:name="com.amap.api.location.APSService"></service>
 
         <provider
