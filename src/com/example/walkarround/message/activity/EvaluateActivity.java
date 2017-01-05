@@ -135,7 +135,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 //Update local DB conversation state, set 8th conversation to INIT state and set it as inactive on server side.
                 ThreadPoolManager.getPoolManager().addAsyncTask(
                         new AsyncTaskLoadFriendsSession(getApplicationContext(),
-                                MessageConstant.MSG_OPERATION_LOAD_FRIENDS, mLoadFriendsResultListener)
+                                MessageConstant.MSG_OPERATION_LOAD_FRIENDS, mLoadFriendsResultListener, mInActiveFriendTaskListener)
                 );
             } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
                 mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
@@ -163,6 +163,28 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
             } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_END_SPEED_DATE)) {
                 myLogger.d("End speed date fail.");
                 mUIHandler.sendEmptyMessageDelayed(MSG_EVALUATE_FAILED, 1000);
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
+    private HttpTaskBase.onResultListener mInActiveFriendTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_INACTIVE_FRIEND)) {
+                myLogger.d("InActiveFriend ok.");
+            } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_INACTIVE_FRIEND)) {
+                myLogger.d("InActiveFriend fail.");
             }
         }
 

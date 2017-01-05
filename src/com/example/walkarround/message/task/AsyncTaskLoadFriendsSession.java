@@ -1,12 +1,16 @@
 package com.example.walkarround.message.task;
 
 import android.content.Context;
+import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.MessageSessionBaseModel;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.SessionComparator;
+import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
+import com.example.walkarround.util.http.HttpUtil;
+import com.example.walkarround.util.http.ThreadPoolManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,9 +19,11 @@ import java.util.List;
 public class AsyncTaskLoadFriendsSession extends HttpTaskBase {
 
     private static final Logger logger = Logger.getLogger(AsyncTaskLoadFriendsSession.class.getSimpleName());
+    private HttpTaskBase.onResultListener mInactiveFriendtaskListener = null;
 
-    public AsyncTaskLoadFriendsSession(Context context, String operate, onResultListener listener) {
+    public AsyncTaskLoadFriendsSession(Context context, String operate, onResultListener listener, onResultListener inactiveFriendlistener) {
         super(context, listener, operate);
+        mInactiveFriendtaskListener = inactiveFriendlistener;
     }
 
     @Override
@@ -46,10 +52,15 @@ public class AsyncTaskLoadFriendsSession extends HttpTaskBase {
             }
 
             //TODO: Send friends user id to server to inactive friends.
-
+            String curUsrId = ProfileManager.getInstance().getCurUsrObjId();
+            for(String friendItemId : friendUsrId) {
+                ThreadPoolManager.getPoolManager().addAsyncTask(new InActivieFriendTask(mContext,
+                        mInactiveFriendtaskListener,
+                        HttpUtil.HTTP_FUNC_INACTIVE_FRIEND,
+                        HttpUtil.HTTP_TASK_INACTIVE_FRIEND,
+                        InActivieFriendTask.getParams(curUsrId, friendItemId),
+                        TaskUtil.getTaskHeader()));
+            }
         }
-
-        //No callback now.
-        //doResultCallback(null, TaskResult.SUCCEESS);
     }
 }
