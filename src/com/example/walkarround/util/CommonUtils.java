@@ -540,4 +540,25 @@ public class CommonUtils {
         Location.distanceBetween(lat1, lon1, lat2, lon2, results);
         return results[0];
     }
+
+    /**
+     * Return a string by input distance meter.
+     * @param distance, original unit is meter.
+     * @return
+     */
+    public static String getDistanceStr(int distance) {
+        String disanceStr = null;
+
+        if(distance < 0) {
+            return "";
+        }
+
+        if(distance < 1000) {
+            disanceStr = distance + WalkArroundApp.getInstance().getResources().getString(R.string.common_distance_unit_meter);
+        } else {
+            disanceStr = (distance / 1000) + WalkArroundApp.getInstance().getResources().getString(R.string.common_distance_unit_kilometer);
+        }
+
+        return disanceStr;
+    }
 }

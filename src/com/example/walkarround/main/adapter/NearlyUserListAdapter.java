@@ -12,6 +12,7 @@ import com.example.walkarround.R;
 import com.example.walkarround.flingswipe.RotateTextImageView;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
+import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.image.ImageLoaderManager;
 
 import java.util.List;
@@ -72,15 +73,14 @@ public class NearlyUserListAdapter extends BaseAdapter {
 
         String ageByBirth = ProfileUtil.getAgeByBirth(mUserList.get(position).getBirthday());
         if (TextUtils.isEmpty(ageByBirth)) {
-            holder.mCardYear.setText("");
+            holder.mCardYear.setText(mContext.getString(R.string.common_age_secret));
         } else {
             holder.mCardYear.setText(ageByBirth);
         }
 
-        //有数据时显示距离，单位米
+        //有数据时显示距离
         String distance = (mUserList.get(position).getDistance() != null && mUserList.get(position).getDistance().size() > 0)
-                ? (int)(mUserList.get(position).getDistance().get(0) * 1000) + mContext.getResources().getString(R.string.common_distance_unit)
-                    : "";
+                ? CommonUtils.getDistanceStr((int)(mUserList.get(position).getDistance().get(0) * 1000)) : "";
         holder.mCardImageNum.setText(distance);
 
         return convertView;

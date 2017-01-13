@@ -14,7 +14,9 @@
     <string name="com_select">选择</string>
     <string name="common_search">搜索</string>
     <string name="common_select">选择</string>
-    <string name="common_distance_unit">米</string>
+    <string name="common_distance_unit_meter">米</string>
+    <string name="common_distance_unit_kilometer">千米</string>
+    <string name="common_age_secret">保密</string>
 
     <!-- Strings for dialog -->
     <string name="err_account_already_exist">该账户已存在</string>

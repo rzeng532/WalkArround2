@@ -109,7 +109,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                     logger.d("ShowDistance:update distance: " + distance);
                     if(DISTANCE_2_DISPLAY_FRIEND_PORTRAIT >= distance) {
                         mSearchingView.start();
-                        mTvTitle.setText(distance + getResources().getString(R.string.common_distance_unit));
+                        mTvTitle.setText(distance + getResources().getString(R.string.common_distance_unit_meter));
                         mPvFriend.setVisibility(View.VISIBLE);
                         mTvPleaseClickPortrait.setVisibility(View.VISIBLE);
                     } else {
