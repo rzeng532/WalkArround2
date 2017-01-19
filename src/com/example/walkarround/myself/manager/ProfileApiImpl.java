@@ -3,15 +3,24 @@
  */
 package com.example.walkarround.myself.manager;
 
+import android.text.TextUtils;
 import com.avos.avoscloud.*;
+import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
+import com.example.walkarround.base.WalkArroundApp;
+import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
+import com.example.walkarround.main.task.TaskUtil;
 import com.example.walkarround.myself.model.MyDynamicInfo;
+import com.example.walkarround.myself.task.CreateDynDataTask;
+import com.example.walkarround.myself.task.QueryDynDataTask;
+import com.example.walkarround.myself.task.UpdateDynDataTask;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
-
-import java.util.List;
+import com.example.walkarround.util.http.HttpTaskBase;
+import com.example.walkarround.util.http.HttpUtil;
+import com.example.walkarround.util.http.ThreadPoolManager;
 
 /**
  * TODO: description
@@ -22,6 +31,71 @@ import java.util.List;
 public class ProfileApiImpl extends ProfileApiAbstract {
 
     private Logger mLogger = Logger.getLogger(ProfileApiImpl.class.getSimpleName());
+
+    private HttpTaskBase.onResultListener mCreateDynDataTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_CREATE_DYNC_DATA)) {
+
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+        }
+    };
+
+    private HttpTaskBase.onResultListener mUpdateDynDataTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_UPDATE_DYNC_DATA)) {
+
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+        }
+    };
+
+    private HttpTaskBase.onResultListener mQueryDynDataTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            mLogger.w("mQueryDynDataTaskListener : " + (String) object);
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_QUERY_DYNC_DATA)) {
+                String datingStatus = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_DATING_STATUS);
+                if (TextUtils.isEmpty(datingStatus)) {
+                    mLogger.d("datingStatus != null");
+                    createCurUserDynData();
+                } else {
+                    mLogger.d("datingStatus == null");
+                    updateCurUserDynData();
+                }
+            } else {
+                mLogger.e("!!! queryCurUserDynData return fail result.");
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+        }
+    };
+
 
     @Override
     public void updateGendle(String value) throws Exception {
@@ -120,102 +194,56 @@ public class ProfileApiImpl extends ProfileApiAbstract {
 
         mLogger.w("updateDynamicData start.");
 
-        //Query dynamic data at first
-        AVQuery<AVObject> query = new AVQuery<AVObject>(AppConstant.TABLE_DYNAMIC_USER_DATA);
-        query.whereEqualTo(ProfileUtil.DYN_DATA_USER_ID, AVUser.getCurrentUser());
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                mLogger.d("Update user dynamic information done.");
-                if (e == null) {
-                    //Query success
-                    mLogger.d("Update user dynamic information successful.");
-                    AVObject objLocation = null;
-                    if (list != null && list.size() > 0) {
-                        //There is record, update original one.
-                        objLocation = (AVObject) list.get(0); //There is only one record
-                    } else {
-                        //There is no record, create a new one.
-                        objLocation = new AVObject(AppConstant.TABLE_DYNAMIC_USER_DATA);
-                        objLocation.put(ProfileUtil.DYN_DATA_USER_ID, AVUser.getCurrentUser());
-                    }
-
-                    //Fill data
-                    objLocation.put(ProfileUtil.DYN_DATA_ONLINE_STATE, dynamicInfo.getOnlineState());
-                    objLocation.put(ProfileUtil.DYN_DATA_GEO, ProfileUtil.geodataConvert2AVObj(dynamicInfo.getCurGeo()));
-                    objLocation.put(ProfileUtil.DYN_DATA_DATING_STATE, dynamicInfo.getDatingState());
-
-                    //Update dynamic data to server.
-                    objLocation.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(AVException e) {
-                            mLogger.d("Update user dynamic information successful.");
-                            if (listener == null) {
-                                return;
-                            }
-
-                            if (e == null) {
-                                //Update object successful, query current user's data again.
-                                queryCurUserDynData(new AsyncTaskListener() {
-                                    @Override
-                                    public void onSuccess(Object data) {
-                                        if(data != null) {
-                                            AVObject dynData = (AVObject) data;
-                                            listener.onSuccess(dynData.getObjectId());
-                                        } else {
-                                            listener.onFailed(null);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailed(AVException e) {
-                                        listener.onFailed(e);
-                                    }
-                                });
-                            } else {
-                                listener.onFailed(e);
-                            }
-                        }
-                    });
-                } else {
-                    if (listener != null) {
-                        mLogger.d("Update user dynamic information failed.");
-                        listener.onFailed(e);
-                    }
-                }
+        //geoData != null mean location mananger get MAP information
+        GeoData geoData = LocationManager.getInstance(WalkArroundApp.getInstance()).getCurrentLoc();
+        if(geoData != null) {
+            GeoData curGeo = ProfileManager.getInstance().getMyProfile().getLocation();
+            //curGeo != null means we already set location information to profile manager.
+            if (curGeo == null) {
+                queryCurUserDynData(null);
+            } else {
+                updateCurUserDynData();
             }
-        });
+        } else {
+            mLogger.w("updateDynamicData fail: there is no MAP information from MAP SDK.");
+        }
     }
 
     @Override
     public void queryCurUserDynData(AsyncTaskListener listener) {
+        mLogger.d("queryCurUserDynData");
 
-        if(listener == null) {
-            return ;
+        ThreadPoolManager.getPoolManager().addAsyncTask(new QueryDynDataTask(WalkArroundApp.getInstance(),
+                mQueryDynDataTaskListener,
+                HttpUtil.HTTP_FUNC_QUERY_DYNC_DATA,
+                HttpUtil.HTTP_TASK_QUERY_DYNC_DATA,
+                QueryDynDataTask.getParams(ProfileManager.getInstance().getCurUsrObjId()),
+                TaskUtil.getTaskHeader()));
+    }
+
+    private void createCurUserDynData() {
+        mLogger.d("createCurUserDynData");
+
+        ThreadPoolManager.getPoolManager().addAsyncTask(new CreateDynDataTask(WalkArroundApp.getInstance(),
+                mCreateDynDataTaskListener,
+                HttpUtil.HTTP_FUNC_CREATE_DYNC_DATA,
+                HttpUtil.HTTP_TASK_CREATE_DYNC_DATA,
+                CreateDynDataTask.getParams(ProfileManager.getInstance().getCurUsrObjId()),
+                TaskUtil.getTaskHeader()));
+    }
+
+    private void updateCurUserDynData() {
+        GeoData curGeo = ProfileManager.getInstance().getMyProfile().getLocation();
+
+        if(curGeo != null) {
+            mLogger.d("updateCurUserDynData");
+            ThreadPoolManager.getPoolManager().addAsyncTask(new UpdateDynDataTask(WalkArroundApp.getInstance(),
+                    mUpdateDynDataTaskListener,
+                    HttpUtil.HTTP_FUNC_UPDATE_DYNC_DATA,
+                    HttpUtil.HTTP_TASK_UPDATE_DYNC_DATA,
+                    UpdateDynDataTask.getParams(ProfileManager.getInstance().getCurUsrObjId(), curGeo.getLatitude(), curGeo.getLongitude()),
+                    TaskUtil.getTaskHeader()));
         }
-
-        //Query current user's dynamic data
-        AVQuery<AVObject> query = new AVQuery<AVObject>(AppConstant.TABLE_DYNAMIC_USER_DATA);
-        query.whereEqualTo(ProfileUtil.DYN_DATA_USER_ID, AVUser.getCurrentUser());
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-
-                if (e == null) {
-                    //Query success
-                    AVObject objLocation = null;
-                    if (list != null && list.size() > 0) {
-                        //There is record, update original one.
-                        objLocation = (AVObject) list.get(0); //There is only one record
-                        listener.onSuccess(objLocation);
-                    } else {
-                        listener.onFailed(null);
-                    }
-                } else {
-                    listener.onFailed(e);
-                }
-            }
-        });
     }
 
     @Override

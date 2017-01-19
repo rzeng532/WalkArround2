@@ -2,7 +2,6 @@ package com.example.walkarround.myself.manager;
 
 import android.text.TextUtils;
 import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.login.manager.LoginManager;
@@ -69,7 +68,9 @@ public class ProfileManager {
         //Set signature
         myProfileInfo.setSignature(avUser.getString(ProfileUtil.REG_KEY_SIGNATURE));
 
-        myProfileInfo.setLocation(new GeoData((AVObject) avUser.get(ProfileUtil.REG_KEY_LOCATION_EX)));
+        //Don't init location information while init personal information.
+        // Setter just be invoked by location listener on app main activity.
+        //myProfileInfo.setLocation(new GeoData((AVObject) avUser.get(ProfileUtil.REG_KEY_LOCATION_EX)));
     }
 
     /*

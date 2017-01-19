@@ -27,6 +27,9 @@ public class HttpUtil {
     public static final String HTTP_FUNC_END_SPEED_DATE = "endSpeedDate";
     public static final String HTTP_FUNC_CANCEL_SPEED_DATE = "cancelSpeedDate";
     public static final String HTTP_FUNC_INACTIVE_FRIEND = "friendInActive";
+    public static final String HTTP_FUNC_CREATE_DYNC_DATA = "createUserDynamicData";
+    public static final String HTTP_FUNC_QUERY_DYNC_DATA = "queryUserDynamicData";
+    public static final String HTTP_FUNC_UPDATE_DYNC_DATA = "updateUserDynamicData";
 
     //Public HTTP tasks
     private static final String HTTP_TASK_PRE = HTTP_BASE_URL + HTTP_BASE_SPLIT_SYM +
@@ -68,6 +71,15 @@ public class HttpUtil {
     public static final String HTTP_TASK_INACTIVE_FRIEND = HTTP_TASK_PRE +
             HTTP_FUNC_INACTIVE_FRIEND;
 
+    public static final String HTTP_TASK_CREATE_DYNC_DATA = HTTP_TASK_PRE +
+            HTTP_FUNC_CREATE_DYNC_DATA;
+
+    public static final String HTTP_TASK_QUERY_DYNC_DATA = HTTP_TASK_PRE +
+            HTTP_FUNC_QUERY_DYNC_DATA;
+
+    public static final String HTTP_TASK_UPDATE_DYNC_DATA = HTTP_TASK_PRE +
+            HTTP_FUNC_UPDATE_DYNC_DATA;
+
     public static final String HTTP_PARAM_QUERY_NEARLY_USERS_ID = "userDynamicDataId";
     public static final String HTTP_PARAM_LIKE_SOMEONE_FROM = "fromUserId";
     public static final String HTTP_PARAM_LIKE_SOMEONE_TO = "toUserId";
@@ -77,6 +89,9 @@ public class HttpUtil {
     public static final String HTTP_PARAM_FRIEND_LIST_COUNT = "count";
     public static final String HTTP_PARAM_SPEEDDATE_COLOR = "color";
     public static final String HTTP_PARAM_USR_COORDINATE = "userId";
+    public static final String HTTP_PARAM_DYN_DATA_DATE_STATE = "datingStatus";
+    public static final String HTTP_PARAM_DYN_DATA_LATITUDE = "latitude";
+    public static final String HTTP_PARAM_DYN_DATA_LONGITUDE = "longitude";
 
     public static final String HTTP_PARAM_EVALUATE_HONEST = "honesty";
     public static final String HTTP_PARAM_EVALUATE_TALK_STYLE = "talkative";
@@ -107,6 +122,9 @@ public class HttpUtil {
     //Response: query user coordinate
     public static final String HTTP_RESPONSE_KEY_LATITUDE = "latitude";
     public static final String HTTP_RESPONSE_KEY_LONGITUDE = "longitude";
+
+    //Response: query user dynamic data
+    public static final String HTTP_RESPONSE_KEY_DATING_STATUS = "datingStatus";
 
     private String addEntityKeyValue(String key, String value) {
         try {

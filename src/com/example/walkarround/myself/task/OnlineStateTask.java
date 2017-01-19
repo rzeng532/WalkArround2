@@ -1,7 +1,6 @@
 package com.example.walkarround.myself.task;
 
 import android.content.Context;
-
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.myself.manager.ProfileManager;
@@ -51,8 +50,6 @@ public class OnlineStateTask {
 
                     GeoData geoData = LocationManager.getInstance(mContext).getCurrentLoc();
 
-                    //TODO: should we do relocating here?
-
                     if (geoData != null) {
                         //Update user dynamic data - online state & GEO.
                         ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(geoData, true, 1), null);
@@ -66,7 +63,6 @@ public class OnlineStateTask {
                         return;
                     }
                 }
-
             }
         });
 
