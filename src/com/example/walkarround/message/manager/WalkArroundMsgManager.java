@@ -68,6 +68,13 @@ public class WalkArroundMsgManager {
 
     public static void onDestroy() {
         synchronized (WalkArroundMsgManager.class) {
+            mInstance.mAvimClient.close(new AVIMClientCallback() {
+
+                @Override
+                public void done(AVIMClient avimClient, AVIMException e) {
+                    //There is nothing.
+                }
+            });
             mInstance.mAvimClient = null;
             mInstance.mMsgManager = null;
             mInstance = null;

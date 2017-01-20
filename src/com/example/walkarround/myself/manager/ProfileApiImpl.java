@@ -14,6 +14,7 @@ import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.myself.task.CreateDynDataTask;
 import com.example.walkarround.myself.task.QueryDynDataTask;
 import com.example.walkarround.myself.task.UpdateDynDataTask;
+import com.example.walkarround.myself.util.ProfileOnResultListener;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
@@ -41,7 +42,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
             //Task success.
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_CREATE_DYNC_DATA)) {
-
+                updateCurUserDynData(null);
             }
         }
 
@@ -81,10 +82,10 @@ public class ProfileApiImpl extends ProfileApiAbstract {
                 String datingStatus = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_DATING_STATUS);
                 if (TextUtils.isEmpty(datingStatus)) {
                     mLogger.d("datingStatus != null");
-                    createCurUserDynData();
+                    createCurUserDynData(null);
                 } else {
                     mLogger.d("datingStatus == null");
-                    updateCurUserDynData();
+                    updateCurUserDynData(null);
                 }
             } else {
                 mLogger.e("!!! queryCurUserDynData return fail result.");
@@ -200,9 +201,9 @@ public class ProfileApiImpl extends ProfileApiAbstract {
             GeoData curGeo = ProfileManager.getInstance().getMyProfile().getLocation();
             //curGeo != null means we already set location information to profile manager.
             if (curGeo == null) {
-                queryCurUserDynData(null);
+                queryCurUserDynData(listener);
             } else {
-                updateCurUserDynData();
+                updateCurUserDynData(listener);
             }
         } else {
             mLogger.w("updateDynamicData fail: there is no MAP information from MAP SDK.");
@@ -214,31 +215,31 @@ public class ProfileApiImpl extends ProfileApiAbstract {
         mLogger.d("queryCurUserDynData");
 
         ThreadPoolManager.getPoolManager().addAsyncTask(new QueryDynDataTask(WalkArroundApp.getInstance(),
-                mQueryDynDataTaskListener,
+                new ProfileOnResultListener(mQueryDynDataTaskListener, listener),
                 HttpUtil.HTTP_FUNC_QUERY_DYNC_DATA,
                 HttpUtil.HTTP_TASK_QUERY_DYNC_DATA,
                 QueryDynDataTask.getParams(ProfileManager.getInstance().getCurUsrObjId()),
                 TaskUtil.getTaskHeader()));
     }
 
-    private void createCurUserDynData() {
+    private void createCurUserDynData(AsyncTaskListener listener) {
         mLogger.d("createCurUserDynData");
 
         ThreadPoolManager.getPoolManager().addAsyncTask(new CreateDynDataTask(WalkArroundApp.getInstance(),
-                mCreateDynDataTaskListener,
+                new ProfileOnResultListener(mCreateDynDataTaskListener, listener),
                 HttpUtil.HTTP_FUNC_CREATE_DYNC_DATA,
                 HttpUtil.HTTP_TASK_CREATE_DYNC_DATA,
                 CreateDynDataTask.getParams(ProfileManager.getInstance().getCurUsrObjId()),
                 TaskUtil.getTaskHeader()));
     }
 
-    private void updateCurUserDynData() {
+    private void updateCurUserDynData(AsyncTaskListener listener) {
         GeoData curGeo = ProfileManager.getInstance().getMyProfile().getLocation();
 
         if(curGeo != null) {
             mLogger.d("updateCurUserDynData");
             ThreadPoolManager.getPoolManager().addAsyncTask(new UpdateDynDataTask(WalkArroundApp.getInstance(),
-                    mUpdateDynDataTaskListener,
+                    new ProfileOnResultListener(mUpdateDynDataTaskListener, listener),
                     HttpUtil.HTTP_FUNC_UPDATE_DYNC_DATA,
                     HttpUtil.HTTP_TASK_UPDATE_DYNC_DATA,
                     UpdateDynDataTask.getParams(ProfileManager.getInstance().getCurUsrObjId(), curGeo.getLatitude(), curGeo.getLongitude()),

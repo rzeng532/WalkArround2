@@ -242,13 +242,21 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         public void onSuccess(Object data) {
             amLogger.d("update dynamic success.");
 
+            if(data == null) {
+                return;
+            }
+
+            String dynamicRecordId = WalkArroundJsonResultParser.parseUserDynamicRecordId((String)data);
+
             //Query nearly users
-            ThreadPoolManager.getPoolManager().addAsyncTask(new QueryNearlyUsers(getApplicationContext(),
-                    mQueryNearUserListener,
-                    HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS,
-                    HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS,
-                    QueryNearlyUsers.getParams((String) data),
-                    TaskUtil.getTaskHeader()));
+            if(!TextUtils.isEmpty(dynamicRecordId)) {
+                ThreadPoolManager.getPoolManager().addAsyncTask(new QueryNearlyUsers(getApplicationContext(),
+                        mQueryNearUserListener,
+                        HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS,
+                        HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS,
+                        QueryNearlyUsers.getParams(dynamicRecordId),
+                        TaskUtil.getTaskHeader()));
+            }
         }
 
         @Override

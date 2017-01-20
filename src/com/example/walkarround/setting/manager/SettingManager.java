@@ -4,6 +4,7 @@
 package com.example.walkarround.setting.manager;
 
 import com.example.walkarround.login.manager.LoginManager;
+import com.example.walkarround.main.activity.NearlyUsersFragment;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.myself.manager.ProfileManager;
 
@@ -32,6 +33,7 @@ public class SettingManager {
     public void doLogout() {
         WalkArroundMsgManager.onDestroy();
         ProfileManager.onDestroy();
+        NearlyUsersFragment.getInstance().clearNearlyUserList();
         LoginManager.getInstance().doLogout();
     }
 }

@@ -180,7 +180,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         mFragmentHandler.sendEmptyMessageDelayed(UPDATE_NEARLY_USERS, RADAR_STOP_DELAY);
     }
 
-    protected void clearNearlyUserList() {
+    public void clearNearlyUserList() {
         mNearlyUserList.clear();
         mDeleletedUserList.clear();
     }
