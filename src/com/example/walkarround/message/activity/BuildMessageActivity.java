@@ -1476,7 +1476,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         PhotoView photoView = (PhotoView) detailHeaderView.findViewById(R.id.message_title_profile_pv);
         //Right, more
         View moreView = detailHeaderView.findViewById(R.id.message_title_more_iv);
-        moreView.setOnClickListener(this);
+        moreView.setVisibility(View.GONE);
+        //moreView.setOnClickListener(this);
 
         //Get color and set image view.
         logger.d("thread id is: " + mRecipientInfo.getThreadId());
@@ -1505,7 +1506,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 receiverNumStr = contact.getMobilePhoneNumber();
             }
 
-            moreView.setVisibility(View.VISIBLE);
+            //moreView.setVisibility(View.VISIBLE);
         }
 
         TextView receiverName = (TextView) detailHeaderView.findViewById(R.id.message_title_name_tv);
