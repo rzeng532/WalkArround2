@@ -172,7 +172,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             //TODO: add forgot password step.
         } else if (v.getId() == R.id.back_rl) {
             this.finish();
+            onBackPressed();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        startActivity(new Intent(LoginActivity.this, LoginOrRegActivity.class));
     }
 
     private void showDialog() {

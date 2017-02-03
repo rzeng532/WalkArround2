@@ -8,8 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import com.example.walkarround.EntranceActivity;
 import com.example.walkarround.R;
-import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
 
@@ -35,6 +35,17 @@ public class LoginOrRegActivity extends Activity implements View.OnClickListener
         setContentView(R.layout.activity_login_or_register);
         findView();
         loginLogger = Logger.getLogger(LoginOrRegActivity.class.getSimpleName());
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        //Goto main activity and exit, so we can skip intermediate activities.
+        //NOTE: DO NOT set CLEAR flag here.
+        Intent intent = new Intent(LoginOrRegActivity.this, EntranceActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     private void findView() {
@@ -63,7 +74,4 @@ public class LoginOrRegActivity extends Activity implements View.OnClickListener
         }
     }
 
-    private void startMainActivity() {
-        startActivity(new Intent(LoginOrRegActivity.this, AppMainActivity.class));
-    }
 }

@@ -11,11 +11,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
-import com.example.walkarround.EntranceActivity;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
+import com.example.walkarround.login.activity.LoginOrRegActivity;
 import com.example.walkarround.setting.manager.SettingManager;
-import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 
 /**
@@ -103,7 +102,6 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 
     public void doLogout() {
@@ -120,10 +118,10 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
                         }
                         //finish();
 
-                        Intent intent = new Intent(AppSettingActivity.this, EntranceActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.putExtra(AppConstant.KEY_START_TARGET_ACTIVITY, AppConstant.START_LOGIN_ACTIVITY);
+                        Intent intent = new Intent(AppSettingActivity.this, LoginOrRegActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        AppSettingActivity.this.finish();
                     }
                 }, null);
         noticeDialog.show();

@@ -21,6 +21,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.example.walkarround.EntranceActivity;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
@@ -439,6 +440,14 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         //Clear nearly user list while user select to exit main page. So user can search user while he/she enter next time.
         NearlyUsersFragment.getInstance().clearNearlyUserList();
+
+        //Goto main activity and exit, so we can skip intermediate activities.
+        //NOTE: DO NOT set CLEAR flag here.
+        Intent intent = new Intent(AppMainActivity.this, EntranceActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
+        finish();
     }
 
     @Override
@@ -588,6 +597,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         super.onDestroy();
         mDynUpdateListener = null;
         mQueryNearUserListener = null;
+        ProfileManager.getInstance().getMyProfile().setLocation(null);
         LocationManager.getInstance(getApplicationContext()).onDestroy();
     }
 

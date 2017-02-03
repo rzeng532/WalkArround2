@@ -52,7 +52,12 @@ public class OnlineStateTask {
 
                     if (geoData != null) {
                         //Update user dynamic data - online state & GEO.
-                        ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(geoData, true, 1), null);
+                        try{
+                            ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(geoData, true, 1), null);
+                        } catch (Exception e) {
+                            logger.d(" ------ OnlineStateTask exception: ");
+                            e.printStackTrace();
+                        }
                         logger.d("OnlineStateTask updateDynamicData.");
                     }
 

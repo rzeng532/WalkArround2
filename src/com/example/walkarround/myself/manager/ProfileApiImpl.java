@@ -198,6 +198,13 @@ public class ProfileApiImpl extends ProfileApiAbstract {
         //geoData != null mean location mananger get MAP information
         GeoData geoData = LocationManager.getInstance(WalkArroundApp.getInstance()).getCurrentLoc();
         if(geoData != null) {
+            if(ProfileManager.getInstance().getMyProfile() == null) {
+                if(listener != null) {
+                    listener.onFailed(new AVException(-1, "ProfileManager.getInstance().getMyProfile() is NULL."));
+                }
+                return;
+            }
+
             GeoData curGeo = ProfileManager.getInstance().getMyProfile().getLocation();
             //curGeo != null means we already set location information to profile manager.
             if (curGeo == null) {

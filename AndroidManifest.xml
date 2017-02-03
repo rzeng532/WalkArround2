@@ -74,7 +74,7 @@
         <activity android:name=".util.image.ImageBrowserActivity" />
         <activity android:name=".util.image.ImageChooseActivity" />
         <activity android:name=".Location.activity.LocationActivity"/>
-        <activity android:name=".main.activity.AppMainActivity"/>
+        <activity android:name=".main.activity.AppMainActivity" android:launchMode="singleTask"/>
         <activity android:name=".message.activity.BuildMessageActivity"/>
         <activity android:name=".message.activity.ConversationActivity"/>
         <activity android:name=".message.activity.ChatDetailActivity"/>

@@ -24,7 +24,9 @@ public class EntranceActivity extends Activity {
 
         boolean isLogined = LoginManager.getInstance().isLogined();
         if (isLogined) {
-            startActivityForResult(new Intent(this, AppMainActivity.class), REQ_CODE_LOGIN);
+            Intent intent = new Intent(this, AppMainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivityForResult(intent, REQ_CODE_LOGIN);
         } else {
             startActivityForResult(new Intent(this, LoginOrRegActivity.class), REQ_CODE_MAIN);
         }
@@ -57,6 +59,7 @@ public class EntranceActivity extends Activity {
                 startActivityForResult(new Intent(this, AppMainActivity.class), REQ_CODE_LOGIN);
                 break;
             default:
+                finish();
                 break;
         }
 
@@ -69,7 +72,7 @@ public class EntranceActivity extends Activity {
         switch (requestCode) {
             case REQ_CODE_LOGIN:
                 if (resultCode != AppConstant.ACTIVITY_RETURN_CODE_OK) {
-                    finishEntranceActivity();
+                    //finishEntranceActivity();
                 } else {
                     OnlineStateTask.getInstance(getApplicationContext()).startTask();
                 }

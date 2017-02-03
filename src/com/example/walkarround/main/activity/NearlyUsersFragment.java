@@ -420,11 +420,23 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     }
 
     private void right() {
-        mUserFrame.getTopCardListener().selectRight();
+        if(mUserFrame != null) {
+            try{
+                mUserFrame.getTopCardListener().selectRight();
+            } catch (Exception e) {
+                logger.e(" ------ right() exception: ");
+            }
+        }
     }
 
     private void left() {
-        mUserFrame.getTopCardListener().selectLeft();
+        if(mUserFrame != null) {
+            try{
+                mUserFrame.getTopCardListener().selectLeft();
+            } catch (Exception e) {
+                logger.e(" ------ left() exception: ");
+            }
+        }
     }
 
     private void addCacheContact(String userId) {
