@@ -96,6 +96,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     private static final String MSG_EVENT_EXTRA_LIST = "listData";
     private static final String MSG_OPERATION_KEY_REQUEST = "msg_operation_key_request";
 
+    //Flag for check if first task for getting nearly user complete or not;
+    private boolean bFirstSearchComplete = false;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -169,6 +172,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         @Override
         public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
             amLogger.d("Query nearly user done.");
+
             if (object != null &&
                     WalkArroundJsonResultParser.parseReturnCode((String) object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
                 List<ContactInfo> nearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String) object);
@@ -183,6 +187,12 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
             if (TaskResult.SUCCEESS == resultCode) {
                 amLogger.d("TaskResult.SUCCEESS");
+            } else {
+                amLogger.e("----- ! TaskRsult.FAIL");
+            }
+
+            if(!bFirstSearchComplete) {
+                bFirstSearchComplete = true;
             }
         }
 
@@ -251,12 +261,12 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
             //Query nearly users
             if(!TextUtils.isEmpty(dynamicRecordId)) {
-                ThreadPoolManager.getPoolManager().addAsyncTask(new QueryNearlyUsers(getApplicationContext(),
-                        mQueryNearUserListener,
-                        HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS,
-                        HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS,
-                        QueryNearlyUsers.getParams(dynamicRecordId),
-                        TaskUtil.getTaskHeader()));
+
+                if(myProfileInfo != null) {
+                    myProfileInfo.setDynamicDataId(dynamicRecordId);
+                }
+
+                startQueryNearlyUserTask();
             }
         }
 
@@ -330,6 +340,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                         localThreadStatus = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(chattingThreadId);
                         localThreadStatus = (iStatus > localThreadStatus) ? iStatus : localThreadStatus;
                     }
+
+                    ProfileManager.getInstance().setCurUsrDateState(localThreadStatus);
 
                     if (localThreadStatus == MessageUtil.WalkArroundState.STATE_IM || localThreadStatus == MessageUtil.WalkArroundState.STATE_WALK) {
                         //Go to build message && Start IM directly:
@@ -461,6 +473,10 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         if (!NetWorkManager.getInstance(getApplicationContext()).isNetworkAvailable()) {
             Toast.makeText(getApplicationContext(), getString(R.string.err_network_unavailable), Toast.LENGTH_SHORT).show();
             return;
+        }
+
+        if(bFirstSearchComplete && !NearlyUsersFragment.getInstance().isThereNearlyUser()) {
+            startQueryNearlyUserTask();
         }
     }
 
@@ -715,5 +731,22 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                 }
             }
         }
+    }
+
+    private void startQueryNearlyUserTask() {
+
+        if(myProfileInfo == null || TextUtils.isEmpty(myProfileInfo.getDynamicDataId())
+                || myProfileInfo.getUserDateState() == MessageUtil.WalkArroundState.STATE_IM
+                || myProfileInfo.getUserDateState() == MessageUtil.WalkArroundState.STATE_WALK
+                || myProfileInfo.getUserDateState() == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+            return;
+        }
+
+        ThreadPoolManager.getPoolManager().addAsyncTask(new QueryNearlyUsers(getApplicationContext(),
+                mQueryNearUserListener,
+                HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS,
+                HttpUtil.HTTP_TASK_QUERY_NEARLY_USERS,
+                QueryNearlyUsers.getParams(myProfileInfo.getDynamicDataId()),
+                TaskUtil.getTaskHeader()));
     }
 }

@@ -180,6 +180,14 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         mFragmentHandler.sendEmptyMessageDelayed(UPDATE_NEARLY_USERS, RADAR_STOP_DELAY);
     }
 
+    /*
+     * False: nearly user list is empty;
+     * True: there is nearly user on list;
+     */
+    protected boolean isThereNearlyUser() {
+        return (mNearlyUserList == null || mNearlyUserList.size() <= 0) ? false : true;
+    }
+
     public void clearNearlyUserList() {
         mNearlyUserList.clear();
         mDeleletedUserList.clear();
@@ -348,7 +356,6 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                     //If there is no data, display radar again.
                     showRadar();
                 }
-                ;
             }
 
             @Override
