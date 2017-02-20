@@ -120,22 +120,13 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
             //Task success.
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
 
-                //End speed date
-                String speedDateId = ProfileManager.getInstance().getSpeedDateId();
-                if (!TextUtils.isEmpty(speedDateId)) {
-                    ThreadPoolManager.getPoolManager().addAsyncTask(new EndSpeedDateTask(getApplicationContext(),
-                            mEndSpeedDateTaskListener,
-                            HttpUtil.HTTP_FUNC_END_SPEED_DATE,
-                            HttpUtil.HTTP_TASK_END_SPEED_DATE,
-                            EndSpeedDateTask.getParams(speedDateId),
-                            TaskUtil.getTaskHeader()));
-                }
-
                 //Update local DB conversation state, set 8th conversation to INIT state and set it as inactive on server side.
                 ThreadPoolManager.getPoolManager().addAsyncTask(
                         new AsyncTaskLoadFriendsSession(getApplicationContext(),
                                 MessageConstant.MSG_OPERATION_LOAD_FRIENDS, mLoadFriendsResultListener, mInActiveFriendTaskListener)
                 );
+
+                mUIHandler.sendEmptyMessageDelayed(MSG_EVALUATE_SUCCESS, 1000);
             } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
                 mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
             }
@@ -158,7 +149,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
             //Task success.
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_END_SPEED_DATE)) {
                 myLogger.d("End speed date ok.");
-                mUIHandler.sendEmptyMessageDelayed(MSG_EVALUATE_SUCCESS, 1000);
+                //mUIHandler.sendEmptyMessageDelayed(MSG_EVALUATE_SUCCESS, 1000);
             } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_END_SPEED_DATE)) {
                 myLogger.d("End speed date fail.");
                 mUIHandler.sendEmptyMessageDelayed(MSG_EVALUATE_FAILED, 1000);
@@ -297,6 +288,17 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         initData();
 
         initView();
+
+        //End speed date
+        String speedDateId = ProfileManager.getInstance().getSpeedDateId();
+        if (!TextUtils.isEmpty(speedDateId)) {
+            ThreadPoolManager.getPoolManager().addAsyncTask(new EndSpeedDateTask(getApplicationContext(),
+                    mEndSpeedDateTaskListener,
+                    HttpUtil.HTTP_FUNC_END_SPEED_DATE,
+                    HttpUtil.HTTP_TASK_END_SPEED_DATE,
+                    EndSpeedDateTask.getParams(speedDateId),
+                    TaskUtil.getTaskHeader()));
+        }
 
         //Cancel notification while jump to this UI page.
         MessageUtil.cancelNotification(getApplicationContext(), mFriend.getObjectId(), MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
