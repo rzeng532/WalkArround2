@@ -263,7 +263,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             finish();
         } else if(v.getId() == R.id.locate_iv) {
             mBUserSelect = true;
-            LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mMyPositionListener);
+            LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_SHOW_LOCATION_ONCLICK, mMyPositionListener);
         } else if(v.getId() == R.id.select_another) {
             setResult(RESULT_OK);
             finish();

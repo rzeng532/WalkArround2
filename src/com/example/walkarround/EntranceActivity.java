@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.example.walkarround.login.activity.LoginOrRegActivity;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.main.activity.AppMainActivity;
+import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.task.OnlineStateTask;
 import com.example.walkarround.util.AppConstant;
 
@@ -30,8 +31,6 @@ public class EntranceActivity extends Activity {
         } else {
             startActivityForResult(new Intent(this, LoginOrRegActivity.class), REQ_CODE_MAIN);
         }
-
-        //finish();
     }
 
     @Override
@@ -46,7 +45,7 @@ public class EntranceActivity extends Activity {
         super.onNewIntent(intent);
         //退出
         if ((Intent.FLAG_ACTIVITY_CLEAR_TOP & intent.getFlags()) != 0) {
-            finish();
+            finishEntranceActivity();
         }
 
         int targetActivity = intent.getIntExtra(AppConstant.KEY_START_TARGET_ACTIVITY, AppConstant.START_INVALID_VALUE);
@@ -88,6 +87,8 @@ public class EntranceActivity extends Activity {
     private void finishEntranceActivity() {
         OnlineStateTask.getInstance(getApplicationContext()).stopTask();
 
+        //Get latest profile data while
+        ProfileManager.onDestroy();
         finish();
     }
 }

@@ -75,9 +75,16 @@
         <activity android:name=".util.image.ImageChooseActivity" />
         <activity android:name=".Location.activity.LocationActivity"/>
         <activity android:name=".main.activity.AppMainActivity" android:launchMode="singleTask"/>
-        <activity android:name=".message.activity.BuildMessageActivity"/>
-        <activity android:name=".message.activity.ConversationActivity"/>
-        <activity android:name=".message.activity.ChatDetailActivity"/>
+        <activity android:name=".message.activity.BuildMessageActivity"
+                  android:configChanges="orientation|keyboardHidden|screenSize"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+        />
+        <activity android:name=".message.activity.ConversationActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".message.activity.ChatDetailActivity"
+                  android:screenOrientation="portrait"/>
         <activity android:name=".message.activity.ImageViewerActivity"/>
         <activity android:name=".message.activity.ShowLocationActivity"/>
         <activity android:name=".message.activity.PlaintTextDetailActivity"/>

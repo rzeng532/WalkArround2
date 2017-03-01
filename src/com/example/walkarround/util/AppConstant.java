@@ -63,8 +63,13 @@ public class AppConstant {
     /*
      * Key value for map location listener.
      */
+    public static final long MAP_CONTINUE_LOC_INTERVAL = 3000;
+
     public static final String KEY_MAP_ASYNC_LISTERNER_MAIN = "main_activity_get_key";
     public static final String KEY_MAP_ASYNC_LISTERNER_SHOW_LOCATION = "show_location_activity_get_key";
+    public static final String KEY_MAP_ASYNC_LISTERNER_SHOW_LOCATION_ONCLICK = "show_location_activity_get_key_onclick";
+
+    public static final String KEY_MAP_ASYNC_LISTERNER_CONTINUE_LOC_DURING_WALK = "walkarround_activity_continue_to_loc";
 
     /**
      * Bugly APP ID

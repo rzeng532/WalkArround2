@@ -17,8 +17,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.avos.avoscloud.AVException;
+import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
+import com.example.walkarround.base.WalkArroundApp;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.base.view.RippleView;
@@ -33,6 +36,9 @@ import com.example.walkarround.message.task.QueryUsrCoordinateTask;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.myself.manager.ProfileManager;
+import com.example.walkarround.myself.model.MyDynamicInfo;
+import com.example.walkarround.util.AppConstant;
+import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
@@ -55,6 +61,8 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     private TextView mTvPleaseClickPortrait;
     private TextView mTvTitle;
     private String mStrFriendId;
+    private GeoData mFriendGeoData;
+
     public static final String PARAMS_THREAD_ID = "thread_id";
 
     private final int MSG_FRIEND_REPLY_OK = 1;
@@ -118,13 +126,6 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                         mPvFriend.setVisibility(View.GONE);
                         mTvPleaseClickPortrait.setVisibility(View.GONE);
                     }
-
-                    mUiHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            start2GetFriendCoordinate();
-                        }
-                    }, 10 * 1000);
                     break;
                 default:
                     break;
@@ -177,25 +178,41 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                 logger.d("QueryFriendDynData success, DATA is: " + (String)object);
 
                 //Parse object
-                GeoData friendCoordinate = WalkArroundJsonResultParser.parseUserCoordinate((String)object);
+                mFriendGeoData = WalkArroundJsonResultParser.parseUserCoordinate((String)object);
 
-                if(friendCoordinate != null) {
-                    GeoData myGeo = ProfileManager.getInstance().getMyProfile().getLocation();
-                    if(myGeo != null) {
-                        int distance = (int)CommonUtils.getDistance(myGeo.getLatitude(), myGeo.getLongitude(),
-                                friendCoordinate.getLatitude(), friendCoordinate.getLongitude());
-                        Message msg = mUiHandler.obtainMessage();
-                        msg.what = MSG_UPDATE_DISTANCE;
-                        msg.arg1 = distance;
-                        mUiHandler.sendMessage(msg);
+                mUiHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        start2GetFriendCoordinate();
                     }
-                }
+                }, AppConstant.MAP_CONTINUE_LOC_INTERVAL /* Interval is the same as continue location*/);
             }
         }
 
         @Override
         public void onProgress(int progress, String requestCode) {
 
+        }
+    };
+
+    AsyncTaskListener mWalkArroundLocListener = new AsyncTaskListener() {
+        @Override
+        public void onSuccess(Object data) {
+            GeoData geoData = LocationManager.getInstance(getApplicationContext()).getCurrentLoc();
+            try{
+                ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(geoData, true, 1), null);
+            } catch (Exception e) {
+                logger.d(" ------ ShowDistanceActivity continue locate exception: ");
+                e.printStackTrace();
+            }
+
+            updateDistanceBetweenFriends();
+            logger.d("ShowDistanceActivity continue locate. The geo data is: " + geoData.getAddrInfor());
+        }
+
+        @Override
+        public void onFailed(AVException e) {
+            //TODO:
         }
     };
 
@@ -212,16 +229,22 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
 
         initRegisterforNewMsg();
 
+        //Start to update current user location information.
+        LocationManager.getInstance(WalkArroundApp.getInstance()).start2ContinueLocate(AppConstant.KEY_MAP_ASYNC_LISTERNER_CONTINUE_LOC_DURING_WALK, mWalkArroundLocListener);
+
+        //Start to update friend location information.
         start2GetFriendCoordinate();
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
+
+        LocationManager.getInstance(WalkArroundApp.getInstance()).stopContinueLocate();
+
         try {
             unregisterReceiver(mMessageReceiver);
             mUiHandler.removeCallbacksAndMessages(null);
-            //unRegisterContactReceiver();
         } catch (Exception e) {
         }
     }
@@ -371,5 +394,19 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                 HttpUtil.HTTP_TASK_QUERY_USR_COORDINATE,
                 QueryUsrCoordinateTask.getParams(mStrFriendId),
                 TaskUtil.getTaskHeader()));
+    }
+
+    private void updateDistanceBetweenFriends() {
+        if(mFriendGeoData != null) {
+            GeoData myGeo = ProfileManager.getInstance().getMyProfile().getLocation();
+            if(myGeo != null) {
+                int distance = (int)CommonUtils.getDistance(myGeo.getLatitude(), myGeo.getLongitude(),
+                        mFriendGeoData.getLatitude(), mFriendGeoData.getLongitude());
+                Message msg = mUiHandler.obtainMessage();
+                msg.what = MSG_UPDATE_DISTANCE;
+                msg.arg1 = distance;
+                mUiHandler.sendMessage(msg);
+            }
+        }
     }
 }
