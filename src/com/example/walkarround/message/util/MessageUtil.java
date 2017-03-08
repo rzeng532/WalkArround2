@@ -69,6 +69,11 @@ public class MessageUtil {
             R.color.friend_col_4, R.color.friend_col_5,
             R.color.friend_col_6,R.color.friend_col_7);
 
+    private static final List<Integer> mFriendColStrArray = Arrays.asList(R.string.friend_col1_description,
+            R.string.friend_col2_description, R.string.friend_col3_description,
+            R.string.friend_col4_description, R.string.friend_col5_description,
+            R.string.friend_col6_description, R.string.friend_col7_description);
+
     public interface WalkArroundState {
         public static int STATE_INIT = 1; //初始状态，无匹配关系
         public static int STATE_IM = 2;  //匹配，并在IM 聊天状态
@@ -96,73 +101,6 @@ public class MessageUtil {
         }
         return false;
     }
-
-    /*
-    public static String getGroupInfo(Context context, String msg, HashMap<String, String> nickNameMap) {
-        // 解析 group通知类消息
-        // XXX加入群 （成员号码） 数据格式：join,18966669999
-        // 修改群名 （修改后的名称） 数据格式：subject,rcsGroup
-        // 修改群备注 （群备注名称，不需要同步网络侧） 数据格式：remark,Suntek Rcs
-        // 成员设置自己别名 （成员号码，别名） 数据格式：alias,18966669999,james
-        // 群主改变 （新群主号码） 数据格式：chairman,18966669999
-        // XXX被踢出 （被踢出成员号码） 数据格式：tick,18966669999
-        // XXX退出群 （退出成员号码） 数据格式：quit,18966669999
-        // 群解散 （群ID） 数据格式：disband,1
-        // 群聊策略 policy,1
-        // 群聊创建 create
-        if (TextUtils.isEmpty(msg)) {
-            return "";
-        }
-        String groupInfo[] = msg.split(",");
-        String msgType = groupInfo[0];
-        if ("create".equals(msgType)) {
-            msg = context.getString(R.string.group_info_create);
-        } else if ("join".equals(msgType)) {
-            msg = context.getString(R.string.group_info_join, getContactDisplayName(context, groupInfo[1], nickNameMap));
-        } else if ("subject".equals(msgType)) {
-            msg = context.getString(R.string.group_info_subject, groupInfo[1]);
-        } else if ("alias".equals(msgType)) {
-            if (groupInfo.length == 3) {
-                msg = context.getString(R.string.group_info_alias, groupInfo[1], groupInfo[2]);
-            }
-        } else if ("remark".equals(msgType)) {
-            msg = context.getString(R.string.group_info_remark, groupInfo[1]);
-        } else if ("chairman".equals(msgType)) {
-            msg = context.getString(R.string.group_info_chairman, getContactDisplayName(context, groupInfo[1], nickNameMap));
-        } else if ("tick".equals(msgType)) {
-            msg = context.getString(R.string.group_info_tick, getContactDisplayName(context, groupInfo[1], nickNameMap));
-        } else if ("quit".equals(msgType)) {
-            msg = context.getString(R.string.group_info_quit, getContactDisplayName(context, groupInfo[1], nickNameMap));
-        } else if ("disband".equals(msgType)) {
-            msg = context.getString(R.string.group_info_disband);
-        } else if ("policy".equals(msgType)) {
-            if (groupInfo.length >= 2 && !TextUtils.isEmpty(groupInfo[1])) {
-                if (groupInfo[1].equals("0")) {
-                    msg = context.getString(R.string.group_info_policy_0);
-                } else if (groupInfo[1].equals("1")) {
-                    msg = context.getString(R.string.group_info_policy_1);
-                } else if (groupInfo[1].equals("2")) {
-                    msg = context.getString(R.string.group_info_policy_2);
-                }
-            }
-        }
-        return msg;
-    }
-
-    public static String getContactDisplayName(Context context, String number, HashMap<String, String> nickNameMap) {
-        String phoneNum = CommonUtil.getPhoneNum(number);
-        if (nickNameMap != null && nickNameMap.containsKey(phoneNum)) {
-            return nickNameMap.get(phoneNum);
-        }
-        ContactInfo contactInfo = NewContactManager.getInstance(context)
-                .getDetailByPhoneNumber(phoneNum);
-        if (contactInfo != null) {
-            return contactInfo.getFirstName();
-        }
-
-        return number;
-    }
-    */
 
     /**
      * 获取拍照图片路径
@@ -404,6 +342,14 @@ public class MessageUtil {
             return mFriendColArray.get(index).intValue();
         } else {
             return R.color.bgcor1;
+        }
+    }
+
+    public static int getFriendColorDescription(int index) {
+        if(index >= 0 && index < mFriendColStrArray.size()) {
+            return mFriendColStrArray.get(index).intValue();
+        } else {
+            return mFriendColStrArray.get(0).intValue();
         }
     }
 

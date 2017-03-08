@@ -177,12 +177,18 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
 
         viewHolder.msgTextTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         viewHolder.msgTextTv.setText(getNotifyMsgContentText(context, message));
-
+        setTextColor(context, viewHolder.msgTextTv, message);
         setDateElement(context, message.getTime(), viewHolder.sendTimeTv);
 
         return convertView;
     }
 
+    /**
+     * 获取通知类型消息在build message 中的text 内容。
+     * @param context
+     * @param msg
+     * @return
+     */
     private String getNotifyMsgContentText(Context context, ChatMsgBaseInfo msg) {
         String result = null;
 
@@ -202,7 +208,8 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
                 } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME)) {
                     result = context.getString(msg.getSendReceive() == MessageSendReceive.MSG_RECEIVE ? R.string.msg_walk_reply_receiver_next_time : R.string.msg_walk_reply_sender_next_time);
                 } else if(extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND)) {
-                    result = context.getString(msg.getSendReceive() == MessageSendReceive.MSG_RECEIVE ? R.string.receive_agree_2_walkarround : R.string.agree_2_walkarround);
+                    String preFix = context.getString(msg.getSendReceive() == MessageSendReceive.MSG_RECEIVE ? R.string.agree_2_walkarround : R.string.receive_agree_2_walkarround);
+                    result = preFix + result;
                 } else if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_SAY_HELLO)) {
                     result = context.getString(msg.getSendReceive() == MessageSendReceive.MSG_RECEIVE ? R.string.msg_received_hello : R.string.msg_say_hello);
                 }
@@ -210,6 +217,20 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
         }
 
         return result;
+    }
+
+    private void setTextColor(Context context, TextView tv, ChatMsgBaseInfo msg) {
+        if(context != null && tv != null && msg != null) {
+            String result = msg.getData();
+
+            if(!TextUtils.isEmpty(result) && !TextUtils.isEmpty(msg.getExtraInfo())) {
+                String[] extraArray = msg.getExtraInfo().split(MessageUtil.EXTRA_INFOR_SPLIT);
+
+                if(extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND)) {
+                    tv.setTextColor(context.getResources().getColor(R.color.emerald_green));
+                }
+            }
+        }
     }
 
     /**

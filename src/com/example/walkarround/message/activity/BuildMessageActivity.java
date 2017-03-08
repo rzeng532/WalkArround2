@@ -1693,7 +1693,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 colorIndex;
         logger.d("send agreement, the extra is: " + extraInfor);
         long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo,
-                getString(R.string.agree_2_walkarround),
+                getString(R.string.agree_2_walkarround_postfix) +
+                getString(MessageUtil.getFriendColorDescription(colorIndex)),
                 extraInfor);
 
         //Update conversation state & color
@@ -2914,6 +2915,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     private void updateHeaderAreaOnRecMsg(ChatMsgBaseInfo msg) {
         if (msg.getMsgType() == MessageType.MSG_TYPE_NOTIFICATION) {
+            logger.d("Get notification msg with extra infor.");
             if(!TextUtils.isEmpty(msg.getExtraInfo())) {
                 String[] extraArray = msg.getExtraInfo().split(MessageUtil.EXTRA_INFOR_SPLIT);
                 if(extraArray != null && extraArray.length >= 2 && !TextUtils.isEmpty(extraArray[0])) {
@@ -2929,7 +2931,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
                     } else if(extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND)) {
                         //Agree to walk, build msg UI add distance button.
-                        int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
+                        int color = MessageUtil.getFriendColor(Integer.parseInt(extraArray[1]));
+                        logger.d("EXTRA_AGREEMENT_2_WALKARROUND with color : " + color);
                         if (color > 0) {
                             mImvDistance.setVisibility(View.VISIBLE);
                             mImvDistance.setImageResource(color);

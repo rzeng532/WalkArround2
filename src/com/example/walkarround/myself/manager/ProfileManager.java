@@ -34,12 +34,12 @@ public class ProfileManager {
 
     private void initMyProfile() {
 
+        myProfileInfo = new MyProfileInfo();
+
         AVUser avUser = AVUser.getCurrentUser();
         if(avUser == null) {
             return;
         }
-
-        myProfileInfo = new MyProfileInfo();
 
         //Set the mobile number as user name while user name is empty
         if(TextUtils.isEmpty(avUser.getUsername())) {

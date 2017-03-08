@@ -23,11 +23,13 @@ import com.example.walkarround.Location.activity.LocationActivity;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
+import com.example.walkarround.base.WalkArroundApp;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.GoTogetherTask;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.myself.manager.ProfileManager;
@@ -219,7 +221,12 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             findViewById(R.id.button_layout).setVisibility(View.GONE);
         }
 
-        mCurThreadStatus = getIntent().getIntExtra(LocationActivity.THREAD_ID, MessageUtil.WalkArroundState.STATE_INIT);
+        mCurThreadStatus = 0;
+
+        long threadId = getIntent().getLongExtra(LocationActivity.THREAD_ID, -1);
+        if(threadId != -1) {
+            mCurThreadStatus = WalkArroundMsgManager.getInstance(WalkArroundApp.getInstance().getApplicationContext()).getConversationStatus(threadId);
+        }
     }
 
     void initMap() {
@@ -265,6 +272,11 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             mBUserSelect = true;
             LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_SHOW_LOCATION_ONCLICK, mMyPositionListener);
         } else if(v.getId() == R.id.select_another) {
+            if(mCurThreadStatus == MessageUtil.WalkArroundState.STATE_WALK
+                    || mCurThreadStatus == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+                Toast.makeText(ShowLocationActivity.this, R.string.msg_already_on_walking_state, Toast.LENGTH_LONG).show();
+                return;
+            }
             setResult(RESULT_OK);
             finish();
         } else if(v.getId() == R.id.accept_place) {
@@ -274,6 +286,9 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
                 //If we already be friend, we will skip some steps and send "I agreed" directly.
                 showCircleDialog();
                 mUIHandler.sendEmptyMessageDelayed(MSG_AGREE_TO_WALKARROUND_SUC, 1000);
+            } else if(mCurThreadStatus == MessageUtil.WalkArroundState.STATE_WALK
+                    || mCurThreadStatus == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+                Toast.makeText(ShowLocationActivity.this, R.string.msg_already_on_walking_state, Toast.LENGTH_LONG).show();
             } else if(!TextUtils.isEmpty(speedId)) {
                 ThreadPoolManager.getPoolManager().addAsyncTask(new GoTogetherTask(getApplicationContext(),
                         mGoTogetherListener,
