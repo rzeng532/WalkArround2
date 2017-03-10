@@ -22,6 +22,7 @@ import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.main.activity.AppMainActivity;
+import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
@@ -72,6 +73,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             Message msg = Message.obtain();
             loginLogger.d("Do login success.");
 
+            ProfileManager.getInstance().getMyProfile();
             LoginManager.getInstance().setCurrentUser();
 
             msg.what = LOGIN_OK;

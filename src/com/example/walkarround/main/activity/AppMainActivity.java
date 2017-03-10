@@ -427,8 +427,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             selectItem(FRAGMENT_PAGE_ID_MAIN);
         }
 
-        LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mLocListener);
-
         //IM client init operation.
         WalkArroundMsgManager.getInstance(getApplicationContext()).open(WalkArroundMsgManager.getInstance(getApplicationContext()).getClientId(),
                 new AVIMClientCallback() {
@@ -478,6 +476,28 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         if(bFirstSearchComplete && !NearlyUsersFragment.getInstance().isThereNearlyUser()) {
             startQueryNearlyUserTask();
         }
+
+        LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mLocListener);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+
+        //IM client init operation.
+        WalkArroundMsgManager.getInstance(getApplicationContext()).open(WalkArroundMsgManager.getInstance(getApplicationContext()).getClientId(),
+                new AVIMClientCallback() {
+                    @Override
+                    public void done(AVIMClient avimClient, AVIMException e) {
+                        if (e == null) {
+                            amLogger.d("Open client success.");
+                        } else {
+                            amLogger.d("Open client fail.");
+                        }
+                    }
+                });
+
+        //Get speed data id and check local conversation later.
+        getConversationDataFromServer();
     }
 
     @Override
@@ -536,6 +556,10 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private void initData() {
         myProfileInfo = ProfileManager.getInstance().getMyProfile();
+
+        if(myProfileInfo == null) {
+            return;
+        }
 
         if (!TextUtils.isEmpty(myProfileInfo.getUsrName()) && !TextUtils.isEmpty(myProfileInfo.getMobileNum())) {
             mPvPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
@@ -613,7 +637,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         super.onDestroy();
         mDynUpdateListener = null;
         mQueryNearUserListener = null;
-        ProfileManager.getInstance().getMyProfile().setLocation(null);
+        if(ProfileManager.getInstance().getMyProfile() != null) {
+            ProfileManager.getInstance().getMyProfile().setLocation(null);
+        }
         LocationManager.getInstance(getApplicationContext()).onDestroy();
     }
 

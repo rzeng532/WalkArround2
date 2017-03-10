@@ -43,14 +43,17 @@ public class WalkArroundJsonResultParser {
             if (jsonObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT)) {
 
                 JSONObject jsonResultObject = jsonObject.getJSONObject(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT);
-                if (jsonResultObject != null && jsonResultObject.containsKey(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA)) {
+                if (jsonResultObject != null) {
 
+                    //兼容部分接口，有些返回result有些返回 results
                     JSONObject subResultObject = jsonResultObject.getJSONObject(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA);
+                    if(subResultObject == null) {
+                        subResultObject = jsonResultObject.getJSONObject(HttpUtil.HTTP_RESPONSE_KEY_RESULT_RESULT);
+                    }
+
                     if (subResultObject != null && subResultObject.containsKey(reqCode)) {
                         return subResultObject.getString(reqCode);
                     }
-                    //String data = jsonResultObject.getJSONArray(HttpUtil.HTTP_RESPONSE_KEY_RESULT_DATA).toJSONString();
-                    //return JSONObject.parseArray(data, ContactInfo.class);
                 }
             }
         } catch (Exception e) {

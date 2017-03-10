@@ -2,11 +2,12 @@ package com.example.walkarround.login.manager;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import android.util.Log;
 import com.avos.avoscloud.*;
 import com.example.walkarround.R;
 import com.example.walkarround.login.util.LoginConstant;
+import com.example.walkarround.myself.manager.ProfileManager;
+import com.example.walkarround.myself.model.MyProfileInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.*;
 
@@ -184,15 +185,15 @@ public class LoginManager {
     }
 
     public void setCurrentUser() {
-        AVUser currentUser = AVUser.getCurrentUser();
+        MyProfileInfo profile = ProfileManager.getInstance().getMyProfile();
 
-        if (currentUser != null) {
-            String username = currentUser.getUsername();
+        if (profile != null) {
+            String username = profile.getUsrName();
             if (!TextUtils.isEmpty(username)) {
                 AppSharedPreference.putString(AppSharedPreference.ACCOUNT_USERNAME, username);
 
                 logger.d("current user name: " + username);
-                logger.d("current user mobile: " + currentUser.getMobilePhoneNumber());
+                logger.d("current user mobile: " + profile.getMobileNum());
             }
         }
     }
