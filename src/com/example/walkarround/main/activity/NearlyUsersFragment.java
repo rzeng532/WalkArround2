@@ -226,6 +226,13 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         super.onResume();
         setUnreadState();
 
+        mStrFromUsrId = AVUser.getCurrentUser().getObjectId();
+        if (mNearlyUserList != null && mNearlyUserList.size() > 0) {
+            showNearyUser();
+        } else {
+            showRadar();
+        }
+
         MyProfileInfo myProfileInfo = ProfileManager.getInstance().getMyProfile();
 
         if (!TextUtils.isEmpty(myProfileInfo.getUsrName()) && !TextUtils.isEmpty(myProfileInfo.getMobileNum())) {
@@ -384,21 +391,6 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             }
         });
 
-        mStrFromUsrId = AVUser.getCurrentUser().getObjectId();
-
-        if (mNearlyUserList != null && mNearlyUserList.size() > 0) {
-            showNearyUser();
-        }
-
-        MyProfileInfo myProfileInfo = ProfileManager.getInstance().getMyProfile();
-
-        if (!TextUtils.isEmpty(myProfileInfo.getUsrName()) && !TextUtils.isEmpty(myProfileInfo.getMobileNum())) {
-            mPvPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
-                    myProfileInfo.getUsrName().substring(0, 1), -1);
-
-            mSearchingPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
-                    myProfileInfo.getUsrName().substring(0, 1), -1);
-        }
     }
 
     /*
