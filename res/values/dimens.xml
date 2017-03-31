@@ -22,7 +22,7 @@
     <dimen name="font_size7_dp">10dp</dimen>
     <dimen name="font_size9_dp">30dp</dimen>
     <dimen name="font_size_40dp">40dp</dimen>
-    <dimen name="font_size_50dp">500dp</dimen>
+    <dimen name="font_size_50dp">50dp</dimen>
 
     <!-- 时间选择view的高度 -->
     <dimen name="time_picker_item_height">55dp</dimen>

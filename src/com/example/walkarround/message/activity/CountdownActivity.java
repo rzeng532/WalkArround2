@@ -5,6 +5,7 @@ package com.example.walkarround.message.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,41 +51,36 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
     private ContactInfo mFriend = null;
 
     private final int COUNTDOWN_TOTOL_TIME = 10 * 60;
+    private final int PREPARE_COUNTDOWN_TOTOL_TIME = 5;
     //private final int COUNTDOWN_TOTOL_TIME = 1 * 60;
     private final int MUSIC_START_TIME = 30; //it means last 30 seconds.
     private int mCurTime = 0;
-    private Timer timer;
+    private long mCountdownStartTime = 0l;
+    private Timer mRealCountdownTimer;
+    private Timer mPrepareCountdownTimer;
     //Input parameter for this actvity to display UI elements.
     public static final String PARAMS_FRIEND_OBJ_ID = "friend_obj_id";
 
     //For playing complete music.
     private MediaPlayer mMediaPlayer;
+    private final int REAL_COUNTDOWN_MSG = 1;
+    private final int PREPARE_COUNTDOWN_MSG = 2;
+    private final int RESET_COUNTDOWN_FROM_LOCKSCREEN = 3;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
             switch (msg.what) {
-                case 1:
-                    logger.d("curTime add: " + mCurTime);
-                    mCurTime++;
-                    if(mCurTime > COUNTDOWN_TOTOL_TIME) {
-                        logger.d("Set time as 0 ");
-                        timeProgress.setProgress(100);
-                        setTvCountdownTimeUI(0);
-                        timer.cancel();
-                        jump2EvaluatePage();
-                        CountdownActivity.this.finish();
-                    } else {
-                        timeProgress.setProgress(( 100 * mCurTime / COUNTDOWN_TOTOL_TIME));
-                        setTvCountdownTimeUI(COUNTDOWN_TOTOL_TIME - mCurTime);
-                        if(COUNTDOWN_TOTOL_TIME - mCurTime == MUSIC_START_TIME) {
-                            if (mMediaPlayer == null) {
-                                createWalkArroundCompleteMusic();
-                            }
-                        }
-                    }
-
+                case REAL_COUNTDOWN_MSG:
+                    handleRealCountdownMsg();
+                    break;
+                case PREPARE_COUNTDOWN_MSG:
+                    handlePrepareCountdownMsg();
+                    break;
+                case RESET_COUNTDOWN_FROM_LOCKSCREEN:
+                    int resetTime = msg.arg1;
+                    handleResetTimer(resetTime);
                     break;
                 default:
                     break;
@@ -92,11 +88,13 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         }
     };
 
-    TimerTask task = new TimerTask(){
+    TimerTask mRealCountdownTask = null;
+
+    TimerTask mPrepareCountdownTask = new TimerTask() {
         public void run() {
             Message message = new Message();
-            message.what = 1;
-            logger.d("task run and dispatch msg: " + message.what);
+            message.what = PREPARE_COUNTDOWN_MSG;
+            logger.d("mPrepareCountdownTask run and dispatch msg: " + message.what);
             handler.sendMessage(message);
         }
     };
@@ -110,12 +108,12 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 
         initView();
 
-        if(mFriend != null) {
+        if (mFriend != null) {
             List<String> recipient = new ArrayList<>();
             recipient.add(mFriend.getObjectId());
             long msgThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
                     recipient);
-            if(msgThreadId >= 0) {
+            if (msgThreadId >= 0) {
                 WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, MessageUtil.WalkArroundState.STATE_WALK);
                 //TODO: update speed data id state to server.
             }
@@ -124,15 +122,37 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         DialogFactory.getWalkRuleDialog(this, new DialogFactory.ConfirmDialogClickListener() {
             @Override
             public void onConfirmDialogConfirmClick() {
-                timer = new Timer(true);
-                timer.schedule(task,1000, 1000);
+                mPrepareCountdownTimer = new Timer(true);
+                mPrepareCountdownTimer.schedule(mPrepareCountdownTask, 1000, 1000);
             }
         }).show();
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mCountdownStartTime > 0l) {
+            long curTime = System.currentTimeMillis();
+            int interval = (int) (curTime - mCountdownStartTime) / 1000; //Get interval time (second);
+
+            startCountdownTimer();
+
+            if (interval > 0) {
+                Message message = new Message();
+                message.what = RESET_COUNTDOWN_FROM_LOCKSCREEN;
+                message.arg1 = interval;
+                logger.d("RESET_COUNTDOWN_FROM_LOCKSCREEN interval: " + interval);
+                handler.sendMessage(message);
+            }
+        }
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
+
+        stopCountdownTimer();
 
         if (mMediaPlayer != null) {
             logger.d("onPause: stop & reset media player.");
@@ -144,23 +164,25 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
     }
 
     private void initView() {
-        mTvDescription = (TextView)findViewById(R.id.tv_walk_description);
-        mTvComplete = (TextView)findViewById(R.id.tv_complete_walk);
+        mTvDescription = (TextView) findViewById(R.id.tv_walk_description);
+        mTvComplete = (TextView) findViewById(R.id.tv_complete_walk);
         mTvComplete.setOnClickListener(this);
-        mPvPortrait = (PhotoView)findViewById(R.id.pv_countdown);
+        mPvPortrait = (PhotoView) findViewById(R.id.pv_countdown);
 
         //Init countdown time text.
-        mTvCountdownTime = (TextView)findViewById(R.id.tv_countdown_time);
-        setTvCountdownTimeUI(COUNTDOWN_TOTOL_TIME);
+        mTvCountdownTime = (TextView) findViewById(R.id.tv_countdown_time);
+        setTvPrepareCountdownTimeUI(PREPARE_COUNTDOWN_TOTOL_TIME);
 
         //mIvCountdown = (ImageView)findViewById(R.id.iv_countdown);
         timeProgress = (RoundProgressBar) findViewById(R.id.iv_countdown);
         timeProgress.setProgress(0);
 
-        if(mFriend != null) {
+        if (mFriend != null) {
             String friendName = mFriend.getUsername();
-            mTvDescription.setText(getString(R.string.countdown_walk_with_who, friendName));
-
+            mTvDescription.setText(getString(R.string.countdown_prepare_walk_with_who, friendName));
+            mTvComplete.setClickable(false);
+            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
+            backGround.setColor(getResources().getColor(R.color.transparent));
             mPvPortrait.setBaseData(friendName, mFriend.getPortrait().getUrl(), null,
                     R.drawable.contact_default_profile);
         }
@@ -168,10 +190,10 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 
     private void initData() {
         Intent intent = getIntent();
-        if(intent != null) {
+        if (intent != null) {
             String friendId = intent.getStringExtra(PARAMS_FRIEND_OBJ_ID);
 
-            if(!TextUtils.isEmpty(friendId)) {
+            if (!TextUtils.isEmpty(friendId)) {
                 mFriend = ContactsManager.getInstance(this).getContactByUsrObjId(friendId);
             }
         }
@@ -182,9 +204,9 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 
         switch (v.getId()) {
             case R.id.tv_complete_walk:
-                if(timer != null) {
-                    timer.cancel();
-                    timer = null;
+                if (mRealCountdownTimer != null) {
+                    mRealCountdownTimer.cancel();
+                    mRealCountdownTimer = null;
                 }
 
                 //We need a popup here
@@ -197,18 +219,62 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+        //super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mRealCountdownTimer != null) {
+            mRealCountdownTimer.cancel();
+            mRealCountdownTimer = null;
+        }
+
+        if (mPrepareCountdownTimer != null) {
+            mPrepareCountdownTimer.cancel();
+            mPrepareCountdownTimer = null;
+        }
+    }
+
     private void setTvCountdownTimeUI(int timeSec) {
-        if(mTvCountdownTime != null && timeSec > 30l) {
-            SimpleDateFormat sdf = new SimpleDateFormat( "mm:ss");
+        if (mTvCountdownTime != null && timeSec > 30l) {
+            SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
             String time = sdf.format(new Date((timeSec * 1000L)));
+
+            if (timeSec == (COUNTDOWN_TOTOL_TIME - 1)) {
+                //mTvCountdownTime.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getResources().getDimension(R.dimen.font_size4_dp));
+                mTvCountdownTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, getResources().getDimension(R.dimen.font_size4_dp));
+                mTvCountdownTime.setTextColor(getResources().getColor(R.color.fontcor3));
+            }
+
             mTvCountdownTime.setText(time);
-        } else if(mTvCountdownTime != null && timeSec >= 0l) {
-            SimpleDateFormat sdf = new SimpleDateFormat( "ss");
+        } else if (mTvCountdownTime != null && timeSec <= 30l && timeSec >= 0l) {
+            SimpleDateFormat sdf = new SimpleDateFormat("ss");
             String time = sdf.format(new Date((timeSec * 1000L)));
-            mTvCountdownTime.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 50);
-            mTvCountdownTime.setTextColor(getResources().getColor(R.color.cor_red));
+
+            if (timeSec == 30l) {
+                mTvCountdownTime.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 50);
+                mTvCountdownTime.setTextColor(getResources().getColor(R.color.cor_red));
+            }
+
             mTvCountdownTime.setText(time);
         }
+    }
+
+    private void setTvPrepareCountdownTimeUI(int timeSec) {
+        SimpleDateFormat sdf = new SimpleDateFormat("s");
+        String time = sdf.format(new Date((timeSec * 1000L)));
+
+        if (timeSec == PREPARE_COUNTDOWN_TOTOL_TIME) {
+            mTvCountdownTime.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 90);
+            mTvCountdownTime.setTextColor(getResources().getColor(R.color.fontcor3));
+        }
+
+        mTvCountdownTime.setText(time);
     }
 
     /**
@@ -225,7 +291,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
                 mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mediaPlayer) {
-                        if(mediaPlayer != null) {
+                        if (mediaPlayer != null) {
                             mediaPlayer.reset();
                         }
                     }
@@ -237,11 +303,110 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 
     private void jump2EvaluatePage() {
         //Start Evaluate activity
-        if(mFriend != null) {
+        if (mFriend != null) {
             Intent intent = new Intent(CountdownActivity.this, EvaluateActivity.class);
             intent.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, mFriend.getObjectId());
             startActivity(intent);
         }
         ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_WALK);
+    }
+
+    private void handlePrepareCountdownMsg() {
+
+        mCurTime++;
+        setTvPrepareCountdownTimeUI(PREPARE_COUNTDOWN_TOTOL_TIME - mCurTime);
+
+        if (mCurTime >= (PREPARE_COUNTDOWN_TOTOL_TIME - 1)) {
+            //Reset current time second value.
+            mCurTime = 0;
+            //Mark real countdown start time.
+            mCountdownStartTime = System.currentTimeMillis();
+
+            //Reset title
+            if (mFriend != null) {
+                String friendName = mFriend.getUsername();
+                mTvDescription.setText(getString(R.string.countdown_walk_with_who, friendName));
+            }
+
+            //start real countdown activity.
+            startCountdownTimer();
+
+            //Cancel prepare task.
+            mPrepareCountdownTimer.cancel();
+        }
+    }
+
+    private void handleRealCountdownMsg() {
+        logger.d("curTime add: " + mCurTime);
+
+        if(mCurTime == 0) {
+            mTvComplete.setClickable(true);
+            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
+            backGround.setColor(getResources().getColor(R.color.red_button));
+        }
+
+        mCurTime++;
+
+        if (mCurTime > COUNTDOWN_TOTOL_TIME) {
+            logger.d("Set time as 0 ");
+            timeProgress.setProgress(100);
+            setTvCountdownTimeUI(0);
+            stopCountdownTimer();
+            jump2EvaluatePage();
+            CountdownActivity.this.finish();
+        } else {
+            timeProgress.setProgress((100 * mCurTime / COUNTDOWN_TOTOL_TIME));
+            setTvCountdownTimeUI(COUNTDOWN_TOTOL_TIME - mCurTime);
+            if (COUNTDOWN_TOTOL_TIME - mCurTime == MUSIC_START_TIME) {
+                if (mMediaPlayer == null) {
+                    createWalkArroundCompleteMusic();
+                }
+            }
+        }
+    }
+
+    /**
+     * 处理重新设置timer的需求
+     *
+     * @param resetTime
+     */
+    private void handleResetTimer(int resetTime) {
+
+        //Check time value
+        if (resetTime <= 0) {
+            return;
+        } else if (resetTime >= COUNTDOWN_TOTOL_TIME) {
+            mCurTime = COUNTDOWN_TOTOL_TIME - 1;
+        } else {
+            mCurTime = resetTime - 1;
+        }
+
+        handleRealCountdownMsg();
+    }
+
+    private void startCountdownTimer() {
+        if(mRealCountdownTimer == null) {
+            mRealCountdownTimer = new Timer(true);
+            mRealCountdownTask = new TimerTask() {
+                public void run() {
+                    Message message = new Message();
+                    message.what = REAL_COUNTDOWN_MSG;
+                    logger.d("mRealCountdownTask run and dispatch msg: " + message.what);
+                    handler.sendMessage(message);
+                }
+            };
+
+            mRealCountdownTimer.schedule(mRealCountdownTask, 1000, 1000);
+        }
+    }
+
+    private void stopCountdownTimer() {
+        if(mRealCountdownTimer != null) {
+            mRealCountdownTimer.cancel();
+            mRealCountdownTimer = null;
+
+            mRealCountdownTask.cancel();
+            mRealCountdownTask = null;
+        }
     }
 }

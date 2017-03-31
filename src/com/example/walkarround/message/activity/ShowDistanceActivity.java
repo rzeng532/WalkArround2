@@ -387,7 +387,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     }
 
     private void start2GetFriendCoordinate() {
-        //Start task to get friend dynamic data, like distance, online or not...
+        //Start mRealCountdownTask to get friend dynamic data, like distance, online or not...
         ThreadPoolManager.getPoolManager().addAsyncTask(new QueryUsrCoordinateTask(getApplicationContext(),
                 mQueryFriendCoordinateTaskListener,
                 HttpUtil.HTTP_FUNC_QUERY_USR_COORDINATE,

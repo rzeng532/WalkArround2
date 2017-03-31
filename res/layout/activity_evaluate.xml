@@ -174,7 +174,7 @@
 
 
     <!-- finish walk button -->
-    <TextView android:id="@+id/tv_complete_walk"
+    <TextView android:id="@+id/tv_complete_evaluate"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginLeft="30dp"

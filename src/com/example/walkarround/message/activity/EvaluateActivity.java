@@ -342,8 +342,11 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
     private void initView() {
         mTvDescription = (TextView) findViewById(R.id.tv_walk_description);
-        mTvComplete = (TextView) findViewById(R.id.tv_complete_walk);
+        mTvComplete = (TextView) findViewById(R.id.tv_complete_evaluate);
         mTvComplete.setOnClickListener(this);
+        mTvComplete.setClickable(false);
+        GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
+        backGround.setColor(getResources().getColor(R.color.transparent));
 
         mPvPortrait = (PhotoView) findViewById(R.id.pv_evaluate);
 
@@ -370,7 +373,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.tv_complete_walk) {
+        if (v.getId() == R.id.tv_complete_evaluate) {
             if (mRbHonest.getRating() > 0.0f
                     && mRbConversationStyle.getRating() > 0.0f
                     && mRbAppearance.getRating() > 0.0f
