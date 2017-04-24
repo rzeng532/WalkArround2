@@ -7,6 +7,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 import com.example.walkarround.R;
@@ -23,19 +25,36 @@ import java.util.List;
 public class RippleView extends View {
 
     private static final int INIT_CIRCLE_RADIUS_EXTEND_VALUE = 200;
-    private static final int INIT_CIRCLE_RADIUS_STEP_VALUE = 1;
-    private static final int INIT_CIRCLE_ALPHA_STEP_VALUE = 1;
+    private int mInitCircleRadiusStep = 1;
+    private int mInitCircleAlphaStep = 1;
     private static final int CIRCLE_COUNT = 6;
 
     private Paint paint;
-    private int maxRadius = 255;
+    private int maxRadius = 0;
     private int mMaxRadiusListSize;
     // 是否运行
     private boolean isStarting = false;
     private List<Integer> alphaList = new ArrayList<>();
     private List<Integer> radiusList = new ArrayList<>();
 
-    private int mInitAlphaValue = 0;
+    private int mInitAlphaValue = 255;
+
+    //1/2 size of real width value
+    private int mPortraitWidth = 0;
+
+    private View mPortraitIv;
+    private Handler mRedrawHandler =  new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 100:
+                    invalidate();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     public RippleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -87,42 +106,64 @@ public class RippleView extends View {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    private void initParamsBeforeDraw() {
+        //首次绘制前更新相关UI尺寸
+        mPortraitWidth = ((mPortraitIv != null && mPortraitIv.getWidth() != 0)
+                            ? mPortraitIv.getWidth() : INIT_CIRCLE_RADIUS_EXTEND_VALUE) / 2;
+        maxRadius = getWidth() / 2 - mPortraitWidth ;
+
+        if(maxRadius <= 255) {
+
+        } else if(maxRadius > 255 && maxRadius < 255 * 2) {
+            int intervalValue = (maxRadius - 255);
+            mPortraitWidth += intervalValue / 2;
+        } else if(maxRadius >= 255 * 2) {
+            //mPortraitWidth += 100;
+            mInitCircleAlphaStep = 2;
+            mInitCircleRadiusStep = 2;
+        }
+
+        if(radiusList != null && radiusList.size() > 0) {
+            radiusList.remove(0);
+            radiusList.add(0, mPortraitWidth);
+        }
+    }
+
+    @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        maxRadius = getWidth() / 2 - INIT_CIRCLE_RADIUS_EXTEND_VALUE;
-        //mMaxRadiusListSize = maxRadius
-        //Log.d("RippleView", "getWidth() = " + getWidth() + ", maxWid = " + maxRadius);
+
+        if(maxRadius == 0) {
+            initParamsBeforeDraw();
+        }
+
         setBackgroundColor(Color.TRANSPARENT);// 颜色：完全透明
         // 依次绘制同心圆
         int alpha;
         int iNextAlpha = 0;
         for (int i = 0; i < alphaList.size(); i++) {
             alpha = alphaList.get(i);
-            // 圆半径
-            int startWidth = radiusList.get(i);
-
             paint.setAlpha(alpha);
 
             // 画出当前圆圈
             canvas.drawCircle(getWidth() / 2, getHeight() / 2,
-                    startWidth + INIT_CIRCLE_RADIUS_EXTEND_VALUE,
+                    radiusList.get(i),
                     paint);
             // 准备下一个圆圈参数：半径 + 透明度（递减）
             if (isStarting && alpha > 0) {
-                iNextAlpha = alpha - INIT_CIRCLE_ALPHA_STEP_VALUE;
+                //透明度递减
+                iNextAlpha = alpha - mInitCircleAlphaStep;
                 if(iNextAlpha > 0) {
                     alphaList.set(i, iNextAlpha);
                 } else {
                     alphaList.set(i, 0);
                 }
-                radiusList.set(i, startWidth + INIT_CIRCLE_RADIUS_STEP_VALUE);
-                //Log.d("RippleView", "Set next circle " + startWidth);
-            } else if(isStarting && alpha == 0 && alphaList.size() == 1) {
-                if(maxRadius - INIT_CIRCLE_RADIUS_EXTEND_VALUE > 255) {
-                    alphaList.set(i, 255);
-                } else {
-                    alphaList.set(i, maxRadius - INIT_CIRCLE_RADIUS_EXTEND_VALUE);
-                }
+                //半径递增
+                radiusList.set(i, radiusList.get(i) + mInitCircleRadiusStep);
             }
         }
 
@@ -138,19 +179,13 @@ public class RippleView extends View {
             iTemp += 1;
         }
         if (isStarting
-                && radiusList.get(radiusList.size() - 1) == iTemp) {
-            //Log.d("RippleView", "maxRadius - INIT_CIRCLE_RADIUS_EXTEND_VALUE : " + (maxRadius - INIT_CIRCLE_RADIUS_EXTEND_VALUE));
-            //alphaList.add(255);
-            if(maxRadius > 255) {
-                alphaList.add(255);
-            } else {
-                alphaList.add(maxRadius);
-            }
-            radiusList.add(0);
+                && radiusList.get(radiusList.size() - 1) == (mPortraitWidth + iTemp)) {
+            alphaList.add(mInitAlphaValue);
+            radiusList.add(mPortraitWidth);
         }
 
         // 刷新界面
-        invalidate();
+        mRedrawHandler.sendEmptyMessageDelayed(100, 10);
     }
 
     // 从上一次结束的地方开始执行动画
@@ -163,9 +198,17 @@ public class RippleView extends View {
         radiusList.clear();
         radiusList.add(0);
         alphaList.clear();
-        alphaList.add(0);
+        alphaList.add(mInitAlphaValue);
 
         isStarting = true;
+    }
+
+    /**
+     * 该函数一定要在onStart之前完成
+     * @param portrait
+     */
+    public void setInitRadiusByPortraitWidth(View portrait) {
+        mPortraitIv = portrait;
     }
 
     // 停止动画
@@ -178,4 +221,7 @@ public class RippleView extends View {
         return isStarting;
     }
 
+    private void setMaxRadius() {
+
+    }
 }

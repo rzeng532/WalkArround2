@@ -55,6 +55,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
 
     private Logger logger = Logger.getLogger(ShowDistanceActivity.class.getSimpleName());
     private RippleView mSearchingView;
+    private View mFulfillView;
     private RelativeLayout mRlSearchArea;
     private PortraitView mPvFriend;
     private Dialog mWalkRequestDialog;
@@ -116,6 +117,8 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                     int distance = msg.arg1;
                     logger.d("ShowDistance:update distance: " + distance);
                     if(DISTANCE_2_DISPLAY_FRIEND_PORTRAIT >= distance) {
+                        mSearchingView.setInitRadiusByPortraitWidth(mFulfillView);
+                        mSearchingView.setVisibility(View.VISIBLE);
                         mSearchingView.start();
                         mTvTitle.setText(distance + getResources().getString(R.string.common_distance_unit_meter));
                         mPvFriend.setVisibility(View.VISIBLE);
@@ -123,6 +126,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                     } else {
                         mSearchingView.stop();
                         mTvTitle.setText(R.string.main_title);
+                        mSearchingView.setVisibility(View.GONE);
                         mPvFriend.setVisibility(View.GONE);
                         mTvPleaseClickPortrait.setVisibility(View.GONE);
                     }
@@ -258,6 +262,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         mTvTitle.setText(R.string.main_title);
 
         mSearchingView = (RippleView) findViewById(R.id.searchingView);
+        mFulfillView = (View) findViewById(R.id.v_fulfill_view);
         mRlSearchArea = (RelativeLayout) findViewById(R.id.rlSearching);
         mPvFriend = (PortraitView) findViewById(R.id.pv_friend_portrait);
         mPvFriend.setOnClickListener(this);
@@ -265,6 +270,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
 
         //Disable those UI element until APP get friend's coordinate.
         mSearchingView.stop();
+        mSearchingView.setVisibility(View.GONE);
         mPvFriend.setVisibility(View.GONE);
         mTvPleaseClickPortrait.setVisibility(View.GONE);
     }

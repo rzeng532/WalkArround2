@@ -321,9 +321,15 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         //Searching UI will be displayed at first.
         mSearchingPortrait = (PortraitView) mViewRoot.findViewById(R.id.searching_center_portrait);
         mSearchingView = (RippleView) mViewRoot.findViewById(R.id.searchingView);
+
+        int width =View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        int height =View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        mSearchingPortrait.measure(width,height);
+        mSearchingView.measure(width,height);
+
+        mSearchingView.setInitRadiusByPortraitWidth(mSearchingPortrait);
         mSearchingView.start();
     }
-
 
     private void initData(Bundle savedInstanceState) {
         mUserListAdapter = new NearlyUserListAdapter(getActivity(), mNearlyUserList);
