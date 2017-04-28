@@ -63,6 +63,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     private TextView mTvTitle;
     private String mStrFriendId;
     private GeoData mFriendGeoData;
+    private int mPriorDistance = -1;
 
     public static final String PARAMS_THREAD_ID = "thread_id";
 
@@ -184,6 +185,8 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                 //Parse object
                 mFriendGeoData = WalkArroundJsonResultParser.parseUserCoordinate((String)object);
 
+                updateDistanceBetweenFriends();
+
                 mUiHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -244,6 +247,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     protected void onDestroy(){
         super.onDestroy();
 
+        mPriorDistance = -1;
         LocationManager.getInstance(WalkArroundApp.getInstance()).stopContinueLocate();
 
         try {
@@ -408,10 +412,19 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
             if(myGeo != null) {
                 int distance = (int)CommonUtils.getDistance(myGeo.getLatitude(), myGeo.getLongitude(),
                         mFriendGeoData.getLatitude(), mFriendGeoData.getLongitude());
+
+                if(mPriorDistance != -1) {
+                    if(mPriorDistance == distance) {
+                        return;
+                    }
+                }
+
+                mPriorDistance = distance;
+                mUiHandler.removeMessages(MSG_UPDATE_DISTANCE);
                 Message msg = mUiHandler.obtainMessage();
                 msg.what = MSG_UPDATE_DISTANCE;
                 msg.arg1 = distance;
-                mUiHandler.sendMessage(msg);
+                mUiHandler.sendMessageDelayed(msg, 500);
             }
         }
     }

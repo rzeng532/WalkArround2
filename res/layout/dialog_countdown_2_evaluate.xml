@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent">
+
+    <!-- Rules -->
+    <RelativeLayout
+            android:id="@+id/rl_walk_rule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/countdown_2_background_bg">
+
+        <TextView android:id="@+id/tv_walk_title"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentTop="true"
+                  android:layout_marginTop="30dp"
+                  android:layout_marginLeft="20dp"
+                  android:layout_marginRight="20dp"
+                  android:paddingTop="10dp"
+                  android:paddingBottom="10dp"
+                  android:layout_centerHorizontal="true"
+                  android:gravity="center"
+                  android:text="@string/countdown_complete_bye"
+                  android:textColor="@color/fontcor3"
+                  android:textSize="@dimen/font_size2"/>
+
+        <ImageView
+                android:id="@+id/iv_bye_icon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@+id/tv_walk_title"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:src="@drawable/byebye_gesture"/>
+
+        <TextView android:id="@+id/tv_start2evaluate"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@+id/iv_bye_icon"
+                  android:layout_marginTop="10dp"
+                  android:layout_marginLeft="20dp"
+                  android:layout_marginRight="20dp"
+                  android:paddingTop="10dp"
+                  android:paddingBottom="10dp"
+                  android:layout_centerHorizontal="true"
+                  android:gravity="center"
+                  android:text="@string/evaluate_eachother"
+                  android:textColor="@color/fontcor3"
+                  android:textSize="@dimen/font_size2_dp"
+                  android:background="@drawable/btn_finish_red"/>
+
+        <View
+                android:id="@+id/line"
+                android:layout_width="0.5dp"
+                android:layout_height="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/tv_start2evaluate"
+                android:background="@color/transparent"/>
+    </RelativeLayout>
+
+    <!-- X button
+
+      <ImageView
+            android:id="@+id/iv_finish_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/icon_delete"/>
+
+     -->
+
+</RelativeLayout>

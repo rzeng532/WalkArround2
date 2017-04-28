@@ -275,6 +275,7 @@
     <string name="countdown_walk_with_who">您正在和%1$s一起走走</string>
     <string name="countdown_prepare_walk_with_who">您即将和%1$s一起走走</string>
     <string name="countdown_complete_walk">结束走走</string>
+    <string name="countdown_complete_bye">欢乐的时光过得特别快，又是时候说拜拜了！</string>
 
     <!-- Other strings  -->
     <string name="drawer_open">Open navigation drawer</string>
@@ -308,6 +309,7 @@
 
     <!-- Evaluate strings -->
     <string name="evaluate_honest">诚实</string>
+    <string name="evaluate_eachother">评价对方</string>
     <string name="evaluate_style_of_conversation">谈吐</string>
     <string name="evaluate_appearance">养眼</string>
     <string name="evaluate_temperament">气质</string>

@@ -352,8 +352,13 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
             timeProgress.setProgress(100);
             setTvCountdownTimeUI(0);
             stopCountdownTimer();
-            jump2EvaluatePage();
-            CountdownActivity.this.finish();
+            DialogFactory.getCountDownEndDialog(this, new DialogFactory.ConfirmDialogClickListener() {
+                @Override
+                public void onConfirmDialogConfirmClick() {
+                    jump2EvaluatePage();
+                    //CountdownActivity.this.finish();
+                }
+            }).show();
         } else {
             timeProgress.setProgress((100 * mCurTime / COUNTDOWN_TOTOL_TIME));
             setTvCountdownTimeUI(COUNTDOWN_TOTOL_TIME - mCurTime);

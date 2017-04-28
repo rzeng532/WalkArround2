@@ -260,25 +260,24 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                     //setResult(RESULT_FIRST_USER);
                     ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_END);
                     Toast.makeText(EvaluateActivity.this, R.string.evaluate_send_impression2server_suc, Toast.LENGTH_LONG).show();
-                    dismissCircleDialog();
-                    Intent target = new Intent(getApplicationContext(), AppMainActivity.class);
-                    target.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(target);
-                    //EvaluateActivity.this.finish();
+                    goToMainActivity();
                     break;
                 case MSG_EVALUATE_FAILED:
-                    dismissCircleDialog();
-
-                    //TODO: We should indicate user details by different server response.Like this friend already be evaluated, time out...
                     Toast.makeText(EvaluateActivity.this, R.string.evaluate_send_impression2server_fail, Toast.LENGTH_LONG).show();
-
-                    EvaluateActivity.this.finish();
+                    goToMainActivity();
                     break;
                 default:
                     break;
             }
         }
     };
+
+    private void goToMainActivity() {
+        dismissCircleDialog();
+        Intent target = new Intent(getApplicationContext(), AppMainActivity.class);
+        target.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(target);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -391,7 +390,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                                     (int) (mRbTemperament.getRating()), speedDateId),
                             TaskUtil.getTaskHeader()));
                 } else {
-                    mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
+                    getSpeedDataId();
                 }
             } else {
                 //Indicate user to evaluate
