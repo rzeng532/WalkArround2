@@ -27,7 +27,7 @@ import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.base.view.RippleView;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
-import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;

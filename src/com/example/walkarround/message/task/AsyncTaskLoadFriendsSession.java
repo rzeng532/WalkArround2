@@ -1,7 +1,7 @@
 package com.example.walkarround.message.task;
 
 import android.content.Context;
-import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.MessageSessionBaseModel;
 import com.example.walkarround.message.util.MessageUtil;

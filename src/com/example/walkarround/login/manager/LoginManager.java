@@ -117,8 +117,7 @@ public class LoginManager {
                 strId = R.string.err_unknow;
         }
 
-        //Test
-        return context.getString(strId) + ", Error code: " + errCode;
+        return context.getString(strId);
     }
 
     /*

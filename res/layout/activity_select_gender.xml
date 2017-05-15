@@ -43,8 +43,7 @@
                 android:textSize="@dimen/font_size3"
                 android:text="@string/gender_female"
                 android:textColor="@color/fontcor1"
-                android:background="@drawable/btn_circle_type"
-        />
+                android:background="@drawable/btn_circle_red"/>
 
         <View
                 android:id="@+id/line"

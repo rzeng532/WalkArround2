@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
+import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
@@ -44,6 +45,9 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == ERROR) {
+
+                dismissLoadingDialog();
+
                 String tip = (String) msg.obj;
                 String oldTip = getString(R.string.register_user_exist);
                 if (tip.equals(oldTip)) {
@@ -79,7 +83,7 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
     AsyncTaskListener mAccountManagerListener = new AsyncTaskListener() {
         @Override
         public void onSuccess(Object data) {
-            //dismissDialog();
+            dismissLoadingDialog();
             //Start check SMS code activity
             Intent intent = new Intent(PhoneAndPasswordActivity.this, CheckSMSCodeActivity.class);
             startActivityForResult(intent, CHECKSMSCODE);
@@ -90,7 +94,7 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
             //dismissDialog();
             Message msg = Message.obtain();
             msg.what = ERROR;
-            msg.obj = LoginManager.getInstance().getErrStringViaErrorCode(getApplicationContext(), e.getCode());
+            msg.obj = LoginManager.getInstance().getErrStringViaErrorCode(getApplicationContext(), e != null ? e.getCode() : R.string.err_unknow);
             mHandler.sendMessage(msg);
         }
     };
@@ -154,6 +158,9 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
             LoginManager.getInstance().setPassword(pass);
             LoginManager.getInstance().doRegister(mAccountManagerListener);
 
+            mLoadingDialog = DialogFactory.getLoadingDialog(this, false, null);
+            mLoadingDialog.show();
+
             //Following code are test code.
             //Intent intent = new Intent(PhoneAndPasswordActivity.this, CheckSMSCodeActivity.class);
             //startActivityForResult(intent, CHECKSMSCODE);
@@ -177,6 +184,14 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
                 setResult(RESULT_OK);
                 finish();
             }
+        }
+    }
+
+    private void dismissLoadingDialog() {
+        if(!PhoneAndPasswordActivity.this.isFinishing()
+                && !PhoneAndPasswordActivity.this.isDestroyed()
+                && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
         }
     }
 }

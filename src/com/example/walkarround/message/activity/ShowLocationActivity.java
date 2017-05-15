@@ -28,7 +28,7 @@ import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.GoTogetherTask;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
-import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;

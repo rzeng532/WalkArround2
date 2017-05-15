@@ -24,7 +24,7 @@ import com.example.walkarround.main.adapter.NearlyUserListAdapter;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.LikeSomeOneTask;
-import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.message.activity.ConversationActivity;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;

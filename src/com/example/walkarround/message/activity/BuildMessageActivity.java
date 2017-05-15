@@ -34,7 +34,7 @@ import com.example.walkarround.handmark.PullToRefreshBase;
 import com.example.walkarround.handmark.PullToRefreshBase.OnRefreshListener2;
 import com.example.walkarround.handmark.PullToRefreshListView;
 import com.example.walkarround.main.model.ContactInfo;
-import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.main.task.UpdateSpeedDateColorTask;
 import com.example.walkarround.message.adapter.MessageDetailListAdapter;
 import com.example.walkarround.message.adapter.PopupListAdapter;

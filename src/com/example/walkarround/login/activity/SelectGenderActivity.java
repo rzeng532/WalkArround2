@@ -2,7 +2,6 @@ package com.example.walkarround.login.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +30,11 @@ public class SelectGenderActivity extends Activity implements View.OnClickListen
         initView();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     private void initView() {
 
         //Title
@@ -41,10 +45,8 @@ public class SelectGenderActivity extends Activity implements View.OnClickListen
 
         mBtnMen = (Button) findViewById(R.id.btn_men);
         mBtnMen.setOnClickListener(this);
-        mBtnMen.setBackground(getResources().getDrawable(R.drawable.btn_circle_type));
         mBtnFemale = (Button) findViewById(R.id.btn_female);
         mBtnFemale.setOnClickListener(this);
-        ((GradientDrawable)mBtnFemale.getBackground()).setColor(getResources().getColor(R.color.red_button));
     }
 
     @Override

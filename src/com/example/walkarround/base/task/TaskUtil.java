@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2014-2016 CMCC All rights reserved
  */
-package com.example.walkarround.main.task;
+package com.example.walkarround.base.task;
 
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.http.HttpUtil;

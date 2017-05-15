@@ -33,7 +33,7 @@ import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.GetFriendListTask;
 import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
-import com.example.walkarround.main.task.TaskUtil;
+import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.message.activity.BuildMessageActivity;
 import com.example.walkarround.message.activity.EvaluateActivity;
 import com.example.walkarround.message.manager.ContactsManager;
