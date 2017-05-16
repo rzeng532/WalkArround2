@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -84,7 +82,7 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_choose);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         // 数据
         initIntentData(savedInstanceState, getIntent());
         // 初始化画面固定部分
@@ -234,7 +232,7 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
             }
         } else if (requestCode == REQUEST_CODE_PICTURE_CUT) {
 
-            File newPortrait = new File(Environment.getExternalStorageDirectory(), "/portrait.jpg");
+            File newPortrait = new File(getExternalCacheDir(), "/portrait.jpg");
             if(newPortrait != null && newPortrait.exists()) {
                 setResult(RESULT_OK);
                 finish();
@@ -347,37 +345,42 @@ public class ImageChooseActivity extends Activity implements View.OnClickListene
     public void startOnPreview(String imageUrl) {
         //NOTE: This API just can be invoked while user try to select one pic as portrait.
         //startPreviewImageActivity(REQUEST_CODE_PREVIEW_AND_CUT);
-        String imagePath = imageUrl;
-        if (!TextUtils.isEmpty(imagePath)) {
-            File fPic = new File(imagePath);
-            if (fPic != null && fPic.exists()) {
-                Intent intent = new Intent("com.android.camera.action.CROP");
-                intent.setDataAndType(Uri.fromFile(fPic), "image/*");
-                intent.putExtra("crop", "true");
-                // 裁剪框的比例，1：1
-                intent.putExtra("aspectX", 1);
-                intent.putExtra("aspectY", 1);
-                // 裁剪后输出图片的尺寸大小
-                intent.putExtra("outputX", 250);
-                intent.putExtra("outputY", 250);
-                // 图片格式
-                intent.putExtra("noFaceDetection", false);// 取消人脸识别
-                intent.putExtra("return-data", false);// true:不返回URI，false：返回URI
-                if (CommonUtils.hasSdcard()) {
-                    File profileheadTemp = new File(Environment.getExternalStorageDirectory(), "/portrait.jpg");
-                    if(profileheadTemp.exists()) {
-                        profileheadTemp.delete();
-                    }
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(profileheadTemp));
-                }
-                intent.putExtra("scale", true);// 黑边
-                intent.putExtra("scaleUpIfNeeded", true);// 黑边
-                // intent.putExtra("outputFormat", "JPEG");
-                intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+//        String imagePath = imageUrl;
+//        if (!TextUtils.isEmpty(imagePath)) {
+//            File fPic = new File(imagePath);
+//            if (fPic != null && fPic.exists()) {
+//                Intent intent = new Intent("com.android.camera.action.CROP");
+//                intent.setDataAndType(Uri.fromFile(fPic), "image/*");
+//                intent.putExtra("crop", "true");
+//                // 裁剪框的比例，1：1
+//                intent.putExtra("aspectX", 1);
+//                intent.putExtra("aspectY", 1);
+//                // 裁剪后输出图片的尺寸大小
+//                intent.putExtra("outputX", 250);
+//                intent.putExtra("outputY", 250);
+//                // 图片格式
+//                intent.putExtra("noFaceDetection", false);// 取消人脸识别
+//                intent.putExtra("return-data", false);// true:不返回URI，false：返回URI
+//                if (CommonUtils.hasSdcard()) {
+//                    File profileheadTemp = new File(getExternalCacheDir(), "/portrait.jpg");
+//                    if(profileheadTemp.exists()) {
+//                        profileheadTemp.delete();
+//                    }
+//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(profileheadTemp));
+//                }
+//                intent.putExtra("scale", true);// 黑边
+//                intent.putExtra("scaleUpIfNeeded", true);// 黑边
+//                // intent.putExtra("outputFormat", "JPEG");
+//                intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+//
+//                startActivityForResult(intent, REQUEST_CODE_PICTURE_CUT);
+//            }
+//        }
 
-                startActivityForResult(intent, REQUEST_CODE_PICTURE_CUT);
-            }
-        }
+        Intent intent = new Intent(this, ClipActivity.class);
+        intent.putExtra("path", imageUrl);
+        startActivityForResult(intent, REQUEST_CODE_PICTURE_CUT);
+
     }
 
     @Override

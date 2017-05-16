@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -139,7 +138,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         initData();
 
         if (CommonUtils.hasSdcard()) {
-            profileheadTemp = new File(Environment.getExternalStorageDirectory(), "/portrait.jpg");
+            profileheadTemp = new File(getExternalCacheDir(), "/portrait.jpg");
             if (!profileheadTemp.exists()) {
                 headUri = Uri.fromFile(profileheadTemp);
             }
@@ -288,9 +287,6 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
         intent.putExtra(ImageChooseActivity.IMAGE_CHOOSE_TYPE, ImageChooseActivity.FROM_MORE_CONFIG);
         startActivityForResult(intent, REQUEST_CODE_PICTURE_CHOOSE);
-
-        //REQUEST_CODE_PICTURE_CHOOSE
-        //startActivity(intent);
     }
 
     @Override
@@ -304,20 +300,22 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
             //if user select cancel, the resule will be 0;
             if (CommonUtils.hasSdcard()) {
-                profileheadTemp = new File(Environment.getExternalStorageDirectory(), "/portrait.jpg");
+                profileheadTemp = new File(getExternalCacheDir(), "/portrait.jpg");
                 if (profileheadTemp.exists()) {
                     headUri = Uri.fromFile(profileheadTemp);
                 }
             }
 
             //TODO: should add listener on update portrait method!!!
-            showDialog();
-            ProfileManager.getInstance().updatePortrait(headUri.getPath(), mUpdateListener);
+//            showDialog();
+//            ProfileManager.getInstance().updatePortrait(headUri.getPath(), mUpdateListener);
 
             if (profileheadTemp != null && profileheadTemp.exists()) {
                 profileheadTemp.delete();
                 headUri = null;
             }
+
+            mUpdateHandler.sendEmptyMessage(UPDATE_PORTRAIT_OK);
         } else if (requestCode == REQUEST_CODE_PICTURE_CUT) {
             //if user select cancel, the resule will be 0;
             if (resultCode == 0 || headUri == null || TextUtils.isEmpty(headUri.toString())) {

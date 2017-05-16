@@ -73,6 +73,7 @@
         <activity android:name=".myself.activity.EditStrProfileInfoActivity" />
         <activity android:name=".util.image.ImageBrowserActivity" />
         <activity android:name=".util.image.ImageChooseActivity" />
+        <activity android:name=".util.image.ClipActivity" />
         <activity android:name=".Location.activity.LocationActivity"/>
         <activity android:name=".main.activity.AppMainActivity" android:launchMode="singleTask"/>
         <activity android:name=".message.activity.BuildMessageActivity"
