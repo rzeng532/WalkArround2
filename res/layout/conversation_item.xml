@@ -28,11 +28,24 @@
           android:layout_alignBottom="@id/conv_mapping_flag"
           android:background="@color/linecor1"/>
 
+    <RelativeLayout android:id="@+id/filfull_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:layout_below="@+id/conv_mapping_flag"
+                    android:layout_alignParentLeft="true"
+                    android:background="@color/friend_col_1">
+            <TextView android:id="@+id/emtpy_tv"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/conv_rl"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/conv_mapping_flag"
+                    android:layout_toRightOf="@+id/filfull_area"
                     android:clickable="true"
                     android:background="@drawable/list_item_bg">
 
@@ -40,7 +53,7 @@
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
+                        android:layout_marginLeft="6dp"
                         android:paddingBottom="2dp"
                         android:paddingTop="2dp">
             <com.example.walkarround.base.view.PhotoView
@@ -91,7 +104,7 @@
                         android:layout_toRightOf="@id/photo_layout"
                         android:layout_toLeftOf="@id/conversation_item_del_icon"
                         android:gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="6dp"
                         android:paddingRight="16dp"
                         android:orientation="vertical">
             <TextView
@@ -126,7 +139,7 @@
                     android:gravity="center_vertical"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:textColor="@color/fontcor3"
+                    android:textColor="@color/fontcor4"
                     android:textSize="@dimen/font_size4" />
         </RelativeLayout>
 

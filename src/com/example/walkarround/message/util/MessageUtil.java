@@ -62,7 +62,7 @@ public class MessageUtil {
 
     //Get friend list count. If count is 4, it means server response 4 friends every time.
     public static final int GET_FRIENDS_LIST_COUNT = 4;
-    public static final int FRIENDS_COUNT_ON_DB = 3;
+    public static final int FRIENDS_COUNT_ON_DB = 5;
 
     private static final List<Integer> mFriendColArray = Arrays.asList(R.color.friend_col_1,
             R.color.friend_col_2, R.color.friend_col_3,
