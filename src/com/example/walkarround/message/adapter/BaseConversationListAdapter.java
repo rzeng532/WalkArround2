@@ -6,11 +6,13 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -166,6 +168,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             convertView = mInflater.inflate(R.layout.conversation_item, null);
             holder = new ViewHolder();
             holder.rlConversation = (RelativeLayout) convertView.findViewById(R.id.conv_rl);
+            holder.rlFilfullArea = (RelativeLayout) convertView.findViewById(R.id.filfull_area);
             holder.ivPortrait = (PhotoView) convertView.findViewById(R.id.conv_portrait);
             holder.ivDelIcon = (ImageView) convertView.findViewById(R.id.conversation_item_del_icon);
             //holder.ivPortrait.setCheckBoxResId(R.drawable.public_icon_list_checkbox_on,
@@ -192,7 +195,10 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder = (ViewHolder) convertView.getTag();
         }
         holder.position = position;
-        initViewHolder(holder, listDO, position, (position <= 0 ? true : mListData.get(position - 1).status < MessageUtil.WalkArroundState.STATE_END));
+
+        boolean isThereMapFriend = mListData.get(0).status < MessageUtil.WalkArroundState.STATE_END;
+
+        initViewHolder(holder, listDO, position, (position <= 0 ? true : mListData.get(position - 1).status < MessageUtil.WalkArroundState.STATE_END), isThereMapFriend);
         return convertView;
     }
 
@@ -201,15 +207,16 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
      * @param holder
      * @param listDO
      * @param position
-     * @param isThereMappingConv， 判断上一个item是否是mapping 关系
+     * @param isPriorItemMapping， 判断上一个item是否是mapping 关系
      */
-    private void initViewHolder(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean isThereMappingConv) {
+    private void initViewHolder(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean isPriorItemMapping, boolean isThereMappingOnList) {
         setItemContactInfo(holder, listDO);
         setItemTime(holder, listDO);
         setItemTop(holder, listDO);
         setItemRead(holder, listDO);
         setItemMessage(holder, listDO);
-        setItemFlag(holder, listDO, position, isThereMappingConv);
+        setItemFlag(holder, listDO, position, isPriorItemMapping);
+        setFilfullArea(holder, listDO, position, isThereMappingOnList);
     }
 
     /**
@@ -332,7 +339,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         } else {
             switch (listDO.getContentType()) {
                 case MessageConstant.MessageType.MSG_TYPE_TEXT:
-                    displayStr = listDO.getData();
+                    //displayStr = listDO.getData();
+                    displayStr = mContext.getString(R.string.msg_conv_default_content);
                     break;
                 case MessageConstant.MessageType.MSG_TYPE_AUDIO:
                     displayStr = mContext.getString(R.string.msg_session_audio);
@@ -395,7 +403,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 holder.tvMappingFlag.setVisibility(View.GONE);
             }
             holder.ivDelIcon.setVisibility(View.GONE);
-            holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
+            holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
+            //holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
         } else {
             if(position >= 1) {
                 MessageSessionBaseModel priorModel = mListData.get(position - 1);
@@ -414,6 +423,49 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(R.color.bgcor14));
             //holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
             holder.ivDelIcon.setVisibility(View.GONE);
+        }
+    }
+
+    private void setFilfullArea(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean isThereMappingOnList) {
+
+        //Check if item need display fulfill area.
+        if(listDO.status == MessageUtil.WalkArroundState.STATE_END) {
+            //Calculate area width value.
+            WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            DisplayMetrics dm = new DisplayMetrics();
+            wm.getDefaultDisplay().getMetrics(dm);
+            int width = dm.widthPixels;// 屏幕宽度（像素）
+
+            //屏幕宽度算法:屏幕宽度（像素）/屏幕密度
+            int halfScreenWidth = (width) / 2;//屏幕宽度(dp)
+
+            int maxAccount = 4; //MessageUtil.FRIENDS_COUNT_ON_DB;
+            int index = position;
+            if(isThereMappingOnList) {
+                index -= 1;
+            }
+
+            if(index < maxAccount) {
+                //Item width
+                int rlWidth = halfScreenWidth / maxAccount * (maxAccount - index);
+
+                //Set width
+                ViewGroup.LayoutParams para1 = holder.rlFilfullArea.getLayoutParams();
+                para1.width = rlWidth;
+                holder.rlFilfullArea.setLayoutParams(para1);
+
+                //Set color
+                holder.rlFilfullArea.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
+            } else {
+                holder.rlFilfullArea.setVisibility(View.GONE);
+
+                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.rlConversation.getLayoutParams();
+                //int marginLeft = -holder.ivPortrait.getWidth() / 2;
+                p.setMargins(-90, 0, 0 ,0);
+                holder.rlConversation.setLayoutParams(p);
+            }
+        } else {
+            holder.rlFilfullArea.setVisibility(View.GONE);
         }
     }
 
@@ -487,6 +539,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         public int position;
         public PhotoView ivPortrait;
         RelativeLayout rlConversation;
+        RelativeLayout rlFilfullArea;
         ImageView ivTopSign;
         ImageView ivDelIcon;
         TextView tvName;
