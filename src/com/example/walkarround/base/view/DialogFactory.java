@@ -241,15 +241,38 @@ public class DialogFactory {
             }
         });
 
-//        dialogView.findViewById(R.id.iv_finish_icon).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                dialog.dismiss();
-//            }
-//        });
+        return dialog;
+    }
+
+    public static Dialog getMappingDialog(Context context, String userName, final ConfirmDialogClickListener listener) {
+        final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_find_mapping, null);
+        dialog.setContentView(dialogView);
+
+        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+        DisplayMetrics mDisplayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
+        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(layoutParams);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        ((TextView)dialogView.findViewById(R.id.tv_mapping)).setText(context.getString(R.string.mapping_indication, userName));
+
+        dialogView.findViewById(R.id.tv_i_see).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                if (listener != null) {
+                    listener.onConfirmDialogConfirmClick();
+                }
+            }
+        });
 
         return dialog;
     }
+
 
     public static Dialog getCountDownEndDialog(Context context, final ConfirmDialogClickListener listener) {
         final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);

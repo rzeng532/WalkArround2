@@ -438,8 +438,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
 
             //屏幕宽度算法:屏幕宽度（像素）/屏幕密度
             int halfScreenWidth = (width) / 2;//屏幕宽度(dp)
-
-            int maxAccount = 4; //MessageUtil.FRIENDS_COUNT_ON_DB;
+            float density = dm.density;//屏幕密度（0.75 / 1.0 / 1.5）
+            int maxAccount = MessageUtil.FRIENDS_COUNT_ON_DB;
             int index = position;
             if(isThereMappingOnList) {
                 index -= 1;
@@ -457,11 +457,13 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 //Set color
                 holder.rlFilfullArea.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
             } else {
+                int headMargin = (int)(6 * density + 60 * density / 2);
+
                 holder.rlFilfullArea.setVisibility(View.GONE);
 
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.rlConversation.getLayoutParams();
                 //int marginLeft = -holder.ivPortrait.getWidth() / 2;
-                p.setMargins(-90, 0, 0 ,0);
+                p.setMargins(-headMargin, 0, 0 ,0);
                 holder.rlConversation.setLayoutParams(p);
             }
         } else {

@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
+import com.example.walkarround.base.task.TaskUtil;
+import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.base.view.RippleView;
 import com.example.walkarround.flingswipe.SwipeFlingAdapterView;
@@ -24,7 +26,6 @@ import com.example.walkarround.main.adapter.NearlyUserListAdapter;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.LikeSomeOneTask;
-import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.message.activity.ConversationActivity;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
@@ -108,6 +109,10 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 if (strState.equalsIgnoreCase(TaskUtil.RESPONSE_USR_STATUS_ACCEPT)) {
                     String strUser = MessageUtil.getFriendIdFromServerData((String) object);
                     addCacheContact(strUser);
+                    Message msg = mFragmentHandler.obtainMessage();
+                    msg.what = SOMEONE_LIKE_YOU;
+                    msg.obj = strUser;
+                    mFragmentHandler.sendMessage(msg);
                     long convThreadId = sayHello(strUser);
                     if(convThreadId >= 0) {
                         WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).updateConversationStatus(convThreadId, MessageUtil.WalkArroundState.STATE_IM);
@@ -155,11 +160,24 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     //Handler
     private final int RADAR_STOP_DELAY = 5 * 1000;
     private final int UPDATE_NEARLY_USERS = 0;
+    private final int SOMEONE_LIKE_YOU = 1;
     private Handler mFragmentHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == UPDATE_NEARLY_USERS) {
                 showNearyUser();
+            } else if(msg.what == SOMEONE_LIKE_YOU) {
+                if(TextUtils.isEmpty((String)msg.obj)) {
+                    return;
+                }
+                ContactInfo user = ContactsManager.getInstance(NearlyUsersFragment.this.getActivity().getApplicationContext())
+                        .getContactByUsrObjId((String)msg.obj);
+                if(user == null) {
+                    return;
+                }
+                DialogFactory.getMappingDialog(NearlyUsersFragment.this.getActivity()
+                        , TextUtils.isEmpty(user.getUsername()) ? user.getMobilePhoneNumber() : user.getUsername()
+                        , null).show();
             }
         }
     };

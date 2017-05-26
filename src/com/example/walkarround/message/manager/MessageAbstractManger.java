@@ -10,9 +10,6 @@ import com.example.walkarround.util.Logger;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 小溪消息收发管理
- */
 public abstract class MessageAbstractManger {
 
     private Logger logger = Logger.getLogger(MessageAbstractManger.class.getSimpleName());
