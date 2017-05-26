@@ -258,7 +258,9 @@ public class DialogFactory {
         dialog.getWindow().setAttributes(layoutParams);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        ((TextView)dialogView.findViewById(R.id.tv_mapping)).setText(context.getString(R.string.mapping_indication, userName));
+        String indicate = context.getApplicationContext().getString(R.string.mapping_indication, userName);
+
+        ((TextView)dialogView.findViewById(R.id.tv_mapping)).setText(indicate);
 
         dialogView.findViewById(R.id.tv_i_see).setOnClickListener(new View.OnClickListener() {
             @Override

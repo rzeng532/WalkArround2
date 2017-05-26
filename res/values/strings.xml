@@ -332,5 +332,5 @@
     <string name="friend_col6_description">宝石蓝</string>
     <string name="friend_col7_description">雪青紫</string>
 
-    <string name="mapping_indication">你和%1$已经相互喜欢，可以相互了解一下</string>
+    <string name="mapping_indication">你和%1$s已经相互喜欢，可以相互了解一下</string>
 </resources>

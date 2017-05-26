@@ -19,6 +19,8 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_marginTop="30dp"
+                  android:paddingLeft="10dp"
+                  android:paddingRight="10dp"
                   android:gravity="center"
                   android:text="@string/mapping_indication"
                   android:textColor="@color/fontcor1"
