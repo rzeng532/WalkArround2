@@ -19,11 +19,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
+        <com.example.walkarround.base.view.photoview.RoundImageView
+                android:id="@+id/iv_tv_backgroup"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:background="@color/bgcor17"
+                android:scaleType="fitXY" />
+        <TextView
+            android:id="@+id/tv_xiyixiu"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="@dimen/font_size2_dp"
+            android:textColor="@color/fontcor3"
+            android:text="咻一咻"
+        />
+        <!--
         <View
                 android:id="@+id/v_fulfill_view"
                 android:layout_centerInParent="true"
                 android:layout_width="100dp"
                 android:layout_height="100dp"/>
+         -->
 
         <com.example.walkarround.base.view.PortraitView
                 android:id="@+id/pv_friend_portrait"

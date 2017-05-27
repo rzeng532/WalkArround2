@@ -1058,7 +1058,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             }
         }
 
-        findViewById(R.id.tv_select_position).setOnClickListener(this);
+        initSelectPositionBtn();
 
         /*
          * if(!NetworkUtil.isNetworkAvailable(getBaseContext())){
@@ -1067,6 +1067,19 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
          * mBottomLeftView.setImageResource(R.drawable.public_btn_enterbar_voice_disable); } }else{
          * mSendMessageEditView.setHint(R.string.message_edittext_hint); mBottomLeftView.setEnabled(true); }
          */
+    }
+
+    private void initSelectPositionBtn() {
+        TextView tvSelectPos = (TextView)findViewById(R.id.tv_select_position);
+        tvSelectPos.setOnClickListener(this);
+
+//        if(mImvDistance.getVisibility() == View.GONE) {
+            tvSelectPos.setText(getString(R.string.msg_select_walkarround_place));
+            tvSelectPos.setBackgroundResource(R.color.red_button);
+//        } else {
+//            tvSelectPos.setText(getString(R.string.msg_select_walkarround_place_ex));
+//            tvSelectPos.setBackgroundResource(R.color.cor3);
+//        }
     }
 
     @Override

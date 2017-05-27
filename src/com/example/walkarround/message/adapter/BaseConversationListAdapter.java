@@ -179,6 +179,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder.tvTime = (TextView) convertView.findViewById(R.id.conv_date);
             holder.tvUnreadCount = (TextView) convertView.findViewById(R.id.conv_count);
             holder.tvMappingFlag = (TextView) convertView.findViewById(R.id.conv_mapping_flag);
+            holder.tvMappingFlagLine = (View) convertView.findViewById(R.id.map_divide_line);
             holder.ivTopSign = (ImageView) convertView.findViewById(R.id.conversation_item_top_sign);
 
             holder.ivDelIcon.setTag(holder);
@@ -391,6 +392,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         if(convState <  MessageUtil.WalkArroundState.STATE_END && convState >= MessageUtil.WalkArroundState.STATE_IM) {
             holder.tvMappingFlag.setVisibility(View.VISIBLE);
             holder.tvMappingFlag.setText(R.string.msg_conversation_mapping);
+            holder.tvMappingFlagLine.setVisibility(View.VISIBLE);
             holder.ivDelIcon.setVisibility(View.VISIBLE);
             //Set correct text font color for this case.
             holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
@@ -398,9 +400,11 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         } else if(convState ==  MessageUtil.WalkArroundState.STATE_END) {
             if(position <= 1 && priorIsMappingConv) {
                 holder.tvMappingFlag.setVisibility(View.VISIBLE);
+                holder.tvMappingFlagLine.setVisibility(View.VISIBLE);
                 holder.tvMappingFlag.setText(R.string.msg_conversation_walking_friends);
             } else {
                 holder.tvMappingFlag.setVisibility(View.GONE);
+                holder.tvMappingFlagLine.setVisibility(View.GONE);
             }
             holder.ivDelIcon.setVisibility(View.GONE);
             holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
@@ -410,13 +414,16 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 MessageSessionBaseModel priorModel = mListData.get(position - 1);
                 if(priorModel != null && priorModel.status == MessageUtil.WalkArroundState.STATE_INIT) {
                     holder.tvMappingFlag.setVisibility(View.GONE);
+                    holder.tvMappingFlagLine.setVisibility(View.GONE);
                 } else {
                     holder.tvMappingFlag.setVisibility(View.VISIBLE);
                     holder.tvMappingFlag.setText(R.string.msg_conversation_unkown_friends);
+                    holder.tvMappingFlagLine.setVisibility(View.VISIBLE);
                 }
             } else if (position == 0) {
                 holder.tvMappingFlag.setVisibility(View.VISIBLE);
                 holder.tvMappingFlag.setText(R.string.msg_conversation_unkown_friends);
+                holder.tvMappingFlagLine.setVisibility(View.VISIBLE);
             }
 
             holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
@@ -448,12 +455,14 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             if(index < maxAccount) {
                 //Item width
                 int rlWidth = halfScreenWidth / maxAccount * (maxAccount - index);
-
+                holder.rlFilfullArea.setVisibility(View.VISIBLE);
                 //Set width
                 ViewGroup.LayoutParams para1 = holder.rlFilfullArea.getLayoutParams();
                 para1.width = rlWidth;
                 holder.rlFilfullArea.setLayoutParams(para1);
-
+                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.rlConversation.getLayoutParams();
+                //int marginLeft = -holder.ivPortrait.getWidth() / 2;
+                p.setMargins((int)(6 * density), 0, 0 ,0);
                 //Set color
                 holder.rlFilfullArea.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
             } else {
@@ -549,6 +558,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         TextView tvTime;
         TextView tvUnreadCount;
         TextView tvMappingFlag;
+        View tvMappingFlagLine;
     }
 
     private boolean isChosenPosition(long threadId) {

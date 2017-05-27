@@ -135,7 +135,7 @@
     <string name="msg_session_phone">[手机]</string>
     <string name="msg_session_sys_msg">[系统消息]</string>
     <string name="msg_check_network_settings">当前网络不可用，请检查你的网络设置。</string>
-    <string name="msg_network_notice">您目前的网络不可用，消息将以普通短信的方式发送。</string>
+    <string name="msg_network_notice">您目前的网络不可用。</string>
     <string name="message_mark_select_all">全选</string>
     <string name="message_mark_clear_all">清除</string>
     <string name="message_mark_clear_top">消顶</string>
@@ -243,6 +243,7 @@
     <string name="msg_say_hello">你向好友打了个招呼</string>
     <string name="msg_received_hello">好友向你打了一个招呼</string>
     <string name="msg_select_walkarround_place">选择10分钟走走地点</string>
+    <string name="msg_select_walkarround_place_ex">点击顶部色块碰头吧</string>
     <string name="msg_select_place_title">见面地点</string>
     <string name="msg_confirm_walk_place">去这附近走走</string>
     <string name="msg_location_search_failed">搜索失败</string>

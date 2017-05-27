@@ -266,7 +266,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         mTvTitle.setText(R.string.main_title);
 
         mSearchingView = (RippleView) findViewById(R.id.searchingView);
-        mFulfillView = (View) findViewById(R.id.v_fulfill_view);
+        mFulfillView = (View) findViewById(R.id.iv_tv_backgroup);
         mRlSearchArea = (RelativeLayout) findViewById(R.id.rlSearching);
         mPvFriend = (PortraitView) findViewById(R.id.pv_friend_portrait);
         mPvFriend.setOnClickListener(this);

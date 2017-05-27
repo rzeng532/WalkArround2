@@ -25,6 +25,7 @@
     <color name="bgcor14">#aaaaaa</color>
     <color name="bgcor15">#A0FFFFFF</color>
     <color name="bgcor16">#90FFFFFF</color>
+    <color name="bgcor17">#90EFEFEF</color>
 
     <!-- line color -->
     <color name="linecor1">#dcdcdc</color>
