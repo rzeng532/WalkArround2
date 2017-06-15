@@ -96,6 +96,7 @@
                  android:layout_height="wrap_content"
                  android:layout_centerHorizontal="true"
                  android:layout_alignParentBottom="true"
+                 android:layout_marginTop="20dp"
                  android:layout_marginBottom="50dp"
                  android:id="@+id/userFrameButtons"
                  android:visibility="gone"/>
