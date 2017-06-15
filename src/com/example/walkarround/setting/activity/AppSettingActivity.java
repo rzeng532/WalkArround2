@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.activity.LoginOrRegActivity;
+import com.example.walkarround.login.activity.UpdatePswActivity;
 import com.example.walkarround.setting.manager.SettingManager;
 import com.example.walkarround.util.Logger;
 
@@ -60,7 +61,7 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
         tvLogout = (TextView) findViewById(R.id.tv_logout);
         tvLogout.setOnClickListener(this);
 
-        tvUpdate = (TextView) findViewById(R.id.tv_update);
+        tvUpdate = (TextView) findViewById(R.id.tv_usr_protocol);
         tvUpdate.setOnClickListener(this);
     }
 
@@ -86,7 +87,7 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
                 checkAboutApp();
                 break;
 
-            case R.id.tv_update:
+            case R.id.tv_usr_protocol:
                 checkAppVersion();
                 break;
 
@@ -140,6 +141,6 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
     }
 
     public void doResetPassword() {
-
+        startActivity(new Intent(this, UpdatePswActivity.class));
     }
 }

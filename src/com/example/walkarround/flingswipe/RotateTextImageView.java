@@ -3,11 +3,11 @@ package com.example.walkarround.flingswipe;
 import android.content.Context;
 import android.graphics.*;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import com.example.walkarround.base.view.roundedimageview.RoundedImageView;
 
 import java.math.BigDecimal;
 
-public class RotateTextImageView extends ImageView {
+public class RotateTextImageView extends RoundedImageView {
     PaintFlagsDrawFilter pfdf;
     Paint paint;
     Matrix matrix;
@@ -26,7 +26,7 @@ public class RotateTextImageView extends ImageView {
     private String text = "";
 
     public RotateTextImageView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+        super(context, attrs);
         initCanvasInfo();
     }
 

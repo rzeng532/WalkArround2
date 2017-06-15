@@ -83,7 +83,7 @@
                     android:background="@color/linecor1"/>
 
             <TextView
-                    android:id="@+id/tv_update"
+                    android:id="@+id/tv_usr_protocol"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:paddingLeft="20dp"
@@ -93,7 +93,7 @@
                     android:background="@drawable/list_item_bg"
                     android:textColor="@color/fontcor1"
                     android:gravity="center_vertical"
-                    android:text="@string/setting_check_update"
+                    android:text="@string/setting_user_protocol"
                     android:visibility="visible"/>
 
             <View

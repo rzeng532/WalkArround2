@@ -14,9 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
@@ -25,6 +23,7 @@ import com.example.walkarround.base.WalkArroundApp;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.base.view.RippleView;
+import com.example.walkarround.base.view.photoview.RoundImageView;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.base.task.TaskUtil;
@@ -57,10 +56,13 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     private RippleView mSearchingView;
     private View mFulfillView;
     private RelativeLayout mRlSearchArea;
+    private LinearLayout mLlDistance;
     private PortraitView mPvFriend;
     private Dialog mWalkRequestDialog;
     private TextView mTvPleaseClickPortrait;
     private TextView mTvTitle;
+    private RoundImageView mIvTextBg;
+    private TextView mTvXiuYiXiu;
     private String mStrFriendId;
     private GeoData mFriendGeoData;
     private int mPriorDistance = -1;
@@ -124,12 +126,16 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                         mTvTitle.setText(distance + getResources().getString(R.string.common_distance_unit_meter));
                         mPvFriend.setVisibility(View.VISIBLE);
                         mTvPleaseClickPortrait.setVisibility(View.VISIBLE);
+                        mTvXiuYiXiu.setVisibility(View.VISIBLE);
+                        mIvTextBg.setVisibility(View.VISIBLE);
                     } else {
                         mSearchingView.stop();
                         mTvTitle.setText(R.string.main_title);
                         mSearchingView.setVisibility(View.GONE);
                         mPvFriend.setVisibility(View.GONE);
                         mTvPleaseClickPortrait.setVisibility(View.GONE);
+                        mTvXiuYiXiu.setVisibility(View.GONE);
+                        mIvTextBg.setVisibility(View.GONE);
                     }
                     break;
                 default:
@@ -265,6 +271,9 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         mTvTitle = (TextView)(title.findViewById(R.id.display_name));
         mTvTitle.setText(R.string.main_title);
 
+        mLlDistance = (LinearLayout)findViewById(R.id.ll_distance);
+        mTvXiuYiXiu = (TextView)findViewById(R.id.tv_xiyixiu);
+        mIvTextBg = (RoundImageView)findViewById(R.id.iv_tv_backgroup);
         mSearchingView = (RippleView) findViewById(R.id.searchingView);
         mFulfillView = (View) findViewById(R.id.iv_tv_backgroup);
         mRlSearchArea = (RelativeLayout) findViewById(R.id.rlSearching);
@@ -276,6 +285,8 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         mSearchingView.stop();
         mSearchingView.setVisibility(View.GONE);
         mPvFriend.setVisibility(View.GONE);
+        mTvXiuYiXiu.setVisibility(View.GONE);
+        mIvTextBg.setVisibility(View.GONE);
         mTvPleaseClickPortrait.setVisibility(View.GONE);
     }
 
@@ -290,7 +301,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
             //Init background color
             if (color >= 0) {
                 //Activity body color
-                mRlSearchArea.setBackgroundColor(getResources().getColor(color));
+                mLlDistance.setBackgroundColor(getResources().getColor(color));
 
                 //Title color
                 RelativeLayout rlTitle = (RelativeLayout) (findViewById(R.id.title));

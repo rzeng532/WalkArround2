@@ -240,4 +240,25 @@ public class LoginManager {
             }
         });
     }
+
+    public void updatePassword(String oldPsw, String newPsw, AsyncTaskListener listener) {
+        AVUser user = AVUser.getCurrentUser();
+
+        if(user != null) {
+            user.updatePasswordInBackground(oldPsw, newPsw, new UpdatePasswordCallback() {
+                @Override
+                public void done(AVException e) {
+                    if(e == null) {
+                        if(listener != null) {
+                            listener.onSuccess(null);
+                        }
+                    } else {
+                        if(listener != null) {
+                            listener.onFailed(null);
+                        }
+                    }
+                }
+            });
+        }
+    }
 }

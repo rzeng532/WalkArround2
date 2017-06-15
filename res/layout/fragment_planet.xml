@@ -79,8 +79,7 @@
             android:id="@+id/body"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/bgcor1"
-            android:gravity="center_vertical">
+            android:background="@color/bgcor1">
 
         <com.example.walkarround.flingswipe.SwipeFlingAdapterView
                 android:id="@+id/userFrame"
@@ -89,14 +88,17 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/userFrameButtons"
                 android:layout_gravity="center"
-                app:rotation_degrees="15.5"/>
+                app:rotation_degrees="15.5"
+                android:visibility="gone"/>
 
         <include layout="@layout/main_nearly_user_buttons"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:layout_centerHorizontal="true"
                  android:layout_alignParentBottom="true"
-                 android:id="@+id/userFrameButtons"/>
+                 android:layout_marginBottom="50dp"
+                 android:id="@+id/userFrameButtons"
+                 android:visibility="gone"/>
 
         <!--
                 <com.example.walkarround.radar.RadarScanView
@@ -110,11 +112,12 @@
         <RelativeLayout
                 android:id="@+id/rlSearching"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="360dp"
+                android:layout_marginTop="50dp">
             <com.example.walkarround.base.view.RippleView
                     android:id="@+id/searchingView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="360dp"/>
 
             <com.example.walkarround.base.view.PortraitView
                     android:id="@+id/searching_center_portrait"

@@ -52,7 +52,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     private TextView mTvBirth;
     private TextView mTvGendle;
     private TextView mTvSignature;
-    private TextView mTvLocation;
+//    private TextView mTvLocation;
 
     private View mVPortrait;
     private View mVUserName;
@@ -60,7 +60,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     private View mVBirthday;
     private View mVGendle;
     private View mVSignature;
-    private View mVLocation;
+//    private View mVLocation;
 
     //For wheel picker.
     private String mStrBirthday;
@@ -182,9 +182,9 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         mVSignature.setOnClickListener(this);
         mTvSignature = (TextView) findViewById(R.id.tv_signature_infor);
 
-        mVLocation = (View) findViewById(R.id.detail_location);
-        mVLocation.setOnClickListener(this);
-        mTvLocation = (TextView) findViewById(R.id.tv_location_infor);
+//        mVLocation = (View) findViewById(R.id.detail_location);
+//        mVLocation.setOnClickListener(this);
+//        mTvLocation = (TextView) findViewById(R.id.tv_location_infor);
     }
 
     public void initData() {
@@ -198,9 +198,6 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             mTvSignature.setText(myProfileInfo.getSignature());
             mTvGendle.setText(getGenderDisplayName(myProfileInfo.getGendle()));
             mTvBirth.setText(myProfileInfo.getBirthday());
-            if (myProfileInfo.getLocation() != null) {
-                mTvLocation.setText(myProfileInfo.getLocation().getAddrInfor());
-            }
         }
     }
 
@@ -261,10 +258,10 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 startEditActivity(ProfileUtil.REG_TYPE_SIGNATURE);
                 break;
 
-            case R.id.detail_location:
-                logger.d("onClick, signature.");
-                startLocationActivity();
-                break;
+//            case R.id.detail_location:
+//                logger.d("onClick, signature.");
+//                startLocationActivity();
+//                break;
 
             default:
 

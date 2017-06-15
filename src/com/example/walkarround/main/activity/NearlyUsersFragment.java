@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
 import com.example.walkarround.base.task.TaskUtil;
@@ -64,6 +65,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private View mUserFrameButtons;
 
     //For radar display.
+    private RelativeLayout mRlSearchArea;
     private RippleView mSearchingView;
     private PortraitView mSearchingPortrait;
 
@@ -337,6 +339,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         mIvUnreadIcon = (ImageView) mViewRoot.findViewById(R.id.unread_msg_iv);
 
         //Searching UI will be displayed at first.
+        mRlSearchArea = (RelativeLayout) mViewRoot.findViewById(R.id.rlSearching);
         mSearchingPortrait = (PortraitView) mViewRoot.findViewById(R.id.searching_center_portrait);
         mSearchingView = (RippleView) mViewRoot.findViewById(R.id.searchingView);
 
@@ -422,8 +425,9 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
      */
     private void showRadar() {
         mSearchingView.start();
-        mSearchingView.setVisibility(View.VISIBLE);
-        mSearchingPortrait.setVisibility(View.VISIBLE);
+        mRlSearchArea.setVisibility(View.VISIBLE);
+//        mSearchingView.setVisibility(View.VISIBLE);
+//        mSearchingPortrait.setVisibility(View.VISIBLE);
 
         mUserFrameButtons.setVisibility(View.GONE);
         mUserFrame.setVisibility(View.GONE);
@@ -431,8 +435,9 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
     private void showNearyUser() {
         mSearchingView.stop();
-        mSearchingView.setVisibility(View.GONE);
-        mSearchingPortrait.setVisibility(View.GONE);
+        mRlSearchArea.setVisibility(View.GONE);
+//        mSearchingView.setVisibility(View.GONE);
+//        mSearchingPortrait.setVisibility(View.GONE);
 
         mUserFrame.setVisibility(View.VISIBLE);
         mUserFrameButtons.setVisibility(View.VISIBLE);

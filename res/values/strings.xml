@@ -70,11 +70,17 @@
     <string name="login_hint_logouting">正在退出当前账户</string>
     <string name="login_do_login_success">登录成功</string>
     <string name="login_hint_please_input_SMS_code">请输入验证码</string>
+    <string name="login_hint_please_input_old_psw">请输入现在的密码</string>
+    <string name="login_hint_please_input_new_psw">请输入新密码</string>
+    <string name="login_hint_please_input_new_psw_again">请再次输入新密码</string>
+    <string name="login_do_update_psw_suc">修改密码成功，请用新密码登录</string>
+    <string name="login_please_confirm_new_psw">两次新密码输入不一致，请再次确认</string>
 
     <!-- Strings for setting -->
     <string name="setting_title">设置</string>
     <string name="setting_modify_password">修改密码</string>
     <string name="setting_check_update">检查更新</string>
+    <string name="setting_user_protocol">用户协议</string>
     <string name="setting_about_app">关于走走</string>
     <string name="setting_do_logout">退出</string>
     <string name="setting_logout_or_not">退出当前账号？</string>
