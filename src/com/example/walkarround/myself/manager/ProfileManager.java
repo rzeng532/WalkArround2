@@ -19,6 +19,8 @@ public class ProfileManager {
     private static ProfileApiAbstract mProfileApi;
     private static MyProfileInfo myProfileInfo;
 
+    private boolean mIsLogined = false;
+
     public static ProfileManager getInstance() {
         if (mProfileManager == null) {
             synchronized (LoginManager.class) {
@@ -220,5 +222,13 @@ public class ProfileManager {
         mProfileManager = null;
         myProfileInfo = null;
         mProfileApi = null;
+    }
+
+    public boolean getCurAccountLoginState() {
+        return mProfileManager.mIsLogined;
+    }
+
+    public void setCurAccountLoginState(boolean newState) {
+        mProfileManager.mIsLogined = newState;
     }
 }

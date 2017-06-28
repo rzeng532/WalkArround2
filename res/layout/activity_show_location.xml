@@ -55,7 +55,7 @@
                     android:layout_centerVertical="true"
                     android:textSize="@dimen/font_size5"
                     android:text="@string/msg_accept_walk_position"
-                    android:textColor="@color/fontcor10"/>
+                    android:textColor="@color/fontcor11"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -75,8 +75,8 @@
                     android:textSize="@dimen/font_size2"
                     android:gravity="center"
                     android:text="@string/msg_accept_walk_position"
-                    android:textColor="@color/emerald_green"
-                    android:background="@color/bgcor14"/>
+                    android:textColor="@color/fontcor3"
+                    android:background="@color/emerald_green"/>
 
             <View
                     android:id="@+id/line"
@@ -95,8 +95,8 @@
                     android:textSize="@dimen/font_size2"
                     android:gravity="center"
                     android:text="@string/msg_let_me_select_position"
-                    android:textColor="@color/fontcor3"
-                    android:background="@color/emerald_green"/>
+                    android:textColor="@color/emerald_green"
+                    android:background="#ededed"/>
         </RelativeLayout>
     </RelativeLayout>
 

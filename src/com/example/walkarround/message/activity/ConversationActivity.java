@@ -21,12 +21,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.walkarround.R;
+import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.ProgressDialogHorizontal;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
-import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.message.adapter.*;
 import com.example.walkarround.message.listener.ConversationItemListener;
 import com.example.walkarround.message.listener.SearchMessageResultItemListener;
@@ -40,6 +40,7 @@ import com.example.walkarround.message.task.CancelSpeedDateTask;
 import com.example.walkarround.message.task.MessageSearchTimerTask;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageConstant.ConversationType;
+import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.message.util.SessionComparator;
 import com.example.walkarround.myself.manager.ProfileManager;
@@ -50,10 +51,7 @@ import com.example.walkarround.util.http.ThreadPoolManager;
 import com.example.walkarround.util.network.NetWorkManager;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
+import java.util.*;
 
 import static com.example.walkarround.util.http.HttpTaskBase.TaskResult;
 import static com.example.walkarround.util.http.HttpTaskBase.onResultListener;
@@ -102,7 +100,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
 
     /*通知消息会话列表*/
     private NotifyMsgListAdapter mNotifyMsgAdapter;
-
+    private ImageView mIvOldFriends;
     /*没有内容时显示的空页面*/
     private View mNoConversationView;
 
@@ -142,6 +140,11 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     /* 新建消息/群组PopupWindow */
     // PopupWindow mPopupWindow;
     //private PopupListAdapter mPopupWindowAdapter;
+
+    public static final String CONV_PARAM_OLD_FRIEND = "conv_param_old_friend";
+    private final int CONV_TYPE_CUR_FRIEND = 0;
+    private final int CONV_TYPE_OLD_FRIEND = 1;
+    private int mConvType = CONV_TYPE_CUR_FRIEND;
 
     /**
      * 消息状态监听
@@ -424,6 +427,21 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 } else if (requestCode.equals(MessageConstant.MSG_OPERATION_LOAD)) {
                     what = MSG_OPERATION_LOAD_SUCCESS;
                     List<MessageSessionBaseModel> conversationMsgList = (List<MessageSessionBaseModel>) object;
+
+                    Iterator<MessageSessionBaseModel> it = conversationMsgList.iterator();
+                    while(it.hasNext()){
+                        MessageSessionBaseModel item = it.next();
+                        if(mConvType == CONV_TYPE_OLD_FRIEND
+                                && item.status != MessageUtil.WalkArroundState.STATE_INIT){
+                            //Current UI need old friends, so we remove !Old friends.
+                            it.remove();
+                        } else if(mConvType == CONV_TYPE_CUR_FRIEND
+                                && item.status == MessageUtil.WalkArroundState.STATE_INIT){
+                            //Current UI need cur friend, we remove old one
+                            it.remove();
+                        }
+                    }
+
                     dataBundle.putSerializable(MSG_EVENT_EXTRA_LIST, (Serializable) conversationMsgList);
                 } else if (requestCode.equals(MessageConstant.MSG_OPERATION_NOTIFY_LOAD)) {
                     what = MSG_OPERATION_NOTIFY_LOAD_SUCCESS;
@@ -458,6 +476,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_conversation);
         mContext = getApplicationContext();
+        mConvType = getIntent().getIntExtra(CONV_PARAM_OLD_FRIEND, CONV_TYPE_CUR_FRIEND);
+
         initView();
         //初始化数据
         initData();
@@ -627,6 +647,12 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     break;
                 }
                 batchDealMsg(MessageConstant.MSG_OPERATION_SET_READ);
+                break;
+            case R.id.iv_old_friends:
+                Intent oldFriend = new Intent(this, ConversationActivity.class);
+                oldFriend.putExtra(CONV_PARAM_OLD_FRIEND, CONV_TYPE_OLD_FRIEND);
+
+                startActivity(oldFriend);
                 break;
 //            case R.id.bt_cancel_search:
 //                mSearchEditText.setText("");
@@ -893,6 +919,9 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         mConversationAdapter.setItemListener(this);
         mConversationListView.setAdapter(mConversationAdapter);
         mConversationListView.removeFooterView(mNoConversationView);
+
+        mIvOldFriends = (ImageView) findViewById(R.id.iv_old_friends);
+        mIvOldFriends.setOnClickListener(this);
 
         // 初始化搜索/通知消息List
         mSearchResultListView = (ListView) findViewById(R.id.search_list);

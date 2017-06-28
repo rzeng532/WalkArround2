@@ -3,8 +3,6 @@ package com.example.walkarround;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import com.example.walkarround.login.activity.LoginOrRegActivity;
-import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.task.OnlineStateTask;
@@ -15,6 +13,7 @@ public class EntranceActivity extends Activity {
     private static final String TAG = EntranceActivity.class.getSimpleName();
     private final int REQ_CODE_LOGIN = 0;
     private final int REQ_CODE_MAIN = 1;
+    private final int REQ_CODE_SPLASH = 2;
 
     /**
      * Called when the activity is first created.
@@ -23,13 +22,13 @@ public class EntranceActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        boolean isLogined = LoginManager.getInstance().isLogined();
-        if (isLogined) {
-            Intent intent = new Intent(this, AppMainActivity.class);
+        boolean isLogined = ProfileManager.getInstance().getCurAccountLoginState();
+        if(isLogined) {
+            Intent intent = new Intent(EntranceActivity.this, AppMainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivityForResult(intent, REQ_CODE_LOGIN);
         } else {
-            startActivityForResult(new Intent(this, LoginOrRegActivity.class), REQ_CODE_MAIN);
+            startActivityForResult(new Intent(this, SplashActivity.class), REQ_CODE_SPLASH);
         }
     }
 
@@ -78,6 +77,9 @@ public class EntranceActivity extends Activity {
                 break;
             case REQ_CODE_MAIN:
                 finishEntranceActivity();
+                break;
+            case REQ_CODE_SPLASH:
+
                 break;
             default:
                 break;

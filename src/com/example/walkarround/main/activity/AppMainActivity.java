@@ -21,10 +21,10 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.example.walkarround.EntranceActivity;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
+import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.main.model.ContactInfo;
@@ -33,7 +33,6 @@ import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.GetFriendListTask;
 import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
-import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.message.activity.BuildMessageActivity;
 import com.example.walkarround.message.activity.EvaluateActivity;
 import com.example.walkarround.message.manager.ContactsManager;
@@ -446,18 +445,18 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        moveTaskToBack(true);
 
-        //Clear nearly user list while user select to exit main page. So user can search user while he/she enter next time.
-        NearlyUsersFragment.getInstance().clearNearlyUserList();
-
-        //Goto main activity and exit, so we can skip intermediate activities.
-        //NOTE: DO NOT set CLEAR flag here.
-        Intent intent = new Intent(AppMainActivity.this, EntranceActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-
-        finish();
+//        //Clear nearly user list while user select to exit main page. So user can search user while he/she enter next time.
+//        NearlyUsersFragment.getInstance().clearNearlyUserList();
+//
+//        //Goto main activity and exit, so we can skip intermediate activities.
+//        //NOTE: DO NOT set CLEAR flag here.
+//        Intent intent = new Intent(AppMainActivity.this, EntranceActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
+//
+//        finish();
     }
 
     @Override

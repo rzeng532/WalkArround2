@@ -7,6 +7,7 @@ import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.login.task.CheckIfVerifiedTask;
 import com.example.walkarround.login.util.LoginConstant;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
+import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppSharedPreference;
 import com.example.walkarround.util.AsyncTaskListener;
@@ -113,6 +114,7 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
         AVUser avUser = AVUser.getCurrentUser();
         if(avUser != null) {
             avUser.logOut();
+            ProfileManager.getInstance().setCurAccountLoginState(false);
         }
     }
 
@@ -159,7 +161,22 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
             logger.d("## loginByMobilePhoneNumberInBackground");
             //Login again via current account
             currentUser.loginByMobilePhoneNumberInBackground(AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PHONE, ""),
-                    AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PASSWORD, ""), null);
+                    AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PASSWORD, ""), new LogInCallback() {
+                        @Override
+                        protected void internalDone0(Object o, AVException e) {
+
+                        }
+
+                        @Override
+                        public void done(AVUser avUser, AVException e) {
+
+                            logger.e("loginByMobilePhoneNumberInBackground Done: exception e " + ((e == null) ? "== null" : "!= null"));
+
+                            if(e == null) {
+                                ProfileManager.getInstance().setCurAccountLoginState(true);
+                            }
+                        }
+                    });
 
             return LoginConstant.LOGIN_STATE;
         } else {
