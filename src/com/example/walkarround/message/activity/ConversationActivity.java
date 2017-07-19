@@ -16,10 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewStub;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.example.walkarround.R;
 import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
@@ -81,6 +78,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     private static final String MSG_EVENT_EXTRA_SEARCH_MAP = "map";
     private static final String MSG_OPERATION_KEY_BLACKLIST = "msg_operation_key_blacklist";
     private static final String MSG_OPERATION_KEY_REQUEST = "msg_operation_key_request";
+
+    private final String PARAM_OLD_FRIENDS = "param_old_friends";
 
     private static final int SEARCH_TASK_DELAY = 200;
     private Context mContext;
@@ -899,7 +898,13 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         title.findViewById(R.id.back_rl).setOnClickListener(this);
         title.findViewById(R.id.more_rl).setVisibility(View.GONE);
         title.findViewById(R.id.middle_iv).setVisibility(View.VISIBLE);
-        ((ImageView) title.findViewById(R.id.middle_iv)).setImageResource(R.drawable.icon_conversation_title);
+
+        if(mConvType == CONV_TYPE_CUR_FRIEND) {
+            ((ImageView) title.findViewById(R.id.middle_iv)).setImageResource(R.drawable.icon_conversation_title);
+        } else {
+            ((ImageView) title.findViewById(R.id.middle_iv)).setImageResource(R.drawable.grey_diag);
+        }
+
         title.findViewById(R.id.display_name).setVisibility(View.GONE);
 
         // 网络提示
@@ -921,7 +926,12 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         mConversationListView.removeFooterView(mNoConversationView);
 
         mIvOldFriends = (ImageView) findViewById(R.id.iv_old_friends);
-        mIvOldFriends.setOnClickListener(this);
+        if(mConvType == CONV_TYPE_CUR_FRIEND) {
+            mIvOldFriends.setOnClickListener(this);
+            mIvOldFriends.setVisibility(View.VISIBLE);
+        } else {
+            mIvOldFriends.setVisibility(View.GONE);
+        }
 
         // 初始化搜索/通知消息List
         mSearchResultListView = (ListView) findViewById(R.id.search_list);

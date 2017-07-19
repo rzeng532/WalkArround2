@@ -163,6 +163,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private final int RADAR_STOP_DELAY = 5 * 1000;
     private final int UPDATE_NEARLY_USERS = 0;
     private final int SOMEONE_LIKE_YOU = 1;
+    private final int DISPLAY_RADAR = 2;
     private Handler mFragmentHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -180,6 +181,8 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 DialogFactory.getMappingDialog(NearlyUsersFragment.this.getActivity()
                         , TextUtils.isEmpty(user.getUsername()) ? user.getMobilePhoneNumber() : user.getUsername()
                         , null).show();
+            } else if(msg.what == DISPLAY_RADAR) {
+                mSearchingView.start();
             }
         }
     };
@@ -272,6 +275,11 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     @Override
     public void onPause() {
         super.onPause();
+
+        if(mSearchingView != null && mSearchingView.isStarting()) {
+            mSearchingView.stop();
+        }
+
         if (null != mMessageReceiver) {
             getActivity().unregisterReceiver(mMessageReceiver);
         }
@@ -424,7 +432,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
      * We will show radar on loading page / while there is no other data
      */
     private void showRadar() {
-        mSearchingView.start();
+        mFragmentHandler.sendEmptyMessageDelayed(DISPLAY_RADAR, 500);
         mRlSearchArea.setVisibility(View.VISIBLE);
 //        mSearchingView.setVisibility(View.VISIBLE);
 //        mSearchingPortrait.setVisibility(View.VISIBLE);

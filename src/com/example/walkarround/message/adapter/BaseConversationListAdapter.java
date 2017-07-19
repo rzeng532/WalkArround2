@@ -340,8 +340,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         } else {
             switch (listDO.getContentType()) {
                 case MessageConstant.MessageType.MSG_TYPE_TEXT:
-                    //displayStr = listDO.getData();
-                    displayStr = mContext.getString(R.string.msg_conv_default_content);
+                    displayStr = listDO.getData();
+                    //displayStr = mContext.getString(R.string.msg_conv_default_content);
                     break;
                 case MessageConstant.MessageType.MSG_TYPE_AUDIO:
                     displayStr = mContext.getString(R.string.msg_session_audio);

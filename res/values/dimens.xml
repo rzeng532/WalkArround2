@@ -13,7 +13,10 @@
     <dimen name="font_size7">10sp</dimen>
     <dimen name="font_size8">24sp</dimen>
     <dimen name="font_size9">30sp</dimen>
-    <dimen name="font_size_title">21sp</dimen>
+    <dimen name="font_size10">36sp</dimen>
+    <dimen name="font_size11">180sp</dimen>
+    <dimen name="font_size12">44sp</dimen>
+    <dimen name="font_size_title">18sp</dimen>
     <dimen name="font_size2_dp">18dp</dimen>
     <dimen name="font_size3_dp">16dp</dimen>
     <dimen name="font_size4_dp">15dp</dimen>
@@ -23,6 +26,7 @@
     <dimen name="font_size9_dp">30dp</dimen>
     <dimen name="font_size_40dp">40dp</dimen>
     <dimen name="font_size_50dp">50dp</dimen>
+    <dimen name="font_size_180dp">50dp</dimen>
 
     <!-- 时间选择view的高度 -->
     <dimen name="time_picker_item_height">55dp</dimen>

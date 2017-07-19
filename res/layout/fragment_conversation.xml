@@ -103,13 +103,14 @@
         android:splitMotionEvents="false" />
 
     <ImageView android:id="@+id/iv_old_friends"
-               android:layout_width="50dp"
-               android:layout_height="50dp"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
                android:layout_alignBottom="@id/converstaion_list"
                android:layout_alignParentRight="true"
+               android:padding="10dp"
                android:layout_marginRight="30dp"
                android:layout_marginBottom="30dp"
-               android:src="@drawable/icon_slide_setting"/>
+               android:src="@drawable/grey_diag"/>
 
     <LinearLayout
         android:id="@+id/search_layout"

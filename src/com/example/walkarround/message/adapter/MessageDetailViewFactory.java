@@ -257,7 +257,9 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             viewHolder.msgHintTv = (TextView) convertView.findViewById(R.id.msg_hint_tv);
             viewHolder.msgStatusIv = (ImageView) convertView.findViewById(R.id.msg_status_fail_iv);
             viewHolder.clickAreaView = convertView.findViewById(R.id.msg_item_bg_layout);
-            viewHolder.clickAreaView.setOnLongClickListener(this);
+
+            //Cancel long click here.
+            //viewHolder.clickAreaView.setOnLongClickListener(this);
             convertView.setOnClickListener(this);
             convertView.setTag(viewHolder);
         } else {
@@ -318,7 +320,8 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             viewHolder.msgStatusIv = (ImageView) convertView.findViewById(R.id.msg_status_fail_iv);
             viewHolder.clickAreaView = convertView.findViewById(R.id.msg_item_bg_layout);
             viewHolder.clickAreaView.setOnClickListener(this);
-            viewHolder.clickAreaView.setOnLongClickListener(this);
+
+            //viewHolder.clickAreaView.setOnLongClickListener(this);
             convertView.setOnClickListener(this);
             convertView.setTag(viewHolder);
         } else {
@@ -381,7 +384,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             viewHolder.msgStatusIv = (ImageView) convertView.findViewById(R.id.msg_status_fail_iv);
             viewHolder.clickAreaView = convertView.findViewById(R.id.msg_item_bg_layout);
             viewHolder.clickAreaView.setOnClickListener(this);
-            viewHolder.clickAreaView.setOnLongClickListener(this);
+            //viewHolder.clickAreaView.setOnLongClickListener(this);
             convertView.setOnClickListener(this);
             convertView.setTag(viewHolder);
         } else {
@@ -441,7 +444,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             viewHolder.msgStatusIv = (ImageView) convertView.findViewById(R.id.msg_status_fail_iv);
             viewHolder.clickAreaView = convertView.findViewById(R.id.msg_item_bg_layout);
             viewHolder.clickAreaView.setOnClickListener(this);
-            viewHolder.clickAreaView.setOnLongClickListener(this);
+            //viewHolder.clickAreaView.setOnLongClickListener(this);
             convertView.setOnClickListener(this);
             convertView.setTag(viewHolder);
         } else {
@@ -484,7 +487,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             viewHolder.msgStatusIv = (ImageView) convertView.findViewById(R.id.msg_status_fail_iv);
             viewHolder.clickAreaView = convertView.findViewById(R.id.msg_item_bg_layout);
             viewHolder.clickAreaView.setOnClickListener(this);
-            viewHolder.clickAreaView.setOnLongClickListener(this);
+            //viewHolder.clickAreaView.setOnLongClickListener(this);
             convertView.setOnClickListener(this);
             convertView.setTag(viewHolder);
         } else {
@@ -527,7 +530,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             }
             viewHolder.clickAreaView = convertView.findViewById(R.id.msg_item_bg_layout);
             viewHolder.clickAreaView.setOnClickListener(this);
-            viewHolder.clickAreaView.setOnLongClickListener(this);
+            //viewHolder.clickAreaView.setOnLongClickListener(this);
             convertView.setOnClickListener(this);
             convertView.setTag(viewHolder);
         } else {

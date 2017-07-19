@@ -56,7 +56,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     private RippleView mSearchingView;
     private View mFulfillView;
     private RelativeLayout mRlSearchArea;
-    private LinearLayout mLlDistance;
+    private RelativeLayout mLlDistance;
     private PortraitView mPvFriend;
     private Dialog mWalkRequestDialog;
     private TextView mTvPleaseClickPortrait;
@@ -67,12 +67,16 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     private GeoData mFriendGeoData;
     private int mPriorDistance = -1;
 
+    private String mDistanceBeyonded;
+    private String mDistanceWithin;
+
     public static final String PARAMS_THREAD_ID = "thread_id";
 
     private final int MSG_FRIEND_REPLY_OK = 1;
     private final int MSG_FRIEND_REPLY_NEXT_TIME = 2;
     private final int MSG_FRIEND_REQ_START_2_WALK = 3;
     private final int MSG_UPDATE_DISTANCE = 4;
+    private final int MSG_DISPLAY_SEARCHING = 5;
 
     //Display friend portrait if distance between you and friend less than 100m.
     private final int DISTANCE_2_DISPLAY_FRIEND_PORTRAIT = 500;
@@ -120,12 +124,12 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                     int distance = msg.arg1;
                     logger.d("ShowDistance:update distance: " + distance);
                     if(DISTANCE_2_DISPLAY_FRIEND_PORTRAIT >= distance) {
-                        mSearchingView.setInitRadiusByPortraitWidth(mFulfillView);
+                        mSearchingView.setInitRadiusByPortraitWidth(mIvTextBg);
                         mSearchingView.setVisibility(View.VISIBLE);
                         mSearchingView.start();
                         mTvTitle.setText(distance + getResources().getString(R.string.common_distance_unit_meter));
                         mPvFriend.setVisibility(View.VISIBLE);
-                        mTvPleaseClickPortrait.setVisibility(View.VISIBLE);
+                        mTvPleaseClickPortrait.setText(mDistanceWithin);
                         mTvXiuYiXiu.setVisibility(View.VISIBLE);
                         mIvTextBg.setVisibility(View.VISIBLE);
                     } else {
@@ -133,10 +137,14 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                         mTvTitle.setText(R.string.main_title);
                         mSearchingView.setVisibility(View.GONE);
                         mPvFriend.setVisibility(View.GONE);
-                        mTvPleaseClickPortrait.setVisibility(View.GONE);
+                        mTvPleaseClickPortrait.setText(mDistanceBeyonded);
+                        //mTvPleaseClickPortrait.setVisibility(View.GONE);
                         mTvXiuYiXiu.setVisibility(View.GONE);
                         mIvTextBg.setVisibility(View.GONE);
                     }
+                    break;
+                case MSG_DISPLAY_SEARCHING:
+                    mSearchingView.start();
                     break;
                 default:
                     break;
@@ -250,6 +258,24 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(mSearchingView.getVisibility() == View.VISIBLE) {
+            mUiHandler.sendEmptyMessageDelayed(MSG_DISPLAY_SEARCHING, 500);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if(mSearchingView.isStarting()) {
+            mSearchingView.stop();
+        }
+    }
+
+    @Override
     protected void onDestroy(){
         super.onDestroy();
 
@@ -266,16 +292,21 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     private void initView() {
         //Title
         View title = findViewById(R.id.title);
+        ImageView back = (ImageView)(title.findViewById(R.id.back_iv));
+        back.setImageResource(R.drawable.back_white);
         title.findViewById(R.id.back_rl).setOnClickListener(this);
         title.findViewById(R.id.more_rl).setVisibility(View.GONE);
+        View line = (View)(title.findViewById(R.id.line));
+        line.setVisibility(View.GONE);
         mTvTitle = (TextView)(title.findViewById(R.id.display_name));
+        mTvTitle.setTextColor(getResources().getColor(R.color.fontcor3));
         mTvTitle.setText(R.string.main_title);
 
-        mLlDistance = (LinearLayout)findViewById(R.id.ll_distance);
+        mLlDistance = (RelativeLayout)findViewById(R.id.ll_distance);
         mTvXiuYiXiu = (TextView)findViewById(R.id.tv_xiyixiu);
         mIvTextBg = (RoundImageView)findViewById(R.id.iv_tv_backgroup);
         mSearchingView = (RippleView) findViewById(R.id.searchingView);
-        mFulfillView = (View) findViewById(R.id.iv_tv_backgroup);
+        //mFulfillView = (View) findViewById(R.id.iv_tv_backgroup);
         mRlSearchArea = (RelativeLayout) findViewById(R.id.rlSearching);
         mPvFriend = (PortraitView) findViewById(R.id.pv_friend_portrait);
         mPvFriend.setOnClickListener(this);
@@ -287,7 +318,8 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         mPvFriend.setVisibility(View.GONE);
         mTvXiuYiXiu.setVisibility(View.GONE);
         mIvTextBg.setVisibility(View.GONE);
-        mTvPleaseClickPortrait.setVisibility(View.GONE);
+        //mTvPleaseClickPortrait.setVisibility(View.GONE);
+
     }
 
     private void initData() {
@@ -323,8 +355,17 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                         usr.getUsername().substring(0, 1), -1);
 
                 //Init bottom indication text
-                mTvPleaseClickPortrait.setText(getString(R.string.walk_rule_please_click_portrait, usr.getUsername()));
+                String friendName = usr.getUsername();
+                if(friendName.length() > AppConstant.SHORTNAME_LEN) {
+                    friendName = friendName.substring(0, AppConstant.SHORTNAME_LEN) + "...";
+                }
+                mDistanceWithin = getString(R.string.walk_rule_please_click_portrait, friendName);
+                mDistanceBeyonded = getString(R.string.mapping_hint_find_friend_cor, getString(MessageUtil.getFriendColorDescription(colorIndex)),friendName);
+
+                mTvPleaseClickPortrait.setText(mDistanceBeyonded);
             }
+
+            mIvTextBg.setBackgroundColor(getResources().getColor(MessageUtil.getFriendColor(colorIndex)));
         }
     }
 

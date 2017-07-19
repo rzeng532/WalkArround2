@@ -32,6 +32,7 @@ import com.example.walkarround.message.task.EvaluateFriendTask;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.myself.manager.ProfileManager;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpUtil;
@@ -363,7 +364,10 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
         if (mFriend != null) {
             String friendName = mFriend.getUsername();
-            mTvDescription.setText(getString(R.string.countdown_walk_with_who, friendName));
+            if(friendName.length() > AppConstant.SHORTNAME_LEN) {
+                friendName = friendName.substring(0, AppConstant.SHORTNAME_LEN) + "...";
+            }
+            mTvDescription.setText(getString(R.string.evaluate_hint, friendName));
 
             mPvPortrait.setBaseData(friendName, mFriend.getPortrait().getUrl(), null,
                     R.drawable.contact_default_profile);

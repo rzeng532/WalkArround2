@@ -14,6 +14,7 @@ import android.widget.*;
 import com.example.walkarround.R;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.manager.ContactsManager;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 
 import static android.app.AlertDialog.Builder;
@@ -82,7 +83,7 @@ public class DialogFactory {
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        //layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         TextView noticeTv = (TextView) dialogView.findViewById(R.id.dialog_notice_tv);
@@ -111,7 +112,7 @@ public class DialogFactory {
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        //layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         TextView noticeTv = (TextView) dialogView.findViewById(R.id.dialog_notice_tv);
@@ -161,7 +162,7 @@ public class DialogFactory {
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        //layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         ((TextView) dialogView.findViewById(R.id.dialog_notice_tv)).setText(content);
@@ -200,7 +201,7 @@ public class DialogFactory {
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        //layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         ((TextView) dialogView.findViewById(R.id.dialog_notice_tv)).setText(noticesResId);
@@ -226,7 +227,7 @@ public class DialogFactory {
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        //layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -253,12 +254,16 @@ public class DialogFactory {
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        //layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        String indicate = context.getApplicationContext().getString(R.string.mapping_indication, userName);
+        String friendName = userName;
+        if(friendName.length() > AppConstant.SHORTNAME_LEN) {
+            friendName = friendName.substring(0, AppConstant.SHORTNAME_LEN) + "...";
+        }
+        String indicate = context.getApplicationContext().getString(R.string.mapping_indication, friendName);
 
         ((TextView)dialogView.findViewById(R.id.tv_mapping)).setText(indicate);
 
@@ -285,7 +290,7 @@ public class DialogFactory {
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        //layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -321,7 +326,7 @@ public class DialogFactory {
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        //layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -339,7 +344,11 @@ public class DialogFactory {
                 dialogView.findViewById(R.id.tv_start2walk).setVisibility(View.GONE);
                 dialogView.findViewById(R.id.tv_wait_response).setVisibility(View.VISIBLE);
                 Toast.makeText(context, R.string.msg_walk_req_time_indicate, Toast.LENGTH_SHORT).show();
-                ((TextView)(dialogView.findViewById(R.id.tv_wait_response))).setText(context.getString(R.string.walk_rule_wait_for_response, usr.getUsername()));
+                String name = usr.getUsername();
+                if(name.length() > AppConstant.SHORTNAME_LEN) {
+                    name = name.substring(0, AppConstant.SHORTNAME_LEN) + "...";
+                }
+                ((TextView)(dialogView.findViewById(R.id.tv_wait_response))).setText(context.getString(R.string.walk_rule_wait_for_response, name));
                 if (listener != null) {
                     listener.onConfirmDialogConfirmClick();
                 }
@@ -364,12 +373,16 @@ public class DialogFactory {
         tvName.setText(usr.getUsername());
 
         TextView tvInvitationDesc = (TextView)dialogView.findViewById(R.id.tv_friend_invitation);
-        tvInvitationDesc.setText(context.getString(R.string.agree_2_walk_invitation_description, usr.getUsername()));
+        String name = usr.getUsername();
+        if(name.length() > AppConstant.SHORTNAME_LEN) {
+            name = name.substring(0, AppConstant.SHORTNAME_LEN) + "...";
+        }
+        tvInvitationDesc.setText(context.getString(R.string.agree_2_walk_invitation_description, name));
 
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        //layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);

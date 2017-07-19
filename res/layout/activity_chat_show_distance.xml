@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/ll_distance"
               android:orientation="vertical"
               android:layout_width="match_parent"
@@ -14,7 +14,9 @@
     <RelativeLayout
             android:id="@+id/rlSearching"
             android:layout_width="match_parent"
-            android:layout_height="360dp">
+            android:layout_height="360dp"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="25dp">
         <com.example.walkarround.base.view.RippleView
                 android:id="@+id/searchingView"
                 android:layout_width="match_parent"
@@ -44,22 +46,25 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"/>
          -->
-
-        <com.example.walkarround.base.view.PortraitView
-                android:id="@+id/pv_friend_portrait"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/tv_xiyixiu"
-                android:layout_marginTop="20dp"
-                android:layout_width="60dp"
-                android:layout_height="60dp"/>
-        <TextView android:id="@+id/tv_click_portrait"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_centerHorizontal="true"
-                  android:layout_below="@+id/pv_friend_portrait"
-                  android:layout_marginTop="10dp"
-                  android:textColor="@color/fontcor1"
-                  android:textSize="@dimen/font_size2_dp" />
     </RelativeLayout>
 
-</LinearLayout>
+    <com.example.walkarround.base.view.PortraitView
+            android:id="@+id/pv_friend_portrait"
+            android:layout_centerHorizontal="true"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/rlSearching"
+            android:layout_marginTop="-30dp"/>
+
+    <TextView android:id="@+id/tv_click_portrait"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:layout_centerHorizontal="true"
+              android:layout_alignParentBottom="true"
+              android:layout_marginBottom="20dp"
+              android:textColor="@color/fontcor3"
+              android:text="bottom text"
+              android:textSize="@dimen/font_size2_dp" />
+
+</RelativeLayout>

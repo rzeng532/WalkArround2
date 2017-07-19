@@ -18,16 +18,19 @@
         <com.example.walkarround.base.view.PortraitView
                 android:id="@+id/pv_start2walk"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:layout_width="100dp"
-                android:layout_height="100dp"/>
+                android:layout_marginTop="30dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"/>
 
         <TextView android:id="@+id/tv_friend_name"
                   android:layout_height="wrap_content"
                   android:layout_width="wrap_content"
                   android:layout_below="@+id/pv_start2walk"
                   android:layout_marginTop="10dp"
+                  android:layout_marginLeft="20dp"
+                  android:layout_marginRight="20dp"
                   android:layout_centerHorizontal="true"
+                  android:singleLine="true"
                   android:text="xxx"
                   android:textColor="@color/fontcor1"
                   android:textSize="@dimen/font_size2_dp"/>
@@ -37,8 +40,11 @@
                   android:layout_width="wrap_content"
                   android:layout_below="@+id/tv_friend_name"
                   android:layout_marginTop="10dp"
+                  android:layout_marginLeft="20dp"
+                  android:layout_marginRight="20dp"
                   android:layout_centerHorizontal="true"
-                  android:text="xxx"
+                  android:singleLine="true"
+                  android:text="xxxx"
                   android:textColor="@color/fontcor1"
                   android:textSize="@dimen/font_size2_dp"/>
 
@@ -80,9 +86,9 @@
                   android:layout_centerHorizontal="true"
                   android:gravity="center"
                   android:text="@string/agree_2_walk_reply_next_time"
-                  android:textColor="@color/fontcor3"
+                  android:textColor="@color/red_button"
                   android:textSize="@dimen/font_size2_dp"
-                  android:background="@drawable/btn_finish_red"/>
+                  android:background="@drawable/btn_finish_red_bound"/>
 
         <View
                 android:id="@+id/line"

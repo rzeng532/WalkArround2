@@ -23,8 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/map"
-            android:paddingBottom="7dp"
-            android:paddingLeft="8dp"
+            android:paddingBottom="14dp"
+            android:paddingLeft="16dp"
             android:src="@drawable/show_my_location"/>
 
     <RelativeLayout
@@ -35,13 +35,14 @@
         <RelativeLayout
                 android:id="@+id/detail_infor"
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="80dp">
             <TextView
                     android:id="@+id/detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="7dp"
-                    android:textSize="@dimen/font_size2"
+                    android:paddingLeft="14dp"
+                    android:paddingTop="14dp"
+                    android:textSize="@dimen/font_size3"
                     android:text="@string/msg_accept_walk_position"
                     android:textColor="@color/fontcor1"/>
 
@@ -49,11 +50,11 @@
                     android:id="@+id/full_infor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="1dp"
-                    android:paddingLeft="7dp"
+                    android:paddingTop="2dp"
+                    android:paddingLeft="14dp"
                     android:layout_below="@+id/detail"
                     android:layout_centerVertical="true"
-                    android:textSize="@dimen/font_size5"
+                    android:textSize="@dimen/font_size7"
                     android:text="@string/msg_accept_walk_position"
                     android:textColor="@color/fontcor11"/>
         </RelativeLayout>
@@ -61,7 +62,7 @@
         <RelativeLayout
                 android:id="@+id/button_layout"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_below="@+id/detail_infor"
                 android:orientation="horizontal">
 
@@ -72,7 +73,7 @@
                     android:layout_toRightOf="@+id/line"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:textSize="@dimen/font_size2"
+                    android:textSize="@dimen/font_size5"
                     android:gravity="center"
                     android:text="@string/msg_accept_walk_position"
                     android:textColor="@color/fontcor3"
@@ -92,7 +93,7 @@
                     android:layout_toLeftOf="@+id/line"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:textSize="@dimen/font_size2"
+                    android:textSize="@dimen/font_size5"
                     android:gravity="center"
                     android:text="@string/msg_let_me_select_position"
                     android:textColor="@color/emerald_green"

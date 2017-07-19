@@ -24,12 +24,14 @@
     <color name="bgcor13">#f5f5f5</color>
     <color name="bgcor14">#aaaaaa</color>
     <color name="bgcor15">#A0FFFFFF</color>
-    <color name="bgcor16">#90FFFFFF</color>
+    <color name="bgcor16">#32FFFFFF</color>
     <color name="bgcor17">#90EFEFEF</color>
+    <color name="bgcor18">#80FFFFFF</color>
 
     <!-- line color -->
     <color name="linecor1">#dcdcdc</color>
     <color name="linecor2">#ffffff</color>
+    <color name="linecor2_t">#66ffffff</color>
     <color name="linecor3">#499dfb</color>
     <color name="linecor4">#2b384c</color>
     <color name="linecor5">#f2f2f2</color>
@@ -38,6 +40,7 @@
     <color name="fontcor1">#333333</color>
     <color name="fontcor2">#666666</color>
     <color name="fontcor3">#ffffff</color>
+    <color name="fontcor3_t">#cdffffff</color>
     <color name="fontcor4">#aaaaaa</color>
     <color name="fontcor5">#888888</color>
     <color name="fontcor6">#499dfb</color>
@@ -47,6 +50,7 @@
     <color name="fontcor9">#80ffffff</color>
     <color name="fontcor11">#9b9b9b</color>
     <color name="translucent">#b0b0b0</color>
+    <color name="font_walk_rule">#4a4a4a</color>
 
     <!-- others font color -->
     <color name="cor_red">#f75a53</color>

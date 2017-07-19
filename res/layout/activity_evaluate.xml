@@ -11,19 +11,18 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_alignParentTop="true"
-              android:layout_marginTop="60dp"
+              android:layout_marginTop="52dp"
               android:layout_centerHorizontal="true"
               android:gravity="center"
-              android:text="@string/countdown_walk_with_who"
               android:textColor="@color/fontcor3"
-              android:textSize="@dimen/font_size2_dp"/>
+              android:textSize="@dimen/font_size3"/>
 
     <!-- Portrait -->
     <com.example.walkarround.base.view.PhotoView
             android:id="@+id/pv_evaluate"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="16dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/tv_walk_description"
             android:layout_centerHorizontal="true"/>
 
@@ -31,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="55dp"
                     android:layout_below="@+id/pv_evaluate"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="50dp"
                     android:layout_centerHorizontal="true"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
@@ -171,21 +170,13 @@
                 android:isIndicator="false"/>
     </RelativeLayout>
 
-
-
     <!-- finish walk button -->
     <TextView android:id="@+id/tv_complete_evaluate"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="30dp"
-              android:layout_marginRight="30dp"
+              android:layout_width="292dp"
+              android:layout_height="48dp"
               android:layout_below="@+id/iv_countdown"
               android:layout_alignParentBottom="true"
-              android:layout_marginBottom="50dp"
-              android:paddingTop="5dp"
-              android:paddingBottom="10dp"
-              android:paddingRight="30dp"
-              android:paddingLeft="30dp"
+              android:layout_marginBottom="72dp"
               android:layout_centerHorizontal="true"
               android:gravity="center"
               android:text="@string/evaluate_complete"

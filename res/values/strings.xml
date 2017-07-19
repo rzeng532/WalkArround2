@@ -285,6 +285,7 @@
     <string name="countdown_prepare_walk_with_who">您即将和%1$s一起走走</string>
     <string name="countdown_complete_walk">结束走走</string>
     <string name="countdown_complete_bye">欢乐的时光过得特别快，又是时候说拜拜了！</string>
+    <string name="countdown_hint">十分钟走走倒计时</string>
 
     <!-- Other strings  -->
     <string name="drawer_open">Open navigation drawer</string>
@@ -306,6 +307,7 @@
 
     <!-- walk rule strings -->
     <string name="walk_rule_title">《走走守则》</string>
+    <string name="walk_rule_content_0">&#183; 请选择公开、安全的环境走走</string>
     <string name="walk_rule_content_1">&#183; 首次见面不能问对方联系方式</string>
     <string name="walk_rule_content_2">&#183; 首次见面不能问对方详细住址</string>
     <string name="walk_rule_content_3">&#183; 首次见面不能问对方尴尬问题</string>
@@ -317,7 +319,7 @@
     <string name="walk_rule_please_click_portrait">如果和%1$s见面了，请点击头像</string>
 
     <!-- Evaluate strings -->
-    <string name="evaluate_honest">诚实</string>
+    <string name="evaluate_honest">诚信</string>
     <string name="evaluate_eachother">评价对方</string>
     <string name="evaluate_style_of_conversation">谈吐</string>
     <string name="evaluate_appearance">养眼</string>
@@ -326,6 +328,7 @@
     <string name="evaluate_please_rating">请完成各项评分，1星表示最低，5星表示最高</string>
     <string name="evaluate_send_impression2server_fail">评价失败,请稍后再试.</string>
     <string name="evaluate_send_impression2server_suc">评价完成.</string>
+    <string name="evaluate_hint">请给一起走走的%1$s一个评价吧</string>
 
     <!-- Wheel picker -->
     <string name="action_settings">Settings</string>
@@ -340,4 +343,6 @@
     <string name="friend_col7_description">雪青紫</string>
 
     <string name="mapping_indication">你和%1$s已经相互喜欢，可以相互了解一下</string>
+    <string name="mapping_hint_find_friend_cor">请找到手机暗号色和你同为%1$s的[%2$s]</string>
+
 </resources>

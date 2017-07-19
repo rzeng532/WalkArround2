@@ -12,6 +12,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 import com.example.walkarround.R;
+import com.example.walkarround.util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ import java.util.List;
  * @author Richard
  */
 public class RippleView extends View {
+
+    private Logger MY_LOGGER = Logger.getLogger(RippleView.class.getSimpleName());
 
     private static final int INIT_CIRCLE_RADIUS_EXTEND_VALUE = 200;
     private int mInitCircleRadiusStep = 1;
@@ -48,6 +51,7 @@ public class RippleView extends View {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 100:
+                    //MY_LOGGER.d("handleMessage 100 ");
                     invalidate();
                     break;
                 default:
@@ -131,6 +135,8 @@ public class RippleView extends View {
             radiusList.remove(0);
             radiusList.add(0, mPortraitWidth);
         }
+
+        //MY_LOGGER.d("mPortraitWidth = " + mPortraitWidth + ", maxRadius = " + maxRadius);
     }
 
     @Override
@@ -162,7 +168,9 @@ public class RippleView extends View {
                 } else {
                     alphaList.set(i, 0);
                 }
+
                 //半径递增
+                //MY_LOGGER.d("radiusList.set = " + radiusList.get(i) + mInitCircleRadiusStep);
                 radiusList.set(i, radiusList.get(i) + mInitCircleRadiusStep);
             }
         }
@@ -185,12 +193,19 @@ public class RippleView extends View {
         }
 
         // 刷新界面
-        mRedrawHandler.sendEmptyMessageDelayed(100, 10);
+        if (isStarting) {
+            mRedrawHandler.sendEmptyMessageDelayed(100, 10);
+        }
     }
 
     // 从上一次结束的地方开始执行动画
     public void start() {
+        if(isStarting) {
+            return;
+        }
+
         isStarting = true;
+        invalidate();
     }
 
     //重新开始执行动画

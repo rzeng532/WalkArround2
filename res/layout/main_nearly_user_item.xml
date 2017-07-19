@@ -3,23 +3,25 @@
     xmlns:MsgRoundedImageView="http://schemas.android.com/apk/res/com.example.walkarround"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="10dp">
+    android:layout_marginLeft="7dp"
+    android:layout_marginRight="7dp"
+    android:layout_marginTop="6dp">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:background="@drawable/nearly_friend_item_bg"
+        android:background="@drawable/photocard_large"
         android:orientation="vertical">
 
         <com.example.walkarround.flingswipe.RotateTextImageView
             android:id="@+id/helloText"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="4dp"
             android:layout_marginBottom="50dp"
-            android:gravity="center"
             android:scaleType="centerCrop"
             android:src="@drawable/card_bg"
             android:textColor="@android:color/white"
@@ -32,13 +34,14 @@
             android:layout_height="50dp"
             android:layout_alignParentBottom="true">
 
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -46,10 +49,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="18dp"
                         android:textColor="@color/fontcor1"
                         android:text="aa"
-                        android:textSize="20sp" />
+                        android:textSize="@dimen/font_size1" />
 
                 <TextView
                         android:id="@+id/split"
@@ -60,7 +62,7 @@
                         android:layout_toRightOf="@id/card_name"
                         android:textColor="@color/fontcor1"
                         android:text=","
-                        android:textSize="20sp" />
+                        android:textSize="@dimen/font_size1" />
 
                 <TextView
                         android:id="@+id/card_year"
@@ -71,13 +73,14 @@
                         android:layout_toRightOf="@id/card_name"
                         android:textColor="@color/fontcor1"
                         android:text="bb"
-                        android:textSize="20sp" />
+                        android:textSize="@dimen/font_size1" />
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginLeft="26dp"
-                    android:background="@drawable/message_btn_more_location" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:scaleType="fitCenter"
+                    android:background="@drawable/icon_distance" />
 
                 <TextView
                     android:id="@+id/card_image_num"
@@ -87,7 +90,7 @@
                     android:layout_marginLeft="4dp"
                     android:text="4"
                     android:textColor="#d8d8d8"
-                    android:textSize="17sp" />
+                    android:textSize="@dimen/font_size5" />
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>

@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
@@ -25,6 +26,7 @@ import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.myself.manager.ProfileManager;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 
 import java.text.SimpleDateFormat;
@@ -44,9 +46,15 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
     private TextView mTvDescription;
     private TextView mTvComplete;
     private TextView mTvCountdownTime;
+    private TextView mTvPreCountdownTime;
+    private TextView mTvCountdownHint;
     private PhotoView mPvPortrait;
     private ImageView mIvCountdown;
     private RoundProgressBar timeProgress;
+    private RoundProgressBar timeProgress2;
+    private RoundProgressBar timeProgress3;
+
+    private LinearLayout mLlPreCountDown;
 
     private ContactInfo mFriend = null;
 
@@ -171,16 +179,25 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 
         //Init countdown time text.
         mTvCountdownTime = (TextView) findViewById(R.id.tv_countdown_time);
+
+        mTvPreCountdownTime = (TextView) findViewById(R.id.tv_walk_pre_countdown);
         setTvPrepareCountdownTimeUI(PREPARE_COUNTDOWN_TOTOL_TIME);
+
+        mTvCountdownHint = (TextView) findViewById(R.id.tv_walk_hint);
 
         //mIvCountdown = (ImageView)findViewById(R.id.iv_countdown);
         timeProgress = (RoundProgressBar) findViewById(R.id.iv_countdown);
+        timeProgress2 = (RoundProgressBar) findViewById(R.id.iv_countdown_2);
+        timeProgress3 = (RoundProgressBar) findViewById(R.id.iv_countdown_3);
         timeProgress.setProgress(0);
+
+        mLlPreCountDown = (LinearLayout)findViewById(R.id.rl_pre_countdown);;
 
         if (mFriend != null) {
             String friendName = mFriend.getUsername();
             mTvDescription.setText(getString(R.string.countdown_prepare_walk_with_who, friendName));
-            mTvComplete.setClickable(false);
+            mTvComplete.setVisibility(View.GONE);
+            invisiableProgressBar();
             GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
             backGround.setColor(getResources().getColor(R.color.transparent));
             mPvPortrait.setBaseData(friendName, mFriend.getPortrait().getUrl(), null,
@@ -269,12 +286,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         SimpleDateFormat sdf = new SimpleDateFormat("s");
         String time = sdf.format(new Date((timeSec * 1000L)));
 
-        if (timeSec == PREPARE_COUNTDOWN_TOTOL_TIME) {
-            mTvCountdownTime.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 90);
-            mTvCountdownTime.setTextColor(getResources().getColor(R.color.fontcor3));
-        }
-
-        mTvCountdownTime.setText(time);
+        mTvPreCountdownTime.setText(time);
     }
 
     /**
@@ -325,6 +337,9 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
             //Reset title
             if (mFriend != null) {
                 String friendName = mFriend.getUsername();
+                if(friendName.length() > AppConstant.SHORTNAME_LEN) {
+                    friendName = friendName.substring(0, AppConstant.SHORTNAME_LEN) + "...";
+                }
                 mTvDescription.setText(getString(R.string.countdown_walk_with_who, friendName));
             }
 
@@ -340,7 +355,8 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         logger.d("curTime add: " + mCurTime);
 
         if(mCurTime == 0) {
-            mTvComplete.setClickable(true);
+            mTvComplete.setVisibility(View.VISIBLE);
+            visiableProgressBar();
             GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
             backGround.setColor(getResources().getColor(R.color.red_button));
         }
@@ -413,5 +429,23 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
             mRealCountdownTask.cancel();
             mRealCountdownTask = null;
         }
+    }
+
+    private void invisiableProgressBar() {
+        timeProgress.setVisibility(View.GONE);
+        timeProgress2.setVisibility(View.GONE);
+        timeProgress3.setVisibility(View.GONE);
+        mTvCountdownTime.setVisibility(View.GONE);
+        mTvCountdownHint.setVisibility(View.VISIBLE);
+        mLlPreCountDown.setVisibility(View.VISIBLE);
+    }
+
+    private void visiableProgressBar() {
+        timeProgress.setVisibility(View.VISIBLE);
+        timeProgress2.setVisibility(View.VISIBLE);
+        timeProgress3.setVisibility(View.VISIBLE);
+        mTvCountdownTime.setVisibility(View.VISIBLE);
+        mTvCountdownHint.setVisibility(View.GONE);
+        mLlPreCountDown.setVisibility(View.GONE);
     }
 }

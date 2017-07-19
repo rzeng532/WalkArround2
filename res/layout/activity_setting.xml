@@ -50,7 +50,7 @@
                     android:background="@color/linecor1"/>
 
             <View
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentBottom="true"
@@ -59,11 +59,11 @@
             <TextView
                     android:id="@+id/tv_reset_password"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:paddingLeft="20dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="18dp"
                     android:paddingRight="16dp"
                     android:drawableRight="@drawable/contacts_icon_list_enter"
-                    android:textSize="@dimen/font_size3"
+                    android:textSize="@dimen/font_size2"
                     android:background="@drawable/list_item_bg"
                     android:textColor="@color/fontcor1"
                     android:gravity="center_vertical"
@@ -76,7 +76,7 @@
                     android:background="@color/linecor1"/>
 
             <View
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentBottom="true"
@@ -85,11 +85,11 @@
             <TextView
                     android:id="@+id/tv_usr_protocol"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:paddingLeft="20dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="18dp"
                     android:paddingRight="16dp"
                     android:drawableRight="@drawable/contacts_icon_list_enter"
-                    android:textSize="@dimen/font_size3"
+                    android:textSize="@dimen/font_size2"
                     android:background="@drawable/list_item_bg"
                     android:textColor="@color/fontcor1"
                     android:gravity="center_vertical"
@@ -99,17 +99,18 @@
             <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
+                    android:layout_marginLeft="18dp"
                     android:layout_alignParentBottom="true"
                     android:background="@color/linecor1"/>
 
             <TextView
                     android:id="@+id/tv_about_app"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:paddingLeft="20dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="18dp"
                     android:paddingRight="16dp"
                     android:drawableRight="@drawable/contacts_icon_list_enter"
-                    android:textSize="@dimen/font_size3"
+                    android:textSize="@dimen/font_size2"
                     android:background="@drawable/list_item_bg"
                     android:textColor="@color/fontcor1"
                     android:gravity="center_vertical"
@@ -121,7 +122,7 @@
                     android:layout_alignParentBottom="true"
                     android:background="@color/linecor1"/>
             <View
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentBottom="true"
@@ -130,9 +131,9 @@
             <TextView
                     android:id="@+id/tv_logout"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="50dp"
                     android:gravity="center"
-                    android:textSize="@dimen/font_size3"
+                    android:textSize="@dimen/font_size2"
                     android:textColor="@color/fontcor1"
                     android:background="@drawable/list_item_bg"
                     android:text="@string/setting_do_logout"

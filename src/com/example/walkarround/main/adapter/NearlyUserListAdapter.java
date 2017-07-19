@@ -12,6 +12,7 @@ import com.example.walkarround.R;
 import com.example.walkarround.flingswipe.RotateTextImageView;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.myself.util.ProfileUtil;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.image.ImageLoaderManager;
 
@@ -69,7 +70,11 @@ public class NearlyUserListAdapter extends BaseAdapter {
             ImageLoaderManager.displayImage(mUserList.get(position).getPortrait().getUrl(), -1, holder.mCardImageView);
         }
 
-        holder.mCardName.setText(mUserList.get(position).getUsername());
+        String friendName = mUserList.get(position).getUsername();
+        if(friendName.length() > AppConstant.SHORTNAME_LEN) {
+            friendName = friendName.substring(0, AppConstant.SHORTNAME_LEN) + "...";
+        }
+        holder.mCardName.setText(friendName);
 
         String ageByBirth = ProfileUtil.getAgeByBirth(mUserList.get(position).getBirthday());
         if (TextUtils.isEmpty(ageByBirth)) {

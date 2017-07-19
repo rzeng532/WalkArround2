@@ -7,15 +7,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="54dp"
+            android:layout_marginTop="40dp"
             android:id="@+id/title"
             android:text="@string/main_title"
             android:textColor="@color/fontcor3"
-            android:textSize="@dimen/font_size9"/>
+            android:textSize="@dimen/font_size8"/>
 
     <Button
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="60dp"
             android:layout_centerHorizontal="true"
             android:layout_above="@id/line"
             android:layout_marginBottom="54dp"
@@ -27,7 +27,7 @@
 
     <Button
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="60dp"
             android:layout_centerHorizontal="true"
             android:layout_above="@id/goto_login"
             android:id="@+id/goto_register"
