@@ -7,6 +7,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap.Config;
 import android.os.Environment;
+
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
@@ -24,7 +25,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.bugly.Bugly;
 
 /**
  * TODO: description
@@ -68,7 +69,7 @@ public class WalkArroundApp extends Application {
         ContactsManager.getInstance(getApplicationContext());
 
         //Init bugly, the 3rd parameter should set to false on release version.
-        CrashReport.initCrashReport(getApplicationContext(), AppConstant.BUGLY_APP_ID, true);
+        Bugly.init(getApplicationContext(), AppConstant.BUGLY_APP_ID, true);
     }
 
     @Override
