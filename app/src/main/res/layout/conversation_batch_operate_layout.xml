@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/ll_batch_operate"
+      android:layout_width="fill_parent"
+      android:layout_height="match_parent"
+      android:layout_alignParentBottom="true"
+      android:background="@color/bgcor1"
+      android:clickable="true"
+      android:gravity="center_vertical"
+      android:orientation="vertical">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/linecor1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3" >
+            <TextView
+                android:id="@+id/tv_sellect_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="42dp"
+                android:background="@drawable/circle_corner_blue_bg"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginLeft="16dp"
+                android:text="@string/message_mark_select_all"
+                android:textColor="@color/fontcor3"
+                android:textSize="@dimen/font_size6" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_sign_read"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:drawableTop="@drawable/toolbar_read_bg"
+            android:gravity="center"
+            android:text="@string/message_menu_mark_read"
+            android:textColor="@drawable/font_color_msg_popup_menu_item"
+            android:textSize="@dimen/font_size6" />
+
+        <TextView
+            android:id="@+id/tv_set_to_top"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:drawableTop="@drawable/toolbar_lay_bg"
+            android:gravity="center"
+            android:text="置顶"
+            android:textColor="@drawable/font_color_msg_popup_menu_item"
+            android:textSize="@dimen/font_size6" />
+
+        <TextView
+            android:id="@+id/tv_add_to_black_list"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:drawableTop="@drawable/toolbar_blacklist_bg"
+            android:gravity="center"
+            android:text="加入黑名单"
+            android:textColor="@drawable/font_color_msg_popup_menu_item"
+            android:textSize="@dimen/font_size6" />
+
+        <TextView
+            android:id="@+id/tv_delete_item"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:drawableTop="@drawable/toolbar_delete_bg"
+            android:gravity="center"
+            android:text="删除"
+            android:textColor="@drawable/font_color_msg_popup_menu_item"
+            android:textSize="@dimen/font_size6" />
+    </LinearLayout>
+</LinearLayout>

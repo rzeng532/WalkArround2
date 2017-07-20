@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            layout="@layout/activity_title_common"/>
+
+    <RelativeLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_bar_height"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible" >
+
+        <LinearLayout
+            android:id="@+id/directory_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp"
+            android:paddingRight="5dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/filter_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/img_select_pics_all"
+                android:textColor="@color/fontcor1"
+                android:textSize="@dimen/font_size3" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/img_select_pics_choose_directory"
+                android:paddingBottom="15dp"
+                android:paddingLeft="5dp"
+                android:layout_gravity="right|bottom"
+                android:src="@drawable/mail_arrow_titlebar" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/preview_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="5dp"
+            android:paddingRight="16dp"
+            android:background="@null"
+            android:text="@string/img_select_pics_preview"
+            android:textColor="@drawable/font_color_msg_popup_menu_item"
+            android:textSize="@dimen/font_size4" />
+
+        <HorizontalScrollView
+            android:id="@+id/horizontal_scrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_toLeftOf="@id/preview_btn"
+            android:layout_toRightOf="@id/directory_filter"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:id="@+id/SelectedPhotosLinearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </HorizontalScrollView>
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/image_list_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomLayout"
+        android:layout_below="@id/title"
+        android:background="@null"
+        android:horizontalSpacing="8dp"
+        android:numColumns="3"
+        android:verticalSpacing="8dp" />
+</RelativeLayout>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            layout="@layout/activity_title_common"/>
+
+    <RelativeLayout
+            android:id="@+id/location_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/bgcor1"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+        <EditText
+                android:id="@+id/location_search_editText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/cancel_location_search_imageView"
+                android:paddingLeft="16dp"
+                android:drawableLeft="@drawable/public_icon_searchbar_search"
+                android:drawablePadding="8dp"
+                android:background="@null"
+                android:maxEms="10"
+                android:maxLength="40"
+                android:singleLine="true"
+                android:textColor="@color/fontcor1"
+                android:textColorHint="@color/fontcor4"
+                android:textSize="@dimen/font_size3"/>
+
+        <ImageView
+                android:id="@+id/cancel_location_search_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/search_button"
+                android:background="@null"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:src="@drawable/public_search_clear_slt"
+                android:visibility="invisible"/>
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/linecor1"/>
+        <Button
+                android:id="@+id/search_button"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:background="@null"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/fontcor1"
+                android:textSize="@dimen/font_size3"
+                android:text="@string/common_search"
+                android:paddingLeft="3dp"
+                android:paddingRight="16dp"
+                android:enabled="false"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:id="@+id/normal_layout"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+        <com.amap.api.maps2d.MapView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/map"
+                android:layout_width="fill_parent"
+                android:layout_height="260dp"/>
+        <ImageView
+                android:id="@+id/locate_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/map"
+                android:paddingBottom="7dp"
+                android:paddingLeft="8dp"
+                android:src="@drawable/show_my_location"/>
+
+        <!-- useless for list now
+        android:layout_height="fill_parent"
+         -->
+        <ListView
+                android:id="@+id/location_listView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@+id/map"
+                android:layout_above="@+id/confirm_place"
+                android:divider="@null"/>
+
+        <TextView
+                android:id="@+id/confirm_place"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/font_size2"
+                android:gravity="center"
+                android:text="@string/msg_confirm_walk_place"
+                android:textColor="@color/fontcor3"
+                android:background="@color/emerald_green"
+                android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+    <ListView
+            android:id="@+id/search_result_listView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:listSelector="@drawable/item_select_bg"
+            android:divider="@null"
+            android:visibility="gone">
+    </ListView>
+
+</LinearLayout>

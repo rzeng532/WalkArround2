@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/msg_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="12dp"
+    android:paddingBottom="8dp"
+    android:paddingLeft="16dp">
+    <CheckedTextView android:id="@+id/select_check_ctv"
+         android:layout_width="20dp"
+         android:layout_height="20dp"
+         android:layout_marginLeft="10dp"
+         android:layout_marginRight="12dp"
+         android:layout_alignTop="@+id/msg_item_bg_layout"
+         android:background="@drawable/check_selecte_bg"
+         android:visibility="invisible"/>
+    <RelativeLayout android:id="@+id/msg_item_bg_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/select_check_ctv"
+        android:padding="4dp"
+        android:background="@drawable/collect_image_msg_item_bg">
+        <ImageView android:id="@+id/map_position_iv"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:scaleType="centerInside"
+           android:src="@drawable/message_icon_chat_position"/>
+        <TextView
+            android:id="@+id/msg_content_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/map_position_iv"
+            android:layout_alignRight="@id/map_position_iv"
+            android:layout_alignBottom="@id/map_position_iv"
+            android:background="@color/transparent0.6"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textColor="@color/fontcor3"
+            android:textSize="@dimen/font_size6" />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/msg_send_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/msg_item_bg_layout"
+        android:layout_alignLeft="@id/msg_item_bg_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/fontcor4"
+        android:textSize="@dimen/font_size6" />
+    <View android:id="@+id/divider_v"
+          android:layout_width="match_parent"
+          android:layout_height="0.5dp"
+          android:layout_marginTop="8dp"
+          android:layout_below="@id/msg_send_time_tv"
+          android:layout_alignLeft="@id/msg_send_time_tv"
+          android:background="@color/linecor1"/>
+</RelativeLayout>

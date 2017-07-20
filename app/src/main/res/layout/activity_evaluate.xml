@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:android_custom="http://schemas.android.com/apk/res/com.example.walkarround"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/emerald_green">
+
+    <!-- Walk with xxx -->
+    <TextView android:id="@+id/tv_walk_description"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentTop="true"
+              android:layout_marginTop="52dp"
+              android:layout_centerHorizontal="true"
+              android:gravity="center"
+              android:textColor="@color/fontcor3"
+              android:textSize="@dimen/font_size3"/>
+
+    <!-- Portrait -->
+    <com.example.walkarround.base.view.PhotoView
+            android:id="@+id/pv_evaluate"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tv_walk_description"
+            android:layout_centerHorizontal="true"/>
+
+    <RelativeLayout android:id="@+id/rl_honest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="55dp"
+                    android:layout_below="@+id/pv_evaluate"
+                    android:layout_marginTop="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+        <TextView
+                android:id="@+id/tv_honest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:paddingTop="4dp"
+                android:textColor="@color/fontcor3"
+                android:textSize="@dimen/font_size2_dp"
+                android:text="@string/evaluate_honest"/>
+
+        <RatingBar
+                style="@style/walkArroundRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/rating_honest"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="1"
+                android:layout_toRightOf="@+id/tv_honest"
+                android:isIndicator="false"/>
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/rl_style_of_conversation"
+                    android:layout_width="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/rl_honest"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+        <TextView
+                android:id="@+id/tv_style_of_conversation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:layout_centerVertical="true"
+                android:textColor="@color/fontcor3"
+                android:textSize="@dimen/font_size2_dp"
+                android:text="@string/evaluate_style_of_conversation"/>
+
+        <RatingBar
+                style="@style/walkArroundRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/rating_style_of_conversation"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="1"
+                android:layout_toRightOf="@+id/tv_style_of_conversation"
+                android:isIndicator="false"/>
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/rl_appearance"
+                    android:layout_width="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/rl_style_of_conversation"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+        <TextView
+                android:id="@+id/tv_appearance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:layout_centerVertical="true"
+                android:textColor="@color/fontcor3"
+                android:textSize="@dimen/font_size2_dp"
+                android:text="@string/evaluate_appearance"/>
+
+        <RatingBar
+                style="@style/walkArroundRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/rating_appearance"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="1"
+                android:layout_toRightOf="@+id/tv_appearance"
+                android:isIndicator="false"/>
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/rl_temperament"
+                    android:layout_width="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/rl_appearance"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+        <TextView
+                android:id="@+id/tv_temperament"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:layout_centerVertical="true"
+                android:textColor="@color/fontcor3"
+                android:textSize="@dimen/font_size2_dp"
+                android:text="@string/evaluate_temperament"/>
+
+        <RatingBar
+                style="@style/walkArroundRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/rating_temperament"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="1"
+                android:layout_toRightOf="@+id/tv_temperament"
+                android:isIndicator="false"/>
+    </RelativeLayout>
+
+    <!-- finish walk button -->
+    <TextView android:id="@+id/tv_complete_evaluate"
+              android:layout_width="292dp"
+              android:layout_height="48dp"
+              android:layout_below="@+id/iv_countdown"
+              android:layout_alignParentBottom="true"
+              android:layout_marginBottom="72dp"
+              android:layout_centerHorizontal="true"
+              android:gravity="center"
+              android:text="@string/evaluate_complete"
+              android:textColor="@color/fontcor3"
+              android:textSize="@dimen/font_size2_dp"
+              android:background="@drawable/btn_countdown_finish"/>
+
+</RelativeLayout>

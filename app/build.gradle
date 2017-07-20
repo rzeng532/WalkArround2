@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'walkarround'
+            keyPassword 'w123456'
+            storeFile file('E:/LeanCloudApp/AS_Pro/WalkArround2/walkarround.keystore')
+            storePassword 'w123456'
+        }
+    }
+    compileSdkVersion 19
+    buildToolsVersion "25.0.0"
+    defaultConfig {
+        applicationId "com.example.walkarround"
+        minSdkVersion 18
+        targetSdkVersion 18
+        jackOptions {
+            enabled true
+        }
+        signingConfig signingConfigs.config
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:19.1.0'
+    compile 'com.google.protobuf:protobuf-java:2.6.1'
+
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
+
+    compile files('libs/AMAP_2D_V2_7_0.jar')
+    compile files('libs/AMap_Location_v2_1_02.jar')
+    compile files('libs/AMap_Services_V2_7_0.jar')
+    compile files('libs/avoscloud-push-v3.16.4.jar')
+    compile files('libs/avoscloud-sdk-v3.16.4.jar')
+    compile files('libs/avoscloud-sns-v3.10.2.jar')
+    compile files('libs/avoscloud-statistics-v3.16.4.jar')
+    compile files('libs/fastjson.jar')
+    compile files('libs/httpmime-4.2.4.jar')
+    compile files('libs/Java-WebSocket-1.3.2-leancloud.jar')
+    compile files('libs/okhttp-2.6.0-leancloud.jar')
+    compile files('libs/okio-1.6.0-leancloud.jar')
+    compile files('libs/qq.sdk.1.6.1.jar')
+    compile files('libs/universal-image-loader-1.9.3.jar')
+    compile files('libs/weibo.sdk.android.sso.3.0.1-leancloud.jar')
+}
