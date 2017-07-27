@@ -78,6 +78,7 @@
                 android:textColor="@color/fontcor3"
                 android:layout_below="@+id/iv_portrait"
                 android:layout_centerVertical="true"
+                android:singleLine="true"
                 android:layout_centerHorizontal="true"/>
         </RelativeLayout>
 

@@ -573,6 +573,10 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
      */
     private void regeocoder(final LatLng latLng, final int searchType, final String key) {
 
+        if(latLng == null) {
+            return;
+        }
+
         if (searchType == AROUND_SEARCH) {
             uiHandler.sendEmptyMessage(AROUND_SEARCH_START);
         } else if (searchType == KEY_SEARCH) {

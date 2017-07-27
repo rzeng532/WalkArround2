@@ -426,8 +426,10 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                 WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId,
                         getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
 
-                mWalkReplyDialog.dismiss();
-                mWalkReplyDialog = null;
+                if(mWalkReplyDialog != null) {
+                    mWalkReplyDialog.dismiss();
+                    mWalkReplyDialog = null;
+                }
             }
 
             @Override
@@ -438,8 +440,11 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                 WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId,
                         getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
 
-                mWalkReplyDialog.dismiss();
-                mWalkReplyDialog = null;
+                if(mWalkReplyDialog != null) {
+                    mWalkReplyDialog.dismiss();
+                    mWalkReplyDialog = null;
+                }
+
 
                 Intent intent = new Intent(ShowDistanceActivity.this, CountdownActivity.class);
                 intent.putExtra(CountdownActivity.PARAMS_FRIEND_OBJ_ID, mStrFriendId);

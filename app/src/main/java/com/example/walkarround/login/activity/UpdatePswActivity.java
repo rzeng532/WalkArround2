@@ -172,8 +172,6 @@ public class UpdatePswActivity extends Activity implements View.OnClickListener 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-        startActivity(new Intent(UpdatePswActivity.this, LoginOrRegActivity.class));
     }
 
     private void showDialog() {

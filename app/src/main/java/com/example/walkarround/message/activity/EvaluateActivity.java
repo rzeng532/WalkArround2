@@ -193,7 +193,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
         @Override
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
-            //Task success.
+            //Task succesrs.
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE)) {
                 //Get status & Get TO user.
                 String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
@@ -301,7 +301,9 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         }
 
         //Cancel notification while jump to this UI page.
-        MessageUtil.cancelNotification(getApplicationContext(), mFriend.getObjectId(), MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
+        if(mFriend != null) {
+            MessageUtil.cancelNotification(getApplicationContext(), mFriend.getObjectId(), MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
+        }
     }
 
     @Override
@@ -326,6 +328,9 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
             if (!TextUtils.isEmpty(friendId)) {
                 mFriend = ContactsManager.getInstance(this).getContactByUsrObjId(friendId);
+                if(mFriend == null) {
+                    ContactsManager.getInstance(this).getContactFromServer(friendId);
+                }
             }
         }
 

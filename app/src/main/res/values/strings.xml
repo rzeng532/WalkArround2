@@ -301,7 +301,7 @@
     <string name="receive_agree_2_walkarround">你已同意了对方的走走地点\r\n</string>
     <string name="agree_2_walkarround_postfix">你们的见面暗号色为: </string>
     <string name="agree_2_walk_face_2_face_req">一起见个面？</string>
-    <string name="agree_2_walk_invitation_description">%1$s想和你一起走走</string>
+    <string name="agree_2_walk_invitation_description">想和你一起走走</string>
     <string name="agree_2_walk_reply_ok">愿意</string>
     <string name="agree_2_walk_reply_next_time">下次吧</string>
 

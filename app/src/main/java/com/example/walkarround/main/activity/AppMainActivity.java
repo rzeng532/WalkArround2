@@ -563,7 +563,12 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         if (!TextUtils.isEmpty(myProfileInfo.getUsrName()) && !TextUtils.isEmpty(myProfileInfo.getMobileNum())) {
             mPvPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
                     myProfileInfo.getUsrName().substring(0, 1), -1);
-            mTvUserName.setText(myProfileInfo.getUsrName());
+
+            String displayName = null;
+            if(myProfileInfo.getUsrName().length() > AppConstant.SHORTNAME_LEN) {
+                displayName = myProfileInfo.getUsrName().substring(0, AppConstant.SHORTNAME_LEN) + "...";
+            }
+            mTvUserName.setText(displayName);
         } else {
             mTvUserName.setText(myProfileInfo.getMobileNum());
         }

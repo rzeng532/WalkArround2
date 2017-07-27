@@ -111,11 +111,6 @@ public class ContactsManager {
         if(addOne != null && mInstance.mUserMap != null) {
 
             ContactInfo curOne = mInstance.mUserMap.get(addOne.getObjectId());
-            if(curOne != null) {
-                //Just reture if there is already a contact.
-                return;
-            }
-
             mInstance.mUserMap.put(addOne.getObjectId(), addOne);
 
             //Insert item to DB
@@ -132,8 +127,27 @@ public class ContactsManager {
                 values.put(ContactInfoDatabase.Contact.PORTRAIT, addOne.getPortrait().getUrl());
             }
 
-            dbContactInfo.insert(ContactInfoDatabase.Contact.TABLE_NAME, null, values);
+            if(curOne == null) {
+                //Add a record
+                dbContactInfo.insert(ContactInfoDatabase.Contact.TABLE_NAME, null, values);
+            } else {
+                //Update record
+                dbContactInfo.update(ContactInfoDatabase.Contact.TABLE_NAME, values, ContactInfoDatabase.Contact.OBJECTID + " = ?", new String[]{curOne.getObjectId()});
+            }
         }
+    }
+
+    public void deleteContact(String usrObjId) {
+        if(TextUtils.isEmpty(usrObjId)) {
+            return;
+        }
+
+        ContactInfo curOne = mInstance.mUserMap.get(usrObjId);
+        if(curOne != null) {
+            mInstance.mUserMap.remove(usrObjId);
+        }
+
+        dbContactInfo.delete(ContactInfoDatabase.Contact.TABLE_NAME, ContactInfoDatabase.Contact.OBJECTID + " = ?", new String[]{usrObjId});
     }
 
     //Get all contacts

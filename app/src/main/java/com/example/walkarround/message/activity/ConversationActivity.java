@@ -100,6 +100,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     /*通知消息会话列表*/
     private NotifyMsgListAdapter mNotifyMsgAdapter;
     private ImageView mIvOldFriends;
+    private ImageView mIvOldFriendUnread;
     /*没有内容时显示的空页面*/
     private View mNoConversationView;
 
@@ -797,6 +798,12 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             }
             if (item == null) {
                 // 新到会话
+                if(mConvType == CONV_TYPE_CUR_FRIEND) {
+                    //Update old friend flag & return;
+                    mIvOldFriendUnread.setVisibility(View.VISIBLE);
+                    return;
+                }
+
                 if (adapter instanceof ConversationListAdapter
                         || mNotifyMsgAdapter.hasInitData()) {
                     adapter.addListData(result);
@@ -926,12 +933,14 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         mConversationListView.removeFooterView(mNoConversationView);
 
         mIvOldFriends = (ImageView) findViewById(R.id.iv_old_friends);
+        mIvOldFriendUnread = (ImageView) findViewById(R.id.iv_msg_unread);
         if(mConvType == CONV_TYPE_CUR_FRIEND) {
             mIvOldFriends.setOnClickListener(this);
             mIvOldFriends.setVisibility(View.VISIBLE);
         } else {
             mIvOldFriends.setVisibility(View.GONE);
         }
+        mIvOldFriendUnread.setVisibility(View.GONE);
 
         // 初始化搜索/通知消息List
         mSearchResultListView = (ListView) findViewById(R.id.search_list);

@@ -344,7 +344,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         mIvChatEntrance = (ImageView) mViewRoot.findViewById(R.id.right_chat_iv);
         mIvChatEntrance.setOnClickListener(this);
 
-        mIvUnreadIcon = (ImageView) mViewRoot.findViewById(R.id.unread_msg_iv);
+        mIvUnreadIcon = (ImageView) mViewRoot.findViewById(R.id.iv_msg_unread);
 
         //Searching UI will be displayed at first.
         mRlSearchArea = (RelativeLayout) mViewRoot.findViewById(R.id.rlSearching);

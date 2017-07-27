@@ -1519,7 +1519,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 receiverNumStr = contact.getMobilePhoneNumber();
             }
 
-            //moreView.setVisibility(View.VISIBLE);
+            //Update contact information from server while user enter bld msg UI.
+            ContactsManager.getInstance(getApplicationContext()).getContactFromServer(mRecipientInfo.getRecipientList().get(0));
         }
 
         TextView receiverName = (TextView) detailHeaderView.findViewById(R.id.message_title_name_tv);
@@ -1971,14 +1972,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 startActivityForResult(intent, REQUEST_CODE_MAP);
                 break;
             case R.id.iv_show_distance:
-//                Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);
-//                intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
-//                startActivity(intentShowDistance);
-
-                Intent intentShowDistance = new Intent(BuildMessageActivity.this, CountdownActivity.class);
-                intentShowDistance.putExtra(CountdownActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
+                Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);
+                intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
                 startActivity(intentShowDistance);
-                BuildMessageActivity.this.finish();
                 break;
             default:
                 break;

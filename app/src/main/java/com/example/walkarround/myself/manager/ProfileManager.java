@@ -54,11 +54,15 @@ public class ProfileManager {
         myProfileInfo.setMobileNum(avUser.getMobilePhoneNumber());
 
         //Set portrait URL.
-        AVFile portraitURL = avUser.getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
-        if(portraitURL != null && !TextUtils.isEmpty(portraitURL.getUrl())) {
-            myProfileInfo.setPortraitPath(portraitURL.getUrl());
-        } else {
-            myProfileInfo.setPortraitPath(""); //Set portrait path as empty.
+        try{
+            AVFile portraitURL = avUser.getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
+            if(portraitURL != null && !TextUtils.isEmpty(portraitURL.getUrl())) {
+                myProfileInfo.setPortraitPath(portraitURL.getUrl());
+            } else {
+                myProfileInfo.setPortraitPath(""); //Set portrait path as empty.
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
 
         //Set gendle

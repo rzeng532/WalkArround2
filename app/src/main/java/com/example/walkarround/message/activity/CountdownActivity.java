@@ -5,7 +5,6 @@ package com.example.walkarround.message.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PhotoView;
@@ -30,7 +30,11 @@ import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -195,11 +199,14 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 
         if (mFriend != null) {
             String friendName = mFriend.getUsername();
+            if(friendName.length() > AppConstant.SHORTNAME_LEN) {
+                friendName = friendName.substring(0, AppConstant.SHORTNAME_LEN) + "...";
+            }
             mTvDescription.setText(getString(R.string.countdown_prepare_walk_with_who, friendName));
             mTvComplete.setVisibility(View.GONE);
             invisiableProgressBar();
-            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
-            backGround.setColor(getResources().getColor(R.color.transparent));
+//            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
+//            backGround.setColor(getResources().getColor(R.color.transparent));
             mPvPortrait.setBaseData(friendName, mFriend.getPortrait().getUrl(), null,
                     R.drawable.contact_default_profile);
         }
@@ -357,8 +364,8 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         if(mCurTime == 0) {
             mTvComplete.setVisibility(View.VISIBLE);
             visiableProgressBar();
-            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
-            backGround.setColor(getResources().getColor(R.color.red_button));
+//            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
+//            backGround.setColor(getResources().getColor(R.color.red_button));
         }
 
         mCurTime++;

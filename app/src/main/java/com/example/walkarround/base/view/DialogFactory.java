@@ -320,8 +320,12 @@ public class DialogFactory {
         portrait.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
                 usr.getUsername().substring(0, 1), -1);
 
+        String name = usr.getUsername();
+        if(name.length() > AppConstant.SHORTNAME_LEN) {
+            name = name.substring(0, AppConstant.SHORTNAME_LEN) + "...";
+        }
         TextView tvName = (TextView)dialogView.findViewById(R.id.tv_friend_name);
-        tvName.setText(usr.getUsername());
+        tvName.setText(name);
 
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
@@ -369,15 +373,15 @@ public class DialogFactory {
         portrait.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
                 usr.getUsername().substring(0, 1), -1);
 
-        TextView tvName = (TextView)dialogView.findViewById(R.id.tv_friend_name);
-        tvName.setText(usr.getUsername());
-
-        TextView tvInvitationDesc = (TextView)dialogView.findViewById(R.id.tv_friend_invitation);
         String name = usr.getUsername();
         if(name.length() > AppConstant.SHORTNAME_LEN) {
             name = name.substring(0, AppConstant.SHORTNAME_LEN) + "...";
         }
-        tvInvitationDesc.setText(context.getString(R.string.agree_2_walk_invitation_description, name));
+        TextView tvName = (TextView)dialogView.findViewById(R.id.tv_friend_name);
+        tvName.setText(name);
+
+        TextView tvInvitationDesc = (TextView)dialogView.findViewById(R.id.tv_friend_invitation);
+        tvInvitationDesc.setText(context.getString(R.string.agree_2_walk_invitation_description));
 
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();

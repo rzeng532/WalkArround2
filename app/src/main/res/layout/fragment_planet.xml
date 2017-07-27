@@ -59,7 +59,7 @@
                 android:src="@drawable/icon_chat_title_right"/>
 
         <ImageView
-                android:id="@+id/unread_msg_iv"
+                android:id="@+id/iv_msg_unread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@id/right_chat_iv"

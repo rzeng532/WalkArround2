@@ -91,14 +91,18 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 dismissDialog();
                 //Update portrait URL
                 AVUser usr = AVUser.getCurrentUser();
-                AVFile portraitURL = usr.getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
-                if(portraitURL != null && !TextUtils.isEmpty(portraitURL.getUrl())) {
-                    myProfileInfo.setPortraitPath(portraitURL.getUrl());
+                try{
+                    AVFile portraitURL = usr.getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
+                    if(portraitURL != null && !TextUtils.isEmpty(portraitURL.getUrl())) {
+                        myProfileInfo.setPortraitPath(portraitURL.getUrl());
+                    }
+                    mMyPortrait.setBaseData(myProfileInfo.getUsrName()
+                                            , myProfileInfo.getPortraitPath()
+                                            , myProfileInfo.getUsrName().substring(0, 1)
+                                            , -1);
+                }catch (Exception e) {
+                    e.printStackTrace();
                 }
-                mMyPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(), myProfileInfo.getUsrName().substring(0, 1), -1);
-
-                //ProfileManager.getInstance().getMyProfile().setPortraitPath(usr.get);
-                //initData();
             } else if (msg.what == UPDATE_PORTRAIT_FAIL) {
                 dismissDialog();
                 Toast.makeText(getApplicationContext(), getString(R.string.err_img_update_fail), Toast.LENGTH_SHORT).show();

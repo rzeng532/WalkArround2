@@ -112,6 +112,15 @@
                android:layout_marginBottom="30dp"
                android:src="@drawable/grey_diag"/>
 
+    <ImageView
+        android:id="@+id/iv_msg_unread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/iv_old_friends"
+        android:layout_alignTop="@id/iv_old_friends"
+        android:paddingRight="3dp"
+        android:src="@drawable/message_unread_count_bg"/>
+
     <LinearLayout
         android:id="@+id/search_layout"
         android:layout_width="match_parent"

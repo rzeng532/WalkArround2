@@ -24,7 +24,6 @@
     <View android:id="@+id/map_divide_line"
           android:layout_width="match_parent"
           android:layout_height="0.5dp"
-          android:layout_marginTop="-1dp"
           android:layout_alignTop="@id/conv_mapping_flag"
           android:background="@color/linecor1"
           android:visibility="gone"/>
