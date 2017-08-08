@@ -30,8 +30,8 @@
                 android:maxLength="50"
                 android:background="@null"
                 android:drawableRight="@drawable/public_search_clear_slt"
+                android:textColorHint="@color/colorTextHint"
                 android:hint="@string/register_set_yournick"
-                android:textColorHint="@color/fontcor4"
                 android:textSize="@dimen/font_size3"
                 android:textColor="@color/fontcor1"
                 android:singleLine="true"/>

@@ -14,15 +14,14 @@
         android:id="@+id/detail_portrait"
         android:layout_width="match_parent"
         android:layout_height="76dp"
-        android:background="@drawable/list_item_bg"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:background="@drawable/list_item_bg">
 
         <!-- Myself information -->
         <TextView
             android:id="@+id/tv_portrait"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:paddingLeft="16dp"
             android:textSize="@dimen/font_size3"
             android:background="@drawable/list_item_bg"
             android:textColor="@color/fontcor1"
@@ -33,31 +32,33 @@
             android:id="@+id/iv_portrait"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginRight="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/default_profile_portrait"/>
+            android:src="@drawable/default_profile_portrait"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/linecor5"/>
     </RelativeLayout>
 
     <!-- Divide line -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/linecor1"/>
 
     <RelativeLayout
         android:id="@+id/detail_nick_name"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@drawable/list_item_bg"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:background="@drawable/list_item_bg">
 
         <!-- Detail information -->
         <TextView
             android:id="@+id/tv_nick_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:paddingLeft="16dp"
             android:textSize="@dimen/font_size3"
             android:background="@drawable/list_item_bg"
             android:textColor="@color/fontcor1"
@@ -68,33 +69,38 @@
             android:id="@+id/tv_nick_name_infor"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:paddingRight="16dp"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/contacts_icon_list_enter"
             android:textSize="@dimen/font_size3"
             android:layout_alignParentRight="true"
             android:background="@drawable/list_item_bg"
             android:textColor="@color/fontcor1"
             android:gravity="center_vertical"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/linecor5"/>
+
     </RelativeLayout>
 
     <!-- Divide line -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/linecor1"/>
 
     <RelativeLayout
         android:id="@+id/detail_mobile"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@drawable/list_item_bg"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:background="@drawable/list_item_bg">
 
         <!-- Detail information -->
         <TextView
             android:id="@+id/tv_mobile"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:paddingLeft="16dp"
             android:textSize="@dimen/font_size3"
             android:background="@drawable/list_item_bg"
             android:textColor="@color/fontcor1"
@@ -105,33 +111,36 @@
             android:id="@+id/tv_mobile_infor"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:paddingRight="16dp"
             android:textSize="@dimen/font_size3"
             android:layout_alignParentRight="true"
             android:background="@drawable/list_item_bg"
             android:textColor="@color/fontcor1"
             android:gravity="center_vertical"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/linecor5"/>
+
     </RelativeLayout>
 
     <!-- Divide line -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/linecor1"/>
 
     <RelativeLayout
         android:id="@+id/detail_gendle"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@drawable/list_item_bg"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:background="@drawable/list_item_bg">
 
         <!-- Detail information -->
         <TextView
             android:id="@+id/tv_gendle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:paddingLeft="16dp"
             android:textSize="@dimen/font_size3"
             android:background="@drawable/list_item_bg"
             android:textColor="@color/fontcor1"
@@ -142,33 +151,37 @@
             android:id="@+id/tv_gendle_infor"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:paddingRight="16dp"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/contacts_icon_list_enter"
             android:textSize="@dimen/font_size3"
             android:layout_alignParentRight="true"
             android:background="@drawable/list_item_bg"
             android:textColor="@color/fontcor1"
             android:gravity="center_vertical"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/linecor5"/>
     </RelativeLayout>
 
     <!-- Divide line -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/linecor1"/>
 
     <RelativeLayout
         android:id="@+id/detail_birth"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@drawable/list_item_bg"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:background="@drawable/list_item_bg">
 
         <!-- Detail information -->
         <TextView
             android:id="@+id/tv_birth"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:paddingLeft="16dp"
             android:textSize="@dimen/font_size3"
             android:background="@drawable/list_item_bg"
             android:textColor="@color/fontcor1"
@@ -179,19 +192,25 @@
             android:id="@+id/tv_birth_infor"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:paddingRight="16dp"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/contacts_icon_list_enter"
             android:textSize="@dimen/font_size3"
             android:layout_alignParentRight="true"
             android:background="@drawable/list_item_bg"
             android:textColor="@color/fontcor1"
             android:gravity="center_vertical"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/linecor5"/>
+
     </RelativeLayout>
 
     <!-- Divide line -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/linecor1"/>
 
     <RelativeLayout
         android:id="@+id/detail_signature"
@@ -216,6 +235,8 @@
             android:id="@+id/tv_signature_infor"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/contacts_icon_list_enter"
             android:textSize="@dimen/font_size3"
             android:layout_alignParentRight="true"
             android:background="@drawable/list_item_bg"
@@ -260,11 +281,14 @@
                 <!--android:gravity="center_vertical"/>-->
     <!--</RelativeLayout>-->
 
-    <!-- Divide line -->
-    <View
+    <!-- Divide line
+         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_alignParentBottom="true"
             android:background="@color/linecor1"/>
+
+     -->
+
 
 </LinearLayout>

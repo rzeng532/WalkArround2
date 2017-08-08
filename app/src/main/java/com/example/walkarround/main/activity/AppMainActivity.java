@@ -564,9 +564,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             mPvPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
                     myProfileInfo.getUsrName().substring(0, 1), -1);
 
-            String displayName = null;
-            if(myProfileInfo.getUsrName().length() > AppConstant.SHORTNAME_LEN) {
-                displayName = myProfileInfo.getUsrName().substring(0, AppConstant.SHORTNAME_LEN) + "...";
+            String displayName = myProfileInfo.getUsrName();
+            if(displayName.length() > AppConstant.SHORTNAME_LEN) {
+                displayName = displayName.substring(0, AppConstant.SHORTNAME_LEN) + "...";
             }
             mTvUserName.setText(displayName);
         } else {

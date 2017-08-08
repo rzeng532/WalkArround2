@@ -175,6 +175,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             viewHolder = (SysMsgViewHolder) convertView.getTag();
         }
 
+        //getString(R.string.agree_2_walkarround_postfix)
         viewHolder.msgTextTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         viewHolder.msgTextTv.setText(getNotifyMsgContentText(context, message));
         setTextColor(context, viewHolder.msgTextTv, message);

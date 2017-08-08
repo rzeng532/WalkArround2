@@ -59,7 +59,7 @@
                     android:paddingLeft="12dp"
                     android:paddingRight="24dp"
                     android:maxEms="12"
-                    android:textColor="@color/fontcor1"
+                    android:textColor="@color/fontcor3"
                     android:textSize="@dimen/font_size3" />
             </LinearLayout>
             <TextView

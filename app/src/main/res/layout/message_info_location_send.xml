@@ -67,7 +67,7 @@
                 android:layout_toRightOf="@+id/map_position_iv"
                 android:paddingTop="4dp"
                 android:text="xxx"
-                android:textColor="@color/fontcor1"
+                android:textColor="@color/fontcor3"
                 android:textSize="@dimen/font_size6" />
             <TextView
                     android:id="@+id/msg_detail_tv"

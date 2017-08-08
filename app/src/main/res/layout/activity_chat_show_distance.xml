@@ -62,9 +62,9 @@
               android:gravity="center"
               android:layout_centerHorizontal="true"
               android:layout_alignParentBottom="true"
-              android:layout_marginBottom="20dp"
+              android:layout_marginBottom="40dp"
               android:textColor="@color/fontcor3"
               android:text="bottom text"
-              android:textSize="@dimen/font_size2_dp" />
+              android:textSize="@dimen/font_size3_dp" />
 
 </RelativeLayout>

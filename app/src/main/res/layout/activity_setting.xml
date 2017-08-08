@@ -47,14 +47,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/linecor1"/>
+                    android:background="@color/linecor5"/>
 
             <View
                     android:layout_marginTop="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/linecor1"/>
+                    android:background="@color/linecor5"/>
 
             <TextView
                     android:id="@+id/tv_reset_password"
@@ -73,16 +73,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/linecor1"/>
+                    android:background="@color/linecor5"/>
 
             <View
                     android:layout_marginTop="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/linecor1"/>
+                    android:background="@color/linecor5"/>
 
-            <TextView
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bgcor1">
+
+                <TextView
                     android:id="@+id/tv_usr_protocol"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -96,14 +102,15 @@
                     android:text="@string/setting_user_protocol"
                     android:visibility="visible"/>
 
-            <View
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
+                    android:layout_marginTop="-0.5dp"
                     android:layout_marginLeft="18dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/linecor1"/>
+                    android:background="@color/linecor5"/>
 
-            <TextView
+                <TextView
                     android:id="@+id/tv_about_app"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -114,19 +121,21 @@
                     android:background="@drawable/list_item_bg"
                     android:textColor="@color/fontcor1"
                     android:gravity="center_vertical"
-                    android:text="@string/setting_about_app"
-                    />
+                    android:text="@string/setting_about_app"/>
+
+            </LinearLayout>
+
             <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/linecor1"/>
+                    android:background="@color/linecor5"/>
             <View
                     android:layout_marginTop="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/linecor1"/>
+                    android:background="@color/linecor5"/>
 
             <TextView
                     android:id="@+id/tv_logout"
@@ -142,7 +151,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/linecor1"/>
+                    android:background="@color/linecor5"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

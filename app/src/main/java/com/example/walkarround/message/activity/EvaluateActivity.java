@@ -445,12 +445,13 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 && mRbAppearance.getRating() > 0.0f
                 && mRbTemperament.getRating() > 0.0f) {
             mTvComplete.setClickable(true);
-            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
-            backGround.setColor(getResources().getColor(R.color.red_button));
+            mTvComplete.setBackground(getResources().getDrawable(R.drawable.btn_countdown_finish_enable));
+//            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
+//            backGround.setColor(getResources().getColor(R.color.red_button));
         } else {
             mTvComplete.setClickable(false);
-            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
-            backGround.setColor(getResources().getColor(R.color.transparent));
+            mTvComplete.setClickable(true);
+            mTvComplete.setBackground(getResources().getDrawable(R.drawable.btn_countdown_finish));
         }
     }
 

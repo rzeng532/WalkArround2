@@ -102,4 +102,6 @@
     <color name="ColorButtonRelease">#FCC689</color>
     <color name="ColorButtonPressed">#FF7438</color>
     <color name="ColorButtonDisable">#EEE</color>
+
+    <color name="colorTextHint">#979797</color>
 </resources>

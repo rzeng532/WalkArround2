@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@id/right_chat_iv"
                 android:layout_alignTop="@id/right_chat_iv"
-                android:paddingRight="3dp"
+                android:paddingRight="6dp"
                 android:src="@drawable/message_unread_count_bg"/>
     </RelativeLayout>
 

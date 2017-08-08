@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical"
-                android:layout_width="264dp"
+                android:layout_width="match_parent"
                 android:layout_height="320dp"
                 android:layout_marginTop="-20dp"
                 android:background="@color/transparent">
@@ -12,8 +12,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
             android:background="@drawable/countdown_2_background_bg">
 
         <TextView android:id="@+id/tv_walk_title"
@@ -54,7 +52,7 @@
                   android:text="@string/evaluate_eachother"
                   android:textColor="@color/fontcor3"
                   android:textSize="@dimen/font_size2_dp"
-                  android:background="@drawable/btn_finish_red"/>
+                  android:background="@drawable/btn_countdown_finish_enable"/>
 
         <View
                 android:id="@+id/line"
