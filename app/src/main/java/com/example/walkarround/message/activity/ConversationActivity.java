@@ -145,6 +145,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     private final int CONV_TYPE_CUR_FRIEND = 0;
     private final int CONV_TYPE_OLD_FRIEND = 1;
     private int mConvType = CONV_TYPE_CUR_FRIEND;
+    private boolean mIsThereOldFriend = false;
+    private int mOldFriendUnreadCound = 0;
 
     /**
      * 消息状态监听
@@ -329,6 +331,18 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 case MSG_OPERATION_LOAD_SUCCESS:
                     List<MessageSessionBaseModel> conversationList = (List<MessageSessionBaseModel>) data.getSerializable(MSG_EVENT_EXTRA_LIST);
                     mConversationAdapter.setListData(conversationList);
+                    if(mConvType == CONV_TYPE_CUR_FRIEND && mIsThereOldFriend) {
+                        mIvOldFriends.setVisibility(View.VISIBLE);
+                        if(mOldFriendUnreadCound > 0) {
+                            mIvOldFriendUnread.setVisibility(View.VISIBLE);
+                        } else {
+                            mIvOldFriendUnread.setVisibility(View.GONE);
+                        }
+                    } else {
+                        mIvOldFriends.setVisibility(View.GONE);
+                        mIvOldFriendUnread.setVisibility(View.GONE);
+                    }
+
                     mConversationAdapter.notifyDataSetChanged();
                     break;
                 case MSG_OPERATION_NOTIFY_LOAD_SUCCESS:
@@ -429,6 +443,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     List<MessageSessionBaseModel> conversationMsgList = (List<MessageSessionBaseModel>) object;
 
                     Iterator<MessageSessionBaseModel> it = conversationMsgList.iterator();
+                    mOldFriendUnreadCound = 0;
                     while(it.hasNext()){
                         MessageSessionBaseModel item = it.next();
                         if(mConvType == CONV_TYPE_OLD_FRIEND
@@ -438,6 +453,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                         } else if(mConvType == CONV_TYPE_CUR_FRIEND
                                 && item.status == MessageUtil.WalkArroundState.STATE_INIT){
                             //Current UI need cur friend, we remove old one
+                            mIsThereOldFriend = true;
+                            mOldFriendUnreadCound += item.unReadCount;
                             it.remove();
                         }
                     }
@@ -496,12 +513,6 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         // 获取所有联系人
         logger.d("initData");
         getAllContacts();
-
-        // 加载数据
-        ThreadPoolManager.getPoolManager().addAsyncTask(
-                new AsyncTaskLoadSession(mContext,
-                        MessageConstant.MSG_OPERATION_LOAD, 0, Integer.MAX_VALUE, mAsysResultListener)
-        );
 
         //There is user id and there is NO speed date id. We get speed date here and set value to profile.
         if(!TextUtils.isEmpty(ProfileManager.getInstance().getCurUsrObjId()) && TextUtils.isEmpty(ProfileManager.getInstance().getSpeedDateId())) {
@@ -568,6 +579,13 @@ public class ConversationActivity extends Activity implements ConversationItemLi
 //                    mPageState == PageState.NOTIFY_SEARCH_PAGE);
 //        }
         //mConversationAdapter.updateGroupInvitationCount();
+
+        // 加载数据
+        ThreadPoolManager.getPoolManager().addAsyncTask(
+                new AsyncTaskLoadSession(mContext,
+                        MessageConstant.MSG_OPERATION_LOAD, 0, Integer.MAX_VALUE, mAsysResultListener)
+        );
+
         mNotifyMsgAdapter.clearCacheDisplayName();
         mNotifyMsgAdapter.notifyDataSetChanged();
         mConversationAdapter.clearCacheDisplayName();
@@ -934,12 +952,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
 
         mIvOldFriends = (ImageView) findViewById(R.id.iv_old_friends);
         mIvOldFriendUnread = (ImageView) findViewById(R.id.iv_msg_unread);
-        if(mConvType == CONV_TYPE_CUR_FRIEND) {
-            mIvOldFriends.setOnClickListener(this);
-            mIvOldFriends.setVisibility(View.VISIBLE);
-        } else {
-            mIvOldFriends.setVisibility(View.GONE);
-        }
+        mIvOldFriends.setOnClickListener(this);
+        mIvOldFriends.setVisibility(View.GONE);
         mIvOldFriendUnread.setVisibility(View.GONE);
 
         // 初始化搜索/通知消息List
