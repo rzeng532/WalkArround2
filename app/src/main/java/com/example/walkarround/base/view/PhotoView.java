@@ -43,6 +43,24 @@ public class PhotoView extends LinearLayout implements View.OnClickListener {
         initView();
     }
 
+    public void setGrayPortrait() {
+        if(mImageView != null) {
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(0);
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+            mImageView.setColorFilter(filter);
+        }
+    }
+
+    public void setNormalPortrait() {
+        if(mImageView != null) {
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(1);
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+            mImageView.setColorFilter(filter);
+        }
+    }
+
     private void initView() {
         String infService = Context.LAYOUT_INFLATER_SERVICE;
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(infService);

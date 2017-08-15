@@ -2,8 +2,16 @@ package com.example.walkarround.message.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -19,13 +27,26 @@ import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.*;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.walkarround.Location.activity.LocationActivity;
 import com.example.walkarround.R;
 import com.example.walkarround.base.WalkArroundApp;
+import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.EmojiPanelView;
 import com.example.walkarround.base.view.EmojiPanelView.EmojiListener;
@@ -34,7 +55,6 @@ import com.example.walkarround.handmark.PullToRefreshBase;
 import com.example.walkarround.handmark.PullToRefreshBase.OnRefreshListener2;
 import com.example.walkarround.handmark.PullToRefreshListView;
 import com.example.walkarround.main.model.ContactInfo;
-import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.main.task.UpdateSpeedDateColorTask;
 import com.example.walkarround.message.adapter.MessageDetailListAdapter;
 import com.example.walkarround.message.adapter.PopupListAdapter;
@@ -74,7 +94,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 import static com.example.walkarround.base.view.EmojiPanelView.EMOJI_ITEM_TYPE_DEL_BTN;
 import static com.example.walkarround.message.activity.ChatAssistToolsView.ToolsViewOnClick;
@@ -167,7 +191,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     /* 编辑联系人 */
     private EditText mReceiverEditView;
     /* 进入双方距离界面按钮 */
-    ImageView mImvDistance;
+    private ImageView mImvDistance;
 
     /* 底部消息编辑区域 */
     private View mMessageBottomView;
@@ -583,7 +607,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         if (mSensorManager != null) {
             mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
-
     }
 
     @Override
@@ -1501,8 +1524,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         if (color == -1) {
             mImvDistance.setVisibility(View.GONE);
         } else {
-            mImvDistance.setImageResource(color);
+            //mImvDistance.setImageResource(color);
             mImvDistance.setVisibility(View.VISIBLE);
+            start2PlayDistanceBtn(color);
         }
 
         int conversationType = mRecipientInfo.getConversationType();
@@ -2952,7 +2976,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                         logger.d("EXTRA_AGREEMENT_2_WALKARROUND with color : " + color);
                         if (color > 0) {
                             mImvDistance.setVisibility(View.VISIBLE);
-                            mImvDistance.setImageResource(color);
+                            start2PlayDistanceBtn(color);
                         }
                     }
                 }
@@ -2993,5 +3017,27 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 BuildMessageActivity.this.startActivity(intent);
             }
         });
+    }
+
+    private void start2PlayDistanceBtn(int color) {
+        if(mImvDistance  != null && mImvDistance.getVisibility() == View.VISIBLE) {
+            AnimationDrawable currentAnim =  (AnimationDrawable) mImvDistance.getBackground();
+            LayerDrawable layer0 = ((LayerDrawable)currentAnim.getFrame(0));
+            ((GradientDrawable)layer0.getDrawable(2)).setColor(getResources().getColor(color));
+
+            LayerDrawable layer1 = ((LayerDrawable)currentAnim.getFrame(1));
+            ((GradientDrawable)layer1.getDrawable(1)).setStroke(3, getResources().getColor(color));
+//            (layer1.getDrawable(1)).setAlpha(200);
+            ((GradientDrawable)layer1.getDrawable(2)).setColor(getResources().getColor(color));
+
+            LayerDrawable layer2 = ((LayerDrawable)currentAnim.getFrame(2));
+            ((GradientDrawable)layer2.getDrawable(0)).setStroke(1, getResources().getColor(color));
+            (layer2.getDrawable(0)).setAlpha(200);
+            ((GradientDrawable)layer2.getDrawable(1)).setStroke(3, getResources().getColor(color));
+            (layer2.getDrawable(1)).setAlpha(100);
+            ((GradientDrawable)layer2.getDrawable(2)).setColor(getResources().getColor(color));
+
+            currentAnim.start();
+        }
     }
 }

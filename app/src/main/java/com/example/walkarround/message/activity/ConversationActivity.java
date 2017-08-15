@@ -142,8 +142,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     //private PopupListAdapter mPopupWindowAdapter;
 
     public static final String CONV_PARAM_OLD_FRIEND = "conv_param_old_friend";
-    private final int CONV_TYPE_CUR_FRIEND = 0;
-    private final int CONV_TYPE_OLD_FRIEND = 1;
+    public static final int CONV_TYPE_CUR_FRIEND = 0;
+    public static final int CONV_TYPE_OLD_FRIEND = 1;
     private int mConvType = CONV_TYPE_CUR_FRIEND;
     private boolean mIsThereOldFriend = false;
     private int mOldFriendUnreadCound = 0;
@@ -947,6 +947,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         mNoConversationView.setVisibility(View.GONE);
         mConversationAdapter = new ConversationListAdapter(this);
         mConversationAdapter.setItemListener(this);
+        mConversationAdapter.setFriendMode(mConvType);
         mConversationListView.setAdapter(mConversationAdapter);
         mConversationListView.removeFooterView(mNoConversationView);
 

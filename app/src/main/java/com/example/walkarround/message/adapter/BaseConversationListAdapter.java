@@ -17,9 +17,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.PhotoView;
 import com.example.walkarround.main.model.ContactInfo;
+import com.example.walkarround.message.activity.ConversationActivity;
 import com.example.walkarround.message.listener.ConversationItemListener;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
@@ -50,6 +52,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
     private boolean mIsBatchOperation;
     protected Context mContext;
     private LayoutInflater mInflater;
+    private int mFriendMode = ConversationActivity.CONV_TYPE_CUR_FRIEND;
     // 显示内容数据
     private List<MessageSessionBaseModel> mListData = new ArrayList<MessageSessionBaseModel>();
     // 选中的项目位置
@@ -62,6 +65,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         mInflater = LayoutInflater.from(mContext);
     }
 
+
     /**
      * 设置数据
      *
@@ -73,6 +77,10 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             return;
         }
         mListData.addAll(list);
+    }
+
+    public void setFriendMode(int newMode) {
+        mFriendMode = newMode;
     }
 
     public void addListData(List<MessageSessionBaseModel> list) {
@@ -261,6 +269,10 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         holder.ivPortrait.setCheckBoxVisibility(View.GONE);
         holder.ivPortrait.setChecked(false);
         holder.ivPortrait.setBaseData(name, listDO.profile, listDO.nameLastC, listDO.defaultResId);
+
+        if(ConversationActivity.CONV_TYPE_OLD_FRIEND == mFriendMode) {
+            holder.ivPortrait.setGrayPortrait();
+        }
     }
 
     /**
@@ -396,7 +408,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder.ivDelIcon.setVisibility(View.VISIBLE);
             //Set correct text font color for this case.
             holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
-            holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
+            //holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
         } else if(convState ==  MessageUtil.WalkArroundState.STATE_END) {
             if(position <= 1 && priorIsMappingConv) {
                 holder.tvMappingFlag.setVisibility(View.VISIBLE);
@@ -411,7 +423,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 holder.tvMappingFlagLine.setVisibility(View.GONE);
             }
             holder.ivDelIcon.setVisibility(View.GONE);
-            holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
+            //holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
             //holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
         } else {
             if(position >= 1) {
@@ -431,7 +443,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             }
 
             holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
-            holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(R.color.bgcor14));
+            //holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(R.color.bgcor14));
             //holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
             holder.ivDelIcon.setVisibility(View.GONE);
         }

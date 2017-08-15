@@ -4,6 +4,7 @@
 package com.example.walkarround.message.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -59,6 +60,8 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
     private RoundProgressBar timeProgress3;
 
     private LinearLayout mLlPreCountDown;
+
+    private Dialog mRuleDialog;
 
     private ContactInfo mFriend = null;
 
@@ -131,13 +134,17 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
             }
         }
 
-        DialogFactory.getWalkRuleDialog(this, new DialogFactory.ConfirmDialogClickListener() {
+        mRuleDialog = DialogFactory.getWalkRuleDialog(this, new DialogFactory.ConfirmDialogClickListener() {
             @Override
             public void onConfirmDialogConfirmClick() {
-                mPrepareCountdownTimer = new Timer(true);
-                mPrepareCountdownTimer.schedule(mPrepareCountdownTask, 1000, 1000);
+                return;
             }
-        }).show();
+        });
+        ((TextView)mRuleDialog.findViewById(R.id.tv_i_see)).setText(getString(R.string.walk_rule_i_see, PREPARE_COUNTDOWN_TOTOL_TIME));
+        mPrepareCountdownTimer = new Timer(true);
+        mPrepareCountdownTimer.schedule(mPrepareCountdownTask, 1000, 1000);
+        mRuleDialog.setCancelable(false);
+        mRuleDialog.show();
     }
 
     @Override
@@ -204,7 +211,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
             }
             mTvDescription.setText(getString(R.string.countdown_prepare_walk_with_who, friendName));
             mTvComplete.setVisibility(View.GONE);
-            invisiableProgressBar();
+            visiableProgressBar();
 //            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
 //            backGround.setColor(getResources().getColor(R.color.transparent));
             mPvPortrait.setBaseData(friendName, mFriend.getPortrait().getUrl(), null,
@@ -333,9 +340,9 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
     private void handlePrepareCountdownMsg() {
 
         mCurTime++;
-        setTvPrepareCountdownTimeUI(PREPARE_COUNTDOWN_TOTOL_TIME - mCurTime);
+        //setTvPrepareCountdownTimeUI(PREPARE_COUNTDOWN_TOTOL_TIME - mCurTime);
 
-        if (mCurTime >= (PREPARE_COUNTDOWN_TOTOL_TIME - 1)) {
+        if (mRuleDialog != null && mCurTime >= (PREPARE_COUNTDOWN_TOTOL_TIME - 1)) {
             //Reset current time second value.
             mCurTime = 0;
             //Mark real countdown start time.
@@ -353,8 +360,14 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
             //start real countdown activity.
             startCountdownTimer();
 
+            mRuleDialog.dismiss();
+            mRuleDialog = null;
+
             //Cancel prepare task.
             mPrepareCountdownTimer.cancel();
+        } else if(mRuleDialog != null) {
+            ((TextView)mRuleDialog.findViewById(R.id.tv_i_see))
+                    .setText(getString(R.string.walk_rule_i_see, PREPARE_COUNTDOWN_TOTOL_TIME - mCurTime));
         }
     }
 
@@ -363,9 +376,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 
         if(mCurTime == 0) {
             mTvComplete.setVisibility(View.VISIBLE);
-            visiableProgressBar();
-//            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
-//            backGround.setColor(getResources().getColor(R.color.red_button));
+            //visiableProgressBar();
         }
 
         mCurTime++;

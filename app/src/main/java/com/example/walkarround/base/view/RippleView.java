@@ -30,7 +30,7 @@ public class RippleView extends View {
     private static final int INIT_CIRCLE_RADIUS_EXTEND_VALUE = 200;
     private int mInitCircleRadiusStep = 1;
     private int mInitCircleAlphaStep = 1;
-    private static final int CIRCLE_COUNT = 6;
+    private int mCircleCount = 6;
 
     private Paint paint;
     private int maxRadius = 0;
@@ -44,6 +44,7 @@ public class RippleView extends View {
 
     //1/2 size of real width value
     private int mPortraitWidth = 0;
+    private int mDrawDelay = 10;
 
     private View mPortraitIv;
     private Handler mRedrawHandler =  new Handler() {
@@ -107,6 +108,18 @@ public class RippleView extends View {
             alphaList.remove(alphaList.size() - 1);
             alphaList.add(mInitAlphaValue);
         }
+    }
+
+    public void setCircleCount(int count) {
+        mCircleCount = count;
+    }
+
+    public void setInitCircleAlphaStep(int step) {
+        mInitCircleAlphaStep = step;
+    }
+
+    public void setDrawDelay(int delay) {
+        mDrawDelay = delay;
     }
 
     @Override
@@ -176,13 +189,13 @@ public class RippleView extends View {
         }
 
         // 同心圆数量达到Max，删除最外层圆
-        if (isStarting && radiusList.size() == (CIRCLE_COUNT + 1)) {
+        if (isStarting && radiusList.size() == (mCircleCount + 1)) {
             radiusList.remove(0);
             alphaList.remove(0);
         }
 
         //半径永远都是偶数，必须确保每个圆圈间隔也是偶数值
-        int iTemp = maxRadius / CIRCLE_COUNT;
+        int iTemp = maxRadius / mCircleCount;
         if(iTemp % 2 != 0) {
             iTemp += 1;
         }
@@ -194,7 +207,7 @@ public class RippleView extends View {
 
         // 刷新界面
         if (isStarting) {
-            mRedrawHandler.sendEmptyMessageDelayed(100, 10);
+            mRedrawHandler.sendEmptyMessageDelayed(100, mDrawDelay);
         }
     }
 

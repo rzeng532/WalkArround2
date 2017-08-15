@@ -227,20 +227,20 @@ public class DialogFactory {
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        //layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        dialogView.findViewById(R.id.tv_i_see).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                if (listener != null) {
-                    listener.onConfirmDialogConfirmClick();
-                }
-            }
-        });
+//        dialogView.findViewById(R.id.tv_i_see).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dialog.dismiss();
+//                if (listener != null) {
+//                    listener.onConfirmDialogConfirmClick();
+//                }
+//            }
+//        });
 
         return dialog;
     }
