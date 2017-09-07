@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 import com.example.walkarround.R;
 import com.example.walkarround.base.WalkArroundApp;
-import com.example.walkarround.message.manager.LittleCDbManager;
+import com.example.walkarround.message.manager.AVSDbManager;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageConstant.MessageState;
@@ -31,12 +31,12 @@ public class FileDownLoadAsyncTask extends AsyncTask<ChatMsgBaseInfo, Integer, C
 
     private Logger logger = Logger.getLogger(FileDownLoadAsyncTask.class.getSimpleName());
 
-    private LittleCDbManager messageDbManager;
+    private AVSDbManager messageDbManager;
     private Context mContext;
     private ChatMsgBaseInfo downLoadMsg;
     private boolean isCollectMsg = false;
 
-    public FileDownLoadAsyncTask(Context context, LittleCDbManager messageDbManager,
+    public FileDownLoadAsyncTask(Context context, AVSDbManager messageDbManager,
                                  boolean isCollectMsg) {
         this.messageDbManager = messageDbManager;
         this.isCollectMsg = isCollectMsg;

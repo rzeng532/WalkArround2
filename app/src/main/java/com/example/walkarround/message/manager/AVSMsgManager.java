@@ -52,16 +52,16 @@ import static com.example.walkarround.message.util.MessageConstant.MessageSendRe
  *
  * @author mss
  */
-public class LittleCMsgManager extends MessageAbstractManger {
+public class AVSMsgManager extends MessageAbstractManger {
 
-    private Logger logger = Logger.getLogger(LittleCMsgManager.class.getSimpleName());
-    private LittleCDbManager messageDbManager;
+    private Logger logger = Logger.getLogger(AVSMsgManager.class.getSimpleName());
+    private AVSDbManager messageDbManager;
     private Context mContext;
     private AVIMConversation mCurConversation;
 
-    public LittleCMsgManager(Context context) {
+    public AVSMsgManager(Context context) {
         mContext = context;
-        messageDbManager = new LittleCDbManager(context);
+        messageDbManager = new AVSDbManager(context);
     }
 
     /*
@@ -236,7 +236,7 @@ public class LittleCMsgManager extends MessageAbstractManger {
                 height = tempSwitch;
             }
         }
-        msgInfo.setData(width + LittleCDbManager.IMAGE_SIZE_SEPARATOR + height);
+        msgInfo.setData(width + AVSDbManager.IMAGE_SIZE_SEPARATOR + height);
         msgInfo.setThreadId(recipientInfo.getThreadId());
         msgInfo.setChatType(recipientInfo.getConversationType());
         msgInfo.setIsBurnAfter(isBurnAfter);

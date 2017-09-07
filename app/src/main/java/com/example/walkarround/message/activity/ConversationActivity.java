@@ -447,11 +447,11 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     while(it.hasNext()){
                         MessageSessionBaseModel item = it.next();
                         if(mConvType == CONV_TYPE_OLD_FRIEND
-                                && item.status != MessageUtil.WalkArroundState.STATE_INIT){
+                                && (item.status > MessageUtil.WalkArroundState.STATE_INIT || item.status <= MessageUtil.WalkArroundState.STATE_END)){
                             //Current UI need old friends, so we remove !Old friends.
                             it.remove();
                         } else if(mConvType == CONV_TYPE_CUR_FRIEND
-                                && item.status == MessageUtil.WalkArroundState.STATE_INIT){
+                                && (item.status <= MessageUtil.WalkArroundState.STATE_INIT || item.status > MessageUtil.WalkArroundState.STATE_END)){
                             //Current UI need cur friend, we remove old one
                             mIsThereOldFriend = true;
                             mOldFriendUnreadCound += item.unReadCount;

@@ -46,7 +46,7 @@ public class AsyncTaskLoadFriendsSession extends HttpTaskBase {
                 if(model != null) {
                     //Local DB change to INIT state.
                     logger.d("Update satate to INIT & add friend id. i = " + i);
-                    WalkArroundMsgManager.getInstance(null).updateConversationStatus(model.getThreadId(), MessageUtil.WalkArroundState.STATE_INIT);
+                    WalkArroundMsgManager.getInstance(null).updateConversationStatus(model.getThreadId(), MessageUtil.WalkArroundState.STATE_POP);
                     friendUsrId.add(model.getContact());
                 }
             }

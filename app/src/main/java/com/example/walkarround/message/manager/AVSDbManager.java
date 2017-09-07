@@ -28,17 +28,17 @@ import java.io.File;
 import java.util.*;
 
 /**
- * 小溪消息/群组数据库管理 Date: 2015-06-04
+ * 数据库管理
  *
- * @author mss
+ * @author
  */
-public class LittleCDbManager {
+public class AVSDbManager {
     public static final String IMAGE_SIZE_SEPARATOR = "，";
     private static final byte[] sLock = new byte[0];
-    private static Logger logger = Logger.getLogger(LittleCDbManager.class.getSimpleName());
+    private static Logger logger = Logger.getLogger(AVSDbManager.class.getSimpleName());
     private Context mContext;
 
-    public LittleCDbManager(Context context) {
+    public AVSDbManager(Context context) {
         mContext = context;
     }
 
@@ -833,11 +833,8 @@ public class LittleCDbManager {
         long curTime = System.currentTimeMillis();
         Cursor cursor = mContext.getContentResolver().query(Conversation.CONTENT_URI,
                 new String[]{Conversation._ID, Conversation._DATE}, Conversation._CONVERSATION_STATUS + " = ? AND " + Conversation._DATE + " < ?",
-                new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_INIT), String.valueOf(curTime - time)},
+                new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_POP), String.valueOf(curTime - time)},
                 null);
-
-        //TEST
-        long date = 0;
 
         List<Long> threadIdList = new ArrayList<>();
         if (cursor != null) {
@@ -955,7 +952,9 @@ public class LittleCDbManager {
         String[] arg = new String[]{threadId + ""};
         ContentValues conversationValues = new ContentValues();
 
-        if(newState != MessageUtil.WalkArroundState.STATE_INIT && (oldState > newState)) {
+        if(newState != MessageUtil.WalkArroundState.STATE_INIT
+                &&  newState != MessageUtil.WalkArroundState.STATE_POP
+                && (oldState > newState)) {
             newState = oldState;
         }
 
@@ -1000,7 +999,9 @@ public class LittleCDbManager {
         ContentValues conversationValues = new ContentValues();
         conversationValues.put(Conversation._COLOR, newColor);
 
-        if(newStatus != MessageUtil.WalkArroundState.STATE_INIT && (oldState > newStatus)) {
+        if(newStatus != MessageUtil.WalkArroundState.STATE_INIT
+                &&  newStatus != MessageUtil.WalkArroundState.STATE_POP
+                && (oldState > newStatus) && (oldState > newStatus)) {
             newStatus = oldState;
         }
         conversationValues.put(Conversation._CONVERSATION_STATUS, newStatus);
