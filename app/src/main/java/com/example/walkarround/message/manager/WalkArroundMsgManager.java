@@ -58,7 +58,7 @@ public class WalkArroundMsgManager {
             synchronized (WalkArroundMsgManager.class) {
                 if (mInstance == null) {
                     mInstance = new WalkArroundMsgManager(context);
-                    mInstance.mMsgManager = new LittleCMsgManager(context);
+                    mInstance.mMsgManager = new AVSMsgManager(context);
                 }
             }
         }
@@ -115,20 +115,20 @@ public class WalkArroundMsgManager {
     //TODO: set / get conversation should add on abstract class.
     public void setConversation() {
         if (mMsgManager != null) {
-            ((LittleCMsgManager) mMsgManager).setConversation(mInstance.mImConversation);
+            ((AVSMsgManager) mMsgManager).setConversation(mInstance.mImConversation);
         }
     }
 
     public void clearCurConversation() {
         if (mMsgManager != null) {
             mInstance.mImConversation = null;
-            ((LittleCMsgManager) mMsgManager).setConversation(mInstance.mImConversation);
+            ((AVSMsgManager) mMsgManager).setConversation(mInstance.mImConversation);
         }
     }
 
     public void resetConversation() {
         if (mMsgManager != null) {
-            ((LittleCMsgManager) mMsgManager).setConversation(null);
+            ((AVSMsgManager) mMsgManager).setConversation(null);
         }
     }
 
