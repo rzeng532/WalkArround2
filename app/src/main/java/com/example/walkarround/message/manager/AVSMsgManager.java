@@ -48,7 +48,7 @@ import static com.example.walkarround.message.util.MessageConstant.ChatType;
 import static com.example.walkarround.message.util.MessageConstant.MessageSendReceive;
 
 /**
- * 小溪消息收发 Date: 2015-06-03
+ * 消息收发 Date: 2015-06-03
  *
  * @author mss
  */
@@ -448,9 +448,17 @@ public class AVSMsgManager extends MessageAbstractManger {
             return -1L;
         }
         long id = ContentUris.parseId(insertUri);
+
         AVIMLocationMessage content = new AVIMLocationMessage();
         content.setLocation(new AVGeoPoint(lat, lng));
         content.setText(address);
+        if(!TextUtils.isEmpty(extraInfo)) {
+            //Set extra information
+            Map<String, Object> extra = new HashMap<>();
+            extra.put(MessageUtil.EXTRA_INFOR_KEY, (Object)extraInfo);
+            content.setAttrs(extra);
+        }
+
         sendMessage(recipientInfo, id, content, false, extraInfo);
         return id;
     }

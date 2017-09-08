@@ -141,9 +141,18 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
                 if (extraArray != null && extraArray.length > 1) {
                     if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND)) {
                         //Friend agree to walk arround.
+
+                        //Get current thread state
+                        int threadState = WalkArroundMsgManager.getInstance(mContext).getConversationStatus(msgInfo.getMsgThreadId());
+                        int newThreadState;
+                        if(threadState >= MessageUtil.WalkArroundState.STATE_INIT || threadState >= MessageUtil.WalkArroundState.STATE_POP) {
+                            newThreadState = MessageUtil.WalkArroundState.STATE_POP_IMPRESSION;
+                        } else {
+                            newThreadState = MessageUtil.WalkArroundState.STATE_WALK;
+                        }
                         logger.d("msgInfor array 1: " + extraArray[1]);
                         int color = Integer.parseInt(extraArray[1]);
-                        WalkArroundMsgManager.getInstance(mContext).updateConversationStatusAndColor(msgInfo.getMsgThreadId(), MessageUtil.WalkArroundState.STATE_WALK, color);
+                        WalkArroundMsgManager.getInstance(mContext).updateConversationStatusAndColor(msgInfo.getMsgThreadId(), newThreadState, color);
                     } else if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALKARROUND)) {
 
                     } else if(extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_SAY_HELLO)) {

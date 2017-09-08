@@ -52,6 +52,7 @@ public class MessageUtil {
     public static final String EXTRA_INFOR_KEY = "extra_key";
     public static final String EXTRA_INFOR_SPLIT = "#";
     public static final String EXTRA_AGREEMENT_2_WALKARROUND = "extra_agree_place";
+    public static final String EXTRA_SELECT_PLACE_2_WALKARROUND = "extra_select_place";
     public static final String EXTRA_START_2_WALKARROUND = "extra_start_2_walk";
     public static final String EXTRA_START_2_WALK_REQUEST = "extra_start_2_walk_request";
     public static final String EXTRA_START_2_WALK_REPLY_OK = "extra_start_2_walk_reply_ok";
@@ -80,7 +81,8 @@ public class MessageUtil {
         public static int STATE_WALK = 3; //IM 中相互选择地点，并且未相互评价
         public static int STATE_IMPRESSION = 4; //完成走走，等待评价
         public static int STATE_END = 5; //评价完成
-        public static int STATE_POP = 4; //好友堆栈溢出 （例如只能存在7个好友，你排在第八，则溢出）
+        public static int STATE_POP = 6; //好友堆栈溢出 （例如只能存在7个好友，你排在第八，则溢出）
+        public static int STATE_POP_IMPRESSION = 7; //好友堆栈溢出后再次评价
     }
 
     /**
@@ -245,6 +247,13 @@ public class MessageUtil {
             if(temp != null) {
                 msgInfo.setLatitute(temp.getLatitude());
                 msgInfo.setLongitude(temp.getLongitude());
+            }
+            Map<String, Object> attri = ((AVIMTextMessage)cmMessage).getAttrs();
+            if(attri != null) {
+                String extroInfor = (String)attri.get(MessageUtil.EXTRA_INFOR_KEY);
+                if(!TextUtils.isEmpty(extroInfor)) {
+                    msgInfo.setExtraInfo(extroInfor);
+                }
             }
         } else if (cmMessage instanceof AVIMTextMessage) {
             msgInfo.setMsgType(MessageType.MSG_TYPE_TEXT);

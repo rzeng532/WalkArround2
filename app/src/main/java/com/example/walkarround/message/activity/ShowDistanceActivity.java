@@ -251,7 +251,9 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         initRegisterforNewMsg();
 
         //Start to update current user location information.
-        LocationManager.getInstance(WalkArroundApp.getInstance()).start2ContinueLocate(AppConstant.KEY_MAP_ASYNC_LISTERNER_CONTINUE_LOC_DURING_WALK, mWalkArroundLocListener);
+        LocationManager.getInstance(WalkArroundApp.getInstance())
+                .start2ContinueLocate(AppConstant.KEY_MAP_ASYNC_LISTERNER_CONTINUE_LOC_DURING_WALK
+                                        , mWalkArroundLocListener);
 
         //Start to update friend location information.
         start2GetFriendCoordinate();
@@ -388,10 +390,11 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
 
                     @Override
                     public void onConfirmDialogConfirmClick() {
-                        //Send walk invitation 2 friend.
+                        //Send walk invitation to friend.
                         String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
                                 MessageUtil.EXTRA_INFOR_SPLIT +
                                 MessageUtil.EXTRA_START_2_WALK_REQUEST;
+
                         WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId, getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
                     }
                 });

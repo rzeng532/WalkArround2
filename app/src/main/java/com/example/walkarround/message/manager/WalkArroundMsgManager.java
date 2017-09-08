@@ -524,7 +524,12 @@ public class WalkArroundMsgManager {
      */
     public long sendLocation(MessageRecipientInfo recipientInfo, double Lat, double lng, String address,
                              String imagePath) {
-        return sendLocation(recipientInfo, Lat, lng, address, imagePath, null);
+        int colorIndex = getConversationColorIndex(recipientInfo.getThreadId());
+        String extraInfor = MessageUtil.EXTRA_SELECT_PLACE_2_WALKARROUND +
+                MessageUtil.EXTRA_INFOR_SPLIT +
+                colorIndex;
+
+        return sendLocation(recipientInfo, Lat, lng, address, imagePath, colorIndex == -1 ? null : extraInfor);
     }
 
     /**
