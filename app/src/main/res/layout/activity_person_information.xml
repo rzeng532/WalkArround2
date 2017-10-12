@@ -1,0 +1,70 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/detail_portrait"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgcor1">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/activity_title_common"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height" />
+
+    <!-- Myself information -->
+    <ImageView
+        android:id="@+id/iv_portrait"
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:scaleType="centerCrop"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="10dp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_text_infor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_portrait">
+
+        <TextView
+            android:id="@+id/tv_infor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="18dp"
+            android:textColor="@color/fontcor1"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="18dp"
+            android:textColor="@color/emerald_green"
+            android:textSize="16dp" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/v_devider_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/rl_text_infor"
+        android:layout_marginTop="16dp"
+        android:background="@color/linecor1" />
+
+    <TextView
+        android:id="@+id/tv_signature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/v_devider_line"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/fontcor1"
+        android:textSize="14dp" />
+
+</RelativeLayout>
+

@@ -79,6 +79,7 @@ import com.example.walkarround.message.util.MessageConstant.MessageState;
 import com.example.walkarround.message.util.MessageConstant.MessageType;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
+import com.example.walkarround.myself.activity.PersonInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.CommonUtils;
@@ -1510,6 +1511,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         detailHeaderView.findViewById(R.id.back_iv).setOnClickListener(this);
         //Miffle, portrait
         PhotoView photoView = (PhotoView) detailHeaderView.findViewById(R.id.message_title_profile_pv);
+        photoView.setOnClickListener(this);
         //Right, more
         View moreView = detailHeaderView.findViewById(R.id.message_title_more_iv);
         moreView.setVisibility(View.GONE);
@@ -1845,29 +1847,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 //            break;
             case R.id.emoji_iv:
                 // 表情/阅后即焚图片按钮
-//            if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER) {
-//                view.setSelected(false);
-//                hideSoftInput();
-//                // 阅后即焚图片按钮
-//                if (mBurnMsgTypeChoosePopup == null) {
-//                    mBurnMsgTypeChoosePopup = createPopupWindow();
-//                }
-//                mBurnMsgTypeChoosePopup.showAtLocation(view, Gravity.NO_GRAVITY, 0, 0);
-//            } else {
-                // 表情
-//                if (view.isSelected()) {
-//                    if (mEmojiPanel != null) {
-//                        mEmojiPanel.setVisibility(View.GONE);
-//                    }
-//                    showSoftInput();
-//                    switchBottomPanelView();
-//                } else {
-//                    hideSoftInput();
-//                    mCurrentMessageEditState = MESSAGE_EDIT_STATE_MORE_EMOJI;
-//                    switchBottomPanelView(mCurrentMessageEditState);
-//                }
-//                view.setSelected(!view.isSelected());
-                //}
                 break;
             case R.id.msg_popup_menu_layout:
                 mBurnMsgTypeChoosePopup.dismiss();
@@ -1886,39 +1865,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                     switchBottomPanelView(mCurrentMessageEditState);
                 }
                 break;
-//        case R.id.right_change_iv:
-//            // 消息编辑右侧按钮
-//            if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_VOICE
-//                    && mTimeSendView.getVisibility() == View.VISIBLE) {
-//                switchBottomPanelView();
-//            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_MORE_OPERATE) {
-//                if (mEmojiPanel != null) {
-//                    mEmojiPanel.setVisibility(View.GONE);
-//                }
-//                switchBottomPanelView();
-//            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_MORE_EMOJI
-//                    || mCurrentMessageEditState == MESSAGE_EDIT_STATE_VOICE) {
-//                mCurrentMessageEditState = MESSAGE_EDIT_STATE_MORE_OPERATE;
-//                switchBottomPanelView(mCurrentMessageEditState);
-//            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER
-//                    || mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_VOICE) {
-//                mTimeSendView.setText(null);
-//                mTimeSendView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-//                mTimeSendView.setVisibility(View.GONE);
-//                mCurrentMessageEditState = MESSAGE_EDIT_STATE_DEFAULT;
-//                switchBottomPanelView(mCurrentMessageEditState);
-//            } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_DEFAULT) {
-//                if (mTimeSendView.getVisibility() == View.VISIBLE) {
-//                    mSendMessageEditView.setText("");
-//                    mTimeSendView.setText("");
-//                    mTimeSendView.setVisibility(View.GONE);
-//                    switchBottomPanelView(mCurrentMessageEditState);
-//                } else {
-//                    mCurrentMessageEditState = MESSAGE_EDIT_STATE_MORE_OPERATE;
-//                    switchBottomPanelView(mCurrentMessageEditState);
-//                }
-//            }
-//            break;
             case R.id.message_title_more_iv:
                 //case R.id.message_profile_group_iv:
                 // 更多
@@ -1934,22 +1880,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                     mMessageDetailAdapter.setSelectForAll(false);
                 }
                 break;
-//        case R.id.msg_mark_collect_tv:
-//            // 收藏
-//            List<ChatMsgBaseInfo> selectMsg = mMessageDetailAdapter.getSelectedMsgList();
-//            int resultCode = FavoriteMessageManager.setMessageFavorite(this, mRecipientInfo, selectMsg);
-//            if (resultCode == FavoriteMessageManager.COLLECT_SUCCESS_CODE) {
-//                Toast.makeText(this, R.string.collect_success, Toast.LENGTH_SHORT).show();
-//            } else if (resultCode == FavoriteMessageManager.COLLECT_FAIL_REASON_BURN) {
-//                Toast.makeText(this, R.string.connot_collect_msg_notice1, Toast.LENGTH_SHORT).show();
-//            } else if (resultCode == FavoriteMessageManager.COLLECT_FAIL_REASON_BURN_UNLOAD) {
-//                Toast.makeText(this, R.string.connot_collect_msg_notice2, Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(this, R.string.part_msg_collect_fail, Toast.LENGTH_SHORT).show();
-//            }
-//            mMessageDetailAdapter.setInSelectMode(false);
-//            mMessageDetailAdapter.notifyDataSetChanged();
-//            break;
             case R.id.msg_detail_delete_tv:
                 // 删除
                 List<ChatMsgBaseInfo> delMsgList = mMessageDetailAdapter.getSelectedMsgList();
@@ -1961,16 +1891,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 mMessageDetailAdapter.setInSelectMode(false);
                 mMessageDetailAdapter.notifyDataSetChanged();
                 break;
-            case R.id.msg_mark_foward_tv:
-                // 转发
-//            Intent forwardIntent = new Intent(this, SelectContactActivity.class);
-//            forwardIntent.putExtra(SelectContactActivity.SELECT_TYPE,
-//                    SelectContactActivity.TYPE_SELECT_CONTACTS_WITH_NUM);
-//            forwardIntent.putExtra(SelectContactActivity.SELECTION_TYPE, SelectContactActivity.SINGLE_SELECTION);
-//            forwardIntent.putExtra(SelectContactActivity.INTENT_CONFIRM_SELECTION, true);
-////            forwardIntent.putExtra(SelectContactActivity.INTENT_DISABLE_NOT_RCS_NUMBER, true);
-//            startActivityForResult(forwardIntent, REQUEST_CODE_FORWARD_MSG);
-                break;
+
             case R.id.msg_mark_copy_tv:
                 // 拷贝
                 List<ChatMsgBaseInfo> msgList = mMessageDetailAdapter.getSelectedMsgList();
@@ -1999,6 +1920,11 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);
                 intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
                 startActivity(intentShowDistance);
+                break;
+            case R.id.message_title_profile_pv:
+                Intent intentDisplayFriend = new Intent(this, PersonInformationActivity.class);
+                intentDisplayFriend.putExtra(AppConstant.PARAM_USR_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
+                startActivity(intentDisplayFriend);
                 break;
             default:
                 break;

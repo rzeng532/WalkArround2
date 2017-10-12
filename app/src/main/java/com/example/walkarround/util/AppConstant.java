@@ -80,4 +80,6 @@ public class AppConstant {
      * 名字缩写长度
      */
     public static final int SHORTNAME_LEN = 7;
+
+    public static final String PARAM_USR_OBJ_ID = "param_usr_obj_id";
 }

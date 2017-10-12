@@ -84,6 +84,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".myself.activity.DetailInformationActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".myself.activity.PersonInformationActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".myself.activity.EditStrProfileInfoActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".util.image.ImageBrowserActivity"

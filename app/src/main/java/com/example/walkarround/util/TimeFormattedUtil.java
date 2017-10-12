@@ -71,7 +71,7 @@ public class TimeFormattedUtil {
                             display = new SimpleDateFormat("HH:mm").format(tDate);
                         } else {
                             if (tDate.after(beforeYes)) {
-                                display = "昨天";
+                                display = context.getString(R.string.msg_time_yestoday);
                             } else {
                                 display = new SimpleDateFormat("MM-dd").format(tDate);
                             }
