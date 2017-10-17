@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PhotoView;
@@ -99,6 +101,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                     mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
                 }
             } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH)) {
+                AVAnalytics.onEvent(EvaluateActivity.this, AppConstant.ANA_EVENT_EVALUATE, AppConstant.ANA_TAG_RET_FAIL);
                 myLogger.d("EvaluateFriend failed.");
                 mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
             }
@@ -307,12 +310,19 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
     public void onBackPressed() {
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     @Override
@@ -390,6 +400,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 showCircleDialog();
                 String speedDateId = ProfileManager.getInstance().getSpeedDateId();
                 if (!TextUtils.isEmpty(speedDateId)) {
+                    AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_EVALUATE);
                     ThreadPoolManager.getPoolManager().addAsyncTask(new EvaluateFriendTask(getApplicationContext(),
                             mEvaluateFriendTaskListener,
                             HttpUtil.HTTP_FUNC_EVALUATE_EACH,

@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
 import com.example.walkarround.base.task.TaskUtil;
@@ -34,6 +36,7 @@ import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyProfileInfo;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpTaskBase.TaskResult;
@@ -124,6 +127,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 //TODO: This log should be deleted later.
                 logger.d("like someone response: \r\n" + (String) object);
             } else if (TaskResult.FAILED == resultCode) {
+                AVAnalytics.onEvent(getActivity(), AppConstant.ANA_EVENT_LIKE, AppConstant.ANA_TAG_RET_FAIL);
                 logger.d("like someone response failed");
             }
         }
@@ -247,6 +251,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
+        AVAnalytics.onFragmentStart("NearlyUsersFragment");
         setUnreadState();
 
         mStrFromUsrId = AVUser.getCurrentUser().getObjectId();
@@ -275,6 +280,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     @Override
     public void onPause() {
         super.onPause();
+        AVAnalytics.onFragmentEnd("NearlyUsersFragment");
 
         if(mSearchingView != null && mSearchingView.isStarting()) {
             mSearchingView.stop();
@@ -378,15 +384,18 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void onLeftCardExit(Object dataObject) {
+                AVAnalytics.onEvent(getActivity(), AppConstant.ANA_EVENT_DISLIKE);
                 if (mNearlyUserList != null && mNearlyUserList.size() == 0) {
                     //If there is no data, display radar again.
                     showRadar();
                 }
-                ;
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {
+
+                AVAnalytics.onEvent(getActivity(), AppConstant.ANA_EVENT_LIKE);
+
                 ThreadPoolManager.getPoolManager().addAsyncTask(new LikeSomeOneTask(getActivity().getApplicationContext(),
                         mLikeSomeoneListener,
                         HttpUtil.HTTP_FUNC_LIKE_SOMEONE,

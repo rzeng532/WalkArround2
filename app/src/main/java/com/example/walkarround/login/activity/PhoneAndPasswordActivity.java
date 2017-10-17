@@ -13,10 +13,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.manager.LoginManager;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
@@ -92,6 +95,7 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
         @Override
         public void onFailed(AVException e) {
             //dismissDialog();
+            AVAnalytics.onEvent(PhoneAndPasswordActivity.this, AppConstant.ANA_EVENT_GEN_SMS, AppConstant.ANA_TAG_RET_FAIL);
             Message msg = Message.obtain();
             msg.what = ERROR;
             msg.obj = LoginManager.getInstance().getErrStringViaErrorCode(getApplicationContext(), e != null ? e.getCode() : R.string.err_unknow);
@@ -107,6 +111,18 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
 
         setContentView(R.layout.activity_login_input_account);
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     private void initView() {
@@ -154,10 +170,11 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
                 return;
             }
 
+            AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_GEN_SMS);
+
             LoginManager.getInstance().setPhoneNum(mStrPhoneNum);
             LoginManager.getInstance().setPassword(pass);
             LoginManager.getInstance().doRegister(mAccountManagerListener);
-
             mLoadingDialog = DialogFactory.getLoadingDialog(this, false, null);
             mLoadingDialog.show();
 

@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
@@ -86,6 +88,18 @@ public class EditStrProfileInfoActivity extends Activity implements View.OnClick
         setContentView(R.layout.activity_edit_str_profile_infor);
         initView();
         initData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     public void initView() {

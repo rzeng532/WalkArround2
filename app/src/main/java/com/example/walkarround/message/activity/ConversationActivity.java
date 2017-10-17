@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewStub;
 import android.widget.*;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
 import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
@@ -573,7 +575,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     @Override
     public void onResume() {
         super.onResume();
-
+        AVAnalytics.onResume(this);
 //        if (!TextUtils.isEmpty(mSearchEditText.getText())) {
 //            mSearchTask = searchMessageWithKey(mSearchEditText.getText().toString(),
 //                    mPageState == PageState.NOTIFY_SEARCH_PAGE);
@@ -595,6 +597,12 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         if (maskView.getVisibility() == View.VISIBLE) {
             maskView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     @Override

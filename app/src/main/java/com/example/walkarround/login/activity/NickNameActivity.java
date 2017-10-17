@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.util.CommonUtils;
@@ -37,6 +39,18 @@ public class NickNameActivity extends Activity implements View.OnClickListener{
 
         //Init nick name
         initNickName();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     private void initView() {

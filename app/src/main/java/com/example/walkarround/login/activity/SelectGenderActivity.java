@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.util.CommonUtils;
@@ -33,6 +35,13 @@ public class SelectGenderActivity extends Activity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     private void initView() {

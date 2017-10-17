@@ -6,17 +6,21 @@ package com.example.walkarround.setting.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.activity.LoginOrRegActivity;
 import com.example.walkarround.login.activity.UpdatePswActivity;
 import com.example.walkarround.setting.manager.SettingManager;
 import com.example.walkarround.util.Logger;
+import com.example.walkarround.util.UniversalWebView;
 
 /**
  * TODO: description
@@ -30,7 +34,8 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
     //private CheckSwitchButton csbNewMsgNotifyReceive;
     private TextView tvResetPasswordApp;
     private TextView tvAboutApp;
-    private TextView tvUpdate;
+    private TextView tvProtocol;
+    private TextView tvFeedback;
     //    private TextView tvFeedback;
     private TextView tvLogout;
 
@@ -58,11 +63,14 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
         tvAboutApp = (TextView) findViewById(R.id.tv_about_app);
         tvAboutApp.setOnClickListener(this);
 
+        tvFeedback = (TextView) findViewById(R.id.tv_feedback);
+        tvFeedback.setOnClickListener(this);
+
         tvLogout = (TextView) findViewById(R.id.tv_logout);
         tvLogout.setOnClickListener(this);
 
-        tvUpdate = (TextView) findViewById(R.id.tv_usr_protocol);
-        tvUpdate.setOnClickListener(this);
+        tvProtocol = (TextView) findViewById(R.id.tv_usr_protocol);
+        tvProtocol.setOnClickListener(this);
     }
 
     @Override
@@ -70,6 +78,18 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     @Override
@@ -88,11 +108,15 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
                 break;
 
             case R.id.tv_usr_protocol:
-                checkAppVersion();
+                checkUserProtocol();
                 break;
 
             case R.id.tv_logout://退出登录
                 doLogout();
+                break;
+
+            case R.id.tv_feedback:
+                doFeedback();
                 break;
 
             default:
@@ -105,7 +129,7 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
         super.onDestroy();
     }
 
-    public void doLogout() {
+    private void doLogout() {
         Dialog noticeDialog = DialogFactory.getNoticeDialog(this,
                 R.string.setting_logout_or_not, new DialogFactory.NoticeDialogClickListener() {
 
@@ -128,19 +152,47 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
         noticeDialog.show();
     }
 
-    public void checkAppVersion() {
+    private void checkUserProtocol() {
+        Intent intent = new Intent(this, UniversalWebView.class);
+        intent.putExtra("URL", "http://mp.weixin.qq.com/s/Ex96oOUTGHRrdR5Z9OVPBQ");
+        intent.putExtra("TITLE", getString(R.string.setting_user_protocol));
 
+        startActivity(intent);
     }
 
-    public void doUpgradeApp() {
 
+    /****************
+     *
+     * 发起添加群流程。群号：走走反馈群(619714748) 的 key 为： oAiTP6oUr2awPgQEBHr2eflKzcQEIvxI
+     * 调用 doFeedback(oAiTP6oUr2awPgQEBHr2eflKzcQEIvxI) 即可发起手Q客户端申请加群 走走反馈群(619714748)
+     *
+     * key: 由官网生成的key
+     * @return 返回true表示呼起手Q成功，返回fals表示呼起失败
+     ******************/
+    public boolean doFeedback() {
+        Intent intent = new Intent();
+        intent.setData(Uri.parse(
+                                "mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D"
+                                        + "oAiTP6oUr2awPgQEBHr2eflKzcQEIvxI"));
+        // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        try {
+            startActivity(intent);
+            return true;
+        } catch (Exception e) {
+            // 未安装手Q或安装的版本不支持
+            return false;
+        }
     }
 
-    public void checkAboutApp() {
+    private void checkAboutApp() {
+        Intent intent = new Intent(this, UniversalWebView.class);
+        intent.putExtra("URL", "http://mp.weixin.qq.com/s/ucauwQqXa2FHSee8lA6U9Q");
+        intent.putExtra("TITLE", getString(R.string.setting_about_app));
 
+        startActivity(intent);
     }
 
-    public void doResetPassword() {
+    private void doResetPassword() {
         startActivity(new Intent(this, UpdatePswActivity.class));
     }
 }

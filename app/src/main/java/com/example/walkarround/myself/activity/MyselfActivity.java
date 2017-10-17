@@ -11,6 +11,8 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.myself.manager.ProfileManager;
@@ -48,7 +50,14 @@ public class MyselfActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        AVAnalytics.onResume(this);
         initData();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     @Override

@@ -28,6 +28,7 @@ import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.geocoder.*;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.Location.adapter.LocationAdapter;
 import com.example.walkarround.Location.model.LocationItem;
 import com.example.walkarround.R;
@@ -334,11 +335,13 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+        AVAnalytics.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        AVAnalytics.onPause(this);
         mapView.onPause();
         mLocationClient.stopLocation();
         // deactivate();

@@ -15,6 +15,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.*;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
@@ -262,6 +264,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
+        AVAnalytics.onResume(this);
 
         if(mSearchingView.getVisibility() == View.VISIBLE) {
             mUiHandler.sendEmptyMessageDelayed(MSG_DISPLAY_SEARCHING, 500);
@@ -271,6 +274,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     @Override
     protected void onPause() {
         super.onPause();
+        AVAnalytics.onPause(this);
 
         if(mSearchingView.isStarting()) {
             mSearchingView.stop();

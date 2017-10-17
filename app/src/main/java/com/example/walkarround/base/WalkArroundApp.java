@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Bitmap.Config;
 import android.os.Environment;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
@@ -51,6 +52,7 @@ public class WalkArroundApp extends Application {
         try {
             AVOSCloud.setDebugLogEnabled(true);
             AVOSCloud.initialize(this, AppConstant.LEANCLOUD_APP_ID, AppConstant.LEANCLOUD_APP_KEY);
+            AVAnalytics.enableCrashReport(this, true);
             AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, WrTypedMsgHandler.getMsgHandlerInstance(this));
             AVIMMessageManager.registerDefaultMessageHandler(new WrDefaultMsgHandler());
             initImageLoader(AppConstant.MAX_IMAGE_LOADER_CACHE_SIZE);

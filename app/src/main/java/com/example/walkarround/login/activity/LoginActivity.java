@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
@@ -83,6 +85,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         @Override
         public void onFailed(AVException e) {
             loginLogger.d("Get SMS code failed, " + e.getMessage());
+            AVAnalytics.onEvent(LoginActivity.this, AppConstant.ANA_EVENT_LOGIN, AppConstant.ANA_TAG_RET_FAIL);
             Message msg = Message.obtain();
             msg.what = LOGIN_FAIL;
             msg.obj = LoginManager.getInstance().getErrStringViaErrorCode(getApplicationContext(), e.getCode());
@@ -119,6 +122,18 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         findView();
         setNextButtonVisibleOrNot();
         loginLogger = Logger.getLogger(LoginActivity.class.getSimpleName());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     private void findView() {
@@ -166,6 +181,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             try {
                 String strUsername = ((EditText) findViewById(R.id.signin_input_username)).getText().toString();
                 String strPwd = ((EditText) findViewById(R.id.signin_input_password)).getText().toString();
+                AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_LOGIN);
                 LoginManager.getInstance().doLogin(strUsername, strPwd, mLoginListener);
             } catch (Exception e) {
                 e.printStackTrace();

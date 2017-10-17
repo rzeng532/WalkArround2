@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
@@ -462,6 +464,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        AVAnalytics.onResume(this);
+
         initData();
         if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
             mDrawerLayout.closeDrawers();
@@ -497,6 +501,12 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         //Get speed data id and check local conversation later.
         getConversationDataFromServer();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     @Override
@@ -626,9 +636,15 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_slide_setting://goto setting activity
+                if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
+                    mDrawerLayout.closeDrawers();
+                }
                 startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
                 break;
             case R.id.menu_portrait://goto setting activity
+                if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
+                    mDrawerLayout.closeDrawers();
+                }
                 startActivity(new Intent(AppMainActivity.this, DetailInformationActivity.class));
                 break;
             default:

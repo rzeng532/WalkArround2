@@ -10,6 +10,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.RoundProgressBar;
 import com.example.walkarround.base.view.gifview.GifView;
@@ -107,6 +109,18 @@ public class ImageViewerActivity extends Activity implements OnClickListener {
         }
         setContentView(R.layout.activity_image_viewer);
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     @Override

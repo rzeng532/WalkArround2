@@ -82,4 +82,22 @@ public class AppConstant {
     public static final int SHORTNAME_LEN = 7;
 
     public static final String PARAM_USR_OBJ_ID = "param_usr_obj_id";
+
+    public static final String ANA_EVENT_LIKE = "like";
+    public static final String ANA_EVENT_LOGIN = "login";
+    public static final String ANA_EVENT_REGISTER = "register";
+    public static final String ANA_EVENT_LOGOUT = "logout";
+    public static final String ANA_EVENT_GEN_SMS = "gen_sms_code";
+    public static final String ANA_EVENT_CHANGE_PORTRAIT = "change_portrait";
+    public static final String ANA_EVENT_UPDATE_PSD = "update_password";
+    public static final String ANA_EVENT_DISLIKE = "dislike";
+    public static final String ANA_EVENT_MSG = "send_msg";
+    public static final String ANA_EVENT_EVALUATE = "evaluate";
+    public static final String ANA_TAG_MSG_TXT = "msg_tag_txt";
+    public static final String ANA_TAG_MSG_VOICE = "msg_tag_voice";
+    public static final String ANA_TAG_MSG_LOC = "msg_tag_location";
+    public static final String ANA_TAG_MSG_LOC_AGREE = "msg_tag_location_agree";
+
+    public static final String ANA_TAG_RET_OK = "operation_ok";
+    public static final String ANA_TAG_RET_FAIL = "operation_fail";
 }

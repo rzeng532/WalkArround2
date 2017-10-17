@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PhotoView;
@@ -150,6 +151,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
     @Override
     protected void onResume() {
         super.onResume();
+        AVAnalytics.onResume(this);
 
         if (mCountdownStartTime > 0l) {
             long curTime = System.currentTimeMillis();
@@ -170,6 +172,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
     @Override
     protected void onPause() {
         super.onPause();
+        AVAnalytics.onPause(this);
 
         stopCountdownTimer();
 

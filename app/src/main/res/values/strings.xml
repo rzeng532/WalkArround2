@@ -82,6 +82,7 @@
     <string name="setting_check_update">检查更新</string>
     <string name="setting_user_protocol">用户协议</string>
     <string name="setting_about_app">关于走走</string>
+    <string name="setting_feedback">走走反馈群</string>
     <string name="setting_do_logout">退出</string>
     <string name="setting_logout_or_not">退出当前账号？</string>
     <string name="setting_chat">聊天</string>

@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.EntranceActivity;
 import com.example.walkarround.R;
 import com.example.walkarround.util.CommonUtils;
@@ -35,6 +37,18 @@ public class LoginOrRegActivity extends Activity implements View.OnClickListener
         setContentView(R.layout.activity_login_or_register);
         findView();
         loginLogger = Logger.getLogger(LoginOrRegActivity.class.getSimpleName());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     @Override

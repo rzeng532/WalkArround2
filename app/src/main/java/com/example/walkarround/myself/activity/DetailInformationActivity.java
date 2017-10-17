@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
@@ -123,6 +125,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             Message msg = Message.obtain();
             msg.what = UPDATE_PORTRAIT_FAIL;
             mUpdateHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
+            AVAnalytics.onEvent(DetailInformationActivity.this, AppConstant.ANA_EVENT_CHANGE_PORTRAIT, AppConstant.ANA_TAG_RET_FAIL);
         }
     };
 
@@ -139,6 +142,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
+        AVAnalytics.onResume(this);
         initData();
 
         if (CommonUtils.hasSdcard()) {
@@ -147,6 +151,12 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 headUri = Uri.fromFile(profileheadTemp);
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     @Override

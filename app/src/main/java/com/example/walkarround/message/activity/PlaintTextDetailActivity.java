@@ -14,6 +14,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
 import com.example.walkarround.message.util.EmojiParser;
 
@@ -58,6 +60,18 @@ public class PlaintTextDetailActivity extends Activity implements OnClickListene
         if (textLayout.getLineCount() > 1) {
             content.setGravity(Gravity.CENTER_VERTICAL);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     @Override

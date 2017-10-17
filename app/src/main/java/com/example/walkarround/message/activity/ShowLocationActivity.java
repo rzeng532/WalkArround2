@@ -18,6 +18,7 @@ import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.Location.activity.LocationActivity;
 import com.example.walkarround.Location.manager.LocationManager;
@@ -177,6 +178,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
+        AVAnalytics.onResume(this);
         mapView.onResume();
     }
 
@@ -189,6 +191,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
     @Override
     protected void onPause() {
         super.onPause();
+        AVAnalytics.onPause(this);
         mapView.onPause();
     }
 

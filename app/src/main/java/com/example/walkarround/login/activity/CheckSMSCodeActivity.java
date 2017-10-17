@@ -17,10 +17,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.manager.LoginManager;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
 
@@ -99,6 +102,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
         @Override
         public void onFailed(AVException e) {
             dismissDialog();
+            AVAnalytics.onEvent(CheckSMSCodeActivity.this, AppConstant.ANA_EVENT_REGISTER, AppConstant.ANA_TAG_RET_FAIL);
             myLogger.d("Get SMS code failed, " + e.getMessage());
             Message msg = Message.obtain();
             msg.what = ERROR;
@@ -117,6 +121,18 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
         getIntentData();
         initView();
         startTimerTask();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     private void getIntentData() {
@@ -227,6 +243,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
             }
             showDialog();
             //TODO: create account via SMS code.
+            AVAnalytics.onEvent(CheckSMSCodeActivity.this, AppConstant.ANA_EVENT_REGISTER);
             LoginManager.getInstance().createAccountWithCode(code, mGetSMSCodeListener);
         } else if (v.getId() == R.id.tip_standard) {
             startTimerTask();

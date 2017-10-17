@@ -43,6 +43,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.Location.activity.LocationActivity;
 import com.example.walkarround.R;
 import com.example.walkarround.base.WalkArroundApp;
@@ -578,6 +579,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     @Override
     protected void onResume() {
         super.onResume();
+        AVAnalytics.onResume(this);
 
         isActivityOnForground = true;
 
@@ -613,6 +615,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     @Override
     protected void onPause() {
         super.onPause();
+        AVAnalytics.onPause(this);
 
         isActivityOnForground = false;
 
@@ -1714,6 +1717,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             return;
         }
 
+        AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_MSG, AppConstant.ANA_TAG_MSG_TXT);
+
         mSendMessageEditView.setText("");
         mTimeSendView.setVisibility(View.GONE);
         long lastMessageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo, msg, null);
@@ -1752,6 +1757,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 TaskUtil.getTaskHeader()));
 
         transferToDetailView(messageId, false);
+
+        AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_MSG, AppConstant.ANA_TAG_MSG_LOC_AGREE);
+
         logger.d("Send agreement result: " + messageId);
     }
 
@@ -2274,6 +2282,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     @Override
     public void sendVoice(String audioFilePath, int recordTime) {
+        AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_MSG, AppConstant.ANA_TAG_MSG_VOICE);
         // 发送音频
         long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendAudioFile(mRecipientInfo, audioFilePath, recordTime, false,
                 0, true);
@@ -2293,6 +2302,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      * @return
      */
     public long sendLocationInfo(double dLat, double dLng, String strAddr, String imagePath) {
+        AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_MSG, AppConstant.ANA_TAG_MSG_LOC);
         return WalkArroundMsgManager.getInstance(getApplicationContext()).sendLocation(mRecipientInfo, dLat, dLng, strAddr, imagePath);
     }
 

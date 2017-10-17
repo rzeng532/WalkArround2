@@ -126,6 +126,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".base.TestActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".util.UniversalWebView"
+            android:screenOrientation="portrait"/>
 
         <!-- Clean cloud SDK elements -->
         <service android:name="com.avos.avoscloud.PushService"/>

@@ -17,12 +17,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.setting.manager.SettingManager;
+import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
@@ -85,6 +88,7 @@ public class UpdatePswActivity extends Activity implements View.OnClickListener 
             msg.what = UPDATE_PSW_FAIL;
             msg.obj = LoginManager.getInstance().getErrStringViaErrorCode(getApplicationContext(), e.getCode());
             mUpdatePswHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
+            AVAnalytics.onEvent(UpdatePswActivity.this, AppConstant.ANA_EVENT_UPDATE_PSD, AppConstant.ANA_TAG_RET_FAIL);
         }
     };
 
@@ -118,6 +122,18 @@ public class UpdatePswActivity extends Activity implements View.OnClickListener 
         findView();
         setNextButtonVisibleOrNot();
         updatePswLogger = Logger.getLogger(UpdatePswActivity.class.getSimpleName());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 
     private void findView() {
@@ -159,6 +175,7 @@ public class UpdatePswActivity extends Activity implements View.OnClickListener 
             try {
                 String newPsw = edNewPsw.getText().toString();
                 String oldPsw = edOldPsw.getText().toString();
+                AVAnalytics.onEvent(UpdatePswActivity.this, AppConstant.ANA_EVENT_UPDATE_PSD);
                 LoginManager.getInstance().updatePassword(oldPsw, newPsw, mUpdatePswListener);
             } catch (Exception e) {
                 e.printStackTrace();
