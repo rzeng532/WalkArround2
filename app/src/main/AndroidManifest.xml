@@ -28,6 +28,7 @@
     <application
         android:name=".base.WalkArroundApp"
         android:label="@string/app_name"
+        android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:theme="@style/ActivityNoAnimation">
 
