@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'walkarround'
             keyPassword 'w123456'
-            storeFile file('E:/LeanCloudApp/AS_Pro/WalkArround2/walkarround.keystore')
+            storeFile file("walkarround.keystore")
             storePassword 'w123456'
         }
     }
