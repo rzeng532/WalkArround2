@@ -78,6 +78,7 @@
 
     <!-- Strings for setting -->
     <string name="setting_title">设置</string>
+    <string name="setting_feedback_enterance">反馈</string>
     <string name="setting_modify_password">修改密码</string>
     <string name="setting_check_update">检查更新</string>
     <string name="setting_user_protocol">用户协议</string>

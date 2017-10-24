@@ -3,6 +3,7 @@ package com.example.walkarround.main.activity;
 import android.app.*;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -77,6 +78,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
      * UI elements on main activity
      */
     private View mViewSetting;
+    private View mViewFeedback;
     private RelativeLayout mViewPortrait;
     private LinearLayout mViewLeftMenu;
     private PortraitView mPvPortrait;
@@ -553,6 +555,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     private void initView() {
         mViewSetting = (RelativeLayout) findViewById(R.id.rl_slide_setting);
         mViewSetting.setOnClickListener(this);
+        mViewFeedback = (RelativeLayout) findViewById(R.id.rl_slide_feedback);
+        mViewFeedback.setOnClickListener(this);
 
         mViewLeftMenu = (LinearLayout) findViewById(R.id.left_drawer);
         //mViewLeftMenu.setOnClickListener(this);
@@ -640,6 +644,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                     mDrawerLayout.closeDrawers();
                 }
                 startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
+                break;
+            case R.id.rl_slide_feedback://goto setting activity
+                doFeedback();
                 break;
             case R.id.menu_portrait://goto setting activity
                 if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
@@ -795,4 +802,28 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                 QueryNearlyUsers.getParams(myProfileInfo.getDynamicDataId()),
                 TaskUtil.getTaskHeader()));
     }
+
+    /****************
+     *
+     * 发起添加群流程。群号：走走反馈群(619714748) 的 key 为： oAiTP6oUr2awPgQEBHr2eflKzcQEIvxI
+     * 调用 doFeedback(oAiTP6oUr2awPgQEBHr2eflKzcQEIvxI) 即可发起手Q客户端申请加群 走走反馈群(619714748)
+     *
+     * key: 由官网生成的key
+     * @return 返回true表示呼起手Q成功，返回fals表示呼起失败
+     ******************/
+    public boolean doFeedback() {
+        Intent intent = new Intent();
+        intent.setData(Uri.parse(
+                "mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D"
+                        + "oAiTP6oUr2awPgQEBHr2eflKzcQEIvxI"));
+        // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        try {
+            startActivity(intent);
+            return true;
+        } catch (Exception e) {
+            // 未安装手Q或安装的版本不支持
+            return false;
+        }
+    }
+
 }

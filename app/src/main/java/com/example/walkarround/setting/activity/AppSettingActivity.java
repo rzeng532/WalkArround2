@@ -35,7 +35,7 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
     private TextView tvResetPasswordApp;
     private TextView tvAboutApp;
     private TextView tvProtocol;
-    private TextView tvFeedback;
+    //private TextView tvFeedback;
     //    private TextView tvFeedback;
     private TextView tvLogout;
 
@@ -63,8 +63,8 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
         tvAboutApp = (TextView) findViewById(R.id.tv_about_app);
         tvAboutApp.setOnClickListener(this);
 
-        tvFeedback = (TextView) findViewById(R.id.tv_feedback);
-        tvFeedback.setOnClickListener(this);
+//        tvFeedback = (TextView) findViewById(R.id.tv_feedback);
+//        tvFeedback.setOnClickListener(this);
 
         tvLogout = (TextView) findViewById(R.id.tv_logout);
         tvLogout.setOnClickListener(this);
@@ -115,10 +115,6 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
                 doLogout();
                 break;
 
-            case R.id.tv_feedback:
-                doFeedback();
-                break;
-
             default:
                 break;
         }
@@ -158,30 +154,6 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
         intent.putExtra("TITLE", getString(R.string.setting_user_protocol));
 
         startActivity(intent);
-    }
-
-
-    /****************
-     *
-     * 发起添加群流程。群号：走走反馈群(619714748) 的 key 为： oAiTP6oUr2awPgQEBHr2eflKzcQEIvxI
-     * 调用 doFeedback(oAiTP6oUr2awPgQEBHr2eflKzcQEIvxI) 即可发起手Q客户端申请加群 走走反馈群(619714748)
-     *
-     * key: 由官网生成的key
-     * @return 返回true表示呼起手Q成功，返回fals表示呼起失败
-     ******************/
-    public boolean doFeedback() {
-        Intent intent = new Intent();
-        intent.setData(Uri.parse(
-                                "mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D"
-                                        + "oAiTP6oUr2awPgQEBHr2eflKzcQEIvxI"));
-        // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        try {
-            startActivity(intent);
-            return true;
-        } catch (Exception e) {
-            // 未安装手Q或安装的版本不支持
-            return false;
-        }
     }
 
     private void checkAboutApp() {
