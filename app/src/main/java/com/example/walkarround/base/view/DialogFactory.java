@@ -17,6 +17,8 @@ import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.Logger;
 
+import java.util.ArrayList;
+
 import static android.app.AlertDialog.Builder;
 
 /**
@@ -551,4 +553,54 @@ public class DialogFactory {
         dialog.setContentView(contentView);
         return dialog;
     }
+
+    public static Dialog showNaviListDialog(Context context, String title,
+                                                    ArrayList<String> itemData,
+                                                    final AdapterView.OnItemClickListener onItemClickListener) {
+        ArrayAdapter actionAdapter = new ArrayAdapter(context, R.layout.list_item_alter_icon_dialog, R.id.item_text, itemData);
+
+        final Dialog dialog = new Dialog(context, R.style.shareDialogTheme);
+        View view = LayoutInflater.from(context).inflate(
+                R.layout.dialog_alter_icon, null);
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+        window.setContentView(view);
+
+        TextView titleView = (TextView) view.findViewById(R.id.textview_title);
+        View divider = (View) view.findViewById(R.id.divider1);
+        ListView list = (ListView) view.findViewById(R.id.listview_event);
+        //TextView textView = (TextView) view.findViewById(R.id.textview_cancel);
+        if (title == null || TextUtils.isEmpty(title)) {
+            titleView.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
+        } else {
+            titleView.setText(title);
+            titleView.setVisibility(View.VISIBLE);
+            divider.setVisibility(View.VISIBLE);
+        }
+
+        list.setAdapter(actionAdapter);
+
+        list.setOnItemClickListener(onItemClickListener);
+//        if (cancelListener == null) {
+//            textView.setOnClickListener(new View.OnClickListener() {
+//
+//                @Override
+//                public void onClick(View v) {
+//
+//                    dialog.dismiss();
+//                }
+//            });
+//        } else {
+//            textView.setOnClickListener(cancelListener);
+//        }
+
+        return dialog;
+    }
+
 }

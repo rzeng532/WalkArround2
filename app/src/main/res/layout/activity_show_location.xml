@@ -38,7 +38,7 @@
                 android:layout_height="80dp">
             <TextView
                     android:id="@+id/detail"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="14dp"
                     android:paddingTop="14dp"
@@ -48,7 +48,7 @@
 
             <TextView
                     android:id="@+id/full_infor"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="2dp"
                     android:paddingLeft="14dp"
@@ -57,6 +57,19 @@
                     android:textSize="@dimen/font_size7"
                     android:text="@string/msg_accept_walk_position"
                     android:textColor="@color/fontcor11"/>
+
+            <TextView
+                android:id="@+id/tv_navigation"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:layout_marginRight="14dp"
+                android:textSize="@dimen/font_size7"
+                android:text="@string/common_navigation"
+                android:background="@drawable/btn_distance_ripple0"
+                android:textColor="@color/fontcor3"/>
         </RelativeLayout>
 
         <RelativeLayout

@@ -17,6 +17,7 @@
     <string name="common_distance_unit_meter">米</string>
     <string name="common_distance_unit_kilometer">千米</string>
     <string name="common_age_secret">保密</string>
+    <string name="common_navigation">导航</string>
 
     <!-- Strings for dialog -->
     <string name="err_account_already_exist">该账户已存在</string>
@@ -346,5 +347,14 @@
 
     <string name="mapping_indication">你和%1$s已经相互喜欢，可以相互了解一下</string>
     <string name="mapping_hint_find_friend_cor">请找到手机暗号色和你同为%1$s的[%2$s]</string>
+    <string name="mapping_start_baidu_navi">即将用百度地图打开导航</string>
+    <string name="mapping_start_gaode_navi">即将用高德地图打开导航</string>
+    <string name="mapping_start_google_navi">即将用谷歌地图打开导航</string>
+    <string name="mapping_start_tencent_navi">即将用腾讯地图打开导航</string>
+    <string name="mapping_there_is_no_navi">请安装第三方地图方可导航</string>
 
+    <string name="mapping_baidu">百度地图</string>
+    <string name="mapping_gaode">高德地图</string>
+    <string name="mapping_google">高德地图</string>
+    <string name="mapping_tencent">腾讯地图</string>
 </resources>

@@ -140,7 +140,7 @@
                 android:layout_alignParentLeft="true"
                 android:paddingLeft="16dp"
                 android:gravity="center_vertical"
-                android:src="@drawable/icon_slide_setting"/>
+                android:src="@drawable/icon_slide_feedback"/>
 
             <TextView
                 android:id="@+id/tv_slide_feedback"
