@@ -332,8 +332,8 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             }
         } else if (v.getId() == R.id.tv_navigation) {
             if (mMapData != null) {
-                startSysMap(mMapData.latitude, mMapData.longitude);
-                //startNavi(mMapData.latitude, mMapData.longitude);
+                //startSysMap(mMapData.latitude, mMapData.longitude);
+                startNavi(mMapData.latitude, mMapData.longitude);
             }
         }
     }
@@ -385,56 +385,41 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
         ArrayList<String> mapList = new ArrayList<>();
         ArrayList<String> toastList = new ArrayList<>();
         ArrayList<Intent> startList = new ArrayList<>();
+        String curLat = null;
+        String curLng = null;
+        double[] gps = NaviMapUtil.gcj02_To_Gps84(lat, lng);
+        Uri mUri = Uri.parse("geo:" + gps[0] + "," + gps[1] + "?q=" + mMapGeoDetail);
+        Intent intent = new Intent("android.intent.action.VIEW", mUri);
 
         if (isAvilible(this, "com.baidu.BaiduMap")) {//传入指定应用包名
             mapList.add(getString(R.string.mapping_baidu));
             toastList.add(getString(R.string.mapping_start_baidu_navi));
-            //Uri mUri = Uri.parse("geo:"+ lat +","+ lng);
-//            Uri mUri = Uri.parse("geo:" + lat + "," + lng + "?q=" + mMapGeoDetail);
-//            Intent mIntent = new Intent(Intent.ACTION_VIEW, mUri);
-
-            String curLat = null;
-            String curLng = null;
-
-            if (mCurMarker != null && mCurMarker.getPosition() != null) {
-                double[] baiduLatLng = NaviMapUtil.gaoDeToBaidu(lng, lat);
-                curLat = baiduLatLng[1] + "";
-                curLng = baiduLatLng[0] + "";
-                logger.d("converted lat: " + curLat + ", lng: " + curLng);
-                Intent mIntent = NaviMapUtil.getBaiduIntent(this, curLat, curLng, "", "");
-                startList.add(mIntent);
-            }
         }
 
         if (isAvilible(this, "com.autonavi.minimap")) {
             mapList.add(getString(R.string.mapping_gaode));
             toastList.add(getString(R.string.mapping_start_gaode_navi));
-
-//            Uri mUri = Uri.parse("geo:" + lat + "," + lng + "?q=" + mMapGeoDetail);
-//            Uri mUri = Uri.parse("geo:"+ lat +","+ lng);
-//            Intent intent = new Intent("android.intent.action.VIEW", mUri);
-            Intent intent = NaviMapUtil.getGaodeIntent(this, "" + lng, "" + lat);
-            startList.add(intent);
         }
 
         if (mapList.size() <= 0) {
-            Toast.makeText(ShowLocationActivity.this, getString(R.string.mapping_there_is_no_navi), Toast.LENGTH_LONG).show();
-
-            return;
-        } else if (mapList.size() == 1) {
-            //Toast.makeText(ShowLocationActivity.this, toastList.get(0), Toast.LENGTH_LONG).show();
-            startActivity(startList.get(0));
+            Toast.makeText(getApplicationContext(), getString(R.string.mapping_there_is_no_navi), Toast.LENGTH_LONG).show();
 
             return;
         } else {
-            DialogFactory.showNaviListDialog(this, "", mapList
-                    , new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            //Toast.makeText(ShowLocationActivity.this, toastList.get(position), Toast.LENGTH_LONG).show();
-                            startActivity(startList.get(position));
-                        }
-                    }).show();
+            Toast.makeText(getApplicationContext(), toastList.get(0), Toast.LENGTH_LONG).show();
+            startActivity(intent);
+
+            return;
         }
+//        else {
+//            DialogFactory.showNaviListDialog(this, "", mapList
+//                    , new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                            Toast.makeText(ShowLocationActivity.this, toastList.get(position), Toast.LENGTH_LONG).show();
+//                            startActivity(startList.get(position));
+//                        }
+//                    }).show();
+//        }
     }
 }

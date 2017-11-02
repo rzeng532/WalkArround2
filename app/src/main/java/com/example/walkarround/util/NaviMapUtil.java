@@ -2,9 +2,12 @@ package com.example.walkarround.util;
 
 import java.io.File;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -283,4 +286,53 @@ public class NaviMapUtil {
         String result = String .format("%.6f", num);
         return Double.valueOf(result);
     }
+
+    /**
+     * Requests permission.
+     *
+     * @param activity
+     * @param requestCode request code, e.g. if you need request CAMERA permission,parameters is PermissionUtils.CODE_CAMERA
+     */
+//    public static void requestPermission(final Activity activity, final int requestCode, PermissionGrant permissionGrant) {
+//        if (activity == null) {
+//            return;
+//        }
+//
+//        if (requestCode < 0 || requestCode >= requestPermissions.length) {
+//            return;
+//        }
+//
+//        final String requestPermission = requestPermissions[requestCode];
+//
+//        //如果是6.0以下的手机，ActivityCompat.checkSelfPermission()会始终等于PERMISSION_GRANTED，
+//        // 但是，如果用户关闭了你申请的权限，ActivityCompat.checkSelfPermission(),会导致程序崩溃(java.lang.RuntimeException: Unknown exception code: 1 msg null)，
+//        // 你可以使用try{}catch(){},处理异常，也可以在这个地方，低于23就什么都不做，
+//        // 个人建议try{}catch(){}单独处理，提示用户开启权限。
+////        if (Build.VERSION.SDK_INT < 23) {
+////            return;
+////        }
+//
+//        int checkSelfPermission;
+//        try {
+//            checkSelfPermission = ActivityCompat.checkSelfPermission(activity, requestPermission);
+//        } catch (RuntimeException e) {
+//            Toast.makeText(activity, "please open this permission", Toast.LENGTH_SHORT)
+//                    .show();
+//            return;
+//        }
+//
+//        if (checkSelfPermission != PackageManager.PERMISSION_GRANTED) {
+//
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, requestPermission)) {
+//                shouldShowRationale(activity, requestCode, requestPermission);
+//
+//            } else {
+//                ActivityCompat.requestPermissions(activity, new String[]{requestPermission}, requestCode);
+//            }
+//
+//        } else {
+//            Toast.makeText(activity, "opened:" + requestPermissions[requestCode], Toast.LENGTH_SHORT).show();
+//            permissionGrant.onPermissionGranted(requestCode);
+//        }
+//    }
 }

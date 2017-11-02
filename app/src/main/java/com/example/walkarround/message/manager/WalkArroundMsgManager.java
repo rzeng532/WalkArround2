@@ -11,6 +11,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
+import com.avos.avoscloud.im.v2.AVIMConversationsQuery;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
@@ -229,7 +230,7 @@ public class WalkArroundMsgManager {
 
         //Find it from server.
         final AVIMClient client = getMsgClient();
-        AVIMConversationQuery conversationQuery = client.getQuery();
+        AVIMConversationsQuery conversationQuery = client.getConversationsQuery();
         conversationQuery.withMembers(Arrays.asList(memberId), true);
         //conversationQuery.whereEqualTo("customConversationType",1);
 

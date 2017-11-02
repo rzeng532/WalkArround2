@@ -248,7 +248,7 @@ public class MessageUtil {
                 msgInfo.setLatitute(temp.getLatitude());
                 msgInfo.setLongitude(temp.getLongitude());
             }
-            Map<String, Object> attri = ((AVIMTextMessage)cmMessage).getAttrs();
+            Map<String, Object> attri = ((AVIMLocationMessage)cmMessage).getAttrs();
             if(attri != null) {
                 String extroInfor = (String)attri.get(MessageUtil.EXTRA_INFOR_KEY);
                 if(!TextUtils.isEmpty(extroInfor)) {
