@@ -81,8 +81,9 @@ public class MessageUtil {
         public static int STATE_WALK = 3; //IM 中相互选择地点，并且未相互评价
         public static int STATE_IMPRESSION = 4; //完成走走，等待评价
         public static int STATE_END = 5; //评价完成
-        public static int STATE_POP = 6; //好友堆栈溢出 （例如只能存在7个好友，你排在第八，则溢出）
-        public static int STATE_POP_IMPRESSION = 7; //好友堆栈溢出后再次评价
+        public static int STATE_END_IMPRESSION = 6; //好友再次评价
+        public static int STATE_POP = 7; //好友堆栈溢出 （例如只能存在7个好友，你排在第八，则溢出）
+        public static int STATE_POP_IMPRESSION = 8; //好友堆栈溢出后再次评价
     }
 
     /**

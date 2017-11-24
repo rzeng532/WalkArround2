@@ -37,7 +37,7 @@
                   android:paddingBottom="10dp"
                   android:layout_centerHorizontal="true"
                   android:gravity="center"
-                  android:text="@string/walk_rule_i_see"
+                  android:text="@string/walk_rule_i_see_no_countdown"
                   android:textColor="@color/fontcor3"
                   android:textSize="@dimen/font_size2_dp"
                   android:background="@drawable/btn_finish_red"/>

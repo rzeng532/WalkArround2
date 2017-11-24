@@ -23,6 +23,7 @@ import com.example.walkarround.R;
 import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.ProgressDialogHorizontal;
+import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
@@ -449,11 +450,11 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     while(it.hasNext()){
                         MessageSessionBaseModel item = it.next();
                         if(mConvType == CONV_TYPE_OLD_FRIEND
-                                && (item.status > MessageUtil.WalkArroundState.STATE_INIT && item.status <= MessageUtil.WalkArroundState.STATE_END)){
+                                && (item.status > MessageUtil.WalkArroundState.STATE_INIT && item.status <= MessageUtil.WalkArroundState.STATE_END_IMPRESSION)){
                             //Current UI need old friends, so we remove !Old friends.
                             it.remove();
                         } else if(mConvType == CONV_TYPE_CUR_FRIEND
-                                && (item.status <= MessageUtil.WalkArroundState.STATE_INIT || item.status > MessageUtil.WalkArroundState.STATE_END)){
+                                && (item.status <= MessageUtil.WalkArroundState.STATE_INIT || item.status > MessageUtil.WalkArroundState.STATE_END_IMPRESSION)){
                             //Current UI need cur friend, we remove old one
                             mIsThereOldFriend = true;
                             mOldFriendUnreadCound += item.unReadCount;
@@ -498,6 +499,12 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         mConvType = getIntent().getIntExtra(CONV_PARAM_OLD_FRIEND, CONV_TYPE_CUR_FRIEND);
 
         initView();
+
+        //Check 是否有朋友还处于未评价状态
+        if(checkIsTherePopImpressionOne()) {
+            return;
+        }
+
         //初始化数据
         initData();
         logger.d("onCreate end.");
@@ -526,6 +533,20 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     QuerySpeedDateIdTask.getParams(ProfileManager.getInstance().getCurUsrObjId()),
                     TaskUtil.getTaskHeader()));
         }
+    }
+
+    private boolean checkIsTherePopImpressionOne() {
+        List<MessageSessionBaseModel> listPopImp = WalkArroundMsgManager.getInstance(getApplicationContext())
+                .getLocalPopImpressionConv();
+        if(listPopImp != null && listPopImp.size() > 0) {
+            Intent evaItent = new Intent(this, EvaluateActivity.class);
+            evaItent.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, listPopImp.get(0).getContact());
+            startActivity(evaItent);
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override

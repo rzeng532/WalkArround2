@@ -409,7 +409,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             //Set correct text font color for this case.
             holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
             //holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
-        } else if(convState ==  MessageUtil.WalkArroundState.STATE_END) {
+        } else if(convState ==  MessageUtil.WalkArroundState.STATE_END
+                    || convState ==  MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
             if(position <= 1 && priorIsMappingConv) {
                 holder.tvMappingFlag.setVisibility(View.VISIBLE);
                 if(position == 0) {
@@ -452,7 +453,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
     private void setFilfullArea(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean isThereMappingOnList) {
 
         //Check if item need display fulfill area.
-        if(listDO.status == MessageUtil.WalkArroundState.STATE_END) {
+        if(listDO.status == MessageUtil.WalkArroundState.STATE_END
+                || listDO.status == MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
             //Calculate area width value.
             WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             DisplayMetrics dm = new DisplayMetrics();

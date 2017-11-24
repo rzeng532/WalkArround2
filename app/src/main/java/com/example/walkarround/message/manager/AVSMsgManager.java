@@ -737,6 +737,11 @@ public class AVSMsgManager extends MessageAbstractManger {
         return messageDbManager.delOtherConversionsOverParamTime(time);
     }
 
+    @Override
+    public List<MessageSessionBaseModel> getLocalPopImpressionConv() throws Exception {
+        return messageDbManager.getLocalPopImpressionConv();
+    }
+
     public int getMsgUnreadCount(String strThreadId) throws Exception {
         int count = messageDbManager.getConversationUnreadCount(Integer.parseInt(strThreadId));
         return count;

@@ -229,6 +229,8 @@ public abstract class MessageAbstractManger {
 
     public abstract int delOtherConversionsOverParamTime(long time) throws Exception;
 
+    public abstract List<MessageSessionBaseModel> getLocalPopImpressionConv() throws Exception;
+
     public abstract int getMsgUnreadCount(String strThreadId) throws Exception;
 
     public abstract int getUnreadMsgCountByThreadId(String strThreadId) throws Exception;

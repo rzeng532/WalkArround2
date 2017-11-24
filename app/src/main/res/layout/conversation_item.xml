@@ -40,8 +40,7 @@
                       android:layout_height="wrap_content"/>
     </RelativeLayout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/conv_rl"
+    <RelativeLayout android:id="@+id/conv_rl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/conv_mapping_flag"
@@ -87,10 +86,9 @@
 
         <ImageView
                 android:id="@+id/conversation_item_del_icon"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_centerVertical="true"

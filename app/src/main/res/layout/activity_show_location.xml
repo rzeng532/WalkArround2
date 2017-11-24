@@ -54,7 +54,7 @@
                     android:paddingLeft="14dp"
                     android:layout_below="@+id/detail"
                     android:layout_centerVertical="true"
-                    android:textSize="@dimen/font_size7"
+                    android:textSize="@dimen/font_size6"
                     android:text="@string/msg_accept_walk_position"
                     android:textColor="@color/fontcor11"/>
 
@@ -66,7 +66,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:layout_marginRight="14dp"
-                android:textSize="@dimen/font_size7"
+                android:textSize="@dimen/font_size6"
                 android:text="@string/common_navigation"
                 android:background="@drawable/btn_distance_ripple0"
                 android:textColor="@color/fontcor3"/>

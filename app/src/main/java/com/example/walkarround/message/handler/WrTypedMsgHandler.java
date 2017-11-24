@@ -145,14 +145,14 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
                         //Get current thread state
                         int threadState = WalkArroundMsgManager.getInstance(mContext).getConversationStatus(msgInfo.getMsgThreadId());
                         int newThreadState;
-                        if(threadState >= MessageUtil.WalkArroundState.STATE_INIT || threadState >= MessageUtil.WalkArroundState.STATE_POP) {
-                            newThreadState = MessageUtil.WalkArroundState.STATE_POP_IMPRESSION;
+                        if(threadState == MessageUtil.WalkArroundState.STATE_INIT || threadState >= MessageUtil.WalkArroundState.STATE_POP) {
+                            //newThreadState = MessageUtil.WalkArroundState.STATE_POP_IMPRESSION;
                         } else {
                             newThreadState = MessageUtil.WalkArroundState.STATE_WALK;
+                            logger.d("msgInfor array 1: " + extraArray[1]);
+                            int color = Integer.parseInt(extraArray[1]);
+                            WalkArroundMsgManager.getInstance(mContext).updateConversationStatusAndColor(msgInfo.getMsgThreadId(), newThreadState, color);
                         }
-                        logger.d("msgInfor array 1: " + extraArray[1]);
-                        int color = Integer.parseInt(extraArray[1]);
-                        WalkArroundMsgManager.getInstance(mContext).updateConversationStatusAndColor(msgInfo.getMsgThreadId(), newThreadState, color);
                     } else if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALKARROUND)) {
 
                     } else if(extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_SAY_HELLO)) {

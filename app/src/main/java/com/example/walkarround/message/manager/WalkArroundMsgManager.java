@@ -7,10 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMConversationQuery;
 import com.avos.avoscloud.im.v2.AVIMConversationsQuery;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
@@ -29,7 +29,12 @@ import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * TODO: description
@@ -97,7 +102,43 @@ public class WalkArroundMsgManager {
         if(mInstance.mAvimClient == null) {
             synchronized (mMsgClientLock) {
                 if(mInstance.mAvimClient == null) {
-                    open(getClientId(), null);
+                    logger.d("getMsgClient start");
+                    mInstance.mAvimClient = AVIMClient.getInstance(getClientId());
+                    logger.d("Client id is: " + getClientId());
+                    mInstance.mAvimClient.open(new AVIMClientCallback() {
+
+                        @Override
+                        public void done(AVIMClient avimClient, AVIMException e) {
+                            if(e == null) {
+                                //登录成功
+                                logger.d("Clint open ok.");
+                                AVIMConversationsQuery query = avimClient.getConversationsQuery();
+                                query.findInBackground(new AVIMConversationQueryCallback(){
+                                    @Override
+                                    public void done(List<AVIMConversation> list,AVIMException e){
+                                        if(e == null){
+                                            if (null != list && list.size() > 0) {
+                                                //Set current conversation. We just need the first one if list size > 1.
+                                                String memId = "";
+                                                for(AVIMConversation item : list) {
+                                                    if(item.getMembers() != null && item.getMembers().size() > 0) {
+
+                                                        if(item.getMembers().get(0).equalsIgnoreCase(item.getCreator())) {
+                                                            memId = item.getMembers().get(1);
+                                                        } else {
+                                                            memId = item.getMembers().get(0);
+                                                        }
+                                                    }
+                                                    mInstance.mConversationMap.put(memId, item);
+                                                    logger.d("Get conv, memId : " + memId);
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             }
         }
@@ -225,6 +266,7 @@ public class WalkArroundMsgManager {
             if(listener != null) {
                 listener.onSuccess(null);
             }
+            logger.d("We find conversation + " + memberId);
             return;
         }
 
@@ -240,17 +282,21 @@ public class WalkArroundMsgManager {
             @Override
             public void done(List<AVIMConversation> list, AVIMException e) {
                 if (e == null) {
+                    logger.d("Find conv from server + " + memberId);
                     if (null != list && list.size() > 0) {
+                        logger.d("Find conv from server ok. Size: " + list.size());
                         //Set current conversation. We just need the first one if list size > 1.
                         mInstance.mImConversation = list.get(0);
                         mInstance.mConversationMap.put(memberId, mInstance.mImConversation);
                         setConversation();
                         listener.onSuccess(null);
                     } else {
+                        logger.d("Find conv from server fail and create conv.");
                         mInstance.mAvimClient.createConversation(Arrays.asList(memberId), null, null, false, new AVIMConversationCreatedCallback() {
                             @Override
                             public void done(AVIMConversation avimConversation, AVIMException e) {
                                 if (e == null) {
+                                    logger.d("Create conv ok.");
                                     mInstance.mImConversation = avimConversation;
                                     mInstance.mConversationMap.put(memberId, mInstance.mImConversation);
                                     setConversation();
@@ -258,6 +304,7 @@ public class WalkArroundMsgManager {
                                         listener.onSuccess(null);
                                     }
                                 } else {
+                                    logger.d("Create conv fail.");
                                     if(listener != null) {
                                         listener.onFailed(e);
                                     }
@@ -773,6 +820,16 @@ public class WalkArroundMsgManager {
             return mInstance.mMsgManager.getFriendsSessionList();
         } catch (Exception e) {
             logger.e("getFriendsConversationList Exception:" + e.getMessage());
+        }
+
+        return null;
+    }
+
+    public List<MessageSessionBaseModel> getLocalPopImpressionConv() {
+        try {
+            return mInstance.mMsgManager.getLocalPopImpressionConv();
+        } catch (Exception e) {
+            logger.e("getLocalPopImpressionConv Exception:" + e.getMessage());
         }
 
         return null;

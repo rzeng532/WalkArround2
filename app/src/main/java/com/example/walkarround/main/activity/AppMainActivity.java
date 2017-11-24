@@ -431,17 +431,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         }
 
         //IM client init operation.
-        WalkArroundMsgManager.getInstance(getApplicationContext()).open(WalkArroundMsgManager.getInstance(getApplicationContext()).getClientId(),
-                new AVIMClientCallback() {
-                    @Override
-                    public void done(AVIMClient avimClient, AVIMException e) {
-                        if (e == null) {
-                            amLogger.d("Open client success.");
-                        } else {
-                            amLogger.d("Open client fail.");
-                        }
-                    }
-                });
+        WalkArroundMsgManager.getInstance(getApplicationContext()).getMsgClient();
 
         //Get speed data id and check local conversation later.
         getConversationDataFromServer();
@@ -489,17 +479,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     protected void onNewIntent(Intent intent) {
 
         //IM client init operation.
-        WalkArroundMsgManager.getInstance(getApplicationContext()).open(WalkArroundMsgManager.getInstance(getApplicationContext()).getClientId(),
-                new AVIMClientCallback() {
-                    @Override
-                    public void done(AVIMClient avimClient, AVIMException e) {
-                        if (e == null) {
-                            amLogger.d("Open client success.");
-                        } else {
-                            amLogger.d("Open client fail.");
-                        }
-                    }
-                });
+        WalkArroundMsgManager.getInstance(getApplicationContext()).getMsgClient();
 
         //Get speed data id and check local conversation later.
         getConversationDataFromServer();
@@ -712,7 +692,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         if (mFriendList == null || mFriendList.size() <= 0) {
             if (list != null && list.size() > 0) {
                 for (MessageSessionBaseModel item : list) {
-                    if (item.status == MessageUtil.WalkArroundState.STATE_END) {
+                    if (item.status == MessageUtil.WalkArroundState.STATE_END
+                            || item.status == MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
                         removeThreadIdList.add(item.getThreadId());
                     }
                 }
@@ -754,7 +735,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             //Get deleted items list.
             if (removedModelList != null && removedModelList.size() > 0) {
                 for (MessageSessionBaseModel item : removedModelList) {
-                    if (item.status == MessageUtil.WalkArroundState.STATE_END) {
+                    if (item.status == MessageUtil.WalkArroundState.STATE_END
+                            || item.status == MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
                         removeThreadIdList.add(item.getThreadId());
                     }
                 }

@@ -64,10 +64,12 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
     private RatingBar mRbTemperament;
 
     private ContactInfo mFriend = null;
+    private String mFriendId = null;
     private PhotoView mPvPortrait;
 
     private Dialog mLoadingDialog;
     private long mThreadId = -1l;
+    private int mNewThreadState = MessageUtil.WalkArroundState.STATE_IMPRESSION;
 
     private HttpTaskBase.onResultListener mEvaluateFriendTaskListener = new HttpTaskBase.onResultListener() {
         @Override
@@ -78,16 +80,16 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         @Override
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
             myLogger.d("EvaluateFriend done." + (String)object);
-            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH) && mFriend != null) {
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode
+                    && (requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH)
+                        || requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH2))
+                    && mFriend != null) {
                 myLogger.d("EvaluateFriend success, next step is add friend");
 
                 //Get colorIndex
-                List<String> recipient = new ArrayList<>();
-                recipient.add(mFriend.getObjectId());
-                long msgThreadId = mThreadId;
-                if (msgThreadId >= 0) {
-                    int colorIndex = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColorIndex(msgThreadId);
-                    WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, MessageUtil.WalkArroundState.STATE_END);
+                if (mThreadId >= 0) {
+                    int colorIndex = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColorIndex(mThreadId);
+                    WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(mThreadId, MessageUtil.WalkArroundState.STATE_END);
 
                     myLogger.d("AddFriendTask, color index is: " + colorIndex);
 
@@ -201,19 +203,12 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 //Get status & Get TO user.
                 String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
                 myLogger.d("Query speed date id response success: " + strSpeedDateId);
-
-                //Send impression value to server
-                ThreadPoolManager.getPoolManager().addAsyncTask(new EvaluateFriendTask(getApplicationContext(),
-                        mEvaluateFriendTaskListener,
-                        HttpUtil.HTTP_FUNC_EVALUATE_EACH,
-                        HttpUtil.HTTP_TASK_EVALUATION_EACH,
-                        EvaluateFriendTask.getParams(ProfileManager.getInstance().getCurUsrObjId(), (int) (mRbHonest.getRating()),
-                                (int) (mRbConversationStyle.getRating()), (int) (mRbAppearance.getRating()),
-                                (int) (mRbTemperament.getRating()), strSpeedDateId),
-                        TaskUtil.getTaskHeader()));
+                if(!TextUtils.isEmpty(strSpeedDateId)) {
+                    startEvaluateBetweenNoFriends(strSpeedDateId);
+                }
             } else {
-                myLogger.d("Query speed date id failed");
-                mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
+                myLogger.d("Query speed date id response fail: " + resultCode);
+                startEvaluateBetweenOldFriends();
             }
         }
 
@@ -222,6 +217,37 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
         }
     };
+
+    private void startEvaluateBetweenNoFriends(String speedDataId) {
+        if(!TextUtils.isEmpty(speedDataId)) {
+            //Send impression value to server
+            ThreadPoolManager.getPoolManager().addAsyncTask(new EvaluateFriendTask(getApplicationContext(),
+                    mEvaluateFriendTaskListener,
+                    HttpUtil.HTTP_FUNC_EVALUATE_EACH,
+                    HttpUtil.HTTP_TASK_EVALUATION_EACH,
+                    EvaluateFriendTask.getParamsBetweenNoFriend(ProfileManager.getInstance().getCurUsrObjId(),
+                            (int) (mRbHonest.getRating()),
+                            (int) (mRbConversationStyle.getRating()),
+                            (int) (mRbAppearance.getRating()),
+                            (int) (mRbTemperament.getRating()),
+                            speedDataId),
+                    TaskUtil.getTaskHeader()));
+        }
+    }
+
+    private void startEvaluateBetweenOldFriends() {
+        if(!TextUtils.isEmpty(mFriendId)) {
+            AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_EVALUATE);
+            ThreadPoolManager.getPoolManager().addAsyncTask(new EvaluateFriendTask(getApplicationContext(),
+                    mEvaluateFriendTaskListener,
+                    HttpUtil.HTTP_FUNC_EVALUATE_EACH2,
+                    HttpUtil.HTTP_TASK_EVALUATION_EACH2,
+                    EvaluateFriendTask.getParams(ProfileManager.getInstance().getCurUsrObjId(), (int) (mRbHonest.getRating()),
+                            (int) (mRbConversationStyle.getRating()), (int) (mRbAppearance.getRating()),
+                            (int) (mRbTemperament.getRating()), mFriendId),
+                    TaskUtil.getTaskHeader()));
+        }
+    }
 
     private HttpTaskBase.onResultListener mLoadFriendsResultListener = new HttpTaskBase.onResultListener() {
         @Override
@@ -334,23 +360,28 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         //Get data from intent, like friend objId, speed data id.
         Intent intent = getIntent();
         if (intent != null) {
-            String friendId = intent.getStringExtra(PARAMS_FRIEND_OBJ_ID);
+            mFriendId = intent.getStringExtra(PARAMS_FRIEND_OBJ_ID);
 
-            if (!TextUtils.isEmpty(friendId)) {
-                mFriend = ContactsManager.getInstance(this).getContactByUsrObjId(friendId);
+            if (!TextUtils.isEmpty(mFriendId)) {
+                mFriend = ContactsManager.getInstance(this).getContactByUsrObjId(mFriendId);
                 if(mFriend == null) {
-                    ContactsManager.getInstance(this).getContactFromServer(friendId);
+                    ContactsManager.getInstance(this).getContactFromServer(mFriendId);
                 }
-            }
-        }
 
-        if(mFriend != null) {
-            List<String> recipient = new ArrayList<>();
-            recipient.add(mFriend.getObjectId());
-            mThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
-                    recipient);
-            if(mThreadId > -1l) {
-                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(mThreadId, MessageUtil.WalkArroundState.STATE_IMPRESSION);
+                List<String> recipient = new ArrayList<>();
+                recipient.add(mFriendId);
+                mThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
+                        recipient);
+                if(mThreadId > -1l) {
+                    int oldState = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(mThreadId);
+                    if(oldState == MessageUtil.WalkArroundState.STATE_END) {
+                        mNewThreadState = MessageUtil.WalkArroundState.STATE_END_IMPRESSION;
+                    } else if(oldState == MessageUtil.WalkArroundState.STATE_POP) {
+                        mNewThreadState = MessageUtil.WalkArroundState.STATE_POP_IMPRESSION;
+                    }
+
+                    WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(mThreadId, mNewThreadState);
+                }
             }
         }
     }
@@ -398,19 +429,18 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                     && mRbTemperament.getRating() > 0.0f) {
                 //Get speed data id -> evaluate friend -> finish;
                 showCircleDialog();
-                String speedDateId = ProfileManager.getInstance().getSpeedDateId();
-                if (!TextUtils.isEmpty(speedDateId)) {
-                    AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_EVALUATE);
-                    ThreadPoolManager.getPoolManager().addAsyncTask(new EvaluateFriendTask(getApplicationContext(),
-                            mEvaluateFriendTaskListener,
-                            HttpUtil.HTTP_FUNC_EVALUATE_EACH,
-                            HttpUtil.HTTP_TASK_EVALUATION_EACH,
-                            EvaluateFriendTask.getParams(ProfileManager.getInstance().getCurUsrObjId(), (int) (mRbHonest.getRating()),
-                                    (int) (mRbConversationStyle.getRating()), (int) (mRbAppearance.getRating()),
-                                    (int) (mRbTemperament.getRating()), speedDateId),
-                            TaskUtil.getTaskHeader()));
+
+                if(mNewThreadState == MessageUtil.WalkArroundState.STATE_END_IMPRESSION
+                        || mNewThreadState == MessageUtil.WalkArroundState.STATE_POP_IMPRESSION) {
+                    startEvaluateBetweenOldFriends();
                 } else {
-                    getSpeedDataId();
+                    String speedDateId = ProfileManager.getInstance().getSpeedDateId();
+                    if (!TextUtils.isEmpty(speedDateId)) {
+                        AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_EVALUATE);
+                        startEvaluateBetweenNoFriends(speedDateId);
+                    } else {
+                        getSpeedDataId();
+                    }
                 }
             } else {
                 //Indicate user to evaluate

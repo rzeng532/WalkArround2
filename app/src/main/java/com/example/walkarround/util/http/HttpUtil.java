@@ -22,6 +22,7 @@ public class HttpUtil {
     public static final String HTTP_FUNC_ADD_FRIEND = "addFriend";
     public static final String HTTP_FUNC_GET_FRIEND_LIST = "friendList";
     public static final String HTTP_FUNC_EVALUATE_EACH = "evaluationEach";
+    public static final String HTTP_FUNC_EVALUATE_EACH2 = "evaluationEach2";
     public static final String HTTP_FUNC_UPDATE_SPEEDDATE_COLOR = "setColor";
     public static final String HTTP_FUNC_QUERY_USR_COORDINATE = "userCoordinate";
     public static final String HTTP_FUNC_END_SPEED_DATE = "endSpeedDate";
@@ -56,6 +57,9 @@ public class HttpUtil {
 
     public static final String HTTP_TASK_EVALUATION_EACH = HTTP_TASK_PRE +
             HTTP_FUNC_EVALUATE_EACH;
+
+    public static final String HTTP_TASK_EVALUATION_EACH2 = HTTP_TASK_PRE +
+            HTTP_FUNC_EVALUATE_EACH2;
 
     public static final String HTTP_TASK_UPDATE_SPEEDDATE_COLOR = HTTP_TASK_PRE +
             HTTP_FUNC_UPDATE_SPEEDDATE_COLOR;

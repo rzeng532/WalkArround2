@@ -124,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/linecor5"/>
+                android:background="@color/linecor6"/>
 
         <RelativeLayout
             android:id="@+id/rl_slide_feedback"
@@ -159,7 +159,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/linecor5"/>
+            android:background="@color/linecor6"/>
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

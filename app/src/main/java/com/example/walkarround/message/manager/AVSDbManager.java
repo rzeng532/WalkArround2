@@ -803,8 +803,12 @@ public class AVSDbManager {
         String[] args;
 
         sortOrder = Conversation._DATE + " DESC";
-        where = Conversation._DATA1 + " = ? AND " + Conversation._CONVERSATION_STATUS + " = ? ";
-        args = new String[]{Conversation.COMMON_MSG, String.valueOf(MessageUtil.WalkArroundState.STATE_END)};
+        where = Conversation._DATA1 + " = ? AND (" +
+                    Conversation._CONVERSATION_STATUS + " = ? OR " +
+                    Conversation._CONVERSATION_STATUS + " = ?)";
+        args = new String[]{Conversation.COMMON_MSG,
+                            String.valueOf(MessageUtil.WalkArroundState.STATE_END),
+                            String.valueOf(MessageUtil.WalkArroundState.STATE_END_IMPRESSION)};
 
         Cursor cur = mContext.getContentResolver().query(Conversation.CONTENT_URI, null, where, args, sortOrder);
 
@@ -832,8 +836,12 @@ public class AVSDbManager {
 
         long curTime = System.currentTimeMillis();
         Cursor cursor = mContext.getContentResolver().query(Conversation.CONTENT_URI,
-                new String[]{Conversation._ID, Conversation._DATE}, Conversation._CONVERSATION_STATUS + " = ? AND " + Conversation._DATE + " < ?",
-                new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_POP), String.valueOf(curTime - time)},
+                new String[]{Conversation._ID, Conversation._DATE},
+                "(" + Conversation._CONVERSATION_STATUS + " = ? OR " + Conversation._CONVERSATION_STATUS + " = ? )" +
+                        " AND " + Conversation._DATE + " < ?",
+                new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_POP),
+                        String.valueOf(MessageUtil.WalkArroundState.STATE_INIT),
+                        String.valueOf(curTime - time)},
                 null);
 
         List<Long> threadIdList = new ArrayList<>();
@@ -851,6 +859,30 @@ public class AVSDbManager {
         }
 
         return threadIdList.size();
+    }
+
+    public List<MessageSessionBaseModel> getLocalPopImpressionConv() {
+        String sortOrder;
+        String where;
+        String[] args;
+
+        sortOrder = Conversation._DATE + " DESC";
+        where = Conversation._CONVERSATION_STATUS + " = ? ";
+        args = new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_POP_IMPRESSION)};
+
+        Cursor cur = mContext.getContentResolver().query(Conversation.CONTENT_URI, null, where, args, sortOrder);
+
+        List<MessageSessionBaseModel> target = new ArrayList<>();
+        if (cur != null) {
+            if (cur.moveToFirst()) {
+                do {
+                    target.add(getSessionByCursor(cur));
+                } while (cur.moveToNext());
+            }
+            cur.close();
+        }
+
+        return target;
     }
 
     /**
@@ -948,14 +980,18 @@ public class AVSDbManager {
 
         int oldState = getConversationStatus(threadId);
 
+        if(oldState == newState) {
+            return;
+        }
+
         String where = Conversation._ID + "=?";
         String[] arg = new String[]{threadId + ""};
         ContentValues conversationValues = new ContentValues();
 
-        if(newState != MessageUtil.WalkArroundState.STATE_INIT
-                &&  newState != MessageUtil.WalkArroundState.STATE_POP
-                && (oldState > newState)) {
-            newState = oldState;
+        if(newState < oldState
+                && oldState >= MessageUtil.WalkArroundState.STATE_IM
+                && oldState <= MessageUtil.WalkArroundState.STATE_END) {
+            return;
         }
 
         conversationValues.put(Conversation._CONVERSATION_STATUS, newState);
@@ -993,17 +1029,21 @@ public class AVSDbManager {
         }
 
         int oldState = getConversationStatus(threadId);
+        if(oldState == newStatus) {
+            return;
+        }
 
         String where = Conversation._ID + "=?";
         String[] arg = new String[]{threadId + ""};
         ContentValues conversationValues = new ContentValues();
         conversationValues.put(Conversation._COLOR, newColor);
 
-        if(newStatus != MessageUtil.WalkArroundState.STATE_INIT
-                &&  newStatus != MessageUtil.WalkArroundState.STATE_POP
-                && (oldState > newStatus) && (oldState > newStatus)) {
-            newStatus = oldState;
+        if(newStatus < oldState
+                && oldState >= MessageUtil.WalkArroundState.STATE_IM
+                && oldState <= MessageUtil.WalkArroundState.STATE_END) {
+            return;
         }
+
         conversationValues.put(Conversation._CONVERSATION_STATUS, newStatus);
 
         //If conversation state == WalkArroundState.IMPRESSION

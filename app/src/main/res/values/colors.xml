@@ -35,6 +35,7 @@
     <color name="linecor3">#499dfb</color>
     <color name="linecor4">#2b384c</color>
     <color name="linecor5">#f2f2f2</color>
+    <color name="linecor6">#34ffffff</color>
 
     <!-- font color -->
     <color name="fontcor1">#333333</color>

@@ -320,15 +320,16 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
                         TaskUtil.getTaskHeader()));
             } else {
                 //If speed date id is empty.
-                if (!TextUtils.isEmpty(ProfileManager.getInstance().getCurUsrObjId()) && TextUtils.isEmpty(ProfileManager.getInstance().getSpeedDateId())) {
-                    //Check speed date id
-                    ThreadPoolManager.getPoolManager().addAsyncTask(new QuerySpeedDateIdTask(getApplicationContext(),
-                            mGetSpeedIdTaskListener,
-                            HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE,
-                            HttpUtil.HTTP_TASK_QUERY_SPEED_DATE,
-                            QuerySpeedDateIdTask.getParams(ProfileManager.getInstance().getCurUsrObjId()),
-                            TaskUtil.getTaskHeader()));
-                }
+                mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_SUC);
+//                if (!TextUtils.isEmpty(ProfileManager.getInstance().getCurUsrObjId()) && TextUtils.isEmpty(ProfileManager.getInstance().getSpeedDateId())) {
+//                    //Check speed date id
+//                    ThreadPoolManager.getPoolManager().addAsyncTask(new QuerySpeedDateIdTask(getApplicationContext(),
+//                            mGetSpeedIdTaskListener,
+//                            HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE,
+//                            HttpUtil.HTTP_TASK_QUERY_SPEED_DATE,
+//                            QuerySpeedDateIdTask.getParams(ProfileManager.getInstance().getCurUsrObjId()),
+//                            TaskUtil.getTaskHeader()));
+//                }
             }
         } else if (v.getId() == R.id.tv_navigation) {
             if (mMapData != null) {
