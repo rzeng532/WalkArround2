@@ -374,9 +374,12 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                         recipient);
                 if(mThreadId > -1l) {
                     int oldState = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(mThreadId);
-                    if(oldState == MessageUtil.WalkArroundState.STATE_END) {
+                    if(oldState == MessageUtil.WalkArroundState.STATE_END
+                            || oldState == MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
                         mNewThreadState = MessageUtil.WalkArroundState.STATE_END_IMPRESSION;
-                    } else if(oldState == MessageUtil.WalkArroundState.STATE_POP) {
+                    } else if(oldState == MessageUtil.WalkArroundState.STATE_POP
+                                || oldState == MessageUtil.WalkArroundState.STATE_POP_IMPRESSION
+                                || oldState == MessageUtil.WalkArroundState.STATE_INIT) {
                         mNewThreadState = MessageUtil.WalkArroundState.STATE_POP_IMPRESSION;
                     }
 

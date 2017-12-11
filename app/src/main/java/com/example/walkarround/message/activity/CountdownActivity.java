@@ -130,8 +130,10 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
             long msgThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
                     recipient);
             if (msgThreadId >= 0) {
-                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, MessageUtil.WalkArroundState.STATE_WALK);
-                //TODO: update speed data id state to server.
+                int oldState = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(msgThreadId);
+                if(oldState != MessageUtil.WalkArroundState.STATE_INIT) {
+                    WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, MessageUtil.WalkArroundState.STATE_WALK);
+                }
             }
         }
 
@@ -205,7 +207,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         timeProgress3 = (RoundProgressBar) findViewById(R.id.iv_countdown_3);
         timeProgress.setProgress(0);
 
-        mLlPreCountDown = (LinearLayout)findViewById(R.id.rl_pre_countdown);;
+        mLlPreCountDown = (LinearLayout)findViewById(R.id.rl_pre_countdown);
 
         if (mFriend != null) {
             String friendName = mFriend.getUsername();
@@ -345,7 +347,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         mCurTime++;
         //setTvPrepareCountdownTimeUI(PREPARE_COUNTDOWN_TOTOL_TIME - mCurTime);
 
-        if (mRuleDialog != null && mCurTime >= (PREPARE_COUNTDOWN_TOTOL_TIME - 1)) {
+        if (mRuleDialog != null && mCurTime >= (PREPARE_COUNTDOWN_TOTOL_TIME)) {
             //Reset current time second value.
             mCurTime = 0;
             //Mark real countdown start time.

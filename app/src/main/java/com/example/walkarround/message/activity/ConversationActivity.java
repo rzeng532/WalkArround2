@@ -337,6 +337,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     if(mConvType == CONV_TYPE_CUR_FRIEND && mIsThereOldFriend) {
                         mIvOldFriends.setVisibility(View.VISIBLE);
                         if(mOldFriendUnreadCound > 0) {
+                            mIvOldFriends.setVisibility(View.VISIBLE);
                             mIvOldFriendUnread.setVisibility(View.VISIBLE);
                         } else {
                             mIvOldFriendUnread.setVisibility(View.GONE);
@@ -847,6 +848,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 // 新到会话
                 if(mConvType == CONV_TYPE_CUR_FRIEND) {
                     //Update old friend flag & return;
+                    mIvOldFriends.setVisibility(View.VISIBLE);
                     mIvOldFriendUnread.setVisibility(View.VISIBLE);
                     return;
                 }

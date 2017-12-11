@@ -15,6 +15,7 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.model.MessageRecipientInfo;
+import com.example.walkarround.message.model.MessageSessionBaseModel;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageConstant.MessageState;
 import com.example.walkarround.message.util.MessageConstant.MessageType;
@@ -86,6 +87,7 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
                                 msgInfo.setMsgId(ContentUris.parseId(msgUri));
                                 WalkArroundMsgManager.getInstance(mContext).addMsgUnreadCountByThreadId(msgInfo.getMsgThreadId());
                                 WalkArroundMsgManager.getInstance(mContext).onLoadMsgResult(msgInfo, null, true);
+
                                 updateConversationInfor(msgInfo);
                             }
                         } catch (Exception e) {
@@ -146,13 +148,13 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
                         int threadState = WalkArroundMsgManager.getInstance(mContext).getConversationStatus(msgInfo.getMsgThreadId());
                         int newThreadState;
                         if(threadState == MessageUtil.WalkArroundState.STATE_INIT || threadState >= MessageUtil.WalkArroundState.STATE_POP) {
-                            //newThreadState = MessageUtil.WalkArroundState.STATE_POP_IMPRESSION;
+                            newThreadState = threadState;
                         } else {
                             newThreadState = MessageUtil.WalkArroundState.STATE_WALK;
-                            logger.d("msgInfor array 1: " + extraArray[1]);
-                            int color = Integer.parseInt(extraArray[1]);
-                            WalkArroundMsgManager.getInstance(mContext).updateConversationStatusAndColor(msgInfo.getMsgThreadId(), newThreadState, color);
                         }
+                        logger.d("msgInfor array 1: " + extraArray[1]);
+                        int color = Integer.parseInt(extraArray[1]);
+                        WalkArroundMsgManager.getInstance(mContext).updateConversationStatusAndColor(msgInfo.getMsgThreadId(), newThreadState, color);
                     } else if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALKARROUND)) {
 
                     } else if(extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_SAY_HELLO)) {

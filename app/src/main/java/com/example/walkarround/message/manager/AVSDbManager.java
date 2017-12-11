@@ -836,7 +836,7 @@ public class AVSDbManager {
 
         long curTime = System.currentTimeMillis();
         Cursor cursor = mContext.getContentResolver().query(Conversation.CONTENT_URI,
-                new String[]{Conversation._ID, Conversation._DATE},
+                new String[]{Conversation._ID, Conversation._DATE, Conversation._CONVERSATION_STATUS},
                 "(" + Conversation._CONVERSATION_STATUS + " = ? OR " + Conversation._CONVERSATION_STATUS + " = ? )" +
                         " AND " + Conversation._DATE + " < ?",
                 new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_POP),
@@ -848,6 +848,9 @@ public class AVSDbManager {
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
+                    int convState = cursor.getInt(cursor.getColumnIndex(Conversation._CONVERSATION_STATUS));
+                    long convDate = cursor.getLong(cursor.getColumnIndex(Conversation._DATE));
+                    logger.d(convState + " + " + convDate + " + " + (curTime - time));
                     threadIdList.add(cursor.getLong(cursor.getColumnIndex(Conversation._ID)));
                 } while (cursor.moveToNext());
             }
@@ -867,8 +870,8 @@ public class AVSDbManager {
         String[] args;
 
         sortOrder = Conversation._DATE + " DESC";
-        where = Conversation._CONVERSATION_STATUS + " = ? ";
-        args = new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_POP_IMPRESSION)};
+        where = Conversation._CONVERSATION_STATUS + " = ? OR " + Conversation._CONVERSATION_STATUS + " = ?";
+        args = new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_POP_IMPRESSION), String.valueOf(MessageUtil.WalkArroundState.STATE_END_IMPRESSION)};
 
         Cursor cur = mContext.getContentResolver().query(Conversation.CONTENT_URI, null, where, args, sortOrder);
 
@@ -1029,19 +1032,16 @@ public class AVSDbManager {
         }
 
         int oldState = getConversationStatus(threadId);
-        if(oldState == newStatus) {
-            return;
-        }
 
         String where = Conversation._ID + "=?";
         String[] arg = new String[]{threadId + ""};
         ContentValues conversationValues = new ContentValues();
         conversationValues.put(Conversation._COLOR, newColor);
 
-        if(newStatus < oldState
+        if(newStatus <= oldState
                 && oldState >= MessageUtil.WalkArroundState.STATE_IM
                 && oldState <= MessageUtil.WalkArroundState.STATE_END) {
-            return;
+            newStatus = oldState;
         }
 
         conversationValues.put(Conversation._CONVERSATION_STATUS, newStatus);
