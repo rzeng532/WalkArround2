@@ -1,6 +1,11 @@
 package com.example.walkarround.main.activity;
 
-import android.app.*;
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -21,9 +26,6 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMException;
-import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
@@ -37,6 +39,7 @@ import com.example.walkarround.main.task.GetFriendListTask;
 import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
 import com.example.walkarround.message.activity.BuildMessageActivity;
+import com.example.walkarround.message.activity.ConversationActivity;
 import com.example.walkarround.message.activity.EvaluateActivity;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
@@ -102,11 +105,17 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     //Flag for check if first task for getting nearly user complete or not;
     private boolean bFirstSearchComplete = false;
 
+    private Dialog mMapDialog;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_DISPLAY_CONV_BE_DELETED:
+                    if(mMapDialog != null && mMapDialog.isShowing()) {
+                        mMapDialog.dismiss();
+                        mMapDialog = null;
+                    }
                     Dialog noticeDialog = DialogFactory.getConfirmDialog(AppMainActivity.this,
                             R.string.msg_speed_date_be_canceled, R.string.common_ok, null);
                     noticeDialog.show();
@@ -468,11 +477,19 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             return;
         }
 
+        LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mLocListener);
+
+        if(ProfileManager.getInstance() != null) {
+            int curState = ProfileManager.getInstance().getCurUsrDateState();
+            if(curState == MessageUtil.WalkArroundState.STATE_IM || curState == MessageUtil.WalkArroundState.STATE_WALK) {
+                onMappingState();
+                return;
+            }
+        }
+
         if(bFirstSearchComplete && !NearlyUsersFragment.getInstance().isThereNearlyUser()) {
             startQueryNearlyUserTask();
         }
-
-        LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mLocListener);
     }
 
     @Override
@@ -805,6 +822,38 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         } catch (Exception e) {
             // 未安装手Q或安装的版本不支持
             return false;
+        }
+    }
+
+    private void onMappingState() {
+        if(mMapDialog == null) {
+            mMapDialog = DialogFactory.getMappingDialog(AppMainActivity.this
+                    , getString(R.string.msg_u_on_map_state)
+                    , new DialogFactory.ConfirmDialogClickListener() {
+                        @Override
+                        public void onConfirmDialogConfirmClick() {
+
+                            startActivity(new Intent(AppMainActivity.this, ConversationActivity.class));
+
+                            mMapDialog.dismiss();
+                            mMapDialog = null;
+                        }
+                    });
+
+//            mMapDialog = DialogFactory.getConfirmDialog(AppMainActivity.this
+//                    , R.string.msg_u_on_map_state
+//                    , R.string.walk_rule_i_see_no_countdown
+//                    , new DialogFactory.ConfirmDialogClickListener() {
+//                        @Override
+//                        public void onConfirmDialogConfirmClick() {
+//
+//                            startActivity(new Intent(AppMainActivity.this, ConversationActivity.class));
+//
+//                            mMapDialog.dismiss();
+//                            mMapDialog = null;
+//                        }
+//                    });
+            mMapDialog.show();
         }
     }
 

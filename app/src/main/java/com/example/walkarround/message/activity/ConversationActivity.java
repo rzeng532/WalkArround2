@@ -680,6 +680,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                             @Override
                             public void onNoticeDialogConfirmClick(boolean isChecked, Object value) {
                                 if (mConversationAdapter != null) {
+                                    ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_IM);
                                     MessageSessionBaseModel listItem = mConversationAdapter.getItem(((BaseConversationListAdapter.ViewHolder) (view.getTag())).position);
                                     deleteConvMsg(listItem);
                                 }

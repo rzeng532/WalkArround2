@@ -62,22 +62,22 @@ public class NaviMapUtil {
      * */
     public static Intent getGaodeIntent(Context context,String currentLongitude,String currentLatitude){
         //将bd-09坐标转换成gcj-02坐标
-        double[] bd09_To_Gcj02 = NaviMapUtil.bd09_To_Gcj02(Double.parseDouble(currentLatitude),Double.parseDouble(currentLongitude));
-        currentLatitude = bd09_To_Gcj02[0]+"";
-        currentLongitude = bd09_To_Gcj02[1]+"";
+//        double[] bd09_To_Gcj02 = NaviMapUtil.bd09_To_Gcj02(Double.parseDouble(currentLatitude),Double.parseDouble(currentLongitude));
+//        currentLatitude = bd09_To_Gcj02[0]+"";
+//        currentLongitude = bd09_To_Gcj02[1]+"";
         try {
             if (isInstallByRead("com.autonavi.minimap")) {
                 Intent intent = new Intent("android.intent.action.VIEW",
                         android.net.Uri.parse(
                                 "androidamap://route?sourceApplication=walkarround"+"&dlat="+ currentLatitude//终点的经度
                                         + "&dlon="+ currentLongitude//终点的纬度
-                                        + "&dev=0" + "&t=1"));
+                                        + "&dev=0" + "&t=2"));
                 intent.addCategory("android.intent.category.DEFAULT");
                 //context.startActivity(intent);
 
                 return intent;
             } else {
-                Toast.makeText(context, "没有安装高德地图客户端，请先下载该地图应用", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "没有安装高德地图客户端，请先下载该地图应用", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,7 +119,7 @@ public class NaviMapUtil {
                 return intent;
                 //context.startActivity(intent); // 启动调用
             } else {
-                Toast.makeText(context, "没有安装百度地图客户端，请先下载该地图应用", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "没有安装百度地图客户端，请先下载该地图应用", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();

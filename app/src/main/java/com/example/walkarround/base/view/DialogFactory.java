@@ -247,7 +247,7 @@ public class DialogFactory {
         return dialog;
     }
 
-    public static Dialog getMappingDialog(Context context, String userName, final ConfirmDialogClickListener listener) {
+    public static Dialog getMappingDialog(Context context, String indicate, final ConfirmDialogClickListener listener) {
         final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_find_mapping, null);
@@ -260,12 +260,6 @@ public class DialogFactory {
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(layoutParams);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-        String friendName = userName;
-        if(friendName.length() > AppConstant.SHORTNAME_LEN) {
-            friendName = friendName.substring(0, AppConstant.SHORTNAME_LEN) + "...";
-        }
-        String indicate = context.getApplicationContext().getString(R.string.mapping_indication, friendName);
 
         ((TextView)dialogView.findViewById(R.id.tv_mapping)).setText(indicate);
 

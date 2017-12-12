@@ -182,8 +182,16 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 if(user == null) {
                     return;
                 }
+
+                ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_IM);
+
+                String friendName = TextUtils.isEmpty(user.getUsername()) ? user.getMobilePhoneNumber() : user.getUsername();
+                if(friendName.length() > AppConstant.SHORTNAME_LEN) {
+                    friendName = friendName.substring(0, AppConstant.SHORTNAME_LEN) + "...";
+                }
+
                 DialogFactory.getMappingDialog(NearlyUsersFragment.this.getActivity()
-                        , TextUtils.isEmpty(user.getUsername()) ? user.getMobilePhoneNumber() : user.getUsername()
+                        , getActivity().getString(R.string.mapping_indication, friendName)
                         , null).show();
             } else if(msg.what == DISPLAY_RADAR) {
                 mSearchingView.start();

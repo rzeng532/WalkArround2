@@ -271,6 +271,7 @@
     <string name="msg_walk_reply_receiver_next_time">很遗憾，对方下次再和你走走</string>
     <string name="msg_walk_reply_sender_next_time">你拒绝了对方的碰面请求</string>
     <string name="msg_speed_date_be_canceled">对方取消了和你的匹配，本地消息已经被删除。</string>
+    <string name="msg_u_on_map_state">你目前已经在匹配状态了，不要太花心噢</string>
     <string name="msg_already_on_walking_state">你已经在走走状态，走完之后才可以再次选择。</string>
 
     <string name="msg_conv_default_content">See you again</string>
@@ -356,6 +357,7 @@
 
     <string name="mapping_baidu">百度地图</string>
     <string name="mapping_gaode">高德地图</string>
-    <string name="mapping_google">高德地图</string>
+    <string name="mapping_google">谷歌地图</string>
     <string name="mapping_tencent">腾讯地图</string>
+    <string name="mapping_navi_start_indicate">导航完成后，请记得回来用色块碰头</string>
 </resources>

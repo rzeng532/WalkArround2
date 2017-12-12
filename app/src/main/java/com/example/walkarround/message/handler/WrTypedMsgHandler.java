@@ -20,6 +20,7 @@ import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageConstant.MessageState;
 import com.example.walkarround.message.util.MessageConstant.MessageType;
 import com.example.walkarround.message.util.MessageUtil;
+import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.Logger;
 
 import java.util.ArrayList;
@@ -158,6 +159,7 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
                     } else if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALKARROUND)) {
 
                     } else if(extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_SAY_HELLO)) {
+                        ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_IM);
                         WalkArroundMsgManager.getInstance(mContext).updateConversationStatus(msgInfo.getMsgThreadId(), MessageUtil.WalkArroundState.STATE_IM);
                     }
                 }

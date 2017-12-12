@@ -33,6 +33,7 @@ import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
 import com.example.walkarround.base.WalkArroundApp;
 import com.example.walkarround.base.view.DialogFactory;
+import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.GoTogetherTask;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
@@ -49,6 +50,7 @@ import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpUtil;
 import com.example.walkarround.util.http.ThreadPoolManager;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -321,20 +323,18 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             } else {
                 //If speed date id is empty.
                 mUIHandler.sendEmptyMessage(MSG_AGREE_TO_WALKARROUND_SUC);
-//                if (!TextUtils.isEmpty(ProfileManager.getInstance().getCurUsrObjId()) && TextUtils.isEmpty(ProfileManager.getInstance().getSpeedDateId())) {
-//                    //Check speed date id
-//                    ThreadPoolManager.getPoolManager().addAsyncTask(new QuerySpeedDateIdTask(getApplicationContext(),
-//                            mGetSpeedIdTaskListener,
-//                            HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE,
-//                            HttpUtil.HTTP_TASK_QUERY_SPEED_DATE,
-//                            QuerySpeedDateIdTask.getParams(ProfileManager.getInstance().getCurUsrObjId()),
-//                            TaskUtil.getTaskHeader()));
-//                }
             }
         } else if (v.getId() == R.id.tv_navigation) {
             if (mMapData != null) {
                 //startSysMap(mMapData.latitude, mMapData.longitude);
-                startNavi(mMapData.latitude, mMapData.longitude);
+                DialogFactory.getMappingDialog(ShowLocationActivity.this
+                        , getString(R.string.mapping_navi_start_indicate)
+                        , new DialogFactory.ConfirmDialogClickListener() {
+                            @Override
+                            public void onConfirmDialogConfirmClick() {
+                                startNavi(mMapData.latitude, mMapData.longitude);
+                            }
+                        }).show();
             }
         }
     }
@@ -395,32 +395,60 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
         if (isAvilible(this, "com.baidu.BaiduMap")) {//传入指定应用包名
             mapList.add(getString(R.string.mapping_baidu));
             toastList.add(getString(R.string.mapping_start_baidu_navi));
+
+            double[] bdgps = NaviMapUtil.gaoDeToBaidu(lat, lng);
+            Intent intentBaidu = null;
+            try {
+                intentBaidu = Intent.getIntent("intent://map/direction?destination=latlng:" + bdgps[0] + "," + bdgps[1] + "|name:" + mMapGeoDetail + "&mode=walking&src="+mMapGeoDetail+"#Intent;" + "scheme=bdapp;package=com.baidu.BaiduMap;end");
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+//            Intent intentBaidu = NaviMapUtil.getBaiduIntent(this, bdgps[1] + "", bdgps[0] + "", null, null);
+//            intentBaidu.setData(Uri.parse("baidumap://map/walknavi?"//origin=
+//                                //+ "40.057406655722,116.2964407172"
+//                                + "destination="
+//                                + bdgps[1] + "," + bdgps[0]));
+            startList.add(intentBaidu);
         }
 
-        if (isAvilible(this, "com.autonavi.minimap")) {
+        if(isAvilible(this, "com.autonavi.minimap")) {
             mapList.add(getString(R.string.mapping_gaode));
             toastList.add(getString(R.string.mapping_start_gaode_navi));
+
+            Intent intentMini = NaviMapUtil.getGaodeIntent(this, lng + "", lat + "");
+//            try {
+//                intentMini = Intent.getIntent("androidamap://route?sourceApplication=softname"
+//                        //+ "&slat="LATITUDE_A + "&slon="+ LONGTITUDE_A + "&sname="+"万家丽国际Mall"
+//                        + "&dlat=" + lat + "&dlon=" + lng + "&dname=" + mMapGeoDetail + "&dev=0&m=0&t=1");
+//                intent.setPackage("com.autonavi.minimap");
+//            } catch (URISyntaxException e) {
+//                e.printStackTrace();
+//            }
+
+            startList.add(intentMini);
         }
 
         if (mapList.size() <= 0) {
             Toast.makeText(getApplicationContext(), getString(R.string.mapping_there_is_no_navi), Toast.LENGTH_LONG).show();
 
             return;
-        } else {
-            Toast.makeText(getApplicationContext(), toastList.get(0), Toast.LENGTH_LONG).show();
-            startActivity(intent);
-
-            return;
         }
 //        else {
-//            DialogFactory.showNaviListDialog(this, "", mapList
-//                    , new AdapterView.OnItemClickListener() {
-//                        @Override
-//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                            Toast.makeText(ShowLocationActivity.this, toastList.get(position), Toast.LENGTH_LONG).show();
-//                            startActivity(startList.get(position));
-//                        }
-//                    }).show();
+//            Toast.makeText(getApplicationContext(), toastList.get(0), Toast.LENGTH_LONG).show();
+//            startActivity(intent);
+//
+//            return;
 //        }
+        else {
+            DialogFactory.showNaviListDialog(this, "", mapList
+                    , new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Toast.makeText(ShowLocationActivity.this, toastList.get(position), Toast.LENGTH_LONG).show();
+                            startActivity(startList.get(position));
+                        }
+                    }).show();
+        }
     }
 }
