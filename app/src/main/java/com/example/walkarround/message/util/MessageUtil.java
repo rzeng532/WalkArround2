@@ -62,8 +62,8 @@ public class MessageUtil {
     public static final long _24_HOURS = 24 * 60 * 60 * 1000;
 
     //Get friend list count. If count is 4, it means server response 4 friends every time.
-    public static final int GET_FRIENDS_LIST_COUNT = 4;
-    public static final int FRIENDS_COUNT_ON_DB = 5;
+    public static final int GET_FRIENDS_LIST_COUNT = 7;
+    public static final int FRIENDS_COUNT_ON_DB = 7;
 
     private static final List<Integer> mFriendColArray = Arrays.asList(R.color.friend_col_1,
             R.color.friend_col_2, R.color.friend_col_3,

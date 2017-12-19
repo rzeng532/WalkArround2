@@ -151,5 +151,11 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name="com.example.walkarround.message.receiver.MediaAlarmReceiver">
+            <intent-filter>
+                <action android:name="MediaAlarmReceiver_START" />
+                <action android:name="MediaAlarmReceiver_STOP" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

@@ -416,15 +416,16 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             mapList.add(getString(R.string.mapping_gaode));
             toastList.add(getString(R.string.mapping_start_gaode_navi));
 
-            Intent intentMini = NaviMapUtil.getGaodeIntent(this, lng + "", lat + "");
-//            try {
-//                intentMini = Intent.getIntent("androidamap://route?sourceApplication=softname"
-//                        //+ "&slat="LATITUDE_A + "&slon="+ LONGTITUDE_A + "&sname="+"万家丽国际Mall"
-//                        + "&dlat=" + lat + "&dlon=" + lng + "&dname=" + mMapGeoDetail + "&dev=0&m=0&t=1");
-//                intent.setPackage("com.autonavi.minimap");
-//            } catch (URISyntaxException e) {
-//                e.printStackTrace();
-//            }
+            Intent intentMini = null;
+            //NaviMapUtil.getGaodeIntent(this, lng + "", lat + "");
+            try {
+                intentMini = Intent.getIntent("androidamap://route?sourceApplication=softname"
+                        //+ "&slat="LATITUDE_A + "&slon="+ LONGTITUDE_A + "&sname="+"万家丽国际Mall"
+                        + "&dlat=" + lat + "&dlon=" + lng + "&dname=" + mMapGeoDetail + "&dev=0&m=0&t=2");
+                intent.setPackage("com.autonavi.minimap");
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
 
             startList.add(intentMini);
         }

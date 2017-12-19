@@ -4,12 +4,17 @@
 package com.example.walkarround.message.activity;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
@@ -25,6 +30,8 @@ import com.example.walkarround.base.view.RoundProgressBar;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.receiver.AlarmReceiver;
+import com.example.walkarround.message.receiver.MediaAlarmReceiver;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.myself.manager.ProfileManager;
@@ -78,7 +85,6 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
     public static final String PARAMS_FRIEND_OBJ_ID = "friend_obj_id";
 
     //For playing complete music.
-    private MediaPlayer mMediaPlayer;
     private final int REAL_COUNTDOWN_MSG = 1;
     private final int PREPARE_COUNTDOWN_MSG = 2;
     private final int RESET_COUNTDOWN_FROM_LOCKSCREEN = 3;
@@ -96,6 +102,8 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
                     break;
                 case RESET_COUNTDOWN_FROM_LOCKSCREEN:
                     int resetTime = msg.arg1;
+                    mTvCountdownTime.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 50);
+                    mTvCountdownTime.setTextColor(getResources().getColor(R.color.cor_red));
                     handleResetTimer(resetTime);
                     break;
                 default:
@@ -131,9 +139,18 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
                     recipient);
             if (msgThreadId >= 0) {
                 int oldState = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(msgThreadId);
-                if(oldState != MessageUtil.WalkArroundState.STATE_INIT) {
-                    WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, MessageUtil.WalkArroundState.STATE_WALK);
+
+                int mNewThreadState = MessageUtil.WalkArroundState.STATE_IMPRESSION;
+                if(oldState == MessageUtil.WalkArroundState.STATE_END
+                        || oldState == MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
+                    mNewThreadState = MessageUtil.WalkArroundState.STATE_END_IMPRESSION;
+                } else if(oldState == MessageUtil.WalkArroundState.STATE_POP
+                        || oldState == MessageUtil.WalkArroundState.STATE_POP_IMPRESSION
+                        || oldState == MessageUtil.WalkArroundState.STATE_INIT) {
+                    mNewThreadState = MessageUtil.WalkArroundState.STATE_POP_IMPRESSION;
                 }
+
+                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(msgThreadId, mNewThreadState);
             }
         }
 
@@ -177,14 +194,6 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         AVAnalytics.onPause(this);
 
         stopCountdownTimer();
-
-        if (mMediaPlayer != null) {
-            logger.d("onPause: stop & reset media player.");
-            mMediaPlayer.stop();
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
     }
 
     private void initView() {
@@ -274,6 +283,11 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
             mPrepareCountdownTimer.cancel();
             mPrepareCountdownTimer = null;
         }
+
+        //Stop media
+        Intent intent = new Intent(this, MediaAlarmReceiver.class);
+        intent.setAction(MediaAlarmReceiver.ACTION_STOP_MEDIA_TASK);
+        sendBroadcast(intent);
     }
 
     private void setTvCountdownTimeUI(int timeSec) {
@@ -306,30 +320,6 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         String time = sdf.format(new Date((timeSec * 1000L)));
 
         mTvPreCountdownTime.setText(time);
-    }
-
-    /**
-     * 创建本地MP3播放器
-     *
-     * @return
-     */
-    public void createWalkArroundCompleteMusic() {
-
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                mMediaPlayer = MediaPlayer.create(CountdownActivity.this, R.raw.walk_arround_end_music);
-                mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        if (mediaPlayer != null) {
-                            mediaPlayer.reset();
-                        }
-                    }
-                });
-                mMediaPlayer.start();
-            }
-        });
     }
 
     private void jump2EvaluatePage() {
@@ -370,6 +360,9 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 
             //Cancel prepare task.
             mPrepareCountdownTimer.cancel();
+
+            //Test code
+            startMediaDelayTask();
         } else if(mRuleDialog != null) {
             ((TextView)mRuleDialog.findViewById(R.id.tv_i_see))
                     .setText(getString(R.string.walk_rule_i_see, PREPARE_COUNTDOWN_TOTOL_TIME - mCurTime));
@@ -401,11 +394,6 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         } else {
             timeProgress.setProgress((100 * mCurTime / COUNTDOWN_TOTOL_TIME));
             setTvCountdownTimeUI(COUNTDOWN_TOTOL_TIME - mCurTime);
-            if (COUNTDOWN_TOTOL_TIME - mCurTime == MUSIC_START_TIME) {
-                if (mMediaPlayer == null) {
-                    createWalkArroundCompleteMusic();
-                }
-            }
         }
     }
 
@@ -470,5 +458,15 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         mTvCountdownTime.setVisibility(View.VISIBLE);
         mTvCountdownHint.setVisibility(View.GONE);
         mLlPreCountDown.setVisibility(View.GONE);
+    }
+
+    private void startMediaDelayTask() {
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent i = new Intent(this, MediaAlarmReceiver.class);
+        i.setAction(MediaAlarmReceiver.ACTION_START_MEDIA_TASK);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+        manager.set(AlarmManager.RTC_WAKEUP
+                , System.currentTimeMillis() + (COUNTDOWN_TOTOL_TIME - MUSIC_START_TIME) * 1000
+                , pi);
     }
 }
