@@ -43,7 +43,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private EditText edPassWord = null;
     private Button btnLogin = null;
     //private Button btnRegister = null;
-    private TextView tvForgotPwd = null;
+    //private TextView tvForgotPwd = null;
     private Dialog mLoadingDialog;
     private Logger loginLogger;
 
@@ -161,8 +161,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             edPassWord.requestFocus();
         }
 
-        tvForgotPwd = (TextView) findViewById(R.id.signin_forgot_password);
-        tvForgotPwd.setOnClickListener(this);
+//        tvForgotPwd = (TextView) findViewById(R.id.signin_forgot_password);
+//        tvForgotPwd.setOnClickListener(this);
     }
 
     @Override
@@ -186,9 +186,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (v.getId() == R.id.signin_forgot_password) {
-            //TODO: add forgot password step.
-        } else if (v.getId() == R.id.back_rl) {
+        }
+//        else if (v.getId() == R.id.signin_forgot_password) {
+//            //TODO: add forgot password step.
+//        }
+        else if (v.getId() == R.id.back_rl) {
             this.finish();
             onBackPressed();
         }
