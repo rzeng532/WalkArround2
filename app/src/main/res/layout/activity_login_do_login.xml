@@ -63,24 +63,24 @@
                 android:textColor="@color/fontcor1"/>
     </RelativeLayout>
 
-    <TextView
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentBottom="true"
-            android:paddingLeft="@dimen/padding_left_common"
-            android:paddingRight="@dimen/padding_left_common"
-            android:id="@+id/signin_forgot_password"
-            android:text="@string/login_forgot_password"
-            android:textColor="@color/emerald_green"
-            android:textSize="@dimen/font_size3"/>
-
+    <!--<TextView-->
+            <!--android:layout_width="320dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:paddingLeft="@dimen/padding_left_common"-->
+            <!--android:paddingRight="@dimen/padding_left_common"-->
+            <!--android:id="@+id/signin_forgot_password"-->
+            <!--android:text="@string/login_forgot_password"-->
+            <!--android:textColor="@color/emerald_green"-->
+            <!--android:textSize="@dimen/font_size3"/>-->
+    <!--android:layout_above="@id/signin_forgot_password"-->
     <Button
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_above="@id/signin_forgot_password"
+            android:layout_alignParentBottom="true"
             android:id="@+id/signin_loginin"
             android:text="@string/login_dologin"
             android:textColor="@color/fontcor3"

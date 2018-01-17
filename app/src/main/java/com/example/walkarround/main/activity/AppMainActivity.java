@@ -357,20 +357,23 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
                     if (localThreadStatus == MessageUtil.WalkArroundState.STATE_IM || localThreadStatus == MessageUtil.WalkArroundState.STATE_WALK) {
                         //Go to build message && Start IM directly:
-                        Intent imItent = new Intent(AppMainActivity.this, BuildMessageActivity.class);
-                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_RECEIVER, strUser);
-                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, chattingThreadId);
-                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
+//                        Intent imItent = new Intent(AppMainActivity.this, BuildMessageActivity.class);
+//                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_RECEIVER, strUser);
+//                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, chattingThreadId);
+//                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
+//
+//                        String friendName = "";
+//                        if (friend == null) {
+//                            ContactInfo friendContact = ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactByUsrObjId(strUser);
+//                            friendName = (friendContact == null) ? "" : friendContact.getUsername();
+//                        }
+//                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, friendName);
+//                        imItent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
 
-                        String friendName = "";
-                        if (friend == null) {
-                            ContactInfo friendContact = ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactByUsrObjId(strUser);
-                            friendName = (friendContact == null) ? "" : friendContact.getUsername();
-                        }
-                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, friendName);
-                        imItent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
+//                        startActivity(imItent);
 
-                        startActivity(imItent);
+                        //修改逻辑：直接进入conversation activity
+                        startActivity(new Intent(AppMainActivity.this, ConversationActivity.class));
                     } else if (localThreadStatus == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
                         Intent evaItent = new Intent(AppMainActivity.this, EvaluateActivity.class);
                         evaItent.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, strUser);
@@ -836,25 +839,12 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                             startActivity(new Intent(AppMainActivity.this, ConversationActivity.class));
 
                             mMapDialog.dismiss();
-                            mMapDialog = null;
+                            //mMapDialog = null;
                         }
                     });
-
-//            mMapDialog = DialogFactory.getConfirmDialog(AppMainActivity.this
-//                    , R.string.msg_u_on_map_state
-//                    , R.string.walk_rule_i_see_no_countdown
-//                    , new DialogFactory.ConfirmDialogClickListener() {
-//                        @Override
-//                        public void onConfirmDialogConfirmClick() {
-//
-//                            startActivity(new Intent(AppMainActivity.this, ConversationActivity.class));
-//
-//                            mMapDialog.dismiss();
-//                            mMapDialog = null;
-//                        }
-//                    });
+            mMapDialog.show();
+        } else if(mMapDialog != null && !mMapDialog.isShowing()) {
             mMapDialog.show();
         }
     }
-
 }

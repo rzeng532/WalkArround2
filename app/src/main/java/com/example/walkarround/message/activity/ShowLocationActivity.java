@@ -296,11 +296,11 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             mBUserSelect = true;
             LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_SHOW_LOCATION_ONCLICK, mMyPositionListener);
         } else if (v.getId() == R.id.select_another) {
-            if (mCurThreadStatus == MessageUtil.WalkArroundState.STATE_WALK
-                    || mCurThreadStatus == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
-                Toast.makeText(ShowLocationActivity.this, R.string.msg_already_on_walking_state, Toast.LENGTH_LONG).show();
-                return;
-            }
+//            if (mCurThreadStatus == MessageUtil.WalkArroundState.STATE_WALK
+//                    || mCurThreadStatus == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+//                Toast.makeText(ShowLocationActivity.this, R.string.msg_already_on_walking_state, Toast.LENGTH_LONG).show();
+//                return;
+//            }
             setResult(RESULT_OK);
             finish();
         } else if (v.getId() == R.id.accept_place) {
@@ -310,10 +310,12 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
                 //If we already be friend, we will skip some steps and send "I agreed" directly.
                 showCircleDialog();
                 mUIHandler.sendEmptyMessageDelayed(MSG_AGREE_TO_WALKARROUND_SUC, 1000);
-            } else if (mCurThreadStatus == MessageUtil.WalkArroundState.STATE_WALK
-                    || mCurThreadStatus == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
-                Toast.makeText(ShowLocationActivity.this, R.string.msg_already_on_walking_state, Toast.LENGTH_LONG).show();
-            } else if (!TextUtils.isEmpty(speedId)) {
+            }
+//            else if (mCurThreadStatus == MessageUtil.WalkArroundState.STATE_WALK
+//                    || mCurThreadStatus == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+//                Toast.makeText(ShowLocationActivity.this, R.string.msg_already_on_walking_state, Toast.LENGTH_LONG).show();
+//            }
+            else if (!TextUtils.isEmpty(speedId)) {
                 ThreadPoolManager.getPoolManager().addAsyncTask(new GoTogetherTask(getApplicationContext(),
                         mGoTogetherListener,
                         HttpUtil.HTTP_FUNC_GO_TOGETHER,
@@ -399,8 +401,17 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
             double[] bdgps = NaviMapUtil.gaoDeToBaidu(lat, lng);
             Intent intentBaidu = null;
             try {
-                intentBaidu = Intent.getIntent("intent://map/direction?destination=latlng:" + bdgps[0] + "," + bdgps[1] + "|name:" + mMapGeoDetail + "&mode=walking&src="+mMapGeoDetail+"#Intent;" + "scheme=bdapp;package=com.baidu.BaiduMap;end");
-            } catch (URISyntaxException e) {
+                double[] mygps;
+                String regionStr = "";
+                GeoData myGeo = ProfileManager.getInstance().getMyProfile().getLocation();
+                if(myGeo != null) {
+                    mygps = NaviMapUtil.gaoDeToBaidu(myGeo.getLatitude(), myGeo.getLongitude());
+                    regionStr = "origin=" + mygps[0] + "," + mygps[1] + "&";
+                }
+
+                intentBaidu = Intent.getIntent("intent://map/direction?" + regionStr + "destination=latlng:" + bdgps[0] + "," + bdgps[1] + "|name:" + mMapGeoDetail + "&mode=walking&src="+mMapGeoDetail+"#Intent;" + "scheme=bdapp;package=com.baidu.BaiduMap;end");
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

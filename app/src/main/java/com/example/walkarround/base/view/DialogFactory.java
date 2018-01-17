@@ -252,6 +252,7 @@ public class DialogFactory {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_find_mapping, null);
         dialog.setContentView(dialogView);
+        //dialog.setCancelable(false);
 
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();

@@ -318,17 +318,6 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
         initView();
 
-        //End speed date
-        String speedDateId = ProfileManager.getInstance().getSpeedDateId();
-        if (!TextUtils.isEmpty(speedDateId)) {
-            ThreadPoolManager.getPoolManager().addAsyncTask(new EndSpeedDateTask(getApplicationContext(),
-                    mEndSpeedDateTaskListener,
-                    HttpUtil.HTTP_FUNC_END_SPEED_DATE,
-                    HttpUtil.HTTP_TASK_END_SPEED_DATE,
-                    EndSpeedDateTask.getParams(speedDateId),
-                    TaskUtil.getTaskHeader()));
-        }
-
         //Cancel notification while jump to this UI page.
         if(mFriend != null) {
             MessageUtil.cancelNotification(getApplicationContext(), mFriend.getObjectId(), MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
@@ -381,6 +370,19 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                                 || oldState == MessageUtil.WalkArroundState.STATE_POP_IMPRESSION
                                 || oldState == MessageUtil.WalkArroundState.STATE_INIT) {
                         mNewThreadState = MessageUtil.WalkArroundState.STATE_POP_IMPRESSION;
+                    } else if(oldState == MessageUtil.WalkArroundState.STATE_IM
+                            || oldState == MessageUtil.WalkArroundState.STATE_WALK
+                            || oldState == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+                        //End speed date
+                        String speedDateId = ProfileManager.getInstance().getSpeedDateId();
+                        if (!TextUtils.isEmpty(speedDateId)) {
+                            ThreadPoolManager.getPoolManager().addAsyncTask(new EndSpeedDateTask(getApplicationContext(),
+                                    mEndSpeedDateTaskListener,
+                                    HttpUtil.HTTP_FUNC_END_SPEED_DATE,
+                                    HttpUtil.HTTP_TASK_END_SPEED_DATE,
+                                    EndSpeedDateTask.getParams(speedDateId),
+                                    TaskUtil.getTaskHeader()));
+                        }
                     }
 
                     WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(mThreadId, mNewThreadState);
