@@ -1745,16 +1745,24 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 getString(MessageUtil.getFriendColorDescription(colorIndex)),
                 extraInfor);
 
-        //Update conversation state & color
-        WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(threadId, MessageUtil.WalkArroundState.STATE_WALK, colorIndex);
+        if(messageId >= 0L) {
+            int oldState = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(messageId);
+            if(oldState == MessageUtil.WalkArroundState.STATE_IM) {
+                //Update conversation state & color
+                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(threadId, MessageUtil.WalkArroundState.STATE_WALK, colorIndex);
 
-        //Update color to Server
-        ThreadPoolManager.getPoolManager().addAsyncTask(new UpdateSpeedDateColorTask(getApplicationContext(),
-                mUpdateSpeedDateColorListener,
-                HttpUtil.HTTP_FUNC_UPDATE_SPEEDDATE_COLOR,
-                HttpUtil.HTTP_TASK_UPDATE_SPEEDDATE_COLOR,
-                UpdateSpeedDateColorTask.getParams(ProfileManager.getInstance().getSpeedDateId(), String.valueOf(colorIndex)),
-                TaskUtil.getTaskHeader()));
+                //Update color to Server
+                ThreadPoolManager.getPoolManager().addAsyncTask(new UpdateSpeedDateColorTask(getApplicationContext(),
+                        mUpdateSpeedDateColorListener,
+                        HttpUtil.HTTP_FUNC_UPDATE_SPEEDDATE_COLOR,
+                        HttpUtil.HTTP_TASK_UPDATE_SPEEDDATE_COLOR,
+                        UpdateSpeedDateColorTask.getParams(ProfileManager.getInstance().getSpeedDateId(), String.valueOf(colorIndex)),
+                        TaskUtil.getTaskHeader()));
+            } else {
+                //Just update color index
+                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(threadId, oldState, colorIndex);
+            }
+        }
 
         transferToDetailView(messageId, false);
 

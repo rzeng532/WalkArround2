@@ -306,7 +306,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         line.setVisibility(View.GONE);
         mTvTitle = (TextView)(title.findViewById(R.id.display_name));
         mTvTitle.setTextColor(getResources().getColor(R.color.fontcor3));
-        mTvTitle.setText(R.string.main_title);
+        mTvTitle.setText(R.string.mapping_color_title);
 
         mLlDistance = (RelativeLayout)findViewById(R.id.ll_distance);
         mTvXiuYiXiu = (TextView)findViewById(R.id.tv_xiyixiu);
