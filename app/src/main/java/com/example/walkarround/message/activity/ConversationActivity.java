@@ -225,6 +225,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
             //Task success.
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_CANCEL_SPEED_DATE)) {
+                //取消匹配后将自身状态设置为为初始状态
+                ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_INIT);
                 mUIHandler.sendEmptyMessage(MSG_CANCEL_SPEED_DATE_OK);
             } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_CANCEL_SPEED_DATE)) {
                 mUIHandler.sendEmptyMessage(MSG_CANCEL_SPEED_DATE_FAIL);

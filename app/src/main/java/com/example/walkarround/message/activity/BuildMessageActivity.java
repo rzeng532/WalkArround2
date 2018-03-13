@@ -1745,8 +1745,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 getString(MessageUtil.getFriendColorDescription(colorIndex)),
                 extraInfor);
 
-        if(messageId >= 0L) {
-            int oldState = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(messageId);
+        if(threadId >= 0L) {
+            int oldState = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(threadId);
             if(oldState == MessageUtil.WalkArroundState.STATE_IM) {
                 //Update conversation state & color
                 WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(threadId, MessageUtil.WalkArroundState.STATE_WALK, colorIndex);

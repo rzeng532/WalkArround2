@@ -161,8 +161,6 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         }
     };
 
-    private int i = 0;
-
     //Handler
     private final int RADAR_STOP_DELAY = 5 * 1000;
     private final int UPDATE_NEARLY_USERS = 0;
@@ -208,8 +206,19 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         synchronized (NearlyUsersFragment.class) {
             mNearlyUserList.clear();
             mDeleletedUserList.clear();
-            mNearlyUserList.addAll(list);
-            mStrToUsrId = mNearlyUserList.get(0).getObjectId();
+            for(ContactInfo one : list) {
+                if(TextUtils.isEmpty(one.getUsername())
+                        || one.getPortrait() ==  null) {
+                    //没有头像信息 & 没有名字信息，直接略过
+                    continue;
+                } else {
+                    mNearlyUserList.add(one);
+                }
+            }
+
+            if(mNearlyUserList.size() > 0) {
+                mStrToUsrId = mNearlyUserList.get(0).getObjectId();
+            }
         }
 
         mFragmentHandler.sendEmptyMessageDelayed(UPDATE_NEARLY_USERS, RADAR_STOP_DELAY);
@@ -421,7 +430,6 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
                 //mNearlyUserList.add(new CardMode("循环测试", 18, list.get(itemsInAdapter % imageUrls.length - 1)));
                 mUserListAdapter.notifyDataSetChanged();
-                i++;
             }
 
             @Override

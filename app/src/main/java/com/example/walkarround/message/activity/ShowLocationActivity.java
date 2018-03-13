@@ -77,6 +77,8 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
     private static final int MSG_AGREE_TO_WALKARROUND_SUC = 1;
     private static final int MSG_AGREE_TO_WALKARROUND_FAIL = 2;
 
+    private final int ZOOM_SIZE = 15;
+
     private Handler mUIHandler = new Handler() {
         public void handleMessage(Message msg) {
 
@@ -109,7 +111,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
                 if (mBUserSelect) {
                     mBUserSelect = false;
                     aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(geoData.getLatitude(), geoData.getLongitude())));
-                    aMap.moveCamera(CameraUpdateFactory.zoomTo(12));
+                    aMap.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_SIZE));
                 }
             }
         }
@@ -271,7 +273,7 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
         }
 
         aMap.moveCamera(CameraUpdateFactory.changeLatLng(mMapData));
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(12));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_SIZE));
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.message_icon_map_position));
         markerOptions.title(mMapGeoDetail);
