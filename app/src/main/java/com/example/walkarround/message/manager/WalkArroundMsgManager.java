@@ -1028,43 +1028,61 @@ public class WalkArroundMsgManager {
     }
 
     public void updateConversationColor(long threadId, int newColor) {
-        try {
-            logger.e("getConversationStatus new color:" + newColor + ", id :" + threadId);
-            mInstance.mMsgManager.updateConversationColor(threadId, newColor);
-        } catch (Exception e) {
-            logger.e("getConversationStatus Exception:" + e.getMessage());
-        }
-        return ;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    logger.e("updateConversationColor :" + newColor + ", id :" + threadId);
+                    mInstance.mMsgManager.updateConversationColor(threadId, newColor);
+                } catch (Exception e) {
+                    logger.e("updateConversationColor Exception:" + e.getMessage());
+                }
+            }
+        }).start();
     }
 
     public void updateConversationStatus(long threadId, int newStatus) {
-        try {
-            logger.e("getConversationStatus threadId :" + threadId + ", status :" + newStatus);
-            mInstance.mMsgManager.updateConversationStatus(threadId, newStatus);
-        } catch (Exception e) {
-            logger.e("getConversationStatus Exception:" + e.getMessage());
-        }
-        return ;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    logger.e("getConversationStatus threadId :" + threadId + ", status :" + newStatus);
+                    mInstance.mMsgManager.updateConversationStatus(threadId, newStatus);
+                } catch (Exception e) {
+                    logger.e("getConversationStatus Exception:" + e.getMessage());
+                }
+            }
+        }).start();
     }
 
     public void updateConversationStatusAndColor(long threadId, int newStatus, int newColor) {
-        try {
-            mInstance.mMsgManager.updateConversationStatusAndColor(threadId, newStatus, newColor);
-        } catch (Exception e) {
-            logger.e("getConversationStatus Exception:" + e.getMessage());
-        }
-        return ;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mInstance.mMsgManager.updateConversationStatusAndColor(threadId, newStatus, newColor);
+                } catch (Exception e) {
+                    logger.e("getConversationStatus Exception:" + e.getMessage());
+                }
+            }
+        }).start();
     }
 
     /**
      * 设置所有发送中的消息状态为发送失败
      */
     public void setAllSendingMsgStatusFail() {
-        try {
-            mInstance.mMsgManager.setAllSendingMsgStatusFail();
-        } catch (Exception e) {
-            logger.e("setAllSendingMsgStatusFail Exception: " + e.getMessage());
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mInstance.mMsgManager.setAllSendingMsgStatusFail();
+                } catch (Exception e) {
+                    logger.e("setAllSendingMsgStatusFail Exception: " + e.getMessage());
+                }
+            }
+        }).start();
     }
 
     public MessageRecipientInfo abstractReceiptInfo(List<String> addrList, int chatType) throws Exception {

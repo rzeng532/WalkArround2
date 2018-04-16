@@ -154,11 +154,12 @@ public class IMTalkVoiceManager {
             mMediaRecorder.setOnErrorListener(null);
             try {
                 mMediaRecorder.stop();
-            } catch (IllegalStateException e) {
+                mMediaRecorder.reset();
+                mMediaRecorder.release();
+            } catch (Exception e) {
                 logger.d("MediaRecorder STOP error!!!" + e.getMessage());
             }
-            mMediaRecorder.reset();
-            mMediaRecorder.release();
+
             logger.d("RECORDING STOPPED!!!");
         }
     }

@@ -68,4 +68,8 @@ dependencies {
     compile files('libs/universal-image-loader-1.9.3.jar')
     compile files('libs/weibo.sdk.android.sso.3.0.1-leancloud.jar')
     compile files('libs/open_sdk.jar')
+
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
+
 }

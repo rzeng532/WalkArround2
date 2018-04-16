@@ -1,5 +1,4 @@
 package com.example.walkarround.message.activity;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -20,6 +19,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -65,6 +65,7 @@ import com.example.walkarround.message.listener.PressTalkTouchListener;
 import com.example.walkarround.message.listener.PressTalkTouchListener.VoiceManager;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.model.ChatMessageInfo;
 import com.example.walkarround.message.model.ChatMsgAndSMSReturn;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.model.MessageRecipientInfo;
@@ -101,6 +102,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.example.walkarround.base.view.EmojiPanelView.EMOJI_ITEM_TYPE_DEL_BTN;
 import static com.example.walkarround.message.activity.ChatAssistToolsView.ToolsViewOnClick;
@@ -471,13 +478,28 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             initSensor();
             setToolsViewEnable();
             // 显示草稿消息
-            ChatMsgBaseInfo draftMessage = WalkArroundMsgManager.getInstance(this).getDraftMessage(mRecipientInfo.getThreadId());
-            if (draftMessage != null && !TextUtils.isEmpty(draftMessage.getData())) {
-                mSendMessageEditView.setText(EmojiParser.getInstance(this).addSmileySpans(draftMessage.getData()));
-                mSendMessageEditView.setSelection(draftMessage.getData().length());
-            } else {
-                mSendMessageEditView.setText("");
-            }
+            Observable.just("")
+                    .observeOn(Schedulers.io())
+                    .map(new Function<String, ChatMsgBaseInfo>() {
+
+                        @Override
+                        public ChatMsgBaseInfo apply(String s) throws Exception {
+                            ChatMsgBaseInfo draftMessage = WalkArroundMsgManager.getInstance(BuildMessageActivity.this).getDraftMessage(mRecipientInfo.getThreadId());
+                            return draftMessage;
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ChatMsgBaseInfo>() {
+                        @Override
+                        public void accept(ChatMsgBaseInfo draftMessage) throws Exception {
+                            if (draftMessage != null && !TextUtils.isEmpty(draftMessage.getData())) {
+                                mSendMessageEditView.setText(EmojiParser.getInstance(BuildMessageActivity.this).addSmileySpans(draftMessage.getData()));
+                                mSendMessageEditView.setSelection(draftMessage.getData().length());
+                            } else {
+                                mSendMessageEditView.setText("");
+                            }
+                        }
+                    });
         }
     }
 
@@ -1077,12 +1099,32 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         });
 
         if (mRecipientInfo.getThreadId() > 0) {
-            // 显示草稿消息
-            ChatMsgBaseInfo draftMessage = WalkArroundMsgManager.getInstance(getApplicationContext()).getDraftMessage(mRecipientInfo.getThreadId());
-            if (draftMessage != null && !TextUtils.isEmpty(draftMessage.getData())) {
-                mSendMessageEditView.setText(EmojiParser.getInstance(this).addSmileySpans(draftMessage.getData()));
-                mSendMessageEditView.setSelection(draftMessage.getData().length());
-            }
+            Observable.just("")
+                    .observeOn(Schedulers.io())
+                    .map(new Function<String, ChatMsgBaseInfo>() {
+
+                        @Override
+                        public ChatMsgBaseInfo apply(String s) throws Exception {
+                            ChatMsgBaseInfo draftMessage =
+                                    WalkArroundMsgManager.getInstance(getApplicationContext()).getDraftMessage(mRecipientInfo.getThreadId());
+
+                            if(draftMessage == null) {
+                                draftMessage = new ChatMessageInfo();
+                            }
+
+                            return draftMessage;
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ChatMsgBaseInfo>() {
+                        @Override
+                        public void accept(ChatMsgBaseInfo chatMsgBaseInfo) throws Exception {
+                            if (chatMsgBaseInfo != null && !TextUtils.isEmpty(chatMsgBaseInfo.getData())) {
+                                mSendMessageEditView.setText(EmojiParser.getInstance(BuildMessageActivity.this).addSmileySpans(chatMsgBaseInfo.getData()));
+                                mSendMessageEditView.setSelection(chatMsgBaseInfo.getData().length());
+                            }
+                        }
+                    });
         }
 
         initSelectPositionBtn();
@@ -1522,17 +1564,34 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
         //Get color and set image view.
         logger.d("thread id is: " + mRecipientInfo.getThreadId());
-        int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
-        logger.d("color is: " + color);
-        mImvDistance = (ImageView) detailHeaderView.findViewById(R.id.iv_show_distance);
-        mImvDistance.setOnClickListener(this);
-        if (color == -1) {
-            mImvDistance.setVisibility(View.GONE);
-        } else {
-            //mImvDistance.setImageResource(color);
-            mImvDistance.setVisibility(View.VISIBLE);
-            start2PlayDistanceBtn(color);
-        }
+
+        Observable.just("")
+                .observeOn(Schedulers.io())
+                .map(new Function<String, Integer>() {
+
+                    @Override
+                    public Integer apply(String s) throws Exception {
+                        int color = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColor(mRecipientInfo.getThreadId());
+                        return new Integer(color);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer colorRow) throws Exception {
+                        int color = colorRow.intValue();
+                        logger.d("color is: " + color);
+                        mImvDistance = (ImageView) detailHeaderView.findViewById(R.id.iv_show_distance);
+                        mImvDistance.setOnClickListener(BuildMessageActivity.this);
+                        if (color == -1) {
+                            mImvDistance.setVisibility(View.GONE);
+                        } else {
+                            //mImvDistance.setImageResource(color);
+                            mImvDistance.setVisibility(View.VISIBLE);
+                            start2PlayDistanceBtn(color);
+                        }
+                    }
+                });
 
         int conversationType = mRecipientInfo.getConversationType();
         String receiverNameStr = mRecipientInfo.getDisplayName();
@@ -1733,42 +1792,59 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      * Send agreement
      */
     private void sendAgreement2WalkArround() {
-        long threadId = mRecipientInfo.getThreadId();
-        int colorIndex = MessageUtil.getFriendColorIndex(threadId);
-        logger.d("send agreement, the color index is " + colorIndex);
-        String extraInfor = MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND +
-                MessageUtil.EXTRA_INFOR_SPLIT +
-                colorIndex;
-        logger.d("send agreement, the extra is: " + extraInfor);
-        long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo,
-                getString(R.string.agree_2_walkarround_postfix) +
-                getString(MessageUtil.getFriendColorDescription(colorIndex)),
-                extraInfor);
 
-        if(threadId >= 0L) {
-            int oldState = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(threadId);
-            if(oldState == MessageUtil.WalkArroundState.STATE_IM) {
-                //Update conversation state & color
-                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(threadId, MessageUtil.WalkArroundState.STATE_WALK, colorIndex);
+        Observable.just("")
+                .observeOn(Schedulers.io())
+                .map(new Function<String, Long>() {
 
-                //Update color to Server
-                ThreadPoolManager.getPoolManager().addAsyncTask(new UpdateSpeedDateColorTask(getApplicationContext(),
-                        mUpdateSpeedDateColorListener,
-                        HttpUtil.HTTP_FUNC_UPDATE_SPEEDDATE_COLOR,
-                        HttpUtil.HTTP_TASK_UPDATE_SPEEDDATE_COLOR,
-                        UpdateSpeedDateColorTask.getParams(ProfileManager.getInstance().getSpeedDateId(), String.valueOf(colorIndex)),
-                        TaskUtil.getTaskHeader()));
-            } else {
-                //Just update color index
-                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(threadId, oldState, colorIndex);
-            }
-        }
+                    @Override
+                    public Long apply(String s) throws Exception {
+                        long threadId = mRecipientInfo.getThreadId();
+                        int colorIndex = MessageUtil.getFriendColorIndex(threadId);
+                        logger.d("send agreement, the color index is " + colorIndex);
+                        String extraInfor = MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND +
+                                MessageUtil.EXTRA_INFOR_SPLIT +
+                                colorIndex;
+                        logger.d("send agreement, the extra is: " + extraInfor);
+                        long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo,
+                                getString(R.string.agree_2_walkarround_postfix) +
+                                        getString(MessageUtil.getFriendColorDescription(colorIndex)),
+                                extraInfor);
 
-        transferToDetailView(messageId, false);
+                        if(threadId >= 0L) {
+                            int oldState = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(threadId);
+                            if(oldState == MessageUtil.WalkArroundState.STATE_IM) {
+                                //Update conversation state & color
+                                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(threadId, MessageUtil.WalkArroundState.STATE_WALK, colorIndex);
 
-        AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_MSG, AppConstant.ANA_TAG_MSG_LOC_AGREE);
+                                //Update color to Server
+                                ThreadPoolManager.getPoolManager().addAsyncTask(new UpdateSpeedDateColorTask(getApplicationContext(),
+                                        mUpdateSpeedDateColorListener,
+                                        HttpUtil.HTTP_FUNC_UPDATE_SPEEDDATE_COLOR,
+                                        HttpUtil.HTTP_TASK_UPDATE_SPEEDDATE_COLOR,
+                                        UpdateSpeedDateColorTask.getParams(ProfileManager.getInstance().getSpeedDateId(), String.valueOf(colorIndex)),
+                                        TaskUtil.getTaskHeader()));
+                            } else {
+                                //Just update color index
+                                WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(threadId, oldState, colorIndex);
+                            }
+                        }
 
-        logger.d("Send agreement result: " + messageId);
+                        return new Long(messageId);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long messageIdRow) throws Exception {
+                        long messageId = messageIdRow.longValue();
+                        transferToDetailView(messageId, false);
+
+                        AVAnalytics.onEvent(BuildMessageActivity.this, AppConstant.ANA_EVENT_MSG, AppConstant.ANA_TAG_MSG_LOC_AGREE);
+
+                        logger.d("Send agreement result: " + messageId);
+                    }
+                });
     }
 
     /**
