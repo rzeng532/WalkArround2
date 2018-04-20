@@ -593,18 +593,41 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
             public void onRegeocodeSearched(RegeocodeResult arg0, int arg1) {
                 if (arg1 == 0 && arg0 != null) {
                     RegeocodeAddress regeocodeAddress = arg0.getRegeocodeAddress();
-                    if (searchType == AROUND_SEARCH) {
-                        LocationItem item = new LocationItem();
-                        item.setChecked(true);
-                        formerCheckedIndex = 0;
-                        item.setLatitude(latLng.latitude);
-                        item.setLongitude(latLng.longitude);
-                        item.setTitle(getString(R.string.msg_session_location));
-                        item.setSubtitle(regeocodeAddress.getFormatAddress());
-                        locationItems.add(item);
+                    if (searchType == AROUND_SEARCH && arg0.getRegeocodeAddress() != null) {
+                        for (PoiItem item : arg0.getRegeocodeAddress().getPois()) {
+                            slogger.d("snippet:" + item.getSnippet() + " title:" + item.getTitle() + "\n");
+                            LocationItem tempLocation = new LocationItem();
+                            tempLocation.setChecked(false);
+                            tempLocation.setLatitude(item.getLatLonPoint().getLatitude());
+                            tempLocation.setLongitude(item.getLatLonPoint().getLongitude());
+                            String title = item.getTitle();
+                            tempLocation.setTitle(title);
+                            String subtitle = item.getSnippet();
+                            tempLocation.setSubtitle(subtitle == null || subtitle.isEmpty() ? title : subtitle);
+
+                            if (searchType == AROUND_SEARCH) {
+                                locationItems.add(tempLocation);
+                            } else if (searchType == KEY_SEARCH) {
+                                searchResults.add(tempLocation);
+                            }
+                        }
+                        if (searchType == AROUND_SEARCH) {
+                            uiHandler.sendEmptyMessage(AROUND_SEARCH_SUC);
+                            if(locationItems != null && locationItems.size() > 0) {
+                                locationItems.get(0).setChecked(true);
+                                formerCheckedIndex = 0;
+                            }
+                        } else if (searchType == KEY_SEARCH) {
+                            uiHandler.sendEmptyMessage(KEY_SEARCH_SUC);
+                            if(searchResults != null && searchResults.size() > 0) {
+                                formerCheckedIndex = 0;
+                                searchResults.get(0).setChecked(true);
+                            }
+                        }
+                    } else {
+                        newSearch(latLng.latitude, latLng.longitude, key, "",
+                        regeocodeAddress.getCityCode(), searchType);
                     }
-                    newSearch(latLng.latitude, latLng.longitude, key, searchType == AROUND_SEARCH ? "" : "",
-                            regeocodeAddress.getCityCode(), searchType);
                 } else {
                     if (searchType == AROUND_SEARCH) {
                         uiHandler.sendEmptyMessage(AROUND_SEARCH_ERROR);
