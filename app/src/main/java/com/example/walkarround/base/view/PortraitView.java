@@ -17,10 +17,7 @@ import com.example.walkarround.R;
 import com.example.walkarround.util.image.ImageLoaderManager;
 
 /**
- * TODO: description
- * Date: 2015-12-08
- *
- * @author Administrator
+ * @author Richard
  */
 public class PortraitView extends LinearLayout implements View.OnClickListener{
 
@@ -57,29 +54,10 @@ public class PortraitView extends LinearLayout implements View.OnClickListener{
         mCheckBox.setOnClickListener(this);
     }
 
-    /**
-     * @param name
-     * @param cachPhotoKey cach图片关键字
-     * @param defaultResId
-     * @方法名：setBaseData
-     * @描述：初始化头像对应的名字和号码以及默认头像
-     * @输出：void
-     * @作者：mss
-     */
     public void setBaseData(String name, String cachPhotoKey, String namePinyin, int defaultResId) {
         setBaseData(name, cachPhotoKey, namePinyin, defaultResId, false);
     }
 
-    /**
-     * @param name
-     * @param cachPhotoKey cach图片关键字
-     * @param defaultResId
-     * @param toGray       置灰
-     * @方法名：setBaseData
-     * @描述：初始化头像对应的名字和号码以及默认头像
-     * @输出：void
-     * @作者：mss
-     */
     public void setBaseData(String name, String cachPhotoKey, String namePinyin, int defaultResId, final boolean toGray) {
         mImageView.setTag(null);
         int resId = defaultResId > 0 ? defaultResId : R.drawable.default_profile_portrait;
@@ -146,12 +124,7 @@ public class PortraitView extends LinearLayout implements View.OnClickListener{
     }
 
     /**
-     * @param checkedResId
-     * @param uncheckResId
-     * @方法名：setCheckBoxResId
      * @描述：设置CheckBox的背景图片
-     * @输出：void
-     * @作者：mss
      */
     public void setCheckBoxResId(int checkedResId, int uncheckResId) {
         mCheckedResId = checkedResId;
@@ -164,11 +137,7 @@ public class PortraitView extends LinearLayout implements View.OnClickListener{
     }
 
     /**
-     * @param isChecked
-     * @方法名：setChecked
      * @描述：设置是否选中
-     * @输出：void
-     * @作者：mss
      */
     public void setChecked(boolean isChecked) {
         mCheckBox.setSelected(isChecked);
@@ -180,22 +149,14 @@ public class PortraitView extends LinearLayout implements View.OnClickListener{
     }
 
     /**
-     * @return
-     * @方法名：isChecked
      * @描述：是否选中
-     * @输出：boolean
-     * @作者：mss
      */
     public boolean isChecked() {
         return mCheckBox.isSelected();
     }
 
     /**
-     * @param visibility
-     * @方法名：setCheckBoxVisibility
      * @描述：设置选中按钮是否可见
-     * @输出：void
-     * @作者：mss
      */
     public void setCheckBoxVisibility(int visibility) {
         if (mCheckBox.getVisibility() == visibility) {
@@ -205,20 +166,14 @@ public class PortraitView extends LinearLayout implements View.OnClickListener{
     }
 
     /**
-     * @方法名：setOnClickListener
      * @描述：点击CheckBox选中事件
-     * @输出：void
-     * @作者：mss
      */
     public void setCheckBoxOnClickListener(View.OnClickListener onClick) {
         mCheckBoxOnClickListener = onClick;
     }
 
     /**
-     * @方法名：setOnClickListener
      * @描述：点击头像事件
-     * @输出：void
-     * @作者：mss
      */
     public void setPhotoOnClickListener(View.OnClickListener onClick) {
         mPhotoOnClickListener = onClick;
@@ -242,11 +197,7 @@ public class PortraitView extends LinearLayout implements View.OnClickListener{
     }
 
     /**
-     * @param clickable
-     * @方法名：setCheckBoxClickable
      * @描述：设置是否可响应点击
-     * @输出：void
-     * @作者：Administrator
      */
     public void setCheckBoxClickable(boolean clickable) {
         mCheckBox.setClickable(clickable);

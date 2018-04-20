@@ -136,7 +136,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                         mIvTextBg.setVisibility(View.VISIBLE);
                     } else {
                         mSearchingView.stop();
-                        mTvTitle.setText(R.string.main_title);
+                        mTvTitle.setText(R.string.mapping_color_title);
                         mSearchingView.setVisibility(View.GONE);
                         mPvFriend.setVisibility(View.GONE);
                         mTvPleaseClickPortrait.setText(mDistanceBeyonded);

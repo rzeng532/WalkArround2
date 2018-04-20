@@ -199,7 +199,7 @@
                 android:paddingTop="11dp"
                 android:text="@string/chatting_send"
                 android:textColor="@color/emerald_green"
-                android:textSize="@dimen/font_size2_dp"/>
+                android:textSize="@dimen/font_size3_dp"/>
         </RelativeLayout>
     </RelativeLayout>
 

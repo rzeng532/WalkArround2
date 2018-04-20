@@ -27,7 +27,7 @@
 
             <stroke
                 android:width="2dp"
-                android:color="@color/friend_col_5" />
+                android:color="@color/emerald_green" />
         </shape>
     </item>
 
@@ -40,7 +40,7 @@
                 android:width="30dp"
                 android:height="30dp" />
 
-            <solid android:color="@color/friend_col_5" />
+            <solid android:color="@color/emerald_green" />
         </shape>
     </item>
 </layer-list>
