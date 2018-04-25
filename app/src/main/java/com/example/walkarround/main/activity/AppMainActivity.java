@@ -482,14 +482,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         LocationManager.getInstance(getApplicationContext()).locateCurPosition(AppConstant.KEY_MAP_ASYNC_LISTERNER_MAIN, mLocListener);
 
-        if(ProfileManager.getInstance() != null) {
-            int curState = ProfileManager.getInstance().getCurUsrDateState();
-            if(curState == MessageUtil.WalkArroundState.STATE_IM || curState == MessageUtil.WalkArroundState.STATE_WALK) {
-                onMappingState();
-                return;
-            }
-        }
-
         if(bFirstSearchComplete && !NearlyUsersFragment.getInstance().isThereNearlyUser()) {
             startQueryNearlyUserTask();
         }
@@ -790,13 +782,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private void startQueryNearlyUserTask() {
 
-        if(myProfileInfo == null || TextUtils.isEmpty(myProfileInfo.getDynamicDataId())
-                || myProfileInfo.getUserDateState() == MessageUtil.WalkArroundState.STATE_IM
-                || myProfileInfo.getUserDateState() == MessageUtil.WalkArroundState.STATE_WALK
-                || myProfileInfo.getUserDateState() == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
-            return;
-        }
-
         ThreadPoolManager.getPoolManager().addAsyncTask(new QueryNearlyUsers(getApplicationContext(),
                 mQueryNearUserListener,
                 HttpUtil.HTTP_FUNC_QUERY_NEARLY_USERS,
@@ -825,26 +810,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         } catch (Exception e) {
             // 未安装手Q或安装的版本不支持
             return false;
-        }
-    }
-
-    private void onMappingState() {
-        if(mMapDialog == null) {
-            mMapDialog = DialogFactory.getMappingDialog(AppMainActivity.this
-                    , getString(R.string.msg_u_on_map_state)
-                    , new DialogFactory.ConfirmDialogClickListener() {
-                        @Override
-                        public void onConfirmDialogConfirmClick() {
-
-                            startActivity(new Intent(AppMainActivity.this, ConversationActivity.class));
-
-                            mMapDialog.dismiss();
-                            //mMapDialog = null;
-                        }
-                    });
-            mMapDialog.show();
-        } else if(mMapDialog != null && !mMapDialog.isShowing()) {
-            mMapDialog.show();
         }
     }
 }

@@ -178,7 +178,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder.rlConversation = (RelativeLayout) convertView.findViewById(R.id.conv_rl);
             holder.rlFilfullArea = (RelativeLayout) convertView.findViewById(R.id.filfull_area);
             holder.ivPortrait = (PhotoView) convertView.findViewById(R.id.conv_portrait);
-            holder.ivDelIcon = (ImageView) convertView.findViewById(R.id.conversation_item_del_icon);
+            holder.ivDelIcon = (RelativeLayout) convertView.findViewById(R.id.conversation_item_del_icon);
             //holder.ivPortrait.setCheckBoxResId(R.drawable.public_icon_list_checkbox_on,
             //        R.drawable.public_icon_list_checkbox_off);
             //holder.ivPortrait.setCheckBoxClickable(false);
@@ -570,7 +570,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         RelativeLayout rlConversation;
         RelativeLayout rlFilfullArea;
         ImageView ivTopSign;
-        ImageView ivDelIcon;
+        RelativeLayout ivDelIcon;
         TextView tvName;
         TextView tvMessage;
         TextView tvTime;

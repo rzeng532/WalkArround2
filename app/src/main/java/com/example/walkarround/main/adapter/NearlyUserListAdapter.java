@@ -1,6 +1,8 @@
 package com.example.walkarround.main.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +11,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 //import com.bumptech.glide.Glide;
 import com.example.walkarround.R;
+import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.flingswipe.RotateTextImageView;
+import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.main.model.ContactInfo;
+import com.example.walkarround.message.activity.ConversationActivity;
+import com.example.walkarround.message.util.MessageUtil;
+import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.CommonUtils;
@@ -78,6 +85,7 @@ public class NearlyUserListAdapter extends BaseAdapter {
 
         String ageByBirth = ProfileUtil.getAgeByBirth(mUserList.get(position).getBirthday());
         if (TextUtils.isEmpty(ageByBirth)) {
+//            holder.mCardYear.setText(mContext.getString(R.string.common_age_secret));
             holder.mCardYear.setText(mContext.getString(R.string.common_age_secret));
         } else {
             holder.mCardYear.setText(ageByBirth);

@@ -150,6 +150,17 @@ public <methods>;
 -keep class com.amap.api.navi.**{*;}
 -keep class com.autonavi.**{*;}
 
+#AVS
+-dontwarn com.avos.**
+-keep class com.avos.** { *;}
+-dontwarn okio.**
+
+#HTTP API model
+-keep class com.example.walkarround.myself.model.**{*;}
+-keep class com.example.walkarround.message.model.**{*;}
+-keep class com.example.walkarround.main.model.**{*;}
+-keep class com.example.walkarround.Location.model.**{*;}
+
 #友盟分享start
 -dontusemixedcaseclassnames
     -dontshrink

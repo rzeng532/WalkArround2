@@ -102,8 +102,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
                     break;
                 case RESET_COUNTDOWN_FROM_LOCKSCREEN:
                     int resetTime = msg.arg1;
-                    mTvCountdownTime.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 50);
-                    mTvCountdownTime.setTextColor(getResources().getColor(R.color.cor_red));
+                    setTvCountdownTimeUI(resetTime);
                     handleResetTimer(resetTime);
                     break;
                 default:

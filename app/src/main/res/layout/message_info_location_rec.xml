@@ -92,16 +92,21 @@
                         android:textSize="@dimen/font_size6" />
             </RelativeLayout>
 
+            <ImageView android:id="@+id/iv_arrow"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:scaleType="centerInside"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/msg_item_text_layout"
+                android:src="@drawable/public_icon_content_right"/>
 
-                <ImageView android:id="@+id/map_position_iv"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:layout_toRightOf="@+id/msg_item_text_layout"
-                           android:scaleType="center"
-                           android:paddingLeft="10dp"
-                           android:paddingRight="10dp"
-                           android:paddingTop="4dp"
-                           android:src="@drawable/message_loc_from_icon"/>
+            <ImageView android:id="@+id/map_position_iv"
+                       android:layout_width="25dp"
+                       android:layout_height="25dp"
+                       android:layout_toRightOf="@+id/iv_arrow"
+                       android:scaleType="centerInside"
+                       android:layout_centerVertical="true"
+                       android:src="@drawable/message_loc_from_icon"/>
             </RelativeLayout>
         </LinearLayout>
 

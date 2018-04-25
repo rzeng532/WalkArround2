@@ -51,13 +51,13 @@
             android:paddingRight="16dp"
             android:paddingBottom="4dp">
             <ImageView android:id="@+id/map_position_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="center"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:scaleType="centerInside"
+                android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="4dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:src="@drawable/message_loc_from_icon"/>
             <TextView
                 android:id="@+id/msg_content_tv"
@@ -66,6 +66,7 @@
                 android:maxWidth="200dp"
                 android:layout_toRightOf="@+id/map_position_iv"
                 android:paddingTop="4dp"
+                android:paddingRight="20dp"
                 android:text="xxx"
                 android:textColor="@color/fontcor3"
                 android:textSize="@dimen/font_size6" />
@@ -77,10 +78,12 @@
                     android:layout_toRightOf="@+id/map_position_iv"
                     android:layout_below="@+id/msg_content_tv"
                     android:paddingTop="2dp"
+                    android:paddingRight="20dp"
                     android:text="xxx"
-                    android:textColor="@color/fontcor5"
+                    android:textColor="@color/fontcor3"
                     android:textSize="@dimen/font_size6" />
         </RelativeLayout>
+
         <com.example.walkarround.base.view.PhotoView
             android:id="@+id/msg_contact_profile_pv"
             android:layout_marginLeft="5dp"
@@ -89,5 +92,15 @@
             android:layout_gravity="top"
             android:visibility="gone"/>
     </LinearLayout>
+
+    <ImageView android:id="@+id/iv_arrow"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@id/msg_send_time_tv"
+        android:scaleType="centerInside"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/public_icon_content_right"/>
 
 </RelativeLayout>

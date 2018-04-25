@@ -65,6 +65,6 @@
               android:layout_marginBottom="40dp"
               android:textColor="@color/fontcor3"
               android:text="bottom text"
-              android:textSize="@dimen/font_size3_dp" />
+              android:textSize="@dimen/font_size8" />
 
 </RelativeLayout>

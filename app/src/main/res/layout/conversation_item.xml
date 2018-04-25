@@ -34,7 +34,8 @@
                     android:minHeight="80dp"
                     android:layout_below="@+id/conv_mapping_flag"
                     android:layout_alignParentLeft="true"
-                    android:background="@color/friend_col_1">
+                    android:background="@color/friend_col_1"
+        android:visibility="gone">
             <TextView android:id="@+id/emtpy_tv"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"/>
@@ -84,15 +85,19 @@
                 android:background="@drawable/public_icon_list_top"
                 android:visibility="gone"/>
 
-        <ImageView
-                android:id="@+id/conversation_item_del_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
+        <RelativeLayout
+            android:id="@+id/conversation_item_del_icon"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true">
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/public_icon_searchbar_delete"/>
+        </RelativeLayout>
 
         <RelativeLayout android:id="@+id/conversation_content_layout"
                         android:layout_width="match_parent"
@@ -102,7 +107,7 @@
                         android:layout_toLeftOf="@id/conversation_item_del_icon"
                         android:gravity="center_vertical"
                         android:layout_marginLeft="6dp"
-                        android:paddingRight="16dp"
+                        android:paddingRight="10dp"
                         android:orientation="vertical">
             <TextView
                     android:id="@+id/conv_name"

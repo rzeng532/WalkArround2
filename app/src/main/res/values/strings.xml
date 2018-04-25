@@ -16,7 +16,8 @@
     <string name="common_select">选择</string>
     <string name="common_distance_unit_meter">米</string>
     <string name="common_distance_unit_kilometer">千米</string>
-    <string name="common_age_secret">保密</string>
+    <!--<string name="common_age_secret">保密</string>-->
+    <string name="common_age_secret"> </string>
     <string name="common_navigation">导航</string>
 
     <!-- Strings for dialog -->
@@ -271,7 +272,7 @@
     <string name="msg_walk_reply_receiver_next_time">很遗憾，对方下次再和你走走</string>
     <string name="msg_walk_reply_sender_next_time">你拒绝了对方的碰面请求</string>
     <string name="msg_speed_date_be_canceled">对方取消了和你的匹配，本地消息已经被删除。</string>
-    <string name="msg_u_on_map_state">你目前已经在匹配状态了\r\n不要太花心噢</string>
+    <string name="msg_u_on_map_state">你目前已经在匹配状态了,不要太花心噢</string>
     <string name="msg_already_on_walking_state">你已经在走走状态，走完之后才可以再次选择。</string>
 
     <string name="msg_conv_default_content">See you again</string>
@@ -348,7 +349,7 @@
     <string name="friend_col7_description">雪青紫</string>
 
     <string name="mapping_indication">你和%1$s已经相互喜欢，可以相互了解一下</string>
-    <string name="mapping_hint_find_friend_cor">请到指定地点\r\n找到手机暗号色和你同为%1$s的[%2$s]</string>
+    <string name="mapping_hint_find_friend_cor">请到指定地点\r\n找到暗号色同为%1$s的[%2$s]</string>
     <string name="mapping_start_baidu_navi">即将用百度地图打开导航</string>
     <string name="mapping_start_gaode_navi">即将用高德地图打开导航</string>
     <string name="mapping_start_google_navi">即将用谷歌地图打开导航</string>
