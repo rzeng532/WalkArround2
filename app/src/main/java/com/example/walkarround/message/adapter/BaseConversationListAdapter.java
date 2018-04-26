@@ -247,11 +247,11 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 if (info != null) {
                     listDO.name = info.getUsername();
                     listDO.profile = info.getPortrait().getUrl();
-                    listDO.defaultResId = R.drawable.contact_default_profile;
+                    listDO.defaultResId = R.drawable.default_profile_portrait;
                 } else {
                     listDO.profile = null;
                     listDO.name = "";
-                    listDO.defaultResId = R.drawable.contact_default_profile;
+                    listDO.defaultResId = R.drawable.default_profile_portrait;
                 }
         }
 

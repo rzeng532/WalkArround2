@@ -206,10 +206,10 @@ public class SearchMessageResultListAdapter extends BaseAdapter {
     private void setNormalItemPortrait(ViewHolder holder, ChatMsgBaseInfo item) {
         if (!TextUtils.isEmpty(item.getDisplayName())) {
             holder.ivPortrait.setBaseData(item.getDisplayName(), item.getProfileKey(), item.getNamePinyin(),
-                    R.drawable.contact_default_profile);
+                    R.drawable.default_profile_portrait);
         } else {
             // 空时给个默认
-            holder.ivPortrait.setBaseData(null, null, null, R.drawable.contact_default_profile);
+            holder.ivPortrait.setBaseData(null, null, null, R.drawable.default_profile_portrait);
         }
     }
 

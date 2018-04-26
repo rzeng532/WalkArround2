@@ -1532,7 +1532,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         ContactInfo contact = ContactsManager.getInstance(getApplicationContext()).getContactByUsrObjId(receiverNumStr);
         if (contact != null) {
             photoView.setBaseData(contact.getUsername(), contact.getPortrait().getUrl(), null,
-                    R.drawable.contact_default_profile);
+                    R.drawable.default_profile_portrait);
             mRecipientInfo.setDisplayName(contact.getUsername());
             receiverNameStr = contact.getUsername();
         }
@@ -1601,7 +1601,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
             if (contact != null) {
                 photoView.setBaseData(contact.getUsername(), contact.getPortrait().getUrl(), null,
-                        R.drawable.contact_default_profile);
+                        R.drawable.default_profile_portrait);
                 mRecipientInfo.setDisplayName(contact.getUsername());
                 receiverNameStr = contact.getUsername();
                 receiverNumStr = contact.getMobilePhoneNumber();

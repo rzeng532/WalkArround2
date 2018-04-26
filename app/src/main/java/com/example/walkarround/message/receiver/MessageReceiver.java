@@ -157,7 +157,7 @@ public class MessageReceiver extends BroadcastReceiver {
             panelView.setTextViewText(R.id.notify_sender_tv, message.getContact());
             panelView.setViewVisibility(R.id.notify_profile_logogram_tv, View.GONE);
             panelView.setViewVisibility(R.id.notify_profile_iv, View.VISIBLE);
-            panelView.setImageViewResource(R.id.notify_profile_iv, R.drawable.contact_default_profile);
+            panelView.setImageViewResource(R.id.notify_profile_iv, R.drawable.default_profile_portrait);
         }
 
         //TODO: ADD Emoji parser later.

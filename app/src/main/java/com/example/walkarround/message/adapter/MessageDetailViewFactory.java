@@ -644,7 +644,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             }
             viewHolder.photoView.setTag(photoNum);
             viewHolder.photoView.setBaseData(message.getDisplayName(), message.getProfileKey(),
-                    message.getNamePinyin(), R.drawable.contact_default_profile);
+                    message.getNamePinyin(), R.drawable.default_profile_portrait);
             viewHolder.photoView.setVisibility(View.VISIBLE);
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) viewHolder.checkedTextView.getLayoutParams();
             lp.topMargin = context.getResources().getDimensionPixelSize(R.dimen.public_padding_10);

@@ -96,7 +96,7 @@ public class PhotoView extends LinearLayout implements View.OnClickListener {
      */
     public void setBaseData(String name, String cachPhotoKey, String namePinyin, int defaultResId, final boolean toGray) {
         mImageView.setTag(null);
-        int resId = defaultResId > 0 ? defaultResId : R.drawable.contact_default_profile;
+        int resId = defaultResId > 0 ? defaultResId : R.drawable.default_profile_portrait;
 
         if (!TextUtils.isEmpty(cachPhotoKey)) {
             // 头像
