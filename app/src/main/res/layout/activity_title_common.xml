@@ -50,9 +50,10 @@
 
         <ImageView
                 android:id="@+id/more_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
                 android:padding="10dp"
+            android:scaleType="centerInside"
                 android:layout_toRightOf="@id/right_tx"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"

@@ -210,23 +210,11 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             mTvUserName.setText(myProfileInfo.getUsrName());
             mTvMobile.setText(myProfileInfo.getMobileNum());
             mTvSignature.setText(myProfileInfo.getSignature());
-            mTvGendle.setText(getGenderDisplayName(myProfileInfo.getGendle()));
+            mTvGendle.setText(ProfileUtil.getGenderDisplayName(myProfileInfo.getGendle()));
             mTvBirth.setText(myProfileInfo.getBirthday());
         }
     }
 
-    private String getGenderDisplayName(String value) {
-
-        if(TextUtils.isEmpty(value)) {
-            return "";
-        }
-
-        if(value.equalsIgnoreCase(CommonUtils.PROFILE_GENDER_MEN)) {
-            return getResources().getString(R.string.gender_men);
-        } else {
-            return getResources().getString(R.string.gender_female);
-        }
-    }
 
     @Override
     public void onClick(View view) {
@@ -454,7 +442,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         mProfileGendle = gender; //(which == 0) ? CommonUtils.PROFILE_GENDER_MEN : CommonUtils.PROFILE_GENDER_FEMALE;
         myProfileInfo.setGendle(mProfileGendle);
         ProfileManager.getInstance().updateGendle(mProfileGendle);
-        mTvGendle.setText(getGenderDisplayName(myProfileInfo.getGendle()));
+        mTvGendle.setText(ProfileUtil.getGenderDisplayName(myProfileInfo.getGendle()));
     }
 
     private void showBirthdayDlg() {

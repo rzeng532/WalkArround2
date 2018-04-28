@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
-import com.example.walkarround.base.WalkArroundApp;
 import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
@@ -50,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by cmcc on 16/1/11.
+ *
  */
 public class NearlyUsersFragment extends Fragment implements View.OnClickListener {
 
@@ -168,7 +167,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     };
 
     //Handler
-    private final int RADAR_STOP_DELAY = 5 * 1000;
+    private final int RADAR_STOP_DELAY = 3 * 1000;
     private final int UPDATE_NEARLY_USERS = 0;
     private final int SOMEONE_LIKE_YOU = 1;
     private final int DISPLAY_RADAR = 2;
@@ -440,6 +439,8 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                             HttpUtil.HTTP_TASK_LIKE_SOMEONE,
                             LikeSomeOneTask.getParams(mStrFromUsrId, mStrToUsrId),
                             TaskUtil.getTaskHeader()));
+                } else {
+                    showMappingToast();
                 }
 
                 if (mNearlyUserList != null && mNearlyUserList.size() == 0) {
@@ -508,7 +509,6 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         if(mUserFrame != null) {
             try{
                 mUserFrame.getTopCardListener().selectRight();
-                showMappingToast();
             } catch (Exception e) {
                 logger.e(" ------ right() exception: ");
             }
@@ -593,8 +593,10 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         if(curState == MessageUtil.WalkArroundState.STATE_IM
                 || curState == MessageUtil.WalkArroundState.STATE_WALK
                 || curState == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
-            Toast.makeText(getActivity(),
-                    WalkArroundApp.getInstance().getString(R.string.msg_u_on_map_state), Toast.LENGTH_SHORT).show();
+//            ToastUtils.show(getActivity(), WalkArroundApp.getInstance().getString(R.string.msg_u_on_map_state));
+//            Toast.makeText(getActivity().getApplicationContext(),
+//                    WalkArroundApp.getInstance().getString(R.string.msg_u_on_map_state), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.msg_u_on_map_state), Toast.LENGTH_SHORT).show();
         }
     }
 }

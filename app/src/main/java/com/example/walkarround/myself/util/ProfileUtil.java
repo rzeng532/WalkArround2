@@ -6,6 +6,9 @@ package com.example.walkarround.myself.util;
 import android.text.TextUtils;
 import com.avos.avoscloud.AVGeoPoint;
 import com.example.walkarround.Location.model.GeoData;
+import com.example.walkarround.R;
+import com.example.walkarround.base.WalkArroundApp;
+import com.example.walkarround.util.CommonUtils;
 
 import java.util.Calendar;
 
@@ -106,4 +109,18 @@ public class ProfileUtil {
 
         return Integer.toString(ageInt);
     }
+
+    public static String getGenderDisplayName(String value) {
+
+        if(TextUtils.isEmpty(value)) {
+            return "";
+        }
+
+        if(value.equalsIgnoreCase(CommonUtils.PROFILE_GENDER_MEN)) {
+            return WalkArroundApp.getInstance().getResources().getString(R.string.gender_men);
+        } else {
+            return WalkArroundApp.getInstance().getResources().getString(R.string.gender_female);
+        }
+    }
+
 }

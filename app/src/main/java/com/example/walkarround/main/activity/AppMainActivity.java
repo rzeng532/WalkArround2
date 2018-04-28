@@ -38,7 +38,6 @@ import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.GetFriendListTask;
 import com.example.walkarround.main.task.QueryNearlyUsers;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
-import com.example.walkarround.message.activity.BuildMessageActivity;
 import com.example.walkarround.message.activity.ConversationActivity;
 import com.example.walkarround.message.activity.EvaluateActivity;
 import com.example.walkarround.message.manager.ContactsManager;
@@ -47,7 +46,7 @@ import com.example.walkarround.message.model.MessageSessionBaseModel;
 import com.example.walkarround.message.task.AsyncTaskLoadSession;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
-import com.example.walkarround.myself.activity.DetailInformationActivity;
+import com.example.walkarround.myself.activity.PersonInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.myself.model.MyProfileInfo;
@@ -55,6 +54,7 @@ import com.example.walkarround.setting.activity.AppSettingActivity;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
+import com.example.walkarround.util.ToastUtils;
 import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpTaskBase.onResultListener;
 import com.example.walkarround.util.http.HttpUtil;
@@ -104,6 +104,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     //Flag for check if first task for getting nearly user complete or not;
     private boolean bFirstSearchComplete = false;
+    private boolean bSearching = false;
 
     private Dialog mMapDialog;
 
@@ -178,7 +179,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     private onResultListener mQueryNearUserListener = new onResultListener() {
         @Override
         public void onPreTask(String requestCode) {
-
+            bSearching = true;
         }
 
         @Override
@@ -206,6 +207,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             if(!bFirstSearchComplete) {
                 bFirstSearchComplete = true;
             }
+
+            bSearching = false;
         }
 
         @Override
@@ -278,7 +281,11 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                     myProfileInfo.setDynamicDataId(dynamicRecordId);
                 }
 
-                startQueryNearlyUserTask();
+                if(!NearlyUsersFragment.getInstance().isThereNearlyUser()) {
+                    startQueryNearlyUserTask();
+                }
+            } else {
+                bFirstSearchComplete = true;
             }
         }
 
@@ -286,6 +293,11 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         public void onFailed(AVException e) {
             //TODO:
             amLogger.d("update dynamic failed.");
+            if(AppMainActivity.this != null
+                    && !(AppMainActivity.this.isDestroyed() || AppMainActivity.this.isFinishing())) {
+                ToastUtils.show(AppMainActivity.this, getString(R.string.err_loc_unknow));
+            }
+            bFirstSearchComplete = true;
         }
     };
 
@@ -303,7 +315,12 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void onFailed(AVException e) {
-            //TODO:
+            amLogger.e("! Get loc infor failed. e: " + e.getMessage());
+            if(AppMainActivity.this != null
+                    && !(AppMainActivity.this.isDestroyed() || AppMainActivity.this.isFinishing())) {
+                ToastUtils.show(AppMainActivity.this, e.getMessage());
+            }
+            bFirstSearchComplete = true;
         }
     };
 
@@ -644,7 +661,10 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                 if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
                     mDrawerLayout.closeDrawers();
                 }
-                startActivity(new Intent(AppMainActivity.this, DetailInformationActivity.class));
+
+                Intent intentDisplayFriend = new Intent(this, PersonInformationActivity.class);
+                intentDisplayFriend.putExtra(AppConstant.PARAM_USR_OBJ_ID,ProfileManager.getInstance().getCurUsrObjId());
+                startActivity(intentDisplayFriend);
                 break;
             default:
                 break;
@@ -781,6 +801,10 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     }
 
     private void startQueryNearlyUserTask() {
+
+        if(bSearching) {
+            return;
+        }
 
         ThreadPoolManager.getPoolManager().addAsyncTask(new QueryNearlyUsers(getApplicationContext(),
                 mQueryNearUserListener,

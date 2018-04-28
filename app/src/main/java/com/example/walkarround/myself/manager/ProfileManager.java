@@ -103,6 +103,7 @@ public class ProfileManager {
         infor.setBirthday(myProfileInfo.getBirthday());
         infor.setGender(myProfileInfo.getGendle());
         infor.setMobilePhoneNumber(myProfileInfo.getMobileNum());
+        infor.setSignature(myProfileInfo.getSignature());
 
         ContactInfo.PortraitEntity entry = infor.getPortrait();
         entry.setUrl(myProfileInfo.getPortraitPath());

@@ -148,4 +148,9 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <style name="CustomAnimationToast">
+        <item name="android:windowEnterAnimation">@anim/custom_toast_fade_enter</item>
+        <!--<item name="android:windowExitAnimation">@anim/custom_toast_fade_exit</item>-->
+    </style>
+
 </resources>

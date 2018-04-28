@@ -63,6 +63,7 @@
         android:layout_below="@+id/v_devider_line"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:text=""
         android:textColor="@color/fontcor1"
         android:textSize="14dp" />
 

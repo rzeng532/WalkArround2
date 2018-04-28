@@ -1,6 +1,7 @@
 package com.example.walkarround.myself.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,15 +29,22 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
     private TextView mTvSignature;
 
     private String mName;
+    private String mGender;
     private String mAge;
     private String mSignature;
     private String mPortraitUrl;
+
+    private String mUsrObjId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_information);
-        initData();
+
+        //Get user obj id.
+        mUsrObjId = getIntent().getStringExtra(AppConstant.PARAM_USR_OBJ_ID);
+
+        //Find view elements.
         initView();
     }
 
@@ -44,6 +52,12 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
     protected void onResume() {
         super.onResume();
         AVAnalytics.onResume(this);
+
+        //Get latest user data.
+        initData();
+
+        //Update UI with data.
+        updateUIViaData();
     }
 
     @Override
@@ -57,14 +71,23 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
         findViewById(R.id.title).findViewById(R.id.back_rl).setOnClickListener(this);
         TextView titleTv = (TextView)(findViewById(R.id.title).findViewById(R.id.display_name));
         titleTv.setText(R.string.profile_activity_title);
-        findViewById(R.id.title).findViewById(R.id.more_rl).setVisibility(View.GONE);
+
+        if(mUsrObjId != null
+                && mUsrObjId.equalsIgnoreCase(ProfileManager.getInstance().getCurUsrObjId())) {
+            findViewById(R.id.title).findViewById(R.id.more_rl).setVisibility(View.VISIBLE);
+            findViewById(R.id.title).findViewById(R.id.more_rl).setOnClickListener(this);
+        } else {
+            findViewById(R.id.title).findViewById(R.id.more_rl).setVisibility(View.GONE);
+        }
 
         //UI elements
         mIvPortrait = (ImageView) findViewById(R.id.iv_portrait);
         mTvNameAndAge = (TextView) findViewById(R.id.tv_infor);
         mTvImpressionpoint = (TextView) findViewById(R.id.tv_point);
         mTvSignature = (TextView) findViewById(R.id.tv_signature);
+    }
 
+    private void updateUIViaData() {
         if(!TextUtils.isEmpty(mPortraitUrl)) {
             ImageLoaderManager.displayImage(mPortraitUrl, -1, mIvPortrait);
         }
@@ -74,8 +97,12 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
             nameAndAge = nameAndAge + mName;
         }
         if(!TextUtils.isEmpty(mAge)) {
-            nameAndAge = nameAndAge + "," + mAge;
+            nameAndAge = nameAndAge + " , " + mAge;
         }
+        if(!TextUtils.isEmpty(mGender)) {
+            nameAndAge = nameAndAge + " , " + mGender;
+        }
+
         mTvNameAndAge.setText(nameAndAge);
 
         mTvImpressionpoint.setVisibility(View.GONE);
@@ -86,16 +113,15 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
     }
 
     private void initData() {
-        String userObjId = getIntent().getStringExtra(AppConstant.PARAM_USR_OBJ_ID);
 
-        if(!TextUtils.isEmpty(userObjId)) {
+        if(!TextUtils.isEmpty(mUsrObjId)) {
             ContactInfo contact;
-            if(userObjId.equalsIgnoreCase(ProfileManager.getInstance().getCurUsrObjId())) {
+            if(mUsrObjId.equalsIgnoreCase(ProfileManager.getInstance().getCurUsrObjId())) {
                 //Myself
                 contact = ProfileManager.getInstance().getMyContactInfo();
             } else {
                 //Friend
-                contact = ContactsManager.getInstance(this).getContactByUsrObjId(userObjId);
+                contact = ContactsManager.getInstance(this).getContactByUsrObjId(mUsrObjId);
             }
 
             if(contact != null) {
@@ -109,6 +135,8 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
                     mAge = getString(R.string.common_age_secret);
                 }
 
+                mGender = ProfileUtil.getGenderDisplayName(contact.getGender());
+
                 mSignature = contact.getSignature();
                 mPortraitUrl = (contact.getPortrait() != null ? contact.getPortrait().getUrl() : null);
             }
@@ -119,6 +147,8 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
     public void onClick(View view) {
         if(view.getId() == R.id.back_rl) {
             finish();
+        } else if(view.getId() == R.id.more_rl) {
+            startActivity(new Intent(this, DetailInformationActivity.class));
         }
     }
 }

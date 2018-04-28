@@ -32,10 +32,7 @@ import com.example.walkarround.util.http.HttpUtil;
 import com.example.walkarround.util.http.ThreadPoolManager;
 
 /**
- * TODO: description
- * Date: 2015-12-08
  *
- * @author Administrator
  */
 public class ProfileApiImpl extends ProfileApiAbstract {
 
@@ -187,7 +184,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
         }
     }
 
-    /*
+    /**
      * Step 1: query if current user has dynamic data at first;
      * Step 2: If step_1 query data, user queried item. Otherwise, create a new dynamic data;
      * Step 3: Save data in background;
