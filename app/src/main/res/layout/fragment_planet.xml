@@ -113,7 +113,7 @@
         <RelativeLayout
                 android:id="@+id/rlSearching"
                 android:layout_width="match_parent"
-                android:layout_height="360dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="50dp">
             <com.example.walkarround.base.view.RippleView
                     android:id="@+id/searchingView"
@@ -122,9 +122,22 @@
 
             <com.example.walkarround.base.view.PortraitView
                     android:id="@+id/searching_center_portrait"
-                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="130dp"
                     android:layout_width="100dp"
                     android:layout_height="100dp"/>
+
+            <TextView
+                android:id="@+id/searching_notice_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/font_size5"
+                android:textColor="@color/fontcor2"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/searchingView"
+                android:layout_centerHorizontal="true"
+                android:text="@string/searching_notice2"/>
 
         </RelativeLayout>
 
