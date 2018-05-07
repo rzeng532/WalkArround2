@@ -301,6 +301,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             showRadar();
         }
 
+
         MyProfileInfo myProfileInfo = ProfileManager.getInstance().getMyProfile();
 
         if (!TextUtils.isEmpty(myProfileInfo.getUsrName()) && !TextUtils.isEmpty(myProfileInfo.getMobileNum())) {
@@ -333,6 +334,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         if(mFragmentHandler != null) {
             mFragmentHandler.removeMessages(UPDATE_NEARLY_USERS);
             mFragmentHandler.removeMessages(DISPLAY_RADAR);
+            mFragmentHandler.removeMessages(UPDATE_SEARCHING_TEXT);
         }
     }
 
@@ -502,6 +504,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
         mUserFrameButtons.setVisibility(View.GONE);
         mUserFrame.setVisibility(View.GONE);
+        mFragmentHandler.removeMessages(UPDATE_SEARCHING_TEXT);
         mFragmentHandler.sendEmptyMessageDelayed(UPDATE_SEARCHING_TEXT, 2000);
     }
 
