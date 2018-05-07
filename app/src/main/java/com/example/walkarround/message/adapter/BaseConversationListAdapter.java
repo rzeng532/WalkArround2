@@ -47,6 +47,7 @@ import java.util.List;
  */
 public class BaseConversationListAdapter extends BaseAdapter implements OnClickListener, OnLongClickListener {
 
+    private static final int DEFAULT_ITEM_COUNT = 7;
     private static final Logger logger = Logger.getLogger(BaseConversationListAdapter.class.getSimpleName());
     // 是否批量操作模式
     private boolean mIsBatchOperation;
@@ -155,7 +156,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
 
     @Override
     public int getCount() {
-        return mListData.size();
+//        return mListData.size();
+        return DEFAULT_ITEM_COUNT;
     }
 
     @Override
@@ -171,7 +173,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        MessageSessionBaseModel listDO = mListData.get(position);
+        MessageSessionBaseModel listDO = position < mListData.size()
+                ? mListData.get(position) : null;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.conversation_item, null);
             holder = new ViewHolder();
@@ -205,14 +208,13 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         }
         holder.position = position;
 
-        boolean isThereMapFriend = mListData.get(0).status < MessageUtil.WalkArroundState.STATE_END;
-
-        initViewHolder(holder, listDO, position, (position <= 0 ? true : mListData.get(position - 1).status < MessageUtil.WalkArroundState.STATE_END), isThereMapFriend);
+        boolean isThereMapFriend = mListData.size() > 0 && mListData.get(0).status < MessageUtil.WalkArroundState.STATE_END;
+        boolean isPriorItemMapping = position <= 0 || mListData.get(position - 1).status < MessageUtil.WalkArroundState.STATE_END;
+        initViewHolder(holder, listDO, position, isPriorItemMapping, isThereMapFriend);
         return convertView;
     }
 
     /**
-     *
      * @param holder
      * @param listDO
      * @param position
@@ -235,6 +237,16 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
      * @param listDO
      */
     private void setItemContactInfo(ViewHolder holder, MessageSessionBaseModel listDO) {
+        if (listDO == null) {
+            holder.tvName.setText("");
+            //Set photo
+            holder.ivPortrait.setCheckBoxVisibility(View.GONE);
+            holder.ivPortrait.setChecked(false);
+            holder.ivPortrait.setBaseData(null, null, null,
+                    R.drawable.contact_default_profile);
+
+            return;
+        }
 
         ContactInfo info = null;
 
@@ -242,23 +254,23 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             // 首次，则获取联系人信息
             info = ContactsManager.getInstance(mContext).getContactByUsrObjId(listDO.getContact());
             //TODO: get contact infor by user object id.
-                //ContactInfo info = NewContactManager.getInstance(mContext)
-                //        .getDetailByPhoneNumber(listDO.getContact());
-                if (info != null) {
-                    listDO.name = info.getUsername();
-                    listDO.profile = info.getPortrait().getUrl();
-                    listDO.defaultResId = R.drawable.default_profile_portrait;
-                } else {
-                    listDO.profile = null;
-                    listDO.name = "";
-                    listDO.defaultResId = R.drawable.default_profile_portrait;
-                }
+            //ContactInfo info = NewContactManager.getInstance(mContext)
+            //        .getDetailByPhoneNumber(listDO.getContact());
+            if (info != null) {
+                listDO.name = info.getUsername();
+                listDO.profile = info.getPortrait().getUrl();
+                listDO.defaultResId = R.drawable.default_profile_portrait;
+            } else {
+                listDO.profile = null;
+                listDO.name = "";
+                listDO.defaultResId = R.drawable.default_profile_portrait;
+            }
         }
 
         String name;
         if (!TextUtils.isEmpty(listDO.name)) {
             name = listDO.name;
-        } else if(info != null && !TextUtils.isEmpty(info.getMobilePhoneNumber())) {
+        } else if (info != null && !TextUtils.isEmpty(info.getMobilePhoneNumber())) {
             name = info.getMobilePhoneNumber();
         } else {
             name = listDO.getContact();
@@ -270,7 +282,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         holder.ivPortrait.setChecked(false);
         holder.ivPortrait.setBaseData(name, listDO.profile, listDO.nameLastC, listDO.defaultResId);
 
-        if(ConversationActivity.CONV_TYPE_OLD_FRIEND == mFriendMode) {
+        if (ConversationActivity.CONV_TYPE_OLD_FRIEND == mFriendMode) {
             holder.ivPortrait.setGrayPortrait();
         }
     }
@@ -295,11 +307,13 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
 
     /**
      * 设置消息显示时间
+     *
      * @param holder
      * @param listDO
      */
     private void setItemTime(ViewHolder holder, MessageSessionBaseModel listDO) {
-        if (listDO.getItemType() == ConversationType.PUBLIC_ACCOUNT
+        if (listDO == null
+                || listDO.getItemType() == ConversationType.PUBLIC_ACCOUNT
                 || listDO.getItemType() == ConversationType.SYSTEM) {
             holder.tvTime.setVisibility(View.GONE);
         } else {
@@ -324,7 +338,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
     }
 
     private void setItemRead(ViewHolder holder, MessageSessionBaseModel listDO) {
-        if (listDO.unReadCount > 0) {
+        if (listDO != null && listDO.unReadCount > 0) {
             holder.tvUnreadCount.setText(MessageUtil.getDisplayUnreadCount(listDO.unReadCount));
             holder.tvUnreadCount.setVisibility(View.VISIBLE);
         } else {
@@ -334,6 +348,11 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
     }
 
     private void setItemMessage(ViewHolder holder, MessageSessionBaseModel listDO) {
+        if (listDO == null) {
+            holder.tvMessage.setText("");
+            holder.tvMessage.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            return;
+        }
         if (listDO.msgStatus == MessageConstant.MessageState.MSG_STATE_SEND_DRAFT
                 && !TextUtils.isEmpty(listDO.getData())) {
             // 草稿消息
@@ -390,6 +409,15 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
     }
 
     public void setItemFlag(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean priorIsMappingConv) {
+        if (listDO == null) {
+            holder.tvMappingFlag.setVisibility(View.VISIBLE);
+            holder.tvMappingFlag.setText(R.string.msg_conversation_mapping);
+            holder.tvMappingFlagLine.setVisibility(View.GONE);
+            holder.ivDelIcon.setVisibility(View.GONE);
+            //Set correct text font color for this case.
+            holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
+            return;
+        }
         //Init flags
         int convState = listDO.status;
         logger.d("color index is: " + listDO.colorIndex);
@@ -397,11 +425,11 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
 
         //Invalide value, just return.
         logger.d("color is: " + convState);
-        if(convState == -1) {
+        if (convState == -1) {
             return;
         }
 
-        if(convState <  MessageUtil.WalkArroundState.STATE_END && convState >= MessageUtil.WalkArroundState.STATE_IM) {
+        if (convState < MessageUtil.WalkArroundState.STATE_END && convState >= MessageUtil.WalkArroundState.STATE_IM) {
             holder.tvMappingFlag.setVisibility(View.VISIBLE);
             holder.tvMappingFlag.setText(R.string.msg_conversation_mapping);
             holder.tvMappingFlagLine.setVisibility(View.GONE);
@@ -409,11 +437,11 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             //Set correct text font color for this case.
             holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
             //holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
-        } else if(convState ==  MessageUtil.WalkArroundState.STATE_END
-                    || convState ==  MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
-            if(position <= 1 && priorIsMappingConv) {
+        } else if (convState == MessageUtil.WalkArroundState.STATE_END
+                || convState == MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
+            if (position <= 1 && priorIsMappingConv) {
                 holder.tvMappingFlag.setVisibility(View.VISIBLE);
-                if(position == 0) {
+                if (position == 0) {
                     holder.tvMappingFlagLine.setVisibility(View.GONE);
                 } else {
                     holder.tvMappingFlagLine.setVisibility(View.VISIBLE);
@@ -427,9 +455,9 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             //holder.rlConversation.setBackground(mContext.getResources().getDrawable(R.drawable.list_item_bg));
             //holder.rlConversation.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
         } else {
-            if(position >= 1) {
+            if (position >= 1) {
                 MessageSessionBaseModel priorModel = mListData.get(position - 1);
-                if(priorModel != null && priorModel.status == MessageUtil.WalkArroundState.STATE_INIT) {
+                if (priorModel != null && priorModel.status == MessageUtil.WalkArroundState.STATE_INIT) {
                     holder.tvMappingFlag.setVisibility(View.GONE);
                     holder.tvMappingFlagLine.setVisibility(View.GONE);
                 } else {
@@ -453,7 +481,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
     private void setFilfullArea(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean isThereMappingOnList) {
 
         //Check if item need display fulfill area.
-        if(listDO.status == MessageUtil.WalkArroundState.STATE_END
+        if (listDO == null
+                || listDO.status == MessageUtil.WalkArroundState.STATE_END
                 || listDO.status == MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
             //Calculate area width value.
             WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -466,11 +495,11 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             float density = dm.density;//屏幕密度（0.75 / 1.0 / 1.5）
             int maxAccount = MessageUtil.FRIENDS_COUNT_ON_DB - 1; //Index start from 0.
             int index = position;
-            if(isThereMappingOnList) {
+            if (isThereMappingOnList) {
                 index -= 1;
             }
 
-            if(index < maxAccount) {
+            if (index < maxAccount) {
                 //Item width
                 int rlWidth = halfScreenWidth / maxAccount * (maxAccount - index);
                 holder.rlFilfullArea.setVisibility(View.VISIBLE);
@@ -484,13 +513,13 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 //Set color
                 holder.rlFilfullArea.setBackgroundColor(mContext.getResources().getColor(MessageUtil.getFriendColor(listDO.colorIndex)));
             } else {
-                int headMargin = (int)(20 * density);
+                int headMargin = (int) (20 * density);
 
                 holder.rlFilfullArea.setVisibility(View.GONE);
 
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.rlConversation.getLayoutParams();
                 //int marginLeft = -holder.ivPortrait.getWidth() / 2;
-                p.setMargins(-headMargin, 0, 0 ,0);
+                p.setMargins(-headMargin, 0, 0, 0);
                 holder.rlConversation.setLayoutParams(p);
             }
         } else {
@@ -526,10 +555,10 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             ViewHolder holder = (ViewHolder) view.getTag();
             MessageSessionBaseModel item = getItem(holder.position);
 
-            if(view != null && view.getId() == R.id.conversation_item_del_icon) {
+            if (view != null && view.getId() == R.id.conversation_item_del_icon) {
                 mItemListener.onDeleteConversationItem(getItem(holder.position));
                 return;
-            } else if(view != null && view.getId() == R.id.conv_rl) {
+            } else if (view != null && view.getId() == R.id.conv_rl) {
                 mItemListener.conversationItemOnClick(getItem(holder.position));
             }
         }
@@ -555,7 +584,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
     }
 
     public void put2ChoosenList(MessageSessionBaseModel item) {
-        if(item == null) {
+        if (item == null) {
             return;
         }
 
@@ -611,6 +640,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
 
     /**
      * 是否可选中
+     *
      * @return
      */
     protected boolean canSelectable(MessageSessionBaseModel item) {

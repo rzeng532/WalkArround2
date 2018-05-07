@@ -23,7 +23,6 @@ import com.example.walkarround.R;
 import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.ProgressDialogHorizontal;
-import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
