@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVUser;
@@ -72,7 +73,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
     //For radar display.
     private RelativeLayout mRlSearchArea;
-    private TextView mSearchingNoticeView;
+    private ViewFlipper mSearchingNoticeView;
     private RippleView mSearchingView;
     private PortraitView mSearchingPortrait;
 
@@ -173,7 +174,6 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     private final int UPDATE_NEARLY_USERS = 0;
     private final int SOMEONE_LIKE_YOU = 1;
     private final int DISPLAY_RADAR = 2;
-    private final int UPDATE_SEARCHING_TEXT = 3;
     private Handler mFragmentHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -201,16 +201,6 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                         , null).show();
             } else if(msg.what == DISPLAY_RADAR) {
                 mSearchingView.start();
-            } else if(msg.what == UPDATE_SEARCHING_TEXT) {
-                if(mSearchingNoticeView.getTag() == null
-                        || R.string.searching_notice1 == (int)mSearchingNoticeView.getTag()){
-                    mSearchingNoticeView.setText(R.string.searching_notice2);
-                    mSearchingNoticeView.setTag(R.string.searching_notice2);
-                } else {
-                    mSearchingNoticeView.setText(R.string.searching_notice1);
-                    mSearchingNoticeView.setTag(R.string.searching_notice1);
-                }
-                sendEmptyMessageDelayed(UPDATE_SEARCHING_TEXT, 2000);
             }
         }
     };
@@ -326,6 +316,9 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         if(mSearchingView != null && mSearchingView.isStarting()) {
             mSearchingView.stop();
         }
+        if (mSearchingNoticeView != null && mSearchingNoticeView.isFlipping()) {
+            mSearchingNoticeView.stopFlipping();
+        }
 
         if (null != mMessageReceiver) {
             getActivity().unregisterReceiver(mMessageReceiver);
@@ -334,7 +327,6 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         if(mFragmentHandler != null) {
             mFragmentHandler.removeMessages(UPDATE_NEARLY_USERS);
             mFragmentHandler.removeMessages(DISPLAY_RADAR);
-            mFragmentHandler.removeMessages(UPDATE_SEARCHING_TEXT);
         }
     }
 
@@ -402,7 +394,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
         //Searching UI will be displayed at first.
         mRlSearchArea = (RelativeLayout) mViewRoot.findViewById(R.id.rlSearching);
-        mSearchingNoticeView = (TextView) mRlSearchArea.findViewById(R.id.searching_notice_tv);
+        mSearchingNoticeView = (ViewFlipper) mRlSearchArea.findViewById(R.id.searching_notice_flipper_view);
         mSearchingPortrait = (PortraitView) mViewRoot.findViewById(R.id.searching_center_portrait);
         mSearchingView = (RippleView) mViewRoot.findViewById(R.id.searchingView);
 
@@ -504,8 +496,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
         mUserFrameButtons.setVisibility(View.GONE);
         mUserFrame.setVisibility(View.GONE);
-        mFragmentHandler.removeMessages(UPDATE_SEARCHING_TEXT);
-        mFragmentHandler.sendEmptyMessageDelayed(UPDATE_SEARCHING_TEXT, 2000);
+        mSearchingNoticeView.startFlipping();
     }
 
     private void showNearyUser() {
@@ -514,7 +505,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         if (mNearlyUserList != null && mNearlyUserList.size() > 0) {
             mSearchingView.stop();
             mRlSearchArea.setVisibility(View.GONE);
-            mFragmentHandler.removeMessages(UPDATE_SEARCHING_TEXT);
+            mSearchingNoticeView.stopFlipping();
 
             mUserFrame.setVisibility(View.VISIBLE);
             mUserFrameButtons.setVisibility(View.VISIBLE);

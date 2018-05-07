@@ -127,17 +127,31 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"/>
 
-            <TextView
-                android:id="@+id/searching_notice_tv"
-                android:layout_width="wrap_content"
+            <ViewFlipper
+                android:id="@+id/searching_notice_flipper_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="@dimen/font_size5"
-                android:textColor="@color/fontcor2"
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/searchingView"
-                android:layout_centerHorizontal="true"
-                android:text="@string/searching_notice2"/>
+                android:flipInterval="5000">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="2"
+                    android:gravity="center"
+                    android:textSize="@dimen/font_size3"
+                    android:textColor="@color/fontcor2"
+                    android:text="@string/searching_notice1"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/font_size3"
+                    android:textColor="@color/fontcor2"
+                    android:text="@string/searching_notice2"/>
+            </ViewFlipper>
 
         </RelativeLayout>
 
