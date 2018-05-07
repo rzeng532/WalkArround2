@@ -5,17 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
+import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppConstant;
-import com.example.walkarround.util.image.ImageLoaderManager;
 
 /**
  * Created by Richard on 2017/10/11.
@@ -23,9 +22,10 @@ import com.example.walkarround.util.image.ImageLoaderManager;
 
 public class PersonInformationActivity extends Activity implements View.OnClickListener  {
 
-    private ImageView mIvPortrait;
-    private TextView mTvNameAndAge;
-    private TextView mTvImpressionpoint;
+    private PortraitView mIvPortrait;
+    private PortraitView mIvSmallPortrait;
+    private TextView mTvName;
+    private TextView mTvAgeAndGender;
     private TextView mTvSignature;
 
     private String mName;
@@ -69,9 +69,9 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
     private void initView() {
         //Title
         findViewById(R.id.title).findViewById(R.id.back_rl).setOnClickListener(this);
-        TextView titleTv = (TextView)(findViewById(R.id.title).findViewById(R.id.display_name));
-        titleTv.setText(R.string.profile_activity_title);
-
+//        TextView titleTv = (TextView)(findViewById(R.id.title).findViewById(R.id.display_name));
+//        titleTv.setText(R.string.profile_activity_title);
+        findViewById(R.id.title).findViewById(R.id.line).setVisibility(View.GONE);
         if(mUsrObjId != null
                 && mUsrObjId.equalsIgnoreCase(ProfileManager.getInstance().getCurUsrObjId())) {
             findViewById(R.id.title).findViewById(R.id.more_rl).setVisibility(View.VISIBLE);
@@ -81,34 +81,38 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
         }
 
         //UI elements
-        mIvPortrait = (ImageView) findViewById(R.id.iv_portrait);
-        mTvNameAndAge = (TextView) findViewById(R.id.tv_infor);
-        mTvImpressionpoint = (TextView) findViewById(R.id.tv_point);
+        mIvPortrait = (PortraitView) findViewById(R.id.iv_portrait);
+        mIvSmallPortrait = (PortraitView) findViewById(R.id.iv_small_portrait);
+        mTvName = (TextView) findViewById(R.id.tv_name);
+        mTvAgeAndGender = (TextView) findViewById(R.id.tv_infor);
         mTvSignature = (TextView) findViewById(R.id.tv_signature);
     }
 
     private void updateUIViaData() {
-        if(!TextUtils.isEmpty(mPortraitUrl)) {
-            ImageLoaderManager.displayImage(mPortraitUrl, -1, mIvPortrait);
-        }
 
         String nameAndAge = "";
         if(!TextUtils.isEmpty(mName)) {
-            nameAndAge = nameAndAge + mName;
+            mTvName.setText(mName);
         }
         if(!TextUtils.isEmpty(mAge)) {
-            nameAndAge = nameAndAge + " , " + mAge;
+            nameAndAge = mAge;
         }
         if(!TextUtils.isEmpty(mGender)) {
             nameAndAge = nameAndAge + " , " + mGender;
         }
 
-        mTvNameAndAge.setText(nameAndAge);
-
-        mTvImpressionpoint.setVisibility(View.GONE);
+        mTvAgeAndGender.setText(nameAndAge);
 
         if(!TextUtils.isEmpty(mSignature)) {
             mTvSignature.setText(mSignature);
+        }
+
+        if(!TextUtils.isEmpty(mName) && !TextUtils.isEmpty(mPortraitUrl)) {
+            mIvPortrait.setBaseData(mName, mPortraitUrl,
+                    mName.substring(0, 1), -1);
+
+            mIvSmallPortrait.setBaseData(mName, mPortraitUrl,
+                    mName.substring(0, 1), -1);
         }
     }
 
