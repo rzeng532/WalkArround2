@@ -141,7 +141,7 @@
                     android:lines="2"
                     android:gravity="center"
                     android:textSize="@dimen/font_size3"
-                    android:textColor="@color/fontcor2"
+                    android:textColor="@color/fontcor11"
                     android:text="@string/searching_notice1"/>
 
                 <TextView
@@ -149,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textSize="@dimen/font_size3"
-                    android:textColor="@color/fontcor2"
+                    android:textColor="@color/fontcor11"
                     android:text="@string/searching_notice2"/>
             </ViewFlipper>
 
