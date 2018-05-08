@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -395,6 +394,8 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         //Searching UI will be displayed at first.
         mRlSearchArea = (RelativeLayout) mViewRoot.findViewById(R.id.rlSearching);
         mSearchingNoticeView = (ViewFlipper) mRlSearchArea.findViewById(R.id.searching_notice_flipper_view);
+        mSearchingNoticeView.setInAnimation(getActivity(), R.anim.slide_in_from_bottom);
+        mSearchingNoticeView.setOutAnimation(getActivity(), R.anim.slide_out_to_top);
         mSearchingPortrait = (PortraitView) mViewRoot.findViewById(R.id.searching_center_portrait);
         mSearchingView = (RippleView) mViewRoot.findViewById(R.id.searchingView);
 
