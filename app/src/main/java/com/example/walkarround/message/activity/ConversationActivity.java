@@ -1214,11 +1214,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, listDO.getDisplayName());
         intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, listDO.getMsgThreadId());
         intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, listDO.getChatType());
-        intent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
         intent.putExtra(BuildMessageActivity.INTENT_LOCATION_MESSAGE_ID, listDO.getMsgId());
-        // 消息来源
-        int msgFromType = BuildMessageActivity.MSG_FROM_TYPE_RCS;
-        intent.putExtra(BuildMessageActivity.INTENT_LOCATION_MESSAGE_FROM_TYPE, msgFromType);
         startActivity(intent);
     }
 
@@ -1255,7 +1251,6 @@ public class ConversationActivity extends Activity implements ConversationItemLi
 
         intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, listDO.getChatType());
         intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, listDO.name);
-        intent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
 
         return intent;
     }

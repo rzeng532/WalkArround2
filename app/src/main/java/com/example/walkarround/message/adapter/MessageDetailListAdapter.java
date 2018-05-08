@@ -67,10 +67,8 @@ public class MessageDetailListAdapter extends BaseAdapter implements MessageDeta
 
     /*列表中顶部SMS消息ID,IM消息ID*/
     private long mLastChatId = 0;
-    private long mLastSmsId = 0;
     /*列表中di部SMS消息ID,IM消息ID*/
     private long mBottomChatId = 0;
-    private long mBottomSmsId = 0;
     /*创建消息 View*/
     private MessageDetailViewFactory mViewFactory;
     /*是否是群聊*/
@@ -96,9 +94,7 @@ public class MessageDetailListAdapter extends BaseAdapter implements MessageDeta
         }
         isInSelectMode = false;
         mLastChatId = 0;
-        mLastSmsId = 0;
         mBottomChatId = 0;
-        mBottomSmsId = 0;
         if (messageInfoList == null) {
             return;
         }
@@ -280,20 +276,17 @@ public class MessageDetailListAdapter extends BaseAdapter implements MessageDeta
      * @param chatId
      * @param smsId
      */
-    public void setLastMessagesId(long chatId, long smsId) {
+    public void setLastMessagesId(long chatId) {
         mLastChatId = chatId;
-        mLastSmsId = smsId;
     }
 
     /**
      * 设置底部消息ID
      *
      * @param chatId
-     * @param smsId
      */
-    public void setBottomMessagesId(long chatId, long smsId) {
+    public void setBottomMessagesId(long chatId) {
         mBottomChatId = chatId;
-        mBottomSmsId = smsId;
     }
 
     /**
@@ -305,26 +298,8 @@ public class MessageDetailListAdapter extends BaseAdapter implements MessageDeta
         return mLastChatId;
     }
 
-    /**
-     * 获取顶部SMS消息ID
-     *
-     * @return
-     */
-    public long getLastSmsId() {
-        return mLastSmsId;
-    }
-
     public long getBottomChatId() {
         return mBottomChatId;
-    }
-
-    /**
-     * 获取顶部SMS消息ID
-     *
-     * @return
-     */
-    public long getBottomSmsId() {
-        return mBottomSmsId;
     }
 
     public void dismissDialog() {
@@ -453,8 +428,7 @@ public class MessageDetailListAdapter extends BaseAdapter implements MessageDeta
             ChatMsgBaseInfo chatMessageInfo = clickedMessage;
             boolean isChecked = !chatMessageInfo.isChecked();
             chatMessageInfo.setChecked(isChecked);
-            String key = Integer.toString(BuildMessageActivity.MSG_FROM_TYPE_RCS);
-            key += "-" + chatMessageInfo.getMsgId();
+            String key = "" + chatMessageInfo.getMsgId();
             if (isChecked) {
                 mSelectedItemList.put(key, chatMessageInfo);
             } else {
@@ -522,8 +496,7 @@ public class MessageDetailListAdapter extends BaseAdapter implements MessageDeta
         if (mItemListener != null) {
             mItemListener.onMsgForward(clickedMessage);
         }
-        String key = Integer.toString(BuildMessageActivity.MSG_FROM_TYPE_RCS);
-        key += "-" + clickedMessage.getMsgId();
+        String key = "" + clickedMessage.getMsgId();
         mSelectedItemList.put(key, clickedMessage);
     }
 
@@ -535,8 +508,7 @@ public class MessageDetailListAdapter extends BaseAdapter implements MessageDeta
         if (isChecked) {
             for (ChatMsgBaseInfo messageInfo : mMessageInfoList) {
                 messageInfo.setChecked(isChecked);
-                String key = Integer.toString(BuildMessageActivity.MSG_FROM_TYPE_RCS);
-                key += "-" + messageInfo.getMsgId();
+                String key = "" + messageInfo.getMsgId();
                 mSelectedItemList.put(key, messageInfo);
             }
         } else {

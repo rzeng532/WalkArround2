@@ -375,11 +375,10 @@ public class WalkArroundMsgManager {
      * @param thread_id
      * @param number
      * @param beginChatId
-     * @param beginSmsId
      * @return
      */
-    public ChatMsgAndSMSReturn getChatMsgList(Context context, long thread_id, String number, long beginChatId,
-                                              long beginSmsId, boolean isUpBeginId) {
+    public ChatMsgAndSMSReturn getChatMsgList(Context context, long thread_id, String number, long beginChatId
+            , boolean isUpBeginId) {
         List<ChatMsgBaseInfo> chatList = new ArrayList<ChatMsgBaseInfo>();
         if (thread_id > 0) {
             try {
@@ -404,7 +403,6 @@ public class WalkArroundMsgManager {
 
         // 获取lastId
         long lastChatId = beginChatId;
-        long lastSmsId = beginSmsId;
         int start = isUpBeginId ? chatList.size() - 1 : 0;
         int end = isUpBeginId ? 0 : chatList.size() - 1;
         int step = isUpBeginId ? -1 : 1;
@@ -413,7 +411,7 @@ public class WalkArroundMsgManager {
             lastChatId = chatMessage.getMsgId();
         }
 
-        return new ChatMsgAndSMSReturn(lastChatId, lastSmsId, chatList);
+        return new ChatMsgAndSMSReturn(lastChatId, chatList);
     }
 
     public void batchSetMsgRead(List<Long> threadIdList) {
@@ -728,14 +726,14 @@ public class WalkArroundMsgManager {
      * @return
      */
     public ChatMsgAndSMSReturn getChatMsgListByTime(Context context, long thread_id, String number,
-                                                    long msgId, int msgFromType) {
+                                                    long msgId) {
         List<ChatMsgBaseInfo> chatList = new ArrayList<ChatMsgBaseInfo>();
         int msgCount = PAGE_COUNT * 2;
         ChatMsgBaseInfo msg = null;
         msg = getMessageById(msgId);
 
         if ((msg == null) || (msg.getMsgState() == MessageState.MSG_STATE_SEND_DRAFT)) {
-            return getChatMsgList(context, thread_id, number, 0, 0, true);
+            return getChatMsgList(context, thread_id, number, 0, true);
         }
         long time = msg.getTime();
         if (thread_id > 0) {
@@ -755,7 +753,7 @@ public class WalkArroundMsgManager {
         }
 
         // 删除多余项
-        int searchMsgPos = getSearchMsgPos(chatList, msgId, msgFromType);
+        int searchMsgPos = getSearchMsgPos(chatList, msgId);
         if (chatList.size() > msgCount + 1) {
             int startPos = searchMsgPos - msgCount / 2;
             startPos = startPos >= 0 ? searchMsgPos : 0;
@@ -771,7 +769,7 @@ public class WalkArroundMsgManager {
         for (ChatMsgBaseInfo chatMessage : chatList) {
             lastChatId = chatMessage.getMsgId();
         }
-        ChatMsgAndSMSReturn returnList = new ChatMsgAndSMSReturn(lastChatId, lastSmsId, chatList);
+        ChatMsgAndSMSReturn returnList = new ChatMsgAndSMSReturn(lastChatId, chatList);
         returnList.setSearchMsgPos(searchMsgPos);
         return returnList;
     }
@@ -781,18 +779,15 @@ public class WalkArroundMsgManager {
      *
      * @param chatList
      * @param msgId
-     * @param msgFromType
      * @return
      */
-    private int getSearchMsgPos(List<ChatMsgBaseInfo> chatList, long msgId, int msgFromType) {
+    private int getSearchMsgPos(List<ChatMsgBaseInfo> chatList, long msgId) {
         int searchMsgPos = -1;
         for (int i = 0; i < chatList.size(); i++) {
             ChatMsgBaseInfo msgBaseInfo = chatList.get(i);
             if (msgBaseInfo.getMsgId() == msgId) {
-                if (msgFromType == BuildMessageActivity.MSG_FROM_TYPE_RCS) {
-                    searchMsgPos = i;
-                    break;
-                }
+                searchMsgPos = i;
+                break;
             }
         }
         return searchMsgPos;

@@ -30,14 +30,12 @@ public class LoadSearchResultMessageTask extends AsyncTask<String, Void, ChatMsg
         if (length == 5) {
             long thread = Long.parseLong(params[0]);
             long beginChatId = Long.parseLong(params[2]);
-            long beginSmsId = Long.parseLong(params[3]);
             return WalkArroundMsgManager.getInstance(mContext).getChatMsgList(mContext, thread, params[1], beginChatId,
-                    beginSmsId, false);
+                    false);
         } else if (length == 4) {
             long thread = Long.parseLong(params[0]);
             long msgId = Long.parseLong(params[2]);
-            int msgFromType = Integer.parseInt(params[3]);
-            return WalkArroundMsgManager.getInstance(mContext).getChatMsgListByTime(mContext, thread, params[1], msgId, msgFromType);
+            return WalkArroundMsgManager.getInstance(mContext).getChatMsgListByTime(mContext, thread, params[1], msgId);
         }
         return null;
     }

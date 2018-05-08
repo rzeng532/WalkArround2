@@ -202,7 +202,6 @@ public class ChatDetailActivity extends Activity implements View.OnClickListener
             intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, mCurrentThreadId);
             intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, ChatType.CHAT_TYPE_GROUP);
             intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_DISPLAY_NAME, mCurrentGroupName);
-            intent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
             startActivity(intent);
             setResult(RESULT_CANCELED);
         } else if (mConversationType == ChatType.CHAT_TYPE_ONE2ONE) {

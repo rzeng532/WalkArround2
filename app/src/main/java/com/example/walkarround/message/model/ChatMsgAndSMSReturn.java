@@ -11,14 +11,12 @@ import java.util.List;
 public class ChatMsgAndSMSReturn {
 
     private long lastChatId;
-    private long lastSmsId;
     private int searchMsgPos = -1;
     private List<ChatMsgBaseInfo> chatMessages;
 
-    public ChatMsgAndSMSReturn(long lastChatId, long lastSmsId, List<ChatMsgBaseInfo> chatMessages) {
+    public ChatMsgAndSMSReturn(long lastChatId, List<ChatMsgBaseInfo> chatMessages) {
         super();
         this.lastChatId = lastChatId;
-        this.lastSmsId = lastSmsId;
         this.chatMessages = chatMessages;
     }
 
@@ -28,14 +26,6 @@ public class ChatMsgAndSMSReturn {
 
     public void setLastChatId(long lastChatId) {
         this.lastChatId = lastChatId;
-    }
-
-    public long getLastSmsId() {
-        return lastSmsId;
-    }
-
-    public void setLastSmsId(int lastSmsId) {
-        this.lastSmsId = lastSmsId;
     }
 
     public List<ChatMsgBaseInfo> getChatMessages() {
@@ -56,7 +46,7 @@ public class ChatMsgAndSMSReturn {
 
     @Override
     public String toString() {
-        return "ChatMsgAndSMSReturn [lastChatId=" + lastChatId + ", lastSmsId=" + lastSmsId + ", chatMessages="
+        return "ChatMsgAndSMSReturn [lastChatId=" + lastChatId + ", chatMessages="
                 + chatMessages + "]";
     }
 }

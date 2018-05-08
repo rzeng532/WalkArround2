@@ -181,7 +181,6 @@ public class MessageReceiver extends BroadcastReceiver {
 
         Intent intent = new Intent();
         intent.setClass(context.getApplicationContext(), BuildMessageActivity.class);
-        intent.putExtra(BuildMessageActivity.INTENT_RECEIVER_EDITABLE, false);
         intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_RECEIVER, message.getContact());
         intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_THREAD_ID, message.getMsgThreadId());
         intent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_TYPE, message.getChatType());

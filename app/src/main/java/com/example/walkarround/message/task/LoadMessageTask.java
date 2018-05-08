@@ -23,14 +23,13 @@ public class LoadMessageTask extends AsyncTask<String, Void, ChatMsgAndSMSReturn
 
     @Override
     protected ChatMsgAndSMSReturn doInBackground(String... params) {
-        if (params == null || params.length < 4) {
+        if (params == null || params.length < 3) {
             return null;
         }
         long thread = Long.parseLong(params[0]);
         long beginChatId = Long.parseLong(params[2]);
-        long beginSmsId = Long.parseLong(params[3]);
         return WalkArroundMsgManager.getInstance(mContext).getChatMsgList(mContext, thread, params[1], beginChatId,
-                beginSmsId, true);
+                true);
     }
 
     @Override

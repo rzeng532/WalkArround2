@@ -1,4 +1,15 @@
 package com.example.walkarround.message.activity;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -19,7 +30,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -93,16 +103,6 @@ import com.example.walkarround.util.image.ImageBrowserActivity;
 import com.example.walkarround.util.image.ImageChooseActivity;
 import com.example.walkarround.util.network.NetWorkManager;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -117,8 +117,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         OnRefreshListener2<ListView>, SensorEventListener, LoadSearchResultMessageTask.SearchMessageLoadListener,
         DialogFactory.ConfirmDialogClickListener {
 
-    /* 收信人是否可编辑 */
-    public static final String INTENT_RECEIVER_EDITABLE = "receiverEditable";
     /* 消息类型：一对一、一对多、群聊 */
     public static final String INTENT_CONVERSATION_TYPE = "conversationType";
     public static final String INTENT_CONVERSATION_RECEIVER = "conversationReceiver";
@@ -126,9 +124,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     public static final String INTENT_CONVERSATION_THREAD_ID = "conversationThreadId";
     public static final String INTENT_CONVERSATION_GROUP_ID = "conversationGroupId";
     public static final String INTENT_CONVERSATION_ID = "ConversationId";
-    public static final String INTENT_FAST_CONTACTS = "fastContacts";
     public static final String INTENT_LOCATION_MESSAGE_ID = "messageId";
-    public static final String INTENT_LOCATION_MESSAGE_FROM_TYPE = "messageFromType";
 
     public static final int CONVERSATION_DEFAULT_THREAD_ID = -2;
 
@@ -136,10 +132,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     public static final int MAX_INPUT_LENGTH = 450;
 
-    /* 添加收信人 */
-    private static final int REQUEST_CODE_SELECT_CONTACTS_WITH_NUM = 1;
-    /* 发送联系人名片 */
-    private static final int REQUEST_CODE_SELECT_FOR_SEND_VCARD = 2;
     /* 发送视频 */
     private static final int REQUEST_CODE_TAKE_VIDEO = 3;
     /* 发送位置信息 */
@@ -163,24 +155,13 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     private static final int MESSAGE_EDIT_STATE_DEFAULT = 0;
     private static final int MESSAGE_EDIT_STATE_HAS_INPUT = 1;
     private static final int MESSAGE_EDIT_STATE_VOICE = 2;
-    private static final int MESSAGE_EDIT_STATE_MORE_OPERATE = 3;
-    private static final int MESSAGE_EDIT_STATE_MORE_EMOJI = 4;
     private static final int MESSAGE_EDIT_STATE_BURN_AFTER = 5;
     private static final int MESSAGE_EDIT_STATE_BURN_HAS_INPUT = 6;
     private static final int MESSAGE_EDIT_STATE_BURN_VOICE = 7;
 
-    /* 通话类型：普通通话、语音通话、视频通话 */
-    private static final int CALL_TYPE_NORMAL = 0;
-    private static final int CALL_TYPE_VOICE = 1;
-    private static final int CALL_TYPE_VIDEO = 2;
     /* 更多操作：查看联系人、查看友圈、加入黑名单 */
     private static final int MORE_TYPE_LOOK_CONTACT = 0;
-    private static final int MORE_TYPE_LOOK_DYNAMIC = 1;
     private static final int MORE_TYPE_TO_BLACK = 2;
-
-    /* 消息来源：RCS(IM)消息、SMS消息、定时消息 */
-    public static final int MSG_FROM_TYPE_RCS = 1;
-    public static final int MSG_FROM_TYPE_SMS = 2;
 
     /* 发送方发送阅后即焚后消息消息间隔 */
     public static final int MSG_BURN_AFTER_READ_DURATION = 5000;
@@ -192,13 +173,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     public static final String ACTION_NOTIFY_CONVERSATION_REFRESH = "notify_conversation_refresh";
     public static final String CONVERSATION_REFRESH_ID = "conversation_refresh_id";
 
-    /* 收信人是否可编辑 */
-    protected boolean isReceiverEditable = true;
-
     protected boolean isActivityOnForground = false;
 
-    /* 编辑联系人 */
-    private EditText mReceiverEditView;
     /* 进入双方距离界面按钮 */
     private ImageView mImvDistance;
 
@@ -206,22 +182,14 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     private View mMessageBottomView;
     /* 消息编辑框 */
     protected EditText mSendMessageEditView;
-    /* 定时发送或者阅后即焚标记 */
-    private TextView mTimeSendView;
     /* 左侧按钮 */
     private ImageView mBottomLeftView;
     /* 发送和语音区域 */
     private View mBottomRightView;
 
-    /* 更多操作：发送联系人、位置、图片等 */
-    private ChatAssistToolsView mMoreToolsPanel;
-    /* 表情面板 */
-    private EmojiPanelView mEmojiPanel;
     /* 语音面板 */
     private View mVoicePanel;
     private PressTalkTouchListener mVoiceListener;
-    /* 时间选择面板 */
-    private View mTimeSelectPanel;
     /* 批量操作面板：删除、收藏等 */
     private View mSelectModelPanel;
 
@@ -266,14 +234,11 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     /* 利用相机刚拍图片 */
     private String mPhotoImagePath;
 
-    private PopupWindow mBurnMsgTypeChoosePopup;
-
     private Dialog mStart2walkDialog = null;
 
     /*搜索结果定位*/
     private boolean isEnablePullDownLoad = false;
     private long mSearchMsgId = -1;
-    private int mSearchMsgFromType = MSG_FROM_TYPE_RCS;
 
     private static final int UI_WHAT_SCROLL = 1;
     private Handler mUiHandler = new Handler() {
@@ -328,7 +293,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             } else if (action.equals(AlarmReceiver.ACTION_TIME_MSG_SEND)) {
                 // 定时短信
 //                if (!isEnablePullDownLoad) {
-//                    updateLastSendMessageToList(messageId, MSG_FROM_TYPE_RCS, false);
+//                    updateLastSendMessageToList(messageId, MSG_FROM_TYPE_RCS2, false);
 //                }
 //                long deleteMsgId = intent.getLongExtra(AlarmReceiver.INTENT_TIME_MSG_ID, -1);
 //                mMessageDetailAdapter.deleteTimeMessageById(deleteMsgId);
@@ -345,10 +310,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             boolean isAvailable = NetWorkManager.getInstance(context).isNetworkAvailable();
             if (isAvailable != isNetworkAvailable) {
                 isNetworkAvailable = isAvailable;
-                setToolsViewEnable();
                 if (isAvailable) {
                     findViewById(R.id.network_status_notice_tv).setVisibility(View.GONE);
-                } else if (mReceiverEditView == null || !mReceiverEditView.hasFocus()) {
+                } else {
                     // 网络不可用
                     findViewById(R.id.network_status_notice_tv).setVisibility(View.VISIBLE);
                 }
@@ -389,30 +353,22 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             return;
         }
 
-        // 初始化头部
-        if (isReceiverEditable) {
-//            PullToRefreshListView msgListView = (PullToRefreshListView) findViewById(R.id.message_list_xlv);
-//            msgListView.setMode(PullToRefreshBase.Mode.DISABLED);
-//            initHeadReceiverView();
-//            getAllContacts();
-        } else {
-            // 监听新消息及消息状态变化
-            IntentFilter commandFilter = new IntentFilter();
-            commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_STATUS_CHANGED);
-            commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
-            commandFilter.addAction(AlarmReceiver.ACTION_TIME_MSG_SEND);
-            // 群聊通知消息
-            commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_MESSAGE_NEW_RECEIVED);
-            commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_INFO_CHANGED);
-            commandFilter.addAction(MsgBroadcastConstants.ACTION_CONTACT_COMPOSING_INFO);
-            registerReceiver(mMessageReceiver, commandFilter);
+        // 监听新消息及消息状态变化
+        IntentFilter commandFilter = new IntentFilter();
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_STATUS_CHANGED);
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
+        commandFilter.addAction(AlarmReceiver.ACTION_TIME_MSG_SEND);
+        // 群聊通知消息
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_MESSAGE_NEW_RECEIVED);
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_INFO_CHANGED);
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_CONTACT_COMPOSING_INFO);
+        registerReceiver(mMessageReceiver, commandFilter);
 
-            // 初始化头部
-            initMessageDetailHeader();
-            // 加载消息
-            loadMessageList();
-            initSensor();
-        }
+        // 初始化头部
+        initMessageDetailHeader();
+        // 加载消息
+        loadMessageList();
+        initSensor();
         // 初始化消息编辑区域
         initMessageEditArea();
 
@@ -452,55 +408,47 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             mMessageDetailAdapter = null;
         }
         // 初始化头部
-        if (isReceiverEditable) {
-//            initHeadReceiverView();
-//            getAllContacts();
-//            releaseSensor();
-//            mSendMessageEditView.setText("");
-        } else {
-            IntentFilter commandFilter = new IntentFilter();
-            commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_STATUS_CHANGED);
-            commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
-            commandFilter.addAction(AlarmReceiver.ACTION_TIME_MSG_SEND);
-            // 群聊通知消息
-            commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_MESSAGE_NEW_RECEIVED);
-            commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_INFO_CHANGED);
-            commandFilter.addAction(MsgBroadcastConstants.ACTION_CONTACT_COMPOSING_INFO);
-            getBaseContext().registerReceiver(mMessageReceiver, commandFilter);
-            initMessageDetailHeader();
-            // 加载消息
-            if (mMessageListView != null) {
-                PullToRefreshBase.Mode mode = isEnablePullDownLoad ? PullToRefreshBase.Mode.BOTH
-                        : PullToRefreshBase.Mode.PULL_FROM_START;
-                mMessageListView.setMode(mode);
-            }
-            loadMessageList();
-            initSensor();
-            setToolsViewEnable();
-            // 显示草稿消息
-            Observable.just("")
-                    .observeOn(Schedulers.io())
-                    .map(new Function<String, ChatMsgBaseInfo>() {
-
-                        @Override
-                        public ChatMsgBaseInfo apply(String s) throws Exception {
-                            ChatMsgBaseInfo draftMessage = WalkArroundMsgManager.getInstance(BuildMessageActivity.this).getDraftMessage(mRecipientInfo.getThreadId());
-                            return draftMessage;
-                        }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<ChatMsgBaseInfo>() {
-                        @Override
-                        public void accept(ChatMsgBaseInfo draftMessage) throws Exception {
-                            if (draftMessage != null && !TextUtils.isEmpty(draftMessage.getData())) {
-                                mSendMessageEditView.setText(EmojiParser.getInstance(BuildMessageActivity.this).addSmileySpans(draftMessage.getData()));
-                                mSendMessageEditView.setSelection(draftMessage.getData().length());
-                            } else {
-                                mSendMessageEditView.setText("");
-                            }
-                        }
-                    });
+        IntentFilter commandFilter = new IntentFilter();
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_STATUS_CHANGED);
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
+        commandFilter.addAction(AlarmReceiver.ACTION_TIME_MSG_SEND);
+        // 群聊通知消息
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_MESSAGE_NEW_RECEIVED);
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_INFO_CHANGED);
+        commandFilter.addAction(MsgBroadcastConstants.ACTION_CONTACT_COMPOSING_INFO);
+        getBaseContext().registerReceiver(mMessageReceiver, commandFilter);
+        initMessageDetailHeader();
+        // 加载消息
+        if (mMessageListView != null) {
+            PullToRefreshBase.Mode mode = isEnablePullDownLoad ? PullToRefreshBase.Mode.BOTH
+                    : PullToRefreshBase.Mode.PULL_FROM_START;
+            mMessageListView.setMode(mode);
         }
+        loadMessageList();
+        initSensor();
+        // 显示草稿消息
+        Observable.just("")
+                .observeOn(Schedulers.io())
+                .map(new Function<String, ChatMsgBaseInfo>() {
+
+                    @Override
+                    public ChatMsgBaseInfo apply(String s) throws Exception {
+                        ChatMsgBaseInfo draftMessage = WalkArroundMsgManager.getInstance(BuildMessageActivity.this).getDraftMessage(mRecipientInfo.getThreadId());
+                        return draftMessage;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ChatMsgBaseInfo>() {
+                    @Override
+                    public void accept(ChatMsgBaseInfo draftMessage) throws Exception {
+                        if (draftMessage != null && !TextUtils.isEmpty(draftMessage.getData())) {
+                            mSendMessageEditView.setText(EmojiParser.getInstance(BuildMessageActivity.this).addSmileySpans(draftMessage.getData()));
+                            mSendMessageEditView.setSelection(draftMessage.getData().length());
+                        } else {
+                            mSendMessageEditView.setText("");
+                        }
+                    }
+                });
     }
 
     /**
@@ -509,10 +457,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      * @return
      */
     private boolean isSameConversation(Intent intent) {
-        boolean isReceiverEditable = intent.getBooleanExtra(INTENT_RECEIVER_EDITABLE, true);
-        if (isReceiverEditable) {
-            return false;
-        }
         long threadId = intent.getLongExtra(INTENT_CONVERSATION_THREAD_ID, CONVERSATION_DEFAULT_THREAD_ID);
         if (threadId == mRecipientInfo.getThreadId()) {
             return true;
@@ -537,7 +481,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(INTENT_RECEIVER_EDITABLE, isReceiverEditable);
         outState.putInt(INTENT_CONVERSATION_TYPE, mRecipientInfo.getConversationType());
         outState.putLong(INTENT_CONVERSATION_THREAD_ID, mRecipientInfo.getThreadId());
         outState.putSerializable(INTENT_CONVERSATION_RECEIVER, (Serializable) mRecipientInfo.getRecipientList());
@@ -619,11 +562,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         isNetworkAvailable = NetWorkManager.getInstance(this).isNetworkAvailable();
         if (oldNetworkStatus != isNetworkAvailable) {
             int visibility = isNetworkAvailable ? View.GONE : View.VISIBLE;
-            if (mReceiverEditView != null && mReceiverEditView.hasFocus()) {
-                visibility = View.GONE;
-            }
             findViewById(R.id.network_status_notice_tv).setVisibility(visibility);
-            setToolsViewEnable();
         }
         IntentFilter networkFilter = new IntentFilter();
         networkFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -662,9 +601,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             mAudioManager.setMode(AudioManager.MODE_NORMAL);
         }
 
-        if (!isReceiverEditable) {
-            saveDraftMessage();
-        }
+        saveDraftMessage();
 
         if (mMessageListView != null) {
             mMessageListView.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
@@ -825,16 +762,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mTimeSelectPanel != null && mTimeSelectPanel.getVisibility() == View.VISIBLE) {
-                // 隐藏设置时间View
-                mTimeSelectPanel.setVisibility(View.GONE);
-                return true;
-            }
-//            if (mSearchContactView != null && mSearchContactView.getVisibility() == View.VISIBLE) {
-//                // 隐藏搜索联系人View
-//                showSearchContact(false);
-//                return true;
-//            }
             if (mSelectModelPanel != null && mSelectModelPanel.getVisibility() == View.VISIBLE) {
                 // 取消选择模式
                 if (mMessageListView != null) {
@@ -852,58 +779,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    private BroadcastReceiver mContactReceiver = null;
-    private boolean isContactRegister = false;
-//    private void registerContactReceiver(){
-//        if (!isContactRegister && mContactReceiver == null){
-//            mContactReceiver = new BroadcastReceiver() {
-//                public void onReceive(Context context, Intent intent) {
-//                    mSearchContactAdapter.setAllContactList(NewContactManager.getInstance(getApplicationContext()).getAllContacts());
-//                }
-//            };
-//            LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mContactReceiver,new IntentFilter(NewContactManager.Action.ACTION_CONTACT_INIT_DONE));
-//            isContactRegister = true;
-//        }
-//    }
-//
-//    private void unRegisterContactReceiver(){
-//        if (isContactRegister && mContactReceiver != null){
-//            LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mContactReceiver);
-//            mContactReceiver = null;
-//            isContactRegister = false;
-//        }
-//    }
-    /**
-     * 快速联系人
-     *
-     * @param isVisible
-     *            是否可见
-     */
-//    private void showFastContact(boolean isVisible) {
-//        if (isVisible && mFastContactGridView.getCount() > 0) {
-//            mFastContactGridView.setVisibility(View.VISIBLE);
-//        } else {
-//            mFastContactGridView.setVisibility(View.GONE);
-//        }
-//    }
-
-    /**
-     * 检索联系人结果列表
-     *
-     * @param isVisible
-     */
-//    private void showSearchContact(boolean isVisible) {
-//        if (isVisible && mSearchContactAdapter.getCount() > 0) {
-//            mSearchContactView.setVisibility(View.VISIBLE);
-//            mMessageBottomView.setVisibility(View.GONE);
-//            showFastContact(false);
-//        } else {
-//            mSearchContactView.setVisibility(View.GONE);
-//            mMessageBottomView.setVisibility(View.VISIBLE);
-//            showFastContact(true);
-//        }
-//    }
 
     /**
      * 加载通话消息
@@ -929,12 +804,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             number = mRecipientInfo.getRecipientList().get(0);
         }
         String lastImMsgId = Integer.toString(0);
-        String lastSmsMsgId = Integer.toString(0);
         if (mMessageDetailAdapter != null) {
             lastImMsgId = Long.toString(mMessageDetailAdapter.getLastChatId());
-            lastSmsMsgId = Long.toString(mMessageDetailAdapter.getLastSmsId());
         }
-        new LoadMessageTask(this, this).execute(threadId, number, lastImMsgId, lastSmsMsgId);
+        new LoadMessageTask(this, this).execute(threadId, number, lastImMsgId);
     }
 
     /**
@@ -951,11 +824,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
         if (mMessageDetailAdapter != null) {
             String lastImMsgId = Long.toString(mMessageDetailAdapter.getBottomChatId());
-            String lastSmsMsgId = Long.toString(mMessageDetailAdapter.getBottomSmsId());
-            new LoadSearchResultMessageTask(this, this).execute(threadId, number, lastImMsgId, lastSmsMsgId, "");
+            new LoadSearchResultMessageTask(this, this).execute(threadId, number, lastImMsgId, "");
         } else {
-            new LoadSearchResultMessageTask(this, this).execute(threadId, number, Long.toString(mSearchMsgId),
-                    Long.toString(mSearchMsgFromType));
+            new LoadSearchResultMessageTask(this, this).execute(threadId, number, Long.toString(mSearchMsgId));
         }
     }
 
@@ -965,7 +836,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     @SuppressWarnings("unchecked")
     private boolean initData(Bundle savedInstanceState, Intent intent) {
         if (savedInstanceState != null) {
-            isReceiverEditable = savedInstanceState.getBoolean(INTENT_RECEIVER_EDITABLE, true);
             int conversationType = savedInstanceState.getInt(INTENT_CONVERSATION_TYPE, ChatType.CHAT_TYPE_ONE2ONE);
             mRecipientInfo.setConversationType(conversationType);
             long threadId = savedInstanceState.getLong(INTENT_CONVERSATION_THREAD_ID, CONVERSATION_DEFAULT_THREAD_ID);
@@ -982,13 +852,12 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             String displayName = savedInstanceState.getString(INTENT_CONVERSATION_DISPLAY_NAME);
             mRecipientInfo.setDisplayName(displayName);
         } else if (intent != null) {
-            isReceiverEditable = intent.getBooleanExtra(INTENT_RECEIVER_EDITABLE, true);
             int conversationType = intent.getIntExtra(INTENT_CONVERSATION_TYPE, ChatType.CHAT_TYPE_ONE2ONE);
             mRecipientInfo.setConversationType(conversationType);
 
             if (conversationType == ChatType.CHAT_TYPE_ONE2ONE) {
                 String receiver = intent.getStringExtra(INTENT_CONVERSATION_RECEIVER);
-                if (TextUtils.isEmpty(receiver) && !isReceiverEditable) {
+                if (TextUtils.isEmpty(receiver)) {
                     return false;
                 }
                 if (!TextUtils.isEmpty(receiver)) {
@@ -1010,7 +879,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             String displayName = intent.getStringExtra(INTENT_CONVERSATION_DISPLAY_NAME);
             mRecipientInfo.setDisplayName(displayName);
             mSearchMsgId = intent.getLongExtra(INTENT_LOCATION_MESSAGE_ID, -1);
-            mSearchMsgFromType = intent.getIntExtra(INTENT_LOCATION_MESSAGE_FROM_TYPE, MSG_FROM_TYPE_RCS);
             isEnablePullDownLoad = mSearchMsgId > 0;
         }
         // 是否黑名单
@@ -1025,12 +893,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      */
     private void initMessageEditArea() {
         mMessageBottomView = findViewById(R.id.message_bottom_layout);
-        mTimeSendView = (TextView) findViewById(R.id.special_message_ahead_tv);
-        mTimeSendView.setOnClickListener(this);
         // 左侧语音等按钮
         mBottomLeftView = (ImageView) findViewById(R.id.left_change_iv);
         mBottomLeftView.setOnClickListener(this);
-        setToolsViewEnable();
 
         //mMessageBottomView.findViewById(R.id.emoji_iv).setOnClickListener(this);
 
@@ -1059,32 +924,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         touchView.setOnTouchListener(mVoiceListener);
 
         mSendMessageEditView = (EditText) findViewById(R.id.message_edit_et);
-        mSendMessageEditView.addTextChangedListener(new MsgEditTextWatcher(this));
-        mSendMessageEditView.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if (keyCode == KeyEvent.KEYCODE_DEL && keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                        && mSendMessageEditView.getTag(R.id.message_edit_et) == null) {
-                    // 删除键，删除阅后即焚/定时发送
-                    int selectionStart = mSendMessageEditView.getSelectionStart();
-                    int selectionEnd = mSendMessageEditView.getSelectionEnd();
-                    if (mTimeSendView.getVisibility() == View.VISIBLE && selectionStart == 0 && selectionEnd == 0) {
-                        mTimeSendView.setText(null);
-                        mTimeSendView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                        mTimeSendView.setVisibility(View.GONE);
-                        if (mSendMessageEditView.getText().toString().trim().length() > 0) {
-                            mCurrentMessageEditState = MESSAGE_EDIT_STATE_HAS_INPUT;
-                        } else {
-                            mCurrentMessageEditState = MESSAGE_EDIT_STATE_DEFAULT;
-                        }
-                        switchBottomPanelView(mCurrentMessageEditState);
-                        return true;
-                    }
-                }
-                mSendMessageEditView.setTag(R.id.message_edit_et, null);
-                return false;
-            }
-        });
         mSendMessageEditView.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -1108,7 +947,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                             ChatMsgBaseInfo draftMessage =
                                     WalkArroundMsgManager.getInstance(getApplicationContext()).getDraftMessage(mRecipientInfo.getThreadId());
 
-                            if(draftMessage == null) {
+                            if (draftMessage == null) {
                                 draftMessage = new ChatMessageInfo();
                             }
 
@@ -1139,12 +978,12 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     }
 
     private void initSelectPositionBtn() {
-        TextView tvSelectPos = (TextView)findViewById(R.id.tv_select_position);
+        TextView tvSelectPos = (TextView) findViewById(R.id.tv_select_position);
         tvSelectPos.setOnClickListener(this);
 
 //        if(mImvDistance.getVisibility() == View.GONE) {
-            tvSelectPos.setText(getString(R.string.msg_select_walkarround_place));
-            tvSelectPos.setBackgroundResource(R.color.red_button);
+        tvSelectPos.setText(getString(R.string.msg_select_walkarround_place));
+        tvSelectPos.setBackgroundResource(R.color.red_button);
 //        } else {
 //            tvSelectPos.setText(getString(R.string.msg_select_walkarround_place_ex));
 //            tvSelectPos.setBackgroundResource(R.color.cor3);
@@ -1190,7 +1029,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             mMessageListView.setMode(mode);
             updateMessageStatus(result.getChatMessages(), mMessageStatus);
             long lastChatId = 0;
-            long lastSmsId = 0;
             for (int i = result.getChatMessages().size() - 1; i >= 0; i--) {
                 ChatMsgBaseInfo chatMessage = result.getChatMessages().get(i);
                 lastChatId = chatMessage.getMsgId();
@@ -1199,21 +1037,21 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             if (searchMsgPos < 0) {
                 searchMsgPos = result.getChatMessages().size();
             }
-            mMessageDetailAdapter.setLastMessagesId(lastChatId, lastSmsId);
+            mMessageDetailAdapter.setLastMessagesId(lastChatId);
         }
         mMessageDetailAdapter.addDownMessageInfo(result.getChatMessages());
         mMessageDetailAdapter.notifyDataSetChanged();
         if (searchMsgPos != -1) {
             mMessageListView.setSelection(searchMsgPos + 1);
         }
-        mMessageDetailAdapter.setBottomMessagesId(result.getLastChatId(), result.getLastSmsId());
+        mMessageDetailAdapter.setBottomMessagesId(result.getLastChatId());
         mMessageListView.setTag(false);
     }
 
     @Override
     public void onConfirmDialogConfirmClick() {
         //TODO:
-        if(mStart2walkDialog != null) {
+        if (mStart2walkDialog != null) {
             mStart2walkDialog.dismiss();
             mStart2walkDialog = null;
             logger.d("Start 2 walkarround.");
@@ -1281,126 +1119,19 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
 
     /**
-     * 消息输入框文字变化监听
-     */
-    private class MsgEditTextWatcher implements TextWatcher {
-
-        private Context mContext;
-        private int mAddTextStart;
-        private int mAddTextCount;
-        private String mBeforeText;
-
-        MsgEditTextWatcher(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-            mAddTextStart = start;
-            mAddTextCount = after;
-            mBeforeText = charSequence.toString();
-            mSendMessageEditView.setTag(R.id.message_edit_et, mSendMessageEditView.getSelectionStart());
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            mSendMessageEditView.setTag(R.id.message_edit_et, null);
-            String input = editable.toString();
-            if (EmojiParser.getInstance(mContext).getSmileySpansLength(input) > MAX_INPUT_LENGTH) {
-                // 文字超出限定长度
-                Toast.makeText(mContext, getString(R.string.msg_max_input_length), Toast.LENGTH_SHORT).show();
-                mSendMessageEditView.setText(EmojiParser.getInstance(mContext).getSmileySpans(input, MAX_INPUT_LENGTH));
-                mSendMessageEditView.setSelection(mSendMessageEditView.getText().length());
-                return;
-            } else if (mAddTextCount > 0 && !input.equals(mBeforeText)
-                    && EmojiParser.getInstance(mContext).hasSmileySpans(input.substring(mAddTextStart, mAddTextStart + mAddTextCount))) {
-                // 避免粘贴字符串表情没有转换
-                int selection = mSendMessageEditView.getSelectionStart();
-                mSendMessageEditView.setText(EmojiParser.getInstance(mContext).addSmileySpans(input));
-                mSendMessageEditView.setSelection(selection);
-                return;
-            }
-            String inputText = input.trim();
-//            if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_MORE_EMOJI) {
-//                if (mTimeSendView.getVisibility() == View.VISIBLE
-//                        || inputText.length() > 0) {
-//                    ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.VISIBLE);
-//                    //((ImageView) mBottomRightView.getTag(R.id.right_change_iv)).setVisibility(View.INVISIBLE);
-//                } else {
-//                    ((TextView) mBottomRightView.getTag(R.id.send_message_tv)).setVisibility(View.GONE);
-//                    //((ImageView) mBottomRightView.getTag(R.id.right_change_iv)).setVisibility(View.VISIBLE);
-//                }
-//                return;
-//            }
-            if (!TextUtils.isEmpty(inputText)
-                    && (mCurrentMessageEditState == MESSAGE_EDIT_STATE_HAS_INPUT
-                    || mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_HAS_INPUT)) {
-                return;
-            }
-            switchBottomPanelView();
-        }
-    }
-
-    /**
-     * 切换到信息详细列表
-     */
-    private void transferToDetailView(long lastMessageId, int msgFrom, boolean isDelayScroll) {
-        if (!isReceiverEditable) {
-            // 已经是详细通话页面
-            if (isEnablePullDownLoad) {
-                isEnablePullDownLoad = false;
-                // 搜索结果页，取消搜索结果
-                mMessageListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                mMessageDetailAdapter.setMessageInfo(null);
-                mMessageDetailAdapter.notifyDataSetChanged();
-                loadUpMessageList();
-            } else {
-                updateLastSendMessageToList(lastMessageId, msgFrom, isDelayScroll);
-            }
-            return;
-        }
-
-        /*
-        isReceiverEditable = false;
-        View editableContactsHeader = findViewById(R.id.build_message_title_layout);
-        if (editableContactsHeader != null) {
-            editableContactsHeader.setVisibility(View.GONE);
-        }
-        initMessageDetailHeader();
-
-        long threadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(mRecipientInfo.getConversationType(),
-                mRecipientInfo.getRecipientList());
-        mRecipientInfo.setThreadId(threadId);
-        isBlackContact = false;
-        if (mRecipientInfo.getConversationType() == ChatType.CHAT_TYPE_ONE2ONE) {
-            sCurrentReceiverNum = mRecipientInfo.getRecipientList().get(0);
-            // 是否黑名单
-            isBlackContact = false;
-        }
-        mOnPauseSavedReceiverNum = sCurrentReceiverNum;
-        // 加载消息
-        loadMessageList();
-
-        IntentFilter commandFilter = new IntentFilter();
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_STATUS_CHANGED);
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
-        commandFilter.addAction(AlarmReceiver.ACTION_TIME_MSG_SEND);
-        registerReceiver(mMessageReceiver, commandFilter);
-
-        // 初始化传感器
-        initSensor();
-        */
-    }
-
-    /**
      * 切换到信息详细列表
      */
     private void transferToDetailView(long lastMessageId, boolean isDelayScroll) {
-        transferToDetailView(lastMessageId, MSG_FROM_TYPE_RCS, isDelayScroll);
+        if (isEnablePullDownLoad) {
+            isEnablePullDownLoad = false;
+            // 搜索结果页，取消搜索结果
+            mMessageListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+            mMessageDetailAdapter.setMessageInfo(null);
+            mMessageDetailAdapter.notifyDataSetChanged();
+            loadUpMessageList();
+        } else {
+            updateLastSendMessageToList(lastMessageId, isDelayScroll);
+        }
     }
 
     /**
@@ -1441,11 +1172,11 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         } else if (msgCount > 1) {
             // 收到多条消息
             for (long id : idList) {
-                updateLastSendMessageToList(id, MSG_FROM_TYPE_RCS, false);
+                updateLastSendMessageToList(id, false);
             }
         } else {
             //收到一条消息
-            updateLastSendMessageToList(topMsgId, MSG_FROM_TYPE_RCS, false);
+            updateLastSendMessageToList(topMsgId, false);
         }
     }
 
@@ -1454,7 +1185,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      *
      * @param messageId
      */
-    private void updateLastSendMessageToList(long messageId, int msgFrom, boolean isDelayScroll) {
+    private void updateLastSendMessageToList(long messageId, boolean isDelayScroll) {
         // 若mMessageDetailAdapter=null，则说明当前发送的消息为第一条消息，应初始化界面。
         if (mMessageDetailAdapter == null) {
             return;
@@ -1464,16 +1195,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             logger.e("can't find message. lastMessageId = " + messageId);
             return;
         }
-        long lastSmsMsgId = mMessageDetailAdapter.getLastSmsId();
         long lastRcsMsgId = mMessageDetailAdapter.getLastChatId();
-        if (msgFrom == MSG_FROM_TYPE_RCS) {
-            if (lastRcsMsgId == 0) {
-                mMessageDetailAdapter.setLastMessagesId(message.getMsgId(), lastSmsMsgId);
-            }
-        } else {
-            if (lastSmsMsgId == 0) {
-                mMessageDetailAdapter.setLastMessagesId(lastRcsMsgId, message.getMsgId());
-            }
+        if (lastRcsMsgId == 0) {
+            mMessageDetailAdapter.setLastMessagesId(message.getMsgId());
         }
         if ((message.getSendReceive() == MessageSendReceive.MSG_RECEIVE)
                 && (mMessageListView.getRefreshableView().getLastVisiblePosition() < (mMessageDetailAdapter.getCount() - 1))) {
@@ -1615,7 +1339,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         if (TextUtils.isEmpty(receiverNameStr)) {
             receiverName.setText(receiverNumStr);
         } else {
-            if(receiverNameStr.length() > AppConstant.SHORTNAME_LEN) {
+            if (receiverNameStr.length() > AppConstant.SHORTNAME_LEN) {
                 receiverNameStr = receiverNameStr.substring(0, AppConstant.SHORTNAME_LEN) + "...";
             }
             receiverName.setText(receiverNameStr);
@@ -1631,24 +1355,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      */
     private void switchBottomPanelView(boolean isEnableListScroll) {
         int oldState = mCurrentMessageEditState;
-        if (mTimeSendView.getVisibility() == View.VISIBLE) {
-            if (TextUtils.isEmpty(mTimeSendView.getText())) {
-                // 阅后即焚
-                mCurrentMessageEditState = mSendMessageEditView.getText().toString().trim().length() > 0 ? MESSAGE_EDIT_STATE_BURN_HAS_INPUT
-                        : MESSAGE_EDIT_STATE_BURN_AFTER;
-            } else {
-                // 定时发送
-                mCurrentMessageEditState = TextUtils.isEmpty(mSendMessageEditView.getText()) ? MESSAGE_EDIT_STATE_DEFAULT
-                        : MESSAGE_EDIT_STATE_HAS_INPUT;
-            }
-        } else if (mSendMessageEditView.getText().toString().trim().length() > 0) {
-            int emojiVisibility = mEmojiPanel == null ? View.GONE : mEmojiPanel.getVisibility();
-            mCurrentMessageEditState = emojiVisibility == View.VISIBLE ?
-                    MESSAGE_EDIT_STATE_MORE_EMOJI : MESSAGE_EDIT_STATE_HAS_INPUT;
+        if (mSendMessageEditView.getText().toString().trim().length() > 0) {
+            mCurrentMessageEditState = MESSAGE_EDIT_STATE_HAS_INPUT;
         } else {
-            int emojiVisibility = mEmojiPanel == null ? View.GONE : mEmojiPanel.getVisibility();
-            mCurrentMessageEditState = emojiVisibility == View.VISIBLE ?
-                    MESSAGE_EDIT_STATE_MORE_EMOJI : MESSAGE_EDIT_STATE_DEFAULT;
+            mCurrentMessageEditState = MESSAGE_EDIT_STATE_DEFAULT;
         }
         if (oldState != mCurrentMessageEditState) {
             switchBottomPanelView(mCurrentMessageEditState, isEnableListScroll);
@@ -1696,15 +1406,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 mSendMessageEditView.setHint("");
                 mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.VISIBLE);
                 //emjio.setImageResource(R.drawable.message_btn_smile);
-                if (mTimeSendView.getVisibility() == View.VISIBLE) {
-                    rightViewResId = R.drawable.message_btn_close;
-                }
                 break;
             case MESSAGE_EDIT_STATE_HAS_INPUT:
                 //emjio.setImageResource(R.drawable.message_btn_smile);
-                if (mTimeSendView.getVisibility() == View.VISIBLE) {
-                    rightViewResId = R.drawable.message_btn_close;
-                }
                 canSend = true;
                 break;
 
@@ -1716,9 +1420,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.GONE);
                 voicePanelVisibility = View.VISIBLE;
                 leftViewResId = R.drawable.message_btn_keybroad;
-                if (mTimeSendView.getVisibility() == View.VISIBLE) {
-                    rightViewResId = R.drawable.message_btn_close;
-                }
                 break;
             default:
                 break;
@@ -1732,39 +1433,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         voicePanelVisibility = currentState == MESSAGE_EDIT_STATE_BURN_HAS_INPUT ? View.GONE : voicePanelVisibility;
         //emjio.setVisibility(voicePanelVisibility);
 
-        if (mMoreToolsPanel != null) {
-            mMoreToolsPanel.setVisibility(toolsPanelVisibility);
-        }
-
-        if (mEmojiPanel != null) {
-            mEmojiPanel.setVisibility(emojiVisibility);
-        }
-    }
-
-    /**
-     * 设置发送联系人、图片等是否可用
-     */
-    private void setToolsViewEnable() {
-        if (mMoreToolsPanel == null) {
-            if (mRecipientInfo.getRecipientList() == null || mRecipientInfo.getRecipientList().size() == 0) {
-                mBottomLeftView.setEnabled(false);
-            } else {
-                mBottomLeftView.setEnabled(isNetworkAvailable);
-            }
-            return;
-        }
-        if (mRecipientInfo.getRecipientList() == null || mRecipientInfo.getRecipientList().size() == 0) {
-            mMoreToolsPanel.setPictureEnable(false);
-            mMoreToolsPanel.setLocationEnable(false);
-            //mMoreToolsPanel.setVideoEnable(false);
-            mBottomLeftView.setEnabled(false);
-        } else {
-            boolean isEnable = isNetworkAvailable;
-            mMoreToolsPanel.setLocationEnable(isEnable);
-            //mMoreToolsPanel.setVideoEnable(isEnable);
-            mMoreToolsPanel.setPictureEnable(isEnable);
-            mBottomLeftView.setEnabled(isEnable);
-        }
     }
 
     /**
@@ -1779,12 +1447,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_MSG, AppConstant.ANA_TAG_MSG_TXT);
 
         mSendMessageEditView.setText("");
-        mTimeSendView.setVisibility(View.GONE);
         long lastMessageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo, msg, null);
         transferToDetailView(lastMessageId, false);
-        int emojiVisibility = mEmojiPanel == null ? View.GONE : mEmojiPanel.getVisibility();
-        mCurrentMessageEditState = emojiVisibility == View.VISIBLE ?
-                MESSAGE_EDIT_STATE_MORE_EMOJI : MESSAGE_EDIT_STATE_DEFAULT;
+        mCurrentMessageEditState = MESSAGE_EDIT_STATE_DEFAULT;
         switchBottomPanelView(mCurrentMessageEditState);
     }
 
@@ -1811,9 +1476,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                                         getString(MessageUtil.getFriendColorDescription(colorIndex)),
                                 extraInfor);
 
-                        if(threadId >= 0L) {
+                        if (threadId >= 0L) {
                             int oldState = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(threadId);
-                            if(oldState == MessageUtil.WalkArroundState.STATE_IM) {
+                            if (oldState == MessageUtil.WalkArroundState.STATE_IM) {
                                 //Update conversation state & color
                                 WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(threadId, MessageUtil.WalkArroundState.STATE_WALK, colorIndex);
 
@@ -1851,11 +1516,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      * 保存草稿
      */
     private void saveDraftMessage() {
-        String saveText = null;
-        if (mTimeSendView.getVisibility() != View.VISIBLE) {
-            // 不收藏阅后即焚定时消息
-            saveText = mSendMessageEditView.getText().toString();
-        }
+        String saveText = mSendMessageEditView.getText().toString();
         WalkArroundMsgManager.getInstance(getApplicationContext()).updateDraftMessage(mRecipientInfo, saveText);
     }
 
@@ -1933,15 +1594,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 // 发送
                 onSend();
                 break;
-//        case R.id.build_message_receiver_rl:
-//            // 编辑联系人状态
-//            changeToReceiverEditState();
-//            break;
             case R.id.emoji_iv:
                 // 表情/阅后即焚图片按钮
-                break;
-            case R.id.msg_popup_menu_layout:
-                mBurnMsgTypeChoosePopup.dismiss();
                 break;
             case R.id.left_change_iv:
                 // 消息编辑左侧按钮
@@ -1998,12 +1652,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 mMessageDetailAdapter.setInSelectMode(false);
                 mMessageDetailAdapter.notifyDataSetChanged();
                 break;
-            case R.id.special_message_ahead_tv:
-                if (!TextUtils.isEmpty(mTimeSendView.getText())) {
-                    //onSetTimeOnClick();
-                    hideSoftInput();
-                }
-                break;
             case R.id.tv_select_position:
                 Intent intent = new Intent(this, LocationActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_MAP);
@@ -2021,88 +1669,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             default:
                 break;
         }
-    }
-
-//    public void choseContactsCountChange(List<MessageFastContact> choseContactsList) {
-//        // 收信人个数变化了
-//        int choseCount = choseContactsList.size();
-//
-//        // 选择的人数
-//        String choseCountStr = null;
-//        if (choseCount > 1) {
-//            choseCountStr = getString(R.string.message_contact_count, choseCount);
-//        }
-//        TextView receiverCount = (TextView) findViewById(R.id.build_message_chose_count);
-//        receiverCount.setTag(choseCount);
-//        receiverCount.setText(choseCountStr);
-//
-//        // 选择的人显示
-//        HashMap<String, Boolean> choseContactsMap = new HashMap<String, Boolean>();
-//        StringBuilder displayReceiver = new StringBuilder();
-//        for (int i = 0; i < choseCount; i++) {
-//            MessageFastContact contact = choseContactsList.get(i);
-//            if (TextUtils.isEmpty(contact.getName())) {
-//                displayReceiver.append(contact.getAddress());
-//            } else {
-//                displayReceiver.append(contact.getName());
-//            }
-//
-//            displayReceiver.append("，");
-//            choseContactsMap.put(contact.getAddress(), true);
-//        }
-//        TextView receiverNames = (TextView) findViewById(R.id.build_message_chose_names);
-//        if (displayReceiver.length() > 0) {
-//            displayReceiver.deleteCharAt(displayReceiver.length() - 1);
-//        } else {
-//            displayReceiver.append(getString(R.string.message_receiver_hint));
-//        }
-//        receiverNames.setText(displayReceiver.toString());
-//        mRecipientInfo.setDisplayName(receiverNames.getText().toString());
-//
-//        // 收信人信息
-//        int type = ChatType.CHAT_TYPE_ONE2ONE;
-//        mRecipientInfo.setConversationType(type);
-//        if (choseCount > 0) {
-//            String[] receivers = new String[choseCount];
-//            choseContactsMap.keySet().toArray(receivers);
-//            mRecipientInfo.setRecipientList(Arrays.asList(receivers));
-//        } else {
-//            mRecipientInfo.setRecipientList(null);
-//        }
-//        // 底部部分功能（发送联系人、图片等）是否可用
-//        setToolsViewEnable();
-//
-//        // 发送按钮
-//        boolean isEnableSend = choseCount > 0;
-//        TextView sendView = (TextView) mBottomRightView.getTag(R.id.send_message_tv);
-//        sendView.setEnabled(isEnableSend);
-//    }
-
-    /**
-     * 切换到联系人可以编辑状态
-     */
-//    private void changeToReceiverEditState() {
-//        mFastContactGridView.setVisibility(View.VISIBLE);
-//        mSearchContactView.setVisibility(View.GONE);
-//        findViewById(R.id.build_message_receiver_rl).setVisibility(View.GONE);
-//        findViewById(R.id.build_message_reciever_sv).setVisibility(View.VISIBLE);
-//        switchBottomPanelView();
-//        mReceiverEditView.requestFocus();
-//    }
-
-    /**
-     * 选择好时间
-     *
-     * @param pickedTime 选择的时间
-     */
-    private void onSelectedTime(String pickedTime) {
-        mTimeSelectPanel.setVisibility(View.GONE);
-        mTimeSendView.setText(pickedTime);
-        mTimeSendView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.public_icon_enterbar_clock, 0, 0, 0);
-        mTimeSendView.setVisibility(View.VISIBLE);
-        mCurrentMessageEditState = MESSAGE_EDIT_STATE_DEFAULT;
-        switchBottomPanelView(mCurrentMessageEditState);
-        showSoftInput();
     }
 
     /**
@@ -2334,7 +1900,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             mMessageListView.setSelection(selectionPos);
             mMessageListView.setTag(false);
         }
-        mMessageDetailAdapter.setLastMessagesId(result.getLastChatId(), result.getLastSmsId());
+        mMessageDetailAdapter.setLastMessagesId(result.getLastChatId());
     }
 
 
@@ -2553,27 +2119,27 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     }
 
     private void onHandleNotifyMsg(ChatMsgBaseInfo chat) {
-        if(chat != null) {
-            if(chat.getSendReceive() == MessageSendReceive.MSG_RECEIVE && !TextUtils.isEmpty(chat.getExtraInfo())) {
+        if (chat != null) {
+            if (chat.getSendReceive() == MessageSendReceive.MSG_RECEIVE && !TextUtils.isEmpty(chat.getExtraInfo())) {
                 String[] extraArray = chat.getExtraInfo().split(MessageUtil.EXTRA_INFOR_SPLIT);
-                if(extraArray != null && extraArray.length >= 2) {
-                    if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REQUEST)) {
+                if (extraArray != null && extraArray.length >= 2) {
+                    if (extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REQUEST)) {
                         long msgTime = chat.getTime();
                         long curTime = System.currentTimeMillis();
                         //Validate time is : current time - msg time <= 60s
-                        if(curTime - msgTime > 60 * 1000) {
+                        if (curTime - msgTime > 60 * 1000) {
                             Toast.makeText(this, R.string.msg_walk_req_time_out, Toast.LENGTH_SHORT).show();
                         } else {
-                            if(mWalkReplyDialog == null) {
+                            if (mWalkReplyDialog == null) {
                                 createWalkReplyDialog();
                                 mWalkReplyDialog.show();
                             }
                         }
-                    } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_OK)) {
+                    } else if (extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_OK)) {
                         long msgTime = chat.getTime();
                         long curTime = System.currentTimeMillis();
                         //Valide time is : current time - msg time <= 60s
-                        if(curTime - msgTime > 60 * 1000) {
+                        if (curTime - msgTime > 60 * 1000) {
                             Toast.makeText(this, R.string.msg_walk_req_time_out, Toast.LENGTH_SHORT).show();
                         } else {
                             Intent intentShowDistance = new Intent(BuildMessageActivity.this, CountdownActivity.class);
@@ -2611,26 +2177,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         int yPosition = location[1] + anchor.getHeight() - CommonUtils.dip2px(this, 15);
         mPopupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, xPosition, yPosition);
     }
-
-    /**
-     * 创建阅后即焚类型选择
-     *
-     * @return
-     */
-//    private PopupWindow createPopupWindow() {
-//        View popupContentView = View.inflate(this, R.layout.message_burn_msg_type_view, null);
-//        popupContentView.setOnClickListener(this);
-//        popupContentView.findViewById(R.id.msg_popup_menu_layout).setOnClickListener(this);
-//        popupContentView.findViewById(R.id.burn_msg_type_picture_ll).setOnClickListener(this);
-//        popupContentView.findViewById(R.id.burn_msg_type_camera_ll).setOnClickListener(this);
-//        popupContentView.findViewById(R.id.burn_msg_type_video_ll).setOnClickListener(this);
-//        PopupWindow popupWindow = new PopupWindow(popupContentView, ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.MATCH_PARENT);
-//        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-//        popupWindow.setOutsideTouchable(true);
-//        popupWindow.setFocusable(true);
-//        return popupWindow;
-//    }
 
     /**
      * 初始化PopupWindow
@@ -2687,15 +2233,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 ////                        NewContactsDetailActivity.VIEWPAGER_INFORMATION_ITEM);
 //                startActivity(contactDetailIntent);
                     break;
-                case MORE_TYPE_LOOK_DYNAMIC:
-//                // 查看友圈
-//                Intent intent = new Intent(this, NewContactsDetailActivity.class);
-//                String number = CommonUtil.getPhoneNum(mRecipientInfo.getRecipientList().get(0));
-//                intent.putExtra(NewContactsDetailActivity.INTENT_DATA_PHONE_NUM, number);
-////                intent.putExtra(NewContactsDetailActivity.TYPE_CHOOSE_CARD,
-////                        NewContactsDetailActivity.VIEWPAGER_SOCIAL_INFO_ITEM);
-//                startActivity(intent);
-                    break;
                 case MORE_TYPE_TO_BLACK:
                     // 加入黑名单
 //                if (NewContactManager.getInstance(getApplicationContext()).addBlackNumber(mRecipientInfo.getRecipientList().get(0)) == 0) {
@@ -2718,9 +2255,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             if (index > 0) {
                 mSendMessageEditView.onKeyDown(KeyEvent.KEYCODE_DEL, new KeyEvent(KeyEvent.ACTION_DOWN,
                         KeyEvent.KEYCODE_DEL));
-            } else if (mTimeSendView.getVisibility() == View.VISIBLE) {
-                mTimeSendView.setText(null);
-                mTimeSendView.setVisibility(View.GONE);
             }
         } else if (EmojiParser.getInstance(this).getSmileySpansLength(mSendMessageEditView.getText()) < MAX_INPUT_LENGTH) {
             Editable editable = mSendMessageEditView.getEditableText();
@@ -2977,20 +2511,20 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     private void updateHeaderAreaOnRecMsg(ChatMsgBaseInfo msg) {
         if (msg.getMsgType() == MessageType.MSG_TYPE_NOTIFICATION) {
             logger.d("Get notification msg with extra infor.");
-            if(!TextUtils.isEmpty(msg.getExtraInfo())) {
+            if (!TextUtils.isEmpty(msg.getExtraInfo())) {
                 String[] extraArray = msg.getExtraInfo().split(MessageUtil.EXTRA_INFOR_SPLIT);
-                if(extraArray != null && extraArray.length >= 2 && !TextUtils.isEmpty(extraArray[0])) {
-                    if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REQUEST)) {
+                if (extraArray != null && extraArray.length >= 2 && !TextUtils.isEmpty(extraArray[0])) {
+                    if (extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REQUEST)) {
                         //Show dialog directly if activity on foreground
-                        if(mWalkReplyDialog == null && isActivityOnForground) {
+                        if (mWalkReplyDialog == null && isActivityOnForground) {
                             createWalkReplyDialog();
                             mWalkReplyDialog.show();
                         }
-                    } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_OK)) {
+                    } else if (extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_OK)) {
 
-                    } else if(extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME)) {
+                    } else if (extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME)) {
 
-                    } else if(extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND)) {
+                    } else if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND)) {
                         //Agree to walk, build msg UI add distance button.
                         int color = MessageUtil.getFriendColor(Integer.parseInt(extraArray[1]));
                         logger.d("EXTRA_AGREEMENT_2_WALKARROUND with color : " + color);
@@ -3040,22 +2574,22 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     }
 
     private void start2PlayDistanceBtn(int color) {
-        if(mImvDistance  != null && mImvDistance.getVisibility() == View.VISIBLE) {
-            AnimationDrawable currentAnim =  (AnimationDrawable) mImvDistance.getBackground();
-            LayerDrawable layer0 = ((LayerDrawable)currentAnim.getFrame(0));
-            ((GradientDrawable)layer0.getDrawable(2)).setColor(getResources().getColor(color));
+        if (mImvDistance != null && mImvDistance.getVisibility() == View.VISIBLE) {
+            AnimationDrawable currentAnim = (AnimationDrawable) mImvDistance.getBackground();
+            LayerDrawable layer0 = ((LayerDrawable) currentAnim.getFrame(0));
+            ((GradientDrawable) layer0.getDrawable(2)).setColor(getResources().getColor(color));
 
-            LayerDrawable layer1 = ((LayerDrawable)currentAnim.getFrame(1));
-            ((GradientDrawable)layer1.getDrawable(1)).setStroke(3, getResources().getColor(color));
+            LayerDrawable layer1 = ((LayerDrawable) currentAnim.getFrame(1));
+            ((GradientDrawable) layer1.getDrawable(1)).setStroke(3, getResources().getColor(color));
 //            (layer1.getDrawable(1)).setAlpha(200);
-            ((GradientDrawable)layer1.getDrawable(2)).setColor(getResources().getColor(color));
+            ((GradientDrawable) layer1.getDrawable(2)).setColor(getResources().getColor(color));
 
-            LayerDrawable layer2 = ((LayerDrawable)currentAnim.getFrame(2));
-            ((GradientDrawable)layer2.getDrawable(0)).setStroke(1, getResources().getColor(color));
+            LayerDrawable layer2 = ((LayerDrawable) currentAnim.getFrame(2));
+            ((GradientDrawable) layer2.getDrawable(0)).setStroke(1, getResources().getColor(color));
             (layer2.getDrawable(0)).setAlpha(200);
-            ((GradientDrawable)layer2.getDrawable(1)).setStroke(3, getResources().getColor(color));
+            ((GradientDrawable) layer2.getDrawable(1)).setStroke(3, getResources().getColor(color));
             (layer2.getDrawable(1)).setAlpha(100);
-            ((GradientDrawable)layer2.getDrawable(2)).setColor(getResources().getColor(color));
+            ((GradientDrawable) layer2.getDrawable(2)).setColor(getResources().getColor(color));
 
             currentAnim.start();
         }
