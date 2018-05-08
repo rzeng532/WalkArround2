@@ -97,8 +97,8 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
         if(!TextUtils.isEmpty(mAge)) {
             nameAndAge = mAge;
         }
-        if(!TextUtils.isEmpty(mGender)) {
-            nameAndAge = nameAndAge + " , " + mGender;
+        if (!TextUtils.isEmpty(mGender)) {
+            nameAndAge = TextUtils.isEmpty(nameAndAge) ? mGender : (nameAndAge + " , " + mGender);
         }
 
         mTvAgeAndGender.setText(nameAndAge);
@@ -107,7 +107,8 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
             mTvSignature.setText(mSignature);
         }
 
-        if(!TextUtils.isEmpty(mName) && !TextUtils.isEmpty(mPortraitUrl)) {
+//        if(!TextUtils.isEmpty(mName) && !TextUtils.isEmpty(mPortraitUrl)) {
+        if (!TextUtils.isEmpty(mName)) {
             mIvPortrait.setBaseData(mName, mPortraitUrl,
                     mName.substring(0, 1), -1);
 
