@@ -136,7 +136,7 @@
     <!-- Main activity strings -->
     <string name="main_title">走走</string>
     <string name="searching_notice1">正在搜索附近的人...</string>
-    <string name="searching_notice2">如果附近没有发现，换个地方试试\n或者把走走推荐给身边优秀的朋友一起加入</string>
+    <string name="searching_notice2">如果附近没有发现，换个地方试试\n同时请推荐给身边优秀的朋友一起加入</string>
 
     <!-- Message strings -->
     <string name="msg_session_video">[视频]</string>

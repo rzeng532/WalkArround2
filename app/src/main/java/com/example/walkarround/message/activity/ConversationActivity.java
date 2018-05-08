@@ -5,7 +5,11 @@ package com.example.walkarround.message.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,7 +20,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewStub;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
@@ -26,7 +33,11 @@ import com.example.walkarround.base.view.ProgressDialogHorizontal;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.QuerySpeedDateIdTask;
-import com.example.walkarround.message.adapter.*;
+import com.example.walkarround.message.adapter.BaseConversationListAdapter;
+import com.example.walkarround.message.adapter.ConversationListAdapter;
+import com.example.walkarround.message.adapter.NotifyMsgListAdapter;
+import com.example.walkarround.message.adapter.PopupListAdapter;
+import com.example.walkarround.message.adapter.SearchMessageResultListAdapter;
 import com.example.walkarround.message.listener.ConversationItemListener;
 import com.example.walkarround.message.listener.SearchMessageResultItemListener;
 import com.example.walkarround.message.manager.ContactsManager;
@@ -50,7 +61,11 @@ import com.example.walkarround.util.http.ThreadPoolManager;
 import com.example.walkarround.util.network.NetWorkManager;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
 
 import static com.example.walkarround.util.http.HttpTaskBase.TaskResult;
 import static com.example.walkarround.util.http.HttpTaskBase.onResultListener;
@@ -286,7 +301,6 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     // 删除成功
                     mConversationAdapter.deleteSelectedDeletedItem();
                     mConversationAdapter.notifyDataSetChanged();
-                    dismissCircleDialog();
                     break;
                 case MSG_OPERATION_SET_READ_SUCCESS:
                     // 设置为已读
