@@ -157,7 +157,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
     @Override
     public int getCount() {
 //        return mListData.size();
-        return DEFAULT_ITEM_COUNT;
+        boolean hasMappingFriend = mListData.size() > 0 && mListData.get(0).status < MessageUtil.WalkArroundState.STATE_END;
+        return hasMappingFriend ? DEFAULT_ITEM_COUNT + 1 : DEFAULT_ITEM_COUNT;
     }
 
     @Override
@@ -209,7 +210,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         holder.position = position;
 
         boolean isThereMapFriend = mListData.size() > 0 && mListData.get(0).status < MessageUtil.WalkArroundState.STATE_END;
-        boolean isPriorItemMapping = mListData.size() > position && (position <= 0 || mListData.get(position - 1).status < MessageUtil.WalkArroundState.STATE_END);
+        boolean isPriorItemMapping = position <= 0 || (mListData.size() >= position && mListData.get(position - 1).status < MessageUtil.WalkArroundState.STATE_END);
         initViewHolder(holder, listDO, position, isPriorItemMapping, isThereMapFriend);
         return convertView;
     }
@@ -220,7 +221,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
      * @param position
      * @param isPriorItemMapping， 判断上一个item是否是mapping 关系
      */
-    private void initViewHolder(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean isPriorItemMapping, boolean isThereMappingOnList) {
+    private void initViewHolder(ViewHolder holder, MessageSessionBaseModel listDO, int position,
+                                boolean isPriorItemMapping, boolean isThereMappingOnList) {
         setItemContactInfo(holder, listDO);
         setItemTime(holder, listDO);
         setItemTop(holder, listDO);
@@ -410,9 +412,18 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
 
     public void setItemFlag(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean priorIsMappingConv) {
         if (listDO == null) {
-            holder.tvMappingFlag.setVisibility(View.VISIBLE);
-            holder.tvMappingFlag.setText(R.string.msg_conversation_waiting_mapping);
-            holder.tvMappingFlagLine.setVisibility(View.GONE);
+            if (position <= 1 && priorIsMappingConv) {
+                holder.tvMappingFlag.setVisibility(View.VISIBLE);
+                if (position == 0) {
+                    holder.tvMappingFlagLine.setVisibility(View.GONE);
+                } else {
+                    holder.tvMappingFlagLine.setVisibility(View.VISIBLE);
+                }
+                holder.tvMappingFlag.setText(R.string.msg_conversation_walking_friends);
+            } else {
+                holder.tvMappingFlag.setVisibility(View.GONE);
+                holder.tvMappingFlagLine.setVisibility(View.GONE);
+            }
             holder.ivDelIcon.setVisibility(View.GONE);
             //Set correct text font color for this case.
             holder.tvMessage.setTextColor(mContext.getResources().getColor(R.color.fontcor1));
