@@ -1224,6 +1224,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         if (mPageState == PageState.NORMAL_BATCH_PAGE
                 || mPageState == PageState.NOTIFY_BATCH_PAGE) {
             refreshBatchPanel();
+        } else if (listDO == null) {
+            finish();
         } else {
             //Get conversation at first.
             WalkArroundMsgManager.getInstance(getApplicationContext()).getConversation(listDO.getContact(), null);

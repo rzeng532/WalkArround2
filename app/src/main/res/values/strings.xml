@@ -264,6 +264,7 @@
     <string name="msg_let_me_select_position">我来挑地点</string>
     <string name="msg_agree_to_walkarround_fail">操作失败,请稍后再试或选择自己发起走走地点.</string>
     <string name="msg_conversation_mapping">配对中</string>
+    <string name="msg_conversation_waiting_mapping">待匹配</string>
     <string name="msg_conversation_walking_friends">走伴</string>
     <string name="msg_conversation_unkown_friends">其他信息</string>
     <string name="msg_walk_req_time_indicate">请求一分钟内有效，请耐心等待。</string>
