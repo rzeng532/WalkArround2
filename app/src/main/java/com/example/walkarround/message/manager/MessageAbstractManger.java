@@ -25,6 +25,11 @@ public abstract class MessageAbstractManger {
     public abstract long sendPlainMessage(MessageRecipientInfo recipientInfo, String text, boolean isBurnAfter,
                                           int burnTime, String extraInfo) throws Exception;
 
+    public abstract long sendAssistantPlainMessage(MessageRecipientInfo recipientInfo, String text, boolean isBurnAfter,
+                                          int burnTime, String extraInfo) throws Exception;
+
+
+
     /**
      * 发送定时消息
      *

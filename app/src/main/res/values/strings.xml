@@ -366,4 +366,7 @@
     <string name="mapping_google">谷歌地图</string>
     <string name="mapping_tencent">腾讯地图</string>
     <string name="mapping_navi_start_indicate">导航完成后\r\n请记得回来用色块碰头</string>
+
+    <string name="assistant_usr_name">走走助手</string>
+
 </resources>

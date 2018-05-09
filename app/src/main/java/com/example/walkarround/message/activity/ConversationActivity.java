@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
+import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.ProgressDialogHorizontal;
@@ -465,7 +466,10 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     mOldFriendUnreadCound = 0;
                     while(it.hasNext()){
                         MessageSessionBaseModel item = it.next();
-                        if(mConvType == CONV_TYPE_OLD_FRIEND
+
+                        if(item.getContact().equals(AssistantHelper.ASSISTANT_OBJ_ID)) {
+                            ;
+                        } else if(mConvType == CONV_TYPE_OLD_FRIEND
                                 && (item.status > MessageUtil.WalkArroundState.STATE_INIT && item.status <= MessageUtil.WalkArroundState.STATE_END_IMPRESSION)){
                             //Current UI need old friends, so we remove !Old friends.
                             it.remove();

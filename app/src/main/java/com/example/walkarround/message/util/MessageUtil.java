@@ -395,7 +395,7 @@ public class MessageUtil {
         if (conversationType == MessageConstant.ChatType.CHAT_TYPE_ONE2ONE) {
             try {
                 ContactInfo contact = ContactsManager.getInstance(context).getContactByUsrObjId(sender);
-                if(contact == null) {
+                if(contact == null || TextUtils.isEmpty(contact.getMobilePhoneNumber())) {
                     return;
                 }
                 String number = contact.getMobilePhoneNumber();

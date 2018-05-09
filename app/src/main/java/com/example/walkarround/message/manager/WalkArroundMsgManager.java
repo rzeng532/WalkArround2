@@ -16,7 +16,6 @@ import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
-import com.example.walkarround.message.activity.BuildMessageActivity;
 import com.example.walkarround.message.model.ChatMsgAndSMSReturn;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
 import com.example.walkarround.message.model.MessageRecipientInfo;
@@ -210,7 +209,7 @@ public class WalkArroundMsgManager {
 
         String extraInfor = MessageUtil.EXTRA_SAY_HELLO +
                 MessageUtil.EXTRA_INFOR_SPLIT + "   ";
-         sendTextMsg(receiver, content, extraInfor);
+        sendTextMsg(receiver, content, extraInfor);
 
         //After sent msg, get thread id again and return.
         return mInstance.mMsgManager.getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, recipient);
@@ -251,6 +250,25 @@ public class WalkArroundMsgManager {
     public long sendTextMsg(MessageRecipientInfo receiver, String content, String extraInfor) {
         try {
             return mInstance.mMsgManager.sendPlainMessage(receiver, content, false, 0, extraInfor);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public long sendAssistantTextMsg(String receiver, String content, String extraInfor) {
+        MessageRecipientInfo recipientInfo = new MessageRecipientInfo();
+
+        //Set chat type. 1v1 or Group chat
+        recipientInfo.setConversationType(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
+
+        //Set receivers.
+        List<String> recipient = new ArrayList<String>();
+        recipient.add(receiver);
+        recipientInfo.setRecipientList(recipient);
+
+        try {
+            return mInstance.mMsgManager.sendAssistantPlainMessage(recipientInfo, content, false, 0, extraInfor);
         } catch (Exception e) {
             e.printStackTrace();
             return -1;

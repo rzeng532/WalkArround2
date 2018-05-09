@@ -144,6 +144,54 @@ public class AVSMsgManager extends MessageAbstractManger {
     }
 
     @Override
+    public long sendAssistantPlainMessage(MessageRecipientInfo recipientInfo, String text, boolean isBurnAfter,
+                                 int burnTime, String extraInfo)
+            throws Exception {
+        if (recipientInfo == null) {
+            logger.d("sendVideoFile : illegal parameter, receiver is empty.");
+            return -1L;
+        }
+
+        if (recipientInfo.getThreadId() <= 0) {
+            // 还没创建conversation
+            long threadId = messageDbManager.getConversationId(recipientInfo.getConversationType(),
+                    recipientInfo.getRecipientList());
+            if (threadId <= 0) {
+                // 创建threadId
+                threadId = messageDbManager.createConversationId(recipientInfo.getConversationType(),
+                        recipientInfo.getRecipientList());
+            }
+            recipientInfo.setThreadId(threadId);
+        }
+
+        ChatMsgBaseInfo msgInfo = new ChatMessageInfo();
+        msgInfo.setContact(ProfileManager.getInstance().getCurUsrObjId());
+        msgInfo.setReceiver(recipientInfo.getRecipientList());
+        msgInfo.setMsgType(MessageType.MSG_TYPE_TEXT);
+        msgInfo.setTime(System.currentTimeMillis());
+        msgInfo.setSendReceive(MessageSendReceive.MSG_SEND);
+        msgInfo.setMsgState(MessageState.MSG_STATE_SENT);
+        msgInfo.setIsRead(true);
+        msgInfo.setData(text);
+        msgInfo.setThreadId(recipientInfo.getThreadId());
+        msgInfo.setChatType(recipientInfo.getConversationType());
+        msgInfo.setIsBurnAfter(isBurnAfter);
+        if(!TextUtils.isEmpty(extraInfo)) {
+            msgInfo.setExtraInfo(extraInfo);
+            msgInfo.setMsgType(MessageType.MSG_TYPE_NOTIFICATION);
+        }
+
+        Uri insertUri = messageDbManager.addMessage(msgInfo);
+        if (insertUri == null) {
+            logger.e("insert to message db fail");
+            return -1L;
+        }
+        long id = ContentUris.parseId(insertUri);
+
+        return id;
+    }
+
+    @Override
     public long sendTimePlainMessage(MessageRecipientInfo recipientInfo, String text, long time) throws Exception {
         if (recipientInfo == null) {
             logger.d("sendVideoFile : illegal parameter");

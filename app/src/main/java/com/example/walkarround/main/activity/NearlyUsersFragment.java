@@ -23,6 +23,7 @@ import android.widget.ViewFlipper;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVUser;
 import com.example.walkarround.R;
+import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
@@ -435,6 +436,17 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void onRightCardExit(Object dataObject) {
+
+                if(AssistantHelper.isThereGuideStep()
+                        && AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_SEARCHING)
+                        && !TextUtils.isEmpty(mStrToUsrId) && mStrToUsrId.equals(AssistantHelper.ASSISTANT_OBJ_ID)) {
+                    //Assistant's searching step is completed.
+                    AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_SEARCHING_MASK);
+                    //Generate a msg record
+                    WalkArroundMsgManager.getInstance(getActivity()
+                                                        .getApplicationContext())
+                                                        .sendAssistantTextMsg(AssistantHelper.ASSISTANT_OBJ_ID, getString(R.string.msg_say_hello), null);
+                }
 
                 int curState = ProfileManager.getInstance().getCurUsrDateState();
                 //If user state is mapping, we will skip LIKE step. Just display UI for user.

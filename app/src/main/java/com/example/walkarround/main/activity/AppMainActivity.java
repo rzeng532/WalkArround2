@@ -29,6 +29,7 @@ import com.avos.avoscloud.AVException;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
+import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
@@ -50,7 +51,6 @@ import com.example.walkarround.myself.activity.PersonInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.myself.model.MyProfileInfo;
-import com.example.walkarround.setting.activity.AppSettingActivity;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
@@ -186,7 +186,16 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
             amLogger.d("Query nearly user done.");
 
-            if (object != null &&
+            //Check if user use our app at the first time.
+            if(AssistantHelper.isThereGuideStep()) {
+                amLogger.i("Query nearly user -- goto assistant step.");
+
+                if(AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_SEARCHING)) {
+                    List<ContactInfo> assistantList = new ArrayList<>();
+                    assistantList.add(AssistantHelper.getInstance().genAssitantContact());
+                    NearlyUsersFragment.getInstance().updateNearlyUserList(assistantList);
+                }
+            } else if (object != null &&
                     WalkArroundJsonResultParser.parseReturnCode((String) object).equals(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC)) {
                 List<ContactInfo> nearlyUserList = WalkArroundJsonResultParser.parse2NearlyUserModelList((String) object);
                 if (!isFinishing() && nearlyUserList != null && nearlyUserList.size() > 0) {
@@ -332,6 +341,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+
             //Task success.
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE)) {
                 //Get status & Get TO user.
@@ -649,10 +659,12 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_slide_setting://goto setting activity
-                if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
-                    mDrawerLayout.closeDrawers();
-                }
-                startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
+                //Test code, will not merge
+//                if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
+//                    mDrawerLayout.closeDrawers();
+//                }
+//                startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
+                AssistantHelper.getInstance().forkRegisterState();
                 break;
             case R.id.rl_slide_feedback://goto setting activity
                 doFeedback();
