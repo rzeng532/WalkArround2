@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -30,6 +31,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -56,6 +58,7 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.Location.activity.LocationActivity;
 import com.example.walkarround.R;
+import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.base.WalkArroundApp;
 import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
@@ -629,6 +632,22 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             long messageId = sendLocationInfo(latitude, longitude, address, imagePath);
             transferToDetailView(messageId, true);
             switchBottomPanelView(false);
+            if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
+                // 回应约会地点事件
+                ChatMsgBaseInfo messageInfo = generateAssistantMsg(mRecipientInfo);
+                messageInfo.setData(getString(R.string.assistant_date_1));
+                messageId = justSaveMessageToDb(messageInfo);
+                updateLastSendMessageToList(messageId, false);
+
+                messageInfo.setData(getString(R.string.assistant_date_2));
+                messageId = justSaveMessageToDb(messageInfo);
+                updateLastSendMessageToList(messageId, false);
+
+                messageInfo.setData(getString(R.string.assistant_date_3));
+                messageId = justSaveMessageToDb(messageInfo);
+                updateLastSendMessageToList(messageId, false);
+                AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
+            }
         } else if (requestCode == REQUEST_CODE_PICTURE_CHOOSE) {
             // 选择了要发送的图片
             if (resultCode != RESULT_OK) {
@@ -860,11 +879,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 if (TextUtils.isEmpty(receiver)) {
                     return false;
                 }
-                if (!TextUtils.isEmpty(receiver)) {
-                    List<String> recipient = new ArrayList<String>();
-                    recipient.add(receiver);
-                    mRecipientInfo.setRecipientList(recipient);
-                }
+                List<String> recipient = new ArrayList<String>();
+                recipient.add(receiver);
+                mRecipientInfo.setRecipientList(recipient);
                 sCurrentReceiverNum = receiver;
             }
 
@@ -1447,7 +1464,16 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_MSG, AppConstant.ANA_TAG_MSG_TXT);
 
         mSendMessageEditView.setText("");
-        long lastMessageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo, msg, null);
+        long lastMessageId = -1;
+        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
+            // 走走助手
+            ChatMsgBaseInfo msgInfo = generateMsg(mRecipientInfo);
+            msgInfo.setData(msg);
+            lastMessageId = justSaveMessageToDb(msgInfo);
+        } else {
+            lastMessageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo, msg, null);
+        }
+
         transferToDetailView(lastMessageId, false);
         mCurrentMessageEditState = MESSAGE_EDIT_STATE_DEFAULT;
         switchBottomPanelView(mCurrentMessageEditState);
@@ -1901,6 +1927,26 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             mMessageListView.setTag(false);
         }
         mMessageDetailAdapter.setLastMessagesId(result.getLastChatId());
+
+        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
+            // 走走助手
+            if (AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_IM)) {
+                ChatMsgBaseInfo messageInfo = generateAssistantMsg(mRecipientInfo);
+                messageInfo.setData(getString(R.string.assistant_hi_1));
+                long messageId = justSaveMessageToDb(messageInfo);
+                updateLastSendMessageToList(messageId, false);
+
+                messageInfo.setData(getString(R.string.assistant_hi_2));
+                messageId = justSaveMessageToDb(messageInfo);
+                updateLastSendMessageToList(messageId, false);
+
+                messageInfo.setData(getString(R.string.assistant_hi_3));
+                messageId = justSaveMessageToDb(messageInfo);
+                updateLastSendMessageToList(messageId, false);
+                // 标记位改变
+                AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
+            }
+        }
     }
 
 
@@ -1934,13 +1980,23 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     public void sendVoice(String audioFilePath, int recordTime) {
         AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_MSG, AppConstant.ANA_TAG_MSG_VOICE);
         // 发送音频
-        long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendAudioFile(mRecipientInfo, audioFilePath, recordTime, false,
-                0, true);
+        long messageId = -1;
+        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
+            // 走走助手
+            ChatMsgBaseInfo msgInfo = generateMsg(mRecipientInfo);
+            msgInfo.setMsgType(MessageType.MSG_TYPE_AUDIO);
+            File file = new File(audioFilePath);
+            msgInfo.setFileName(file.getName());
+            msgInfo.setFilePath(audioFilePath);
+            msgInfo.setDuration(recordTime);
+            msgInfo.setFileSize(file.length());
+            messageId = justSaveMessageToDb(msgInfo);
+        } else {
+            messageId = WalkArroundMsgManager.getInstance(getApplicationContext())
+                    .sendAudioFile(mRecipientInfo, audioFilePath, recordTime, false,
+                    0, true);
+        }
         transferToDetailView(messageId, false);
-//        if (isBurn) {
-//            mCurrentMessageEditState = MESSAGE_EDIT_STATE_BURN_AFTER;
-//            switchBottomPanelView(mCurrentMessageEditState);
-//        }
     }
 
     /**
@@ -1952,6 +2008,27 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      * @return
      */
     public long sendLocationInfo(double dLat, double dLng, String strAddr, String imagePath) {
+        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
+            // 走走助手
+            ChatMsgBaseInfo msgInfo = generateMsg(mRecipientInfo);
+            msgInfo.setMsgType(MessageType.MSG_TYPE_MAP);
+            msgInfo.setLocationLabel(strAddr);
+            msgInfo.setLatitute(dLat);
+            msgInfo.setLongitude(dLng);
+            if(!TextUtils.isEmpty(imagePath)) {
+                File file = new File(imagePath);
+                msgInfo.setFileName(file.getName());
+                msgInfo.setFilePath(imagePath);
+                msgInfo.setFileSize(file.length());
+            }
+            int colorIndex = WalkArroundMsgManager.getInstance(getApplicationContext())
+                    .getConversationColorIndex(mRecipientInfo.getThreadId());
+            String extraInfor = MessageUtil.EXTRA_SELECT_PLACE_2_WALKARROUND +
+                    MessageUtil.EXTRA_INFOR_SPLIT +
+                    colorIndex;
+            msgInfo.setExtraInfo(extraInfor);
+            return justSaveMessageToDb(msgInfo);
+        }
         AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_MSG, AppConstant.ANA_TAG_MSG_LOC);
         return WalkArroundMsgManager.getInstance(getApplicationContext()).sendLocation(mRecipientInfo, dLat, dLng, strAddr, imagePath);
     }
@@ -2593,5 +2670,53 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
             currentAnim.start();
         }
+    }
+
+    /**
+     * 保存消息至数据库
+     * @param msgInfo
+     * @return
+     */
+    private long justSaveMessageToDb(ChatMsgBaseInfo msgInfo) {
+        Uri insertUri = WalkArroundMsgManager.getInstance(this).saveChatmsg(msgInfo);
+        return insertUri == null ? -1 : ContentUris.parseId(insertUri);
+    }
+
+    /**
+     * 产生模拟聊天消息
+     * @param recipientInfo
+     */
+    private ChatMsgBaseInfo generateAssistantMsg(MessageRecipientInfo recipientInfo) {
+        ChatMsgBaseInfo msgInfo = new ChatMessageInfo();
+        msgInfo.setContact(ProfileManager.getInstance().getCurUsrObjId());
+        msgInfo.setReceiver(recipientInfo.getRecipientList());
+        msgInfo.setMsgType(MessageType.MSG_TYPE_TEXT);
+        msgInfo.setTime(System.currentTimeMillis());
+        msgInfo.setSendReceive(MessageSendReceive.MSG_RECEIVE);
+        msgInfo.setMsgState(MessageState.MSG_STATE_RECEIVED);
+        msgInfo.setIsRead(true);
+        msgInfo.setThreadId(recipientInfo.getThreadId());
+        msgInfo.setChatType(recipientInfo.getConversationType());
+        msgInfo.setIsBurnAfter(false);
+        return msgInfo;
+    }
+
+    /**
+     * 产生模拟聊天消息
+     * @param recipientInfo
+     */
+    private ChatMsgBaseInfo generateMsg(MessageRecipientInfo recipientInfo) {
+        ChatMsgBaseInfo msgInfo = new ChatMessageInfo();
+        msgInfo.setContact(ProfileManager.getInstance().getCurUsrObjId());
+        msgInfo.setReceiver(recipientInfo.getRecipientList());
+        msgInfo.setMsgType(MessageType.MSG_TYPE_TEXT);
+        msgInfo.setTime(System.currentTimeMillis());
+        msgInfo.setSendReceive(MessageSendReceive.MSG_SEND);
+        msgInfo.setMsgState(MessageState.MSG_STATE_SENT);
+        msgInfo.setIsRead(true);
+        msgInfo.setThreadId(recipientInfo.getThreadId());
+        msgInfo.setChatType(recipientInfo.getConversationType());
+        msgInfo.setIsBurnAfter(false);
+        return msgInfo;
     }
 }

@@ -280,6 +280,15 @@
     <string name="walk_friend_remove_notices">最后一个走伴将会被从列表删除</string>
 
     <string name="msg_conv_default_content">See you again</string>
+    <string name="assistant_hi_1">亲，你可以发送文字或语音给我一起沟通了解</string>
+    <string name="assistant_hi_2">也可以直接点击红色按钮，约定走走地点，准备走起</string>
+    <string name="assistant_hi_3">现在请点击走走地点，我们约起吧</string>
+    <string name="assistant_date_1">终于可以见面了，让我们到指定位置见面吧！</string>
+    <string name="assistant_date_2">如果安装了百度和高德，你可以在地图点击导航带你到我们的见面地点。</string>
+    <string name="assistant_date_3">到了见面地点附近，让我们一起亮起色块暗号，如果是同一颜色，那就碰头成功啦</string>
+    <string name="assistant_simulation_meet_over">模拟见面结束</string>
+    <string name="assistant_end_1">%1$s，谢谢你我的一次相遇，给了我很好的第一印象</string>
+    <string name="assistant_end_2">开启你的走走之旅吧，简单点，不断向前，感受这个世界的美好！</string>
 
     <!-- Pull refresh string -->
     <string name="pull_to_refresh_pull_label">下拉以刷新...</string>

@@ -251,15 +251,4 @@ public class ContactsManager {
 
         return contact;
     }
-
-    public ContactInfo getSimulationFriend(String userId) {
-        ContactInfo userInfo = null;
-
-        if(mInstance.mUserMap != null && !TextUtils.isEmpty(userId)) {
-            userInfo = mInstance.mUserMap.get(userId);
-            mLogger.d("getContactByUsrObjId: contact is " + (userInfo == null ? "NULL" : "Not NULL"));
-        }
-
-        return userInfo;
-    }
 }
