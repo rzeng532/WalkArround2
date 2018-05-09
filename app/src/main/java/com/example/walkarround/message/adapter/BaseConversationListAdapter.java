@@ -193,6 +193,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder.tvMappingFlag = (TextView) convertView.findViewById(R.id.conv_mapping_flag);
             holder.tvMappingFlagLine = (View) convertView.findViewById(R.id.map_divide_line);
             holder.ivTopSign = (ImageView) convertView.findViewById(R.id.conversation_item_top_sign);
+            holder.tvRemoveNotices = (TextView) convertView.findViewById(R.id.notices_tv);
 
             holder.ivDelIcon.setTag(holder);
             holder.ivDelIcon.setOnClickListener(this);
@@ -537,6 +538,20 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         } else {
             holder.rlFilfullArea.setVisibility(View.GONE);
         }
+
+        // 有6个走伴，第7个走伴位置提示移除
+        if (listDO == null && position == getCount() - 1) {
+            boolean hasMappingFriend = mListData.size() > 0
+                    && mListData.get(0).status < MessageUtil.WalkArroundState.STATE_END;
+            if ((hasMappingFriend && mListData.size() == DEFAULT_ITEM_COUNT)
+                    || (!hasMappingFriend && mListData.size() == DEFAULT_ITEM_COUNT - 1)) {
+                holder.tvRemoveNotices.setVisibility(View.VISIBLE);
+            } else {
+                holder.tvRemoveNotices.setVisibility(View.GONE);
+            }
+        } else {
+            holder.tvRemoveNotices.setVisibility(View.GONE);
+        }
     }
 
     /*  置顶/消顶功能是否可用 */
@@ -615,6 +630,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         TextView tvTime;
         TextView tvUnreadCount;
         TextView tvMappingFlag;
+        TextView tvRemoveNotices;
         View tvMappingFlagLine;
     }
 

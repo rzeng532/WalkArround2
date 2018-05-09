@@ -264,7 +264,6 @@
     <string name="msg_let_me_select_position">我来挑地点</string>
     <string name="msg_agree_to_walkarround_fail">操作失败,请稍后再试或选择自己发起走走地点.</string>
     <string name="msg_conversation_mapping">配对中</string>
-    <string name="msg_conversation_waiting_mapping">待匹配</string>
     <string name="msg_conversation_walking_friends">走伴</string>
     <string name="msg_conversation_unkown_friends">其他信息</string>
     <string name="msg_walk_req_time_indicate">请求一分钟内有效，请耐心等待。</string>
@@ -278,6 +277,7 @@
     <string name="msg_speed_date_be_canceled">对方取消了和你的匹配，本地消息已经被删除。</string>
     <string name="msg_u_on_map_state">你目前已经在匹配状态了,不要太花心噢</string>
     <string name="msg_already_on_walking_state">你已经在走走状态，走完之后才可以再次选择。</string>
+    <string name="walk_friend_remove_notices">最后一个走伴将会被从列表删除</string>
 
     <string name="msg_conv_default_content">See you again</string>
 

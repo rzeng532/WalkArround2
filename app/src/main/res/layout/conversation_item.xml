@@ -76,6 +76,18 @@
 
         </RelativeLayout>
 
+        <TextView
+            android:id="@+id/notices_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/fontcor2"
+            android:textSize="@dimen/font_size3"
+            android:layout_marginLeft="6dp"
+            android:layout_centerVertical="true"
+            android:text="@string/walk_friend_remove_notices"
+            android:layout_toRightOf="@id/photo_layout"
+            android:visibility="gone"/>
+
         <ImageView
                 android:id="@+id/conversation_item_top_sign"
                 android:layout_width="13dp"
