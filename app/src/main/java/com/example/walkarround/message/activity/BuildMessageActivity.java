@@ -153,6 +153,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     private static final int REQUEST_CODE_PREVIEW_VIDEO = 10;
     /* 查看发送的地图 */
     private static final int REQUEST_CODE_SHOW_LOCATION = 11;
+    /* 查看约会地点 */
+    private static final int REQUEST_CODE_SHOW_DATE = 101;
 
     /* 当前编辑状态：默认、已经有输入、语音、更多、表情 */
     private static final int MESSAGE_EDIT_STATE_DEFAULT = 0;
@@ -244,7 +246,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     private long mSearchMsgId = -1;
 
     private static final int UI_WHAT_SCROLL = 1;
-    private static final int ASSISTANT_WALK_END = 2;
     private Handler mUiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -260,28 +261,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                             mUiHandler.sendMessageDelayed(newMsg, 100);
                         }
                     }
-                    break;
-                case ASSISTANT_WALK_END:
-                    // 模拟走走结束
-                    ChatMsgBaseInfo messageInfo = generateAssistantMsg(mRecipientInfo);
-                    messageInfo.setMsgType(MessageType.MSG_TYPE_NOTIFICATION);
-                    messageInfo.setData(getString(R.string.assistant_simulation_meet_over));
-                    long messageId = justSaveMessageToDb(messageInfo);
-                    updateLastSendMessageToList(messageId, false);
-
-                    messageInfo.setMsgType(MessageType.MSG_TYPE_TEXT);
-                    messageInfo.setData(getString(R.string.assistant_end_1,
-                            ProfileManager.getInstance().getMyContactInfo().getUsername()));
-                    messageId = justSaveMessageToDb(messageInfo);
-                    updateLastSendMessageToList(messageId, false);
-
-                    messageInfo.setData(getString(R.string.assistant_end_2));
-                    messageId = justSaveMessageToDb(messageInfo);
-                    updateLastSendMessageToList(messageId, false);
-                    AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
-                    WalkArroundMsgManager.getInstance(getApplicationContext())
-                            .updateConversationStatus(mRecipientInfo.getThreadId(), MessageUtil.WalkArroundState.STATE_IMPRESSION);
-
                     break;
                 default:
                     break;
@@ -680,6 +659,27 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 messageInfo.setExtraInfo(extraInfor);
                 updateHeaderAreaOnRecMsg(messageInfo);
             }
+        } else if (requestCode == REQUEST_CODE_SHOW_DATE) {
+            // 模拟走走结束
+            ChatMsgBaseInfo messageInfo = generateAssistantMsg(mRecipientInfo);
+            messageInfo.setMsgType(MessageType.MSG_TYPE_NOTIFICATION);
+            messageInfo.setData(getString(R.string.assistant_simulation_meet_over));
+            long messageId = justSaveMessageToDb(messageInfo);
+            updateLastSendMessageToList(messageId, false);
+
+            messageInfo.setMsgType(MessageType.MSG_TYPE_TEXT);
+            messageInfo.setData(getString(R.string.assistant_end_1,
+                    ProfileManager.getInstance().getMyContactInfo().getUsername()));
+            messageId = justSaveMessageToDb(messageInfo);
+            updateLastSendMessageToList(messageId, false);
+
+            messageInfo.setData(getString(R.string.assistant_end_2));
+            messageId = justSaveMessageToDb(messageInfo);
+            updateLastSendMessageToList(messageId, false);
+            AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
+            WalkArroundMsgManager.getInstance(getApplicationContext())
+                    .updateConversationStatus(mRecipientInfo.getThreadId(), MessageUtil.WalkArroundState.STATE_IMPRESSION);
+            mImvDistance.setVisibility(View.GONE);
         } else if (requestCode == REQUEST_CODE_PICTURE_CHOOSE) {
             // 选择了要发送的图片
             if (resultCode != RESULT_OK) {
@@ -1717,7 +1717,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             case R.id.iv_show_distance:
                 Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);
                 intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
-                startActivity(intentShowDistance);
+                startActivityForResult(intentShowDistance, REQUEST_CODE_SHOW_DATE);
                 break;
             case R.id.message_title_profile_pv:
                 Intent intentDisplayFriend = new Intent(this, PersonInformationActivity.class);
@@ -2640,9 +2640,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                         if (color > 0) {
                             mImvDistance.setVisibility(View.VISIBLE);
                             start2PlayDistanceBtn(color);
-                            if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
-                                mUiHandler.sendEmptyMessageDelayed(ASSISTANT_WALK_END, 10000);
-                            }
                         }
                     }
                 }
