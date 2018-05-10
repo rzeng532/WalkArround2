@@ -244,6 +244,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     private long mSearchMsgId = -1;
 
     private static final int UI_WHAT_SCROLL = 1;
+    private static final int ASSISTANT_WALK_END = 2;
     private Handler mUiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -259,6 +260,28 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                             mUiHandler.sendMessageDelayed(newMsg, 100);
                         }
                     }
+                    break;
+                case ASSISTANT_WALK_END:
+                    // 模拟走走结束
+                    ChatMsgBaseInfo messageInfo = generateAssistantMsg(mRecipientInfo);
+                    messageInfo.setMsgType(MessageType.MSG_TYPE_NOTIFICATION);
+                    messageInfo.setData(getString(R.string.assistant_simulation_meet_over));
+                    long messageId = justSaveMessageToDb(messageInfo);
+                    updateLastSendMessageToList(messageId, false);
+
+                    messageInfo.setMsgType(MessageType.MSG_TYPE_TEXT);
+                    messageInfo.setData(getString(R.string.assistant_end_1,
+                            ProfileManager.getInstance().getMyContactInfo().getUsername()));
+                    messageId = justSaveMessageToDb(messageInfo);
+                    updateLastSendMessageToList(messageId, false);
+
+                    messageInfo.setData(getString(R.string.assistant_end_2));
+                    messageId = justSaveMessageToDb(messageInfo);
+                    updateLastSendMessageToList(messageId, false);
+                    AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
+                    WalkArroundMsgManager.getInstance(getApplicationContext())
+                            .updateConversationStatus(mRecipientInfo.getThreadId(), MessageUtil.WalkArroundState.STATE_IMPRESSION);
+
                     break;
                 default:
                     break;
@@ -529,7 +552,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         releaseSensor();
         // 设置会话对应的未读消息数为0
         setThreadToRead();
-        mUiHandler.removeMessages(UI_WHAT_SCROLL);
+        mUiHandler.removeCallbacksAndMessages(null);
     }
 
     /**
@@ -647,6 +670,15 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 messageId = justSaveMessageToDb(messageInfo);
                 updateLastSendMessageToList(messageId, false);
                 AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
+                WalkArroundMsgManager.getInstance(getApplicationContext())
+                        .updateConversationStatus(mRecipientInfo.getThreadId(), MessageUtil.WalkArroundState.STATE_WALK);
+                messageInfo.setMsgType(MessageType.MSG_TYPE_NOTIFICATION);
+                int colorIndex = MessageUtil.getFriendColorIndex(mRecipientInfo.getThreadId());
+                logger.d("send agreement, the color index is " + colorIndex);
+                String extraInfor = MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND +
+                        MessageUtil.EXTRA_INFOR_SPLIT + colorIndex;
+                messageInfo.setExtraInfo(extraInfor);
+                updateHeaderAreaOnRecMsg(messageInfo);
             }
         } else if (requestCode == REQUEST_CODE_PICTURE_CHOOSE) {
             // 选择了要发送的图片
@@ -2608,6 +2640,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                         if (color > 0) {
                             mImvDistance.setVisibility(View.VISIBLE);
                             start2PlayDistanceBtn(color);
+                            if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
+                                mUiHandler.sendEmptyMessageDelayed(ASSISTANT_WALK_END, 10000);
+                            }
                         }
                     }
                 }
