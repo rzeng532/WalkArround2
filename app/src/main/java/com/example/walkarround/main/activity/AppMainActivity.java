@@ -290,9 +290,14 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                     myProfileInfo.setDynamicDataId(dynamicRecordId);
                 }
 
-                if(!NearlyUsersFragment.getInstance().isThereNearlyUser()) {
-                    startQueryNearlyUserTask();
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!NearlyUsersFragment.getInstance().isThereNearlyUser()) {
+                            startQueryNearlyUserTask();
+                        }
+                    }
+                });
             } else {
                 bFirstSearchComplete = true;
             }

@@ -14,21 +14,25 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.Location.manager.LocationManager;
 import com.example.walkarround.Location.model.GeoData;
 import com.example.walkarround.R;
+import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.base.WalkArroundApp;
+import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PortraitView;
 import com.example.walkarround.base.view.RippleView;
 import com.example.walkarround.base.view.photoview.RoundImageView;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
-import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
@@ -400,6 +404,10 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                                 MessageUtil.EXTRA_START_2_WALK_REQUEST;
 
                         WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId, getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
+
+                        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mStrFriendId)) {
+                            mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REPLY_OK, 2000);
+                        }
                     }
                 });
                 mWalkRequestDialog.show();
@@ -461,6 +469,17 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     }
 
     private void start2GetFriendCoordinate() {
+        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mStrFriendId)) {
+            // 小助手
+            GeoData geoData = ProfileManager.getInstance().getMyProfile().getLocation();
+            double latitude = geoData.getLatitude();
+            double longtitude = geoData.getLongitude();
+            mFriendGeoData = new GeoData(latitude, longtitude, null);
+            updateDistanceBetweenFriends();
+
+            mUiHandler.sendEmptyMessage(MSG_FRIEND_REQ_START_2_WALK);
+            return;
+        }
         //Start mRealCountdownTask to get friend dynamic data, like distance, online or not...
         ThreadPoolManager.getPoolManager().addAsyncTask(new QueryUsrCoordinateTask(getApplicationContext(),
                 mQueryFriendCoordinateTaskListener,
