@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import com.avos.avoscloud.*;
+import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.provider.ContactInfoDatabase;
 import com.example.walkarround.myself.util.ProfileUtil;
@@ -68,6 +69,9 @@ public class ContactsManager {
         if(mInstance.mUserMap != null && !TextUtils.isEmpty(userId)) {
             userInfo = mInstance.mUserMap.get(userId);
             mLogger.d("getContactByUsrObjId: contact is " + (userInfo == null ? "NULL" : "Not NULL"));
+        }
+        if (userInfo == null && AssistantHelper.ASSISTANT_OBJ_ID.equals(userId)) {
+            userInfo = AssistantHelper.getInstance().genAssitantContact();
         }
 
         return userInfo;

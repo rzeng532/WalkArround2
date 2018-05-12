@@ -173,6 +173,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     /* 收信人信息 */
     private MessageRecipientInfo mRecipientInfo = new MessageRecipientInfo();
+    private boolean isAssistantFriend = false;
 
     /* 通知会话列表刷新*/
     public static final String ACTION_NOTIFY_CONVERSATION_REFRESH = "notify_conversation_refresh";
@@ -634,7 +635,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             long messageId = sendLocationInfo(latitude, longitude, address, imagePath);
             transferToDetailView(messageId, true);
             switchBottomPanelView(false);
-            if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
+            if (isAssistantFriend) {
                 // 回应约会地点事件
                 ChatMsgBaseInfo messageInfo = generateAssistantMsg(mRecipientInfo);
                 messageInfo.setData(getString(R.string.assistant_date_1));
@@ -661,6 +662,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             }
         } else if (requestCode == REQUEST_CODE_SHOW_DATE) {
             // 模拟走走结束
+            int status = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(mRecipientInfo.getThreadId());
+            if (status < MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+                return;
+            }
             ChatMsgBaseInfo messageInfo = generateAssistantMsg(mRecipientInfo);
             messageInfo.setMsgType(MessageType.MSG_TYPE_NOTIFICATION);
             messageInfo.setData(getString(R.string.assistant_simulation_meet_over));
@@ -677,6 +682,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             messageId = justSaveMessageToDb(messageInfo);
             updateLastSendMessageToList(messageId, false);
             AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
+            if (status == MessageUtil.WalkArroundState.STATE_END) {
+                // 评价完成
+                AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_EVALUATE_MASK);
+            }
             WalkArroundMsgManager.getInstance(getApplicationContext())
                     .updateConversationStatus(mRecipientInfo.getThreadId(), MessageUtil.WalkArroundState.STATE_IMPRESSION);
             mImvDistance.setVisibility(View.GONE);
@@ -898,6 +907,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 if (recipient.size() == 1) {
                     sCurrentReceiverNum = recipient.get(0);
                 }
+                isAssistantFriend = AssistantHelper.ASSISTANT_OBJ_ID.equals(sCurrentReceiverNum);
             }
 
             String displayName = savedInstanceState.getString(INTENT_CONVERSATION_DISPLAY_NAME);
@@ -915,6 +925,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 recipient.add(receiver);
                 mRecipientInfo.setRecipientList(recipient);
                 sCurrentReceiverNum = receiver;
+                isAssistantFriend = AssistantHelper.ASSISTANT_OBJ_ID.equals(receiver);
             }
 
             long threadId = intent.getLongExtra(INTENT_CONVERSATION_THREAD_ID, CONVERSATION_DEFAULT_THREAD_ID);
@@ -1497,7 +1508,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
         mSendMessageEditView.setText("");
         long lastMessageId = -1;
-        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
+        if (isAssistantFriend) {
             // 走走助手
             ChatMsgBaseInfo msgInfo = generateMsg(mRecipientInfo);
             msgInfo.setData(msg);
@@ -1715,6 +1726,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 startActivityForResult(intent, REQUEST_CODE_MAP);
                 break;
             case R.id.iv_show_distance:
+                if (isAssistantFriend) {
+                    AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_CLICK_COLOR_MASK);
+                }
                 Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);
                 intentShowDistance.putExtra(ShowDistanceActivity.PARAMS_THREAD_ID, mRecipientInfo.getThreadId());
                 startActivityForResult(intentShowDistance, REQUEST_CODE_SHOW_DATE);
@@ -1960,7 +1974,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
         mMessageDetailAdapter.setLastMessagesId(result.getLastChatId());
 
-        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
+        if (isAssistantFriend) {
             // 走走助手
             if (AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_IM)) {
                 ChatMsgBaseInfo messageInfo = generateAssistantMsg(mRecipientInfo);
@@ -2013,7 +2027,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_MSG, AppConstant.ANA_TAG_MSG_VOICE);
         // 发送音频
         long messageId = -1;
-        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
+        if (isAssistantFriend) {
             // 走走助手
             ChatMsgBaseInfo msgInfo = generateMsg(mRecipientInfo);
             msgInfo.setMsgType(MessageType.MSG_TYPE_AUDIO);
@@ -2040,7 +2054,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      * @return
      */
     public long sendLocationInfo(double dLat, double dLng, String strAddr, String imagePath) {
-        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mRecipientInfo.getRecipientList().get(0))) {
+        if (isAssistantFriend) {
+            AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_SEND_LOC_MASK);
             // 走走助手
             ChatMsgBaseInfo msgInfo = generateMsg(mRecipientInfo);
             msgInfo.setMsgType(MessageType.MSG_TYPE_MAP);

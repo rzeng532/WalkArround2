@@ -278,6 +278,31 @@ public class DialogFactory {
     }
 
 
+    /**
+     * 阶梯联系人说明
+     * @param context
+     * @param explanation
+     * @return
+     */
+    public static Dialog getConvEmptyDescribestionDialog(Context context, String explanation) {
+        final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_countdown_2_evaluate, null);
+        TextView textView = (TextView) dialogView.findViewById(R.id.tv_walk_title);
+        dialogView.findViewById(R.id.tv_start2evaluate).setVisibility(View.GONE);
+        textView.setText(explanation);
+        dialog.setContentView(dialogView);
+
+        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+        DisplayMetrics mDisplayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
+        //layoutParams.width = mDisplayMetrics.widthPixels / 10 * 9;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(layoutParams);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        return dialog;
+    }
     public static Dialog getCountDownEndDialog(Context context, final ConfirmDialogClickListener listener) {
         final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

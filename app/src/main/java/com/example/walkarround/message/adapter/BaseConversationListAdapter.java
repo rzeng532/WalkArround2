@@ -161,6 +161,11 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         return hasMappingFriend ? DEFAULT_ITEM_COUNT + 1 : DEFAULT_ITEM_COUNT;
     }
 
+    public boolean hasMappingFriend() {
+        boolean hasMappingFriend = mListData.size() > 0 && mListData.get(0).status < MessageUtil.WalkArroundState.STATE_END;
+        return hasMappingFriend;
+    }
+
     @Override
     public MessageSessionBaseModel getItem(int position) {
         return (position >= 0 && position < mListData.size()) ? mListData.get(position) : null;
@@ -584,7 +589,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             if (view.getId() == R.id.conversation_item_del_icon) {
                 mItemListener.onDeleteConversationItem(item);
             } else if (view.getId() == R.id.conv_rl) {
-                mItemListener.conversationItemOnClick(item);
+                mItemListener.conversationItemOnClick(holder.position, item);
             }
         }
     }

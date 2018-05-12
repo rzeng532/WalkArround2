@@ -212,7 +212,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             //Task success.
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE)) {
                 String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
-                if(!TextUtils.isEmpty(strSpeedDateId)) {
+                if (!TextUtils.isEmpty(strSpeedDateId)) {
                     ProfileManager.getInstance().getMyProfile().setSpeedDateId(strSpeedDateId);
                 } else {
                     logger.d("Get speed date id OK but data is EMPTY.");
@@ -234,7 +234,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
      */
     private HttpTaskBase.onResultListener mCancelSpeedDateTaskListener = new HttpTaskBase.onResultListener() {
         @Override
-        public void onPreTask(String requestCode) { }
+        public void onPreTask(String requestCode) {
+        }
 
         @Override
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
@@ -350,9 +351,9 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 case MSG_OPERATION_LOAD_SUCCESS:
                     List<MessageSessionBaseModel> conversationList = (List<MessageSessionBaseModel>) data.getSerializable(MSG_EVENT_EXTRA_LIST);
                     mConversationAdapter.setListData(conversationList);
-                    if(mConvType == CONV_TYPE_CUR_FRIEND && mIsThereOldFriend) {
+                    if (mConvType == CONV_TYPE_CUR_FRIEND && mIsThereOldFriend) {
                         mIvOldFriends.setVisibility(View.VISIBLE);
-                        if(mOldFriendUnreadCound > 0) {
+                        if (mOldFriendUnreadCound > 0) {
                             mIvOldFriends.setVisibility(View.VISIBLE);
                             mIvOldFriendUnread.setVisibility(View.VISIBLE);
                         } else {
@@ -464,17 +465,17 @@ public class ConversationActivity extends Activity implements ConversationItemLi
 
                     Iterator<MessageSessionBaseModel> it = conversationMsgList.iterator();
                     mOldFriendUnreadCound = 0;
-                    while(it.hasNext()){
+                    while (it.hasNext()) {
                         MessageSessionBaseModel item = it.next();
 
-                        if(item.getContact().equals(AssistantHelper.ASSISTANT_OBJ_ID)) {
+                        if (item.getContact().equals(AssistantHelper.ASSISTANT_OBJ_ID)) {
                             ;
-                        } else if(mConvType == CONV_TYPE_OLD_FRIEND
-                                && (item.status > MessageUtil.WalkArroundState.STATE_INIT && item.status <= MessageUtil.WalkArroundState.STATE_END_IMPRESSION)){
+                        } else if (mConvType == CONV_TYPE_OLD_FRIEND
+                                && (item.status > MessageUtil.WalkArroundState.STATE_INIT && item.status <= MessageUtil.WalkArroundState.STATE_END_IMPRESSION)) {
                             //Current UI need old friends, so we remove !Old friends.
                             it.remove();
-                        } else if(mConvType == CONV_TYPE_CUR_FRIEND
-                                && (item.status <= MessageUtil.WalkArroundState.STATE_INIT || item.status > MessageUtil.WalkArroundState.STATE_END_IMPRESSION)){
+                        } else if (mConvType == CONV_TYPE_CUR_FRIEND
+                                && (item.status <= MessageUtil.WalkArroundState.STATE_INIT || item.status > MessageUtil.WalkArroundState.STATE_END_IMPRESSION)) {
                             //Current UI need cur friend, we remove old one
                             mIsThereOldFriend = true;
                             mOldFriendUnreadCound += item.unReadCount;
@@ -521,7 +522,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         initView();
 
         //Check 是否有朋友还处于未评价状态
-        if(checkIsTherePopImpressionOne()) {
+        if (checkIsTherePopImpressionOne()) {
             return;
         }
 
@@ -544,7 +545,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         getAllContacts();
 
         //There is user id and there is NO speed date id. We get speed date here and set value to profile.
-        if(!TextUtils.isEmpty(ProfileManager.getInstance().getCurUsrObjId()) && TextUtils.isEmpty(ProfileManager.getInstance().getSpeedDateId())) {
+        if (!TextUtils.isEmpty(ProfileManager.getInstance().getCurUsrObjId()) && TextUtils.isEmpty(ProfileManager.getInstance().getSpeedDateId())) {
             //Check speed date id
             ThreadPoolManager.getPoolManager().addAsyncTask(new QuerySpeedDateIdTask(getApplicationContext(),
                     mGetSpeedIdTaskListener,
@@ -558,7 +559,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     private boolean checkIsTherePopImpressionOne() {
         List<MessageSessionBaseModel> listPopImp = WalkArroundMsgManager.getInstance(getApplicationContext())
                 .getLocalPopImpressionConv();
-        if(listPopImp != null && listPopImp.size() > 0) {
+        if (listPopImp != null && listPopImp.size() > 0) {
             Intent evaItent = new Intent(this, EvaluateActivity.class);
             evaItent.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, listPopImp.get(0).getContact());
             startActivity(evaItent);
@@ -570,7 +571,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     }
 
     @Override
-    public  void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         if (null != mMessageReceiver) {
             unregisterReceiver(mMessageReceiver);
@@ -866,7 +867,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             }
             if (item == null) {
                 // 新到会话
-                if(mConvType == CONV_TYPE_CUR_FRIEND) {
+                if (mConvType == CONV_TYPE_CUR_FRIEND) {
                     //Update old friend flag & return;
                     mIvOldFriends.setVisibility(View.VISIBLE);
                     mIvOldFriendUnread.setVisibility(View.VISIBLE);
@@ -975,7 +976,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         title.findViewById(R.id.more_rl).setVisibility(View.GONE);
         title.findViewById(R.id.middle_iv).setVisibility(View.VISIBLE);
 
-        if(mConvType == CONV_TYPE_CUR_FRIEND) {
+        if (mConvType == CONV_TYPE_CUR_FRIEND) {
             ((ImageView) title.findViewById(R.id.middle_iv)).setImageResource(R.drawable.icon_conversation_title);
         } else {
             ((ImageView) title.findViewById(R.id.middle_iv)).setImageResource(R.drawable.grey_diag);
@@ -1223,12 +1224,23 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     }
 
     @Override
-    public void conversationItemOnClick(MessageSessionBaseModel listDO) {
+    public void conversationItemOnClick(int position, MessageSessionBaseModel listDO) {
         // 点击了会话
         if (mPageState == PageState.NORMAL_BATCH_PAGE
                 || mPageState == PageState.NOTIFY_BATCH_PAGE) {
             refreshBatchPanel();
         } else if (listDO == null) {
+            // show Toast
+            int index = position;
+            if (mConversationAdapter.hasMappingFriend()) {
+                // 第一个是匹配中人员信息
+                index = index - 1;
+            }
+            String[] textArray = getResources().getStringArray(R.array.conversation_empty_explain);
+            if (index < 0 || index >= textArray.length) {
+                return;
+            }
+            DialogFactory.getConvEmptyDescribestionDialog(this, textArray[index]);
             finish();
         } else {
             //Get conversation at first.
@@ -1298,7 +1310,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     public void onNoticeDialogConfirmClick(boolean isChecked, Object value) {
                         if (mConversationAdapter != null) {
                             String speedDateId = ProfileManager.getInstance().getMyProfile().getSpeedDateId();
-                            if(!TextUtils.isEmpty(speedDateId) && mNetStatusView.getVisibility() == View.GONE) {
+                            if (!TextUtils.isEmpty(speedDateId) && mNetStatusView.getVisibility() == View.GONE) {
                                 //There is speed date id and there is network.
                                 ThreadPoolManager.getPoolManager().addAsyncTask(new CancelSpeedDateTask(getApplicationContext(),
                                         mCancelSpeedDateTaskListener,

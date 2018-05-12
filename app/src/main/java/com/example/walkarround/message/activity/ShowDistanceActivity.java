@@ -70,6 +70,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     private RoundImageView mIvTextBg;
     private TextView mTvXiuYiXiu;
     private String mStrFriendId;
+    private boolean isAssistantFriend = false;
     private GeoData mFriendGeoData;
     private int mPriorDistance = -1;
 
@@ -359,7 +360,9 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
 
             //Init portrait
             mStrFriendId = conversation.getContact();
-            ContactInfo usr = ContactsManager.getInstance(this.getApplicationContext()).getContactByUsrObjId(mStrFriendId);
+            isAssistantFriend = AssistantHelper.ASSISTANT_OBJ_ID.equals(mStrFriendId);
+            ContactInfo usr = ContactsManager.getInstance(this.getApplicationContext())
+                    .getContactByUsrObjId(mStrFriendId);
             if (usr != null) {
                 mPvFriend.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
                         usr.getUsername().substring(0, 1), -1);
@@ -398,16 +401,16 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
 
                     @Override
                     public void onConfirmDialogConfirmClick() {
+                        if (isAssistantFriend) {
+                            mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REPLY_OK, 2000);
+                            return;
+                        }
                         //Send walk invitation to friend.
                         String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
                                 MessageUtil.EXTRA_INFOR_SPLIT +
                                 MessageUtil.EXTRA_START_2_WALK_REQUEST;
 
                         WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId, getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
-
-                        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mStrFriendId)) {
-                            mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REPLY_OK, 2000);
-                        }
                     }
                 });
                 mWalkRequestDialog.show();
@@ -435,11 +438,13 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         mWalkReplyDialog = DialogFactory.getStart2WalkReplyDialog(this, mStrFriendId, new DialogFactory.NoticeDialogCancelClickListener() {
             @Override
             public void onNoticeDialogCancelClick() {
-                String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
-                        MessageUtil.EXTRA_INFOR_SPLIT +
-                        MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME;
-                WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId,
-                        getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
+                if (!isAssistantFriend) {
+                    String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
+                            MessageUtil.EXTRA_INFOR_SPLIT +
+                            MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME;
+                    WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId,
+                            getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
+                }
 
                 if(mWalkReplyDialog != null) {
                     mWalkReplyDialog.dismiss();
@@ -449,11 +454,13 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
 
             @Override
             public void onNoticeDialogConfirmClick(boolean isChecked, Object value) {
-                String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
-                        MessageUtil.EXTRA_INFOR_SPLIT +
-                        MessageUtil.EXTRA_START_2_WALK_REPLY_OK;
-                WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId,
-                        getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
+                if (!isAssistantFriend) {
+                    String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
+                            MessageUtil.EXTRA_INFOR_SPLIT +
+                            MessageUtil.EXTRA_START_2_WALK_REPLY_OK;
+                    WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mStrFriendId,
+                            getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
+                }
 
                 if(mWalkReplyDialog != null) {
                     mWalkReplyDialog.dismiss();
@@ -469,7 +476,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     }
 
     private void start2GetFriendCoordinate() {
-        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mStrFriendId)) {
+        if (isAssistantFriend) {
             // 小助手
             GeoData geoData = ProfileManager.getInstance().getMyProfile().getLocation();
             double latitude = geoData.getLatitude();

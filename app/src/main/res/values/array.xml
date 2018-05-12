@@ -91,4 +91,13 @@
         <item>Dog</item>
         <item>Boar</item>
     </string-array>
+    <string-array name="conversation_empty_explain">
+        <item>你现在联系热度最高的，保持这种热情，让友谊升温吧!</item>
+        <item>排在热度第二名，看来感情应该还不错哟。</item>
+        <item>我猜你还记得上次和交交聊天的话题吧。</item>
+        <item>和他｜她见面后，第一印象可好？</item>
+        <item>和他｜她见面时候的暗号板色彩是你喜欢的吗？</item>
+        <item>应该有一小段时间没联系了，主动问候下٩( 'ω' )و </item>
+        <item>如有新朋友进来，他｜她要跟你说拜拜了(눈_눈)</item>
+    </string-array>
 </resources>
