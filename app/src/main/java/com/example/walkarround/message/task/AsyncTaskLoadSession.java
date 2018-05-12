@@ -27,7 +27,7 @@ public class AsyncTaskLoadSession extends HttpTaskBase {
         super(context, listener, operate);
         this.offset = offset;
         this.count = count;
-        isNotifyMsg = MessageConstant.MSG_OPERATION_NOTIFY_LOAD.equals(operate);
+        isNotifyMsg = !MessageConstant.MSG_OPERATION_LOAD.equals(operate);
     }
 
     @Override

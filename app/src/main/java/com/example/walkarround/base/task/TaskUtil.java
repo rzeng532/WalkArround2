@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014-2016 CMCC All rights reserved
+ * Copyright (C) 2014-2016 All rights reserved
  */
 package com.example.walkarround.base.task;
 

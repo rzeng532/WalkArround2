@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014-2016 Richard All rights reserved
+ * Copyright (C) 2014-2016 All rights reserved
  */
 package com.example.walkarround.message.manager;
 

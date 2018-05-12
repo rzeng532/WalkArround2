@@ -33,7 +33,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -91,7 +90,6 @@ import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpUtil;
 import com.example.walkarround.util.http.ThreadPoolManager;
 import com.example.walkarround.util.image.ImageBrowserActivity;
-import com.example.walkarround.util.image.ImageChooseActivity;
 import com.example.walkarround.util.network.NetWorkManager;
 
 import io.reactivex.Observable;
@@ -100,9 +98,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.example.walkarround.message.activity.ChatAssistToolsView.ToolsViewOnClick;
 
-public class BuildMessageActivity extends Activity implements OnClickListener, ToolsViewOnClick,
+public class BuildMessageActivity extends Activity implements OnClickListener,
         MessageItemListener, MessageLoadListener, VoiceManager,
         OnRefreshListener2<ListView>, SensorEventListener, LoadSearchResultMessageTask.SearchMessageLoadListener,
         DialogFactory.ConfirmDialogClickListener {
@@ -878,11 +875,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
             @Override
             public void onClick(View v) {
-//                if (mEmojiPanel != null) {
-//                    mEmojiPanel.setVisibility(View.GONE);
-//                    ImageView emjio = (ImageView) mMessageBottomView.findViewById(R.id.emoji_iv);
-//                    emjio.setSelected(false);
-//                }
                 switchBottomPanelView();
             }
         });
@@ -1012,66 +1004,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
     }
 
-//    @Override
-//    public void onDownMessageLoaded(ChatMsgAndSMSReturn result) {
-//        if (mMessageListView != null) {
-//            mMessageListView.onRefreshComplete();
-//        }
-//        if (result == null) {
-//            logger.e("onDownMessageLoaded no result");
-//            if (mMessageListView != null) {
-//                mMessageListView.setTag(false);
-//            }
-//            return;
-//        }
-//        if (result.getChatMessages().size() == 0) {
-//            // 没有更多了
-//            if (mMessageListView != null) {
-//                mMessageListView.setTag(false);
-//                isEnablePullDownLoad = false;
-//                if (mMessageListView.getMode() == PullToRefreshBase.Mode.BOTH) {
-//                    mMessageListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-//                } else {
-//                    mMessageListView.setMode(PullToRefreshBase.Mode.DISABLED);
-//                }
-//            }
-//            return;
-//        }
-//        int searchMsgPos = -1;
-//        if (mMessageDetailAdapter == null) {
-//            mMessageDetailAdapter = new MessageDetailListAdapter(this, this);
-//            //boolean isGroupChat = mRecipientInfo.getConversationType() == ChatType.CHAT_TYPE_GROUP;
-//            mMessageDetailAdapter.setGroupChat(false);
-//
-//            mMessageListView = (PullToRefreshListView) findViewById(R.id.message_list_xlv);
-//            initListPullRefreshView(mMessageListView);
-//            mMessageListView.setAdapter(mMessageDetailAdapter);
-//            mMessageListView.setOnRefreshListener(this);
-//            PullToRefreshBase.Mode mode = isEnablePullDownLoad ? PullToRefreshBase.Mode.BOTH : PullToRefreshBase.Mode.PULL_FROM_END;
-//            mMessageListView.setMode(mode);
-//            updateMessageStatus(result.getChatMessages(), mMessageStatus);
-//            long lastChatId = 0;
-//            long lastSmsId = 0;
-//            for (int i = result.getChatMessages().size() - 1; i >= 0; i--) {
-//                ChatMsgBaseInfo chatMessage = result.getChatMessages().get(i);
-//                lastChatId = chatMessage.getMsgId();
-//            }
-//            searchMsgPos = result.getSearchMsgPos();
-//            if (searchMsgPos < 0) {
-//                searchMsgPos = result.getChatMessages().size();
-//            }
-//            mMessageDetailAdapter.setLastMessagesId(lastChatId, lastSmsId);
-//        }
-//        mMessageDetailAdapter.addDownMessageInfo(result.getChatMessages());
-//        mMessageDetailAdapter.notifyDataSetChanged();
-//        if (searchMsgPos != -1) {
-//            mMessageListView.setSelection(searchMsgPos + 1);
-//        }
-//        mMessageDetailAdapter.setBottomMessagesId(result.getLastChatId(), result.getLastSmsId());
-//        mMessageListView.setTag(false);
-//    }
-
-
     /**
      * 切换到信息详细列表
      */
@@ -1194,33 +1126,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         listView.getLoadingLayoutProxy(true, true).setRefreshingLabel(getString(R.string.loading));
         listView.setMode(mode);
         listView.getLoadingLayoutProxy(true, true).setLoadingDrawable(getResources().getDrawable(R.drawable.public_loading));
-    }
-
-    /**
-     * 更新联系人信息
-     */
-    private void updateContactInfo() {
-        if (mRecipientInfo.getConversationType() != ChatType.CHAT_TYPE_ONE2ONE) {
-            return;
-        }
-        View detailHeaderView = findViewById(R.id.message_detail_title_layout);
-        PhotoView photoView = (PhotoView) detailHeaderView.findViewById(R.id.message_title_profile_pv);
-        String receiverNameStr = mRecipientInfo.getDisplayName();
-        String receiverNumStr = mRecipientInfo.getRecipientList().get(0);
-        ContactInfo contact = ContactsManager.getInstance(getApplicationContext()).getContactByUsrObjId(receiverNumStr);
-        if (contact != null) {
-            photoView.setBaseData(contact.getUsername(), contact.getPortrait().getUrl(), null,
-                    R.drawable.default_profile_portrait);
-            mRecipientInfo.setDisplayName(contact.getUsername());
-            receiverNameStr = contact.getUsername();
-        }
-
-        TextView receiverName = (TextView) detailHeaderView.findViewById(R.id.message_title_name_tv);
-        if (TextUtils.isEmpty(receiverNameStr)) {
-            receiverName.setText(receiverNumStr);
-        } else {
-            receiverName.setText(receiverNameStr);
-        }
     }
 
     /**
@@ -1491,58 +1396,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     protected void showSoftInput() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
-    }
-
-    @Override
-    public void onPhrasebookSelected(String selectedStr) {
-        // 常用语
-        if (selectedStr == null || selectedStr.length() == 0) {
-            return;
-        }
-        int cursorPos = mSendMessageEditView.getSelectionStart();
-        Editable editable = mSendMessageEditView.getEditableText();
-        editable.insert(cursorPos, selectedStr);
-        mSendMessageEditView.setSelection(cursorPos + selectedStr.length());
-        mCurrentMessageEditState = MESSAGE_EDIT_STATE_HAS_INPUT;
-        switchBottomPanelView(mCurrentMessageEditState);
-    }
-
-    @Override
-    public void onPictureClick() {
-        Intent intent = new Intent();
-        intent.setClass(this, ImageChooseActivity.class);
-        intent.putExtra(ImageChooseActivity.IS_FULL_SIZE_OPTION, true);
-        intent.putExtra(ImageChooseActivity.IMAGE_CHOOSE_TYPE, ImageChooseActivity.FROM_MESSAGE_CODE);
-        startActivityForResult(intent, REQUEST_CODE_PICTURE_CHOOSE);
-    }
-
-    /**
-     * 打开相机
-     */
-    public void onCameraClick() {
-        // 打开照相机进行拍照
-//        mPhotoImagePath = MessageUtil.createCameraTakePicFile();
-//        if (TextUtils.isEmpty(mPhotoImagePath)) {
-//            Toast.makeText(this, R.string.open_camera_fail, Toast.LENGTH_LONG).show();
-//            return;
-//        }
-//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        Uri fileUri = Uri.fromFile(new File(mPhotoImagePath));
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-//        startActivityForResult(intent, REQUEST_CODE_CAMERA);
-    }
-
-    @Override
-    public void onVideoClick() {
-//        Intent intent = new Intent(this, TakeVideoActivity.class);
-//        startActivityForResult(intent, REQUEST_CODE_TAKE_VIDEO);
-    }
-
-    @Override
-    public void onLocation() {
-        mMaskView.setVisibility(View.VISIBLE);
-        Intent intent = new Intent(this, LocationActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_MAP);
     }
 
     @Override
@@ -1983,24 +1836,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     }
 
     /**
-     * Start vcard activity to check details.
-     */
-//    private void onStartVcardActivity(ChatMsgBaseInfo cmiMsg) {
-//        Intent cardIntent = new Intent(this, ContactCardActivity.class);
-//        ContactInfo contactInfo;
-//        try {
-//            contactInfo = restoreContacts(cmiMsg.getData()).get(0);
-//            cardIntent.putExtra(ContactCardActivity.INTENT_CONTACT_CARD_INFO, contactInfo);
-//            cardIntent.putExtra(ContactCardActivity.INTENT_SHOW_ADD_TO_CONTACT,
-//                    cmiMsg.getSendReceive() == MessageSendReceive.MSG_RECEIVE);
-//            startActivity(cardIntent);
-//        } catch (Exception e) {
-//            // 解析文档异常
-//            logger.e(e.getMessage());
-//        }
-//    }
-
-    /**
      * @param message
      * @方法名：onStartPicture
      * @描述：打开浏览图片的Activity
@@ -2174,20 +2009,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
         mMessageListView.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
         loadDownMessageList();
-    }
-
-    /**
-     * 跳转到聊天详情页面
-     */
-    public void showChatDetail() {
-        Intent intent = new Intent(this, ChatDetailActivity.class);
-        intent.putExtra(INTENT_CONVERSATION_GROUP_ID, mRecipientInfo.getGroupId());
-        intent.putExtra(INTENT_CONVERSATION_TYPE, mRecipientInfo.getConversationType());
-        intent.putExtra(INTENT_CONVERSATION_THREAD_ID, mRecipientInfo.getThreadId());
-        intent.putExtra(INTENT_CONVERSATION_DISPLAY_NAME, mRecipientInfo.getDisplayName());
-        intent.putExtra(INTENT_CONVERSATION_GROUP_ID, mRecipientInfo.getGroupId());
-        intent.putExtra(INTENT_CONVERSATION_RECEIVER, (Serializable) mRecipientInfo.getRecipientList());
-        startActivityForResult(intent, REQUEST_CODE_CHAT_DETAIL);
     }
 
     /**

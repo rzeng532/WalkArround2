@@ -1,7 +1,5 @@
 package com.example.walkarround.util.network;
 
-import java.net.NetworkInterface;
-
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;

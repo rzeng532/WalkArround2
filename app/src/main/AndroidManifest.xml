@@ -124,8 +124,6 @@
         />
         <activity android:name=".message.activity.ConversationActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".message.activity.ChatDetailActivity"
-                  android:screenOrientation="portrait"/>
         <activity android:name=".message.activity.ImageViewerActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".message.activity.ShowLocationActivity"
@@ -141,8 +139,6 @@
         <activity android:name=".message.activity.CountdownActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".message.activity.EvaluateActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".base.TestActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".util.UniversalWebView"
             android:screenOrientation="portrait"/>

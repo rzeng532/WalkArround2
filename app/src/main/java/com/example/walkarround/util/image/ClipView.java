@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014-2017 CMCC All rights reserved
+ * Copyright (C) 2014-2017 All rights reserved
  */
 package com.example.walkarround.util.image;
 

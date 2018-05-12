@@ -1,11 +1,11 @@
 /**
- * Copyright (C) 2014-2015 CMCC All rights reserved
+ * Copyright (C) 2014-2015 All rights reserved
  */
 package com.example.walkarround.message.util;
 
 
 /**
- * 消息相关的定常量(与小溪对接)
+ * 消息相关的定常量
  * Date=0; 2015-06-03
  *
  * @author mss
@@ -55,13 +55,6 @@ public class MessageConstant {
         int CHAT_TYPE_GROUP = 2;//Conversation.TYPE_GROUP;
     }
 
-    public interface GroupJoinState {
-        int DEFAULT = 0;
-        int AGREE = 1;
-        int REFUSE = 2;
-        int CAN_NOT_JOIN = 3;
-    }
-
     public interface ConversationType {
         int GENERAL = 0;
         int PUBLIC_ACCOUNT = 1;
@@ -73,13 +66,6 @@ public class MessageConstant {
     public interface TopState {
         int TOP = 1;
         int NOT_TOP = 0;
-    }
-    public interface ResultCode {
-        int SUCCESS = 0;
-        int OFFLINE = 1;
-        int OTHER_ERROR = 3;
-        int GROUP_NOT_EXIST = 4;
-        int GROUP_IS_FULL = 5;
     }
 
     /* 100 == NO compress, 70 == Original quality * 70% */
@@ -94,7 +80,6 @@ public class MessageConstant {
     
     
     /* 批处理操作类型 */
-    public static final String MSG_OPERATION_NOTIFY_LOAD = "msg_operation_notify_load";
     public static final String MSG_OPERATION_LOAD = "msg_operation_load";
     public static final String MSG_OPERATION_REMOVE = "msg_operation_remove";
     public static final String MSG_OPERATION_SET_READ = "msg_operation_set_read"; 

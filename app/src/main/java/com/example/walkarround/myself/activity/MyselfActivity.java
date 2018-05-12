@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014-2015 Richard All rights reserved
+ * Copyright (C) 2014-2015 All rights reserved
  */
 package com.example.walkarround.myself.activity;
 
