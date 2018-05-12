@@ -23,19 +23,6 @@
         <item>女</item>
     </string-array>
 
-    <!-- 消息更多按钮选项 -->
-    <array name="message_time_more_menu">
-        <item>查看联系人</item>
-        <item>查看友圈</item>
-        <item>加入黑名单</item>
-    </array>
-
-    <!-- 消息会话更多按钮选项 -->
-    <array name="msg_conversation_more_menu">
-        <item>创建群聊</item>
-        <item>新建消息</item>
-    </array>
-
     <!-- Wheel picker -->
     <string-array name="WheelArrayDefault">
         <item>AigeStudio</item>
@@ -97,7 +84,7 @@
         <item>我猜你还记得上次和交交聊天的话题吧。</item>
         <item>和他｜她见面后，第一印象可好？</item>
         <item>和他｜她见面时候的暗号板色彩是你喜欢的吗？</item>
-        <item>应该有一小段时间没联系了，主动问候下٩( 'ω' )و </item>
+        <item>应该有一小段时间没联系了，主动问候下吧。</item>
         <item>如有新朋友进来，他｜她要跟你说拜拜了(눈_눈)</item>
     </string-array>
 </resources>

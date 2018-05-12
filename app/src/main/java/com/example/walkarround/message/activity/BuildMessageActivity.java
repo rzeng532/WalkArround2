@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +19,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.hardware.Sensor;
@@ -36,21 +34,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
-import android.text.Selection;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,11 +52,8 @@ import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.Location.activity.LocationActivity;
 import com.example.walkarround.R;
 import com.example.walkarround.assistant.AssistantHelper;
-import com.example.walkarround.base.WalkArroundApp;
 import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
-import com.example.walkarround.base.view.EmojiPanelView;
-import com.example.walkarround.base.view.EmojiPanelView.EmojiListener;
 import com.example.walkarround.base.view.PhotoView;
 import com.example.walkarround.handmark.PullToRefreshBase;
 import com.example.walkarround.handmark.PullToRefreshBase.OnRefreshListener2;
@@ -71,8 +61,6 @@ import com.example.walkarround.handmark.PullToRefreshListView;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.task.UpdateSpeedDateColorTask;
 import com.example.walkarround.message.adapter.MessageDetailListAdapter;
-import com.example.walkarround.message.adapter.PopupListAdapter;
-import com.example.walkarround.message.adapter.PopupListAdapter.PopupListItemListener;
 import com.example.walkarround.message.listener.MessageItemListener;
 import com.example.walkarround.message.listener.PressTalkTouchListener;
 import com.example.walkarround.message.listener.PressTalkTouchListener.VoiceManager;
@@ -86,7 +74,6 @@ import com.example.walkarround.message.receiver.AlarmReceiver;
 import com.example.walkarround.message.task.LoadMessageTask;
 import com.example.walkarround.message.task.LoadMessageTask.MessageLoadListener;
 import com.example.walkarround.message.task.LoadSearchResultMessageTask;
-import com.example.walkarround.message.util.EmojiParser;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageConstant.ChatType;
 import com.example.walkarround.message.util.MessageConstant.MessageSendReceive;
@@ -97,7 +84,6 @@ import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.myself.activity.PersonInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.util.AppConstant;
-import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpUtil;
@@ -112,11 +98,10 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.example.walkarround.base.view.EmojiPanelView.EMOJI_ITEM_TYPE_DEL_BTN;
 import static com.example.walkarround.message.activity.ChatAssistToolsView.ToolsViewOnClick;
 
 public class BuildMessageActivity extends Activity implements OnClickListener, ToolsViewOnClick,
-        MessageItemListener, MessageLoadListener, VoiceManager, PopupListItemListener, EmojiListener,
+        MessageItemListener, MessageLoadListener, VoiceManager,
         OnRefreshListener2<ListView>, SensorEventListener, LoadSearchResultMessageTask.SearchMessageLoadListener,
         DialogFactory.ConfirmDialogClickListener {
 
@@ -135,22 +120,16 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 
     public static final int MAX_INPUT_LENGTH = 450;
 
-    /* 发送视频 */
-    private static final int REQUEST_CODE_TAKE_VIDEO = 3;
     /* 发送位置信息 */
     private static final int REQUEST_CODE_MAP = 4;
     /* 发送图片 */
     private static final int REQUEST_CODE_PICTURE_CHOOSE = 5;
-    /* 转发 */
-    private static final int REQUEST_CODE_FORWARD_MSG = 6;
     /* 下载/浏览图片 */
     private static final int REQUEST_CODE_PREVIEW_IMAGE = 7;
     /* 聊天详情 */
     public static final int REQUEST_CODE_CHAT_DETAIL = 8;
     /* 打开相机拍摄图片 */
     private static final int REQUEST_CODE_CAMERA = 9;
-    /* 查看视频 */
-    private static final int REQUEST_CODE_PREVIEW_VIDEO = 10;
     /* 查看发送的地图 */
     private static final int REQUEST_CODE_SHOW_LOCATION = 11;
     /* 查看约会地点 */
@@ -209,10 +188,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
     /* 整个页面遮盖View(透明)，防止连续点击 */
     private View mMaskView;
 
-    /* 拨打电话/更多PopupWindow */
-    private PopupWindow mPopupWindow;
-    /* PopupWindow的展示内容 */
-    private PopupListAdapter mPopupWindowAdapter;
     /* 音频播放 */
     private MediaPlayer mAudioMediaPlayer;
     /* 传感器监听，控制语音播放模式 */
@@ -401,10 +376,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
         mMessageStatus.clear();
 
-        if (mPopupWindow != null && mPopupWindow.isShowing()) {
-            mPopupWindow.dismiss();
-        }
-
         if (mMessageDetailAdapter != null) {
             mMessageDetailAdapter.dismissDialog();
             mMessageListView.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -448,7 +419,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                     @Override
                     public void accept(ChatMsgBaseInfo draftMessage) throws Exception {
                         if (draftMessage != null && !TextUtils.isEmpty(draftMessage.getData())) {
-                            mSendMessageEditView.setText(EmojiParser.getInstance(BuildMessageActivity.this).addSmileySpans(draftMessage.getData()));
+                            mSendMessageEditView.setText(draftMessage.getData());
                             mSendMessageEditView.setSelection(draftMessage.getData().length());
                         } else {
                             mSendMessageEditView.setText("");
@@ -702,76 +673,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             boolean isBurnAfter = mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER;
             onSelectedPictures(pathList, fullSizedMap, isBurnAfter);
             switchBottomPanelView(false);
-        } else if (requestCode == REQUEST_CODE_TAKE_VIDEO) {
-//            if (resultCode != RESULT_OK) {
-//                return;
-//            }
-//            final String filename = data.getStringExtra(TakeVideoActivity.INTENT_VIDEO_PATH);
-//            final int videoLength = data.getIntExtra(TakeVideoActivity.INTENT_VIDEO_LENGTH, 0);
-//            final boolean isBurn = mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER;
-//            new Handler().post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    long messageId = WalkArroundMsgManager.getInstance(getApplicationContext()).sendVideoFile(mRecipientInfo, filename, videoLength,
-//                            isBurn, 0, true);
-//                    transferToDetailView(messageId, false);
-//                    switchBottomPanelView(false);
-//                }
-//            });
-        } else if (requestCode == REQUEST_CODE_FORWARD_MSG) {
-            // 转发，选择了联系人
-//            if (resultCode != RESULT_OK) {
-//                if (mSelectModelPanel == null || mSelectModelPanel.getVisibility() == View.GONE) {
-//                    // 单条消息操作
-//                    mMessageDetailAdapter.clearSelectedMsgList();
-//                }
-//                return;
-//            }
-//            @SuppressWarnings("unchecked")
-//            List<ContactInfo> selectedContacts = (List<ContactInfo>) data
-//                    .getSerializableExtra(SelectContactActivity.RESULT_CONTACTS_LIST);
-//            forwardSelectedMsg(selectedContacts);
-        } else if (requestCode == REQUEST_CODE_CHAT_DETAIL) {
-//            // 从聊天详情返回到当前界面
-//            if (resultCode == ChatDetailActivity.RESULT_CODE_CHAT_LOG_CLEARED) {
-//                finish();
-//                return;
-//            }
-//            // 是否黑名单
-//            if (mRecipientInfo.getConversationType() == ChatType.CHAT_TYPE_ONE2ONE) {
-//                isBlackContact = NewContactManager.getInstance(getApplicationContext()).isBlackNumber(mRecipientInfo.getRecipientList().get(0));
-//                // 更新联系人信息
-//                updateContactInfo();
-//                setToolsViewEnable();
-//            } else {
-//                isBlackContact = false;
-//            }
-//            if (mRecipientInfo.getConversationType() == ChatType.CHAT_TYPE_ONE2ONE) {
-//                // 更新会话消息thread ID(从联系人名片点击发送消息，置顶取消置顶后thread id可能会变化)
-//                long thread = MessageManager.getService().getConversationId(mRecipientInfo.getConversationType(),
-//                        mRecipientInfo.getRecipientList());
-//                if (thread != mRecipientInfo.getThreadId()) {
-//                    notifyConversationRefresh(mRecipientInfo.getThreadId());
-//                }
-//                mRecipientInfo.setThreadId(thread);
-//            }
-//            if (resultCode != RESULT_OK) {
-//                return;
-//            }
-//            ArrayList<String> recipientList = (ArrayList<String>) data
-//                    .getSerializableExtra(INTENT_CONVERSATION_RECEIVER);
-//            mRecipientInfo.setRecipientList(recipientList);
-//            String groupName = data.getStringExtra(INTENT_CONVERSATION_DISPLAY_NAME);
-//            mRecipientInfo.setDisplayName(groupName);
-//            if (mMessageDetailAdapter != null) {
-//                boolean isShowNickName = MessageGroupManager.isShowNickName(this, mRecipientInfo.getGroupId());
-//                if (mMessageDetailAdapter.isShowNickName() != isShowNickName) {
-//                    mMessageDetailAdapter.setShowNickName(isShowNickName);
-//                    mMessageDetailAdapter.notifyDataSetChanged();
-//                }
-//            }
-//            TextView receiverName = (TextView) findViewById(R.id.message_title_name_tv);
-//            receiverName.setText(groupName + getString(R.string.group_subject, mRecipientInfo.getRecipientList().size()));
         } else if (requestCode == REQUEST_CODE_PREVIEW_IMAGE) {
             if (resultCode != RESULT_OK) {
                 mMessageDetailAdapter.notifyDataSetChanged();
@@ -793,14 +694,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
             intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_MAX_NUM, 1);
             startActivityForResult(intent, REQUEST_CODE_PICTURE_CHOOSE);
             mPhotoImagePath = null;
-        } else if (requestCode == REQUEST_CODE_PREVIEW_VIDEO) {
-            // 浏览视频
-            if (resultCode != RESULT_OK) {
-                return;
-            }
-            long msgId = data.getLongExtra(PlayVideoActivity.INTENT_MESSAGE_ID, -1);
-            mMessageDetailAdapter.deleteRcsMessage(msgId);
-            mMessageDetailAdapter.notifyDataSetChanged();
         } else if (requestCode == REQUEST_CODE_SHOW_LOCATION) {
             //There are two results from show location activity: normal finish & goto another
             if (resultCode == RESULT_CANCELED) {
@@ -829,11 +722,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 }
                 mMessageDetailAdapter.setInSelectMode(false);
                 mMessageDetailAdapter.notifyDataSetChanged();
-                return true;
-            }
-
-            if (mPopupWindow != null && mPopupWindow.isShowing()) {
-                mPopupWindow.dismiss();
                 return true;
             }
         }
@@ -1019,7 +907,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                         @Override
                         public void accept(ChatMsgBaseInfo chatMsgBaseInfo) throws Exception {
                             if (chatMsgBaseInfo != null && !TextUtils.isEmpty(chatMsgBaseInfo.getData())) {
-                                mSendMessageEditView.setText(EmojiParser.getInstance(BuildMessageActivity.this).addSmileySpans(chatMsgBaseInfo.getData()));
+                                mSendMessageEditView.setText(chatMsgBaseInfo.getData());
                                 mSendMessageEditView.setSelection(chatMsgBaseInfo.getData().length());
                             }
                         }
@@ -1802,10 +1690,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                     onStartAudio(clickedMessage);
                 }
                 break;
-            case MessageType.MSG_TYPE_VIDEO:
-                // 视频;
-                downVideoOrPlay(clickedMessage);
-                break;
             case MessageType.MSG_TYPE_IMAGE:
                 // 图片消息;
                 onStartPicture(clickedMessage);
@@ -2209,25 +2093,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         return bool;
     }
 
-    /**
-     * 点击了视频消息
-     *
-     * @param message
-     */
-    private void downVideoOrPlay(ChatMsgBaseInfo message) {
-        Intent intent = new Intent(this, PlayVideoActivity.class);
-        intent.putExtra(PlayVideoActivity.INTENT_THUMB_PATH, message.getThumbpath());
-        intent.putExtra(PlayVideoActivity.INTENT_THUMB_URL_PATH, message.getThumbUrlPath());
-        intent.putExtra(PlayVideoActivity.INTENT_MESSAGE_ID, message.getMsgId());
-        intent.putExtra(PlayVideoActivity.INTENT_BURN_FLAG, message.isBurnAfterMsg());
-        intent.putExtra(PlayVideoActivity.INTENT_IS_COLLECT_MSG, false);
-        if (message.isBurnAfterMsg()) {
-            startActivityForResult(intent, REQUEST_CODE_PREVIEW_VIDEO);
-        } else {
-            startActivity(intent);
-        }
-    }
-
     /*
      * Start map activity
      */
@@ -2277,118 +2142,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
     }
 
-    /**
-     * 头部右侧更多操作
-     *
-     * @param anchor 显示的相对位置view
-     */
-    private void titleContactsMore(View anchor) {
-        if (mPopupWindow == null) {
-            initPopupView();
-        } else if (mPopupWindow.isShowing()) {
-            mPopupWindow.dismiss();
-            return;
-        }
-        if (mPopupWindowAdapter.getPopupType() != PopupListAdapter.TYPE_MESSAGE_MORE) {
-            String[] moreArray = getResources().getStringArray(R.array.message_time_more_menu);
-            mPopupWindowAdapter.setDisplayStrList(PopupListAdapter.TYPE_MESSAGE_MORE, Arrays.asList(moreArray));
-            mPopupWindowAdapter.notifyDataSetChanged();
-        }
-
-        int[] location = new int[2];
-        anchor.getLocationOnScreen(location);
-        int xPosition = location[0] + anchor.getWidth() / 2 - mPopupWindow.getWidth() + CommonUtils.dip2px(this, 10);
-        int yPosition = location[1] + anchor.getHeight() - CommonUtils.dip2px(this, 15);
-        mPopupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, xPosition, yPosition);
-    }
-
-    /**
-     * 初始化PopupWindow
-     */
-    @SuppressWarnings("deprecation")
-    private void initPopupView() {
-        View popupContentView = View.inflate(this, R.layout.popup_window_view, null);
-        ListView popupList = (ListView) popupContentView.findViewById(R.id.popup_list_lv);
-        mPopupWindowAdapter = new PopupListAdapter(this, this);
-        popupList.setAdapter(mPopupWindowAdapter);
-        mPopupWindow = new PopupWindow(popupContentView, getResources().getDimensionPixelSize(
-                R.dimen.popup_widow_big_width), ViewGroup.LayoutParams.WRAP_CONTENT);
-        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setFocusable(true);
-    }
-
-    @Override
-    public void popupListItemOnClick(int type, int position) {
-        mPopupWindow.dismiss();
-        if (type == PopupListAdapter.TYPE_MESSAGE_CALL) {
-            //TODO:
-//            switch (position) {
-//            case CALL_TYPE_NORMAL:
-//                // 普通通话
-//                CallRelatedUtil.normalCall(this, mRecipientInfo.getRecipientList().get(0));
-//                break;
-//            case CALL_TYPE_VOICE:
-//                // 网络通话
-//                ContactInfo contactInfo = new ContactInfo();
-//                contactInfo.setFirstName(mRecipientInfo.getDisplayName());
-//                contactInfo.setPhoneNumList(mRecipientInfo.getRecipientList());
-//                CallRelatedUtil.networkCall(this, contactInfo);
-//                break;
-//            case CALL_TYPE_VIDEO:
-//                // 视频通话
-//                ContactInfo contact = new ContactInfo();
-//                contact.setFirstName(mRecipientInfo.getDisplayName());
-//                contact.setPhoneNumList(mRecipientInfo.getRecipientList());
-//                CallRelatedUtil.videoCall(this, contact);
-//                break;
-//            default:
-//                break;
-//            }
-        } else if (type == PopupListAdapter.TYPE_MESSAGE_MORE) {
-            switch (position) {
-                case MORE_TYPE_LOOK_CONTACT:
-                    //TODO
-//                // 查看联系人详情
-//                Intent contactDetailIntent = new Intent(this, NewContactsDetailActivity.class);
-//                String phone = CommonUtil.getPhoneNum(mRecipientInfo.getRecipientList().get(0));
-//                contactDetailIntent.putExtra(NewContactsDetailActivity.INTENT_DATA_PHONE_NUM, phone);
-////                contactDetailIntent.putExtra(NewContactsDetailActivity.TYPE_CHOOSE_CARD,
-////                        NewContactsDetailActivity.VIEWPAGER_INFORMATION_ITEM);
-//                startActivity(contactDetailIntent);
-                    break;
-                case MORE_TYPE_TO_BLACK:
-                    // 加入黑名单
-//                if (NewContactManager.getInstance(getApplicationContext()).addBlackNumber(mRecipientInfo.getRecipientList().get(0)) == 0) {
-//                    Toast.makeText(this, R.string.add_black_success, Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(this, R.string.add_black_failure, Toast.LENGTH_SHORT).show();
-//                }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void emojiClick(CharSequence emojiChar) {
-        int index = mSendMessageEditView.getSelectionStart();
-        if (EMOJI_ITEM_TYPE_DEL_BTN.equals(emojiChar)) {
-            // 删除按钮
-            if (index > 0) {
-                mSendMessageEditView.onKeyDown(KeyEvent.KEYCODE_DEL, new KeyEvent(KeyEvent.ACTION_DOWN,
-                        KeyEvent.KEYCODE_DEL));
-            }
-        } else if (EmojiParser.getInstance(this).getSmileySpansLength(mSendMessageEditView.getText()) < MAX_INPUT_LENGTH) {
-            Editable editable = mSendMessageEditView.getEditableText();
-            editable.insert(index, emojiChar);
-            Selection.setSelection(editable, index + emojiChar.length());
-        } else {
-            Toast.makeText(BuildMessageActivity.this, getString(R.string.msg_max_input_length), Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
         // 从上面加载更多
@@ -2410,162 +2163,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
         }
         mMessageListView.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
         loadDownMessageList();
-    }
-
-    /**
-     * 转发消息
-     *
-     * @param selectedContacts
-     */
-//    private void forwardSelectedMsg(List<ContactInfo> selectedContacts) {
-//        MessageRecipientInfo recipientInfo = new MessageRecipientInfo();
-//        recipientInfo.setConversationType(ChatType.CHAT_TYPE_ONE2ONE);
-//        List<String> recipient = new ArrayList<String>();
-//        recipient.add(selectedContacts.get(0).getPhoneNumList().get(0));
-//        recipientInfo.setRecipientList(recipient);
-//        long threadId = MessageManager.getService().getConversationId(recipientInfo.getConversationType(), recipient);
-//        if (threadId < 0) {
-//            threadId = MessageManager.getService().createConversationId(recipientInfo.getConversationType(), recipient);
-//        }
-//        recipientInfo.setThreadId(threadId);
-//        List<ChatMsgBaseInfo> msgList = mMessageDetailAdapter.getSelectedMsgList();
-//        boolean hasAudioOrBurnMsg = false;
-//        boolean hasUnLoadMsg = false;
-//        int successCount = 0;
-//        for (ChatMsgBaseInfo message : msgList) {
-//            int messageType = message.getMsgType();
-//            if (message.isBurnAfterMsg()) {
-//                // 阅后即焚不能转发
-//                hasAudioOrBurnMsg = true;
-//                continue;
-//            }
-//            String filePath = copyFileToMsgFolder(messageType, message.getFilepath());
-//            switch (messageType) {
-//            case MessageType.MSG_TYPE_TEXT:
-//            case MessageType.MSG_TYPE_SMS:
-//                MessageManager.getService().sendPlainText(recipientInfo, message.getData());
-//                successCount++;
-//                break;
-//            case MessageType.MSG_TYPE_CONTACT:
-//                MessageManager.getService().sendVCardInfo(recipientInfo, message.getData(), message.getExtraInfo());
-//                successCount++;
-//                break;
-//            case MessageType.MSG_TYPE_AUDIO:
-//                // 语音消息不可转发
-//                hasAudioOrBurnMsg = true;
-//                break;
-//            case MessageType.MSG_TYPE_VIDEO:
-//                if (message.getSendReceive() == MessageSendReceive.MSG_RECEIVE
-//                        && message.getDownStatus() != ChatMsgBaseInfo.LOADED
-//                        && filePath == null) {
-//                    // 消息还未下载，没有源文件
-//                    hasUnLoadMsg = true;
-//                } else {
-//                    MessageManager.getService().sendVideoFile(recipientInfo, filePath,
-//                            message.getDuration(), false);
-//                    successCount++;
-//                }
-//                break;
-//            case MessageType.MSG_TYPE_IMAGE:
-//                if (message.getSendReceive() == MessageSendReceive.MSG_RECEIVE
-//                        && message.getDownStatus() != ChatMsgBaseInfo.LOADED
-//                        && filePath == null) {
-//                    // 消息还未下载，没有源文件
-//                    hasUnLoadMsg = true;
-//                } else {
-//                    MessageManager.getService().sendImageFiles(recipientInfo, filePath, 100);
-//                    successCount++;
-//                }
-//                break;
-//            case MessageType.MSG_TYPE_MAP:
-//                MessageManager.getService().sendLocation(recipientInfo, message.getLatitude(), message.getLongitude(),
-//                        message.getLocationLabel(), filePath);
-//                successCount++;
-//                break;
-//            default:
-//                break;
-//            }
-//        }
-//        if (hasAudioOrBurnMsg) {
-//            if (hasUnLoadMsg) {
-//                Toast.makeText(this, R.string.connot_forward_msg_notice2, Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(this, R.string.connot_forward_msg_notice1, Toast.LENGTH_SHORT).show();
-//            }
-//        } else {
-//            if (hasUnLoadMsg) {
-//                Toast.makeText(this, R.string.connot_forward_msg_notice2, Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//        if (successCount == 0) {
-//            return;
-//        }
-//        Intent intent = new Intent(this, BuildMessageActivity.class);
-//        intent.putExtra(INTENT_RECEIVER_EDITABLE, isReceiverEditable);
-//        intent.putExtra(INTENT_CONVERSATION_TYPE, ChatType.CHAT_TYPE_ONE2ONE);
-//        String displayName = selectedContacts.get(0).getFirstName();
-//        intent.putExtra(INTENT_CONVERSATION_DISPLAY_NAME, displayName);
-//        intent.putExtra(INTENT_CONVERSATION_RECEIVER, recipient.get(0));
-//        intent.putExtra(INTENT_CONVERSATION_THREAD_ID, threadId);
-//        startActivity(intent);
-//        mMessageDetailAdapter.setMessageInfo(null);
-//        mMessageDetailAdapter.notifyDataSetChanged();
-//    }
-
-    /**
-     * 拷贝文件
-     *
-     * @param msgType
-     * @param filePath
-     * @return
-     */
-    public static String copyFileToMsgFolder(int msgType, String filePath) {
-        if (TextUtils.isEmpty(filePath)) {
-            return null;
-        }
-        File sourceFile = new File(filePath);
-        if (!sourceFile.exists()) {
-            return null;
-        }
-        String subPath = null;
-        switch (msgType) {
-            case MessageType.MSG_TYPE_MAP:
-                subPath = AppConstant.LOCATION_PIC_PATH;
-                break;
-            case MessageType.MSG_TYPE_IMAGE:
-                subPath = AppConstant.CAMERA_TAKE_PIC_PATH;
-                break;
-            case MessageType.MSG_TYPE_VIDEO:
-                subPath = AppConstant.VIDEO_FILE_PATH;
-                break;
-            default:
-                break;
-        }
-        if (subPath == null) {
-            return null;
-        }
-        StringBuilder fileName = new StringBuilder();
-        fileName.append(WalkArroundApp.MTC_DATA_PATH);
-        fileName.append(subPath);
-        File folder = new File(fileName.toString());
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-        fileName.append(System.currentTimeMillis());
-        int dot = filePath.lastIndexOf('.');
-        if ((dot > -1) && (dot < (filePath.length() - 1))) {
-            fileName.append(".");
-            fileName.append(filePath.substring(dot + 1));
-        }
-        String newFilePath = fileName.toString();
-
-        File collectFile = new File(newFilePath);
-//        try {
-//            FavoriteMessageManager.copyFile(sourceFile, collectFile);
-//        } catch (IOException e) {
-//            return null;
-//        }
-        return newFilePath;
     }
 
     /**
@@ -2666,13 +2263,15 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
      * Create a dialog for user to select.
      */
     private void createWalkReplyDialog() {
-        mWalkReplyDialog = DialogFactory.getStart2WalkReplyDialog(this, mRecipientInfo.getRecipientList().get(0), new DialogFactory.NoticeDialogCancelClickListener() {
+        mWalkReplyDialog = DialogFactory.getStart2WalkReplyDialog(this, mRecipientInfo.getRecipientList().get(0),
+                new DialogFactory.NoticeDialogCancelClickListener() {
             @Override
             public void onNoticeDialogCancelClick() {
                 String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
                         MessageUtil.EXTRA_INFOR_SPLIT +
                         MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME;
-                WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo.getRecipientList().get(0),
+                WalkArroundMsgManager.getInstance(getApplicationContext())
+                        .sendTextMsg(mRecipientInfo.getRecipientList().get(0),
                         getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
 
                 mWalkReplyDialog.dismiss();
@@ -2684,7 +2283,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 String extraInfor = MessageUtil.EXTRA_START_2_WALKARROUND +
                         MessageUtil.EXTRA_INFOR_SPLIT +
                         MessageUtil.EXTRA_START_2_WALK_REPLY_OK;
-                WalkArroundMsgManager.getInstance(getApplicationContext()).sendTextMsg(mRecipientInfo.getRecipientList().get(0),
+                WalkArroundMsgManager.getInstance(getApplicationContext())
+                        .sendTextMsg(mRecipientInfo.getRecipientList().get(0),
                         getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
 
                 mWalkReplyDialog.dismiss();

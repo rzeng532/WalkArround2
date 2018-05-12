@@ -32,7 +32,6 @@ import com.example.walkarround.message.listener.PressTalkTouchListener;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
-import com.example.walkarround.message.util.EmojiParser;
 import com.example.walkarround.message.util.MessageConstant.MessageSendReceive;
 import com.example.walkarround.message.util.MessageConstant.MessageState;
 import com.example.walkarround.message.util.MessageConstant.MessageType;
@@ -279,7 +278,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
 
         viewHolder.msgHintTv.setVisibility(View.GONE);
         viewHolder.msgTextTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        viewHolder.msgTextTv.setText(EmojiParser.getInstance(context).addSmileySpans(message.getData()));
+        viewHolder.msgTextTv.setText(message.getData());
 
         viewHolder.clickAreaView.setBackgroundResource(msgBgResId);
 

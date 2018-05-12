@@ -21,7 +21,6 @@ import com.example.walkarround.message.activity.BuildMessageActivity;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
-import com.example.walkarround.message.util.EmojiParser;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.util.AsyncTaskListener;
@@ -200,8 +199,6 @@ public class MessageReceiver extends BroadcastReceiver {
         notification.flags = Notification.FLAG_AUTO_CANCEL;
         notification.icon = R.drawable.msg_notify_icon;
 
-        //TODO: Add Emoji parser later.
-        notification.tickerText = EmojiParser.getInstance(context).getSmileyText(message.getData());
         notification.tickerText = message.getData();
 
         if (Build.VERSION.SDK_INT == 19) {

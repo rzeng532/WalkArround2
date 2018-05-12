@@ -26,7 +26,6 @@ import com.example.walkarround.message.listener.ConversationItemListener;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
 import com.example.walkarround.message.model.MessageSessionBaseModel;
-import com.example.walkarround.message.util.EmojiParser;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageConstant.ChatType;
 import com.example.walkarround.message.util.MessageConstant.ConversationType;
@@ -365,8 +364,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 && !TextUtils.isEmpty(listDO.getData())) {
             // 草稿消息
             String draft = mContext.getString(R.string.draft);
-            SpannableStringBuilder builder = (SpannableStringBuilder) EmojiParser.getInstance(mContext)
-                    .addSmileySpans(draft + listDO.getData(), 0.4f);
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            builder.append(draft).append(listDO.getData());
             int color = mContext.getResources().getColor(R.color.cor_red);
             builder.setSpan(new ForegroundColorSpan(color), 0, draft.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.tvMessage.setText(builder);
@@ -413,7 +412,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 holder.tvMessage.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 break;
         }
-        holder.tvMessage.setText(EmojiParser.getInstance(mContext).addSmileySpans(displayStr, 0.4f));
+        holder.tvMessage.setText(displayStr);
     }
 
     public void setItemFlag(ViewHolder holder, MessageSessionBaseModel listDO, int position, boolean priorIsMappingConv) {

@@ -1,8 +1,13 @@
 package com.example.walkarround.message.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +20,6 @@ import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.listener.SearchMessageResultItemListener;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
-import com.example.walkarround.message.util.EmojiParser;
 import com.example.walkarround.util.CommonUtils;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.TimeFormattedUtil;
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 public class SearchMessageResultListAdapter extends BaseAdapter {
     private static final Logger logger = Logger.getLogger(SearchMessageResultListAdapter.class.getSimpleName());
@@ -181,7 +186,7 @@ public class SearchMessageResultListAdapter extends BaseAdapter {
         String text = item.getData();
         int i = text.indexOf(mKey);
         if (i < 0) {
-            holder.tvMessage.setText(EmojiParser.getInstance(mContext).addSmileySpans(text));
+            holder.tvMessage.setText(text);
             return;
         }
 
@@ -200,7 +205,14 @@ public class SearchMessageResultListAdapter extends BaseAdapter {
                 }
             }
         }
-        holder.tvMessage.setText(EmojiParser.getInstance(mContext).addSmileySpans(subText, mKey, mContext.getResources().getColor(R.color.fontcor6)));
+        SpannableStringBuilder builder = new SpannableStringBuilder(text);
+        if (!TextUtils.isEmpty(mKey)) {
+            int start = text.indexOf(mKey);
+            int color = mContext.getResources().getColor(R.color.fontcor6);
+            builder.setSpan(new ForegroundColorSpan(color), start, start + mKey.length(),
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        holder.tvMessage.setText(builder);
     }
 
     private void setNormalItemPortrait(ViewHolder holder, ChatMsgBaseInfo item) {

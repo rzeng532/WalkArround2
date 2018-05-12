@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
-import com.example.walkarround.message.util.EmojiParser;
 
 import java.lang.reflect.Field;
 
@@ -45,7 +44,7 @@ public class PlaintTextDetailActivity extends Activity implements OnClickListene
         setContentView(R.layout.activity_plaint_text_detail);
         TextView content = (TextView) findViewById(R.id.content_tv);
         content.setOnClickListener(this);
-        content.setText(EmojiParser.getInstance(this).addSmileySpans(mDisplayContent));
+        content.setText(mDisplayContent);
 
         // 设置高度，保证超出屏幕可以滚动，不满屏是可以居中
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -55,7 +54,7 @@ public class PlaintTextDetailActivity extends Activity implements OnClickListene
         TextPaint textPaint = new TextPaint();
         textPaint.setTextSize(getResources().getDimension(R.dimen.font_size8));
         int viewWidth = dm.widthPixels - content.getPaddingLeft() - content.getPaddingRight();
-        DynamicLayout textLayout = new DynamicLayout(EmojiParser.getInstance(this).addSmileySpans(mDisplayContent),
+        DynamicLayout textLayout = new DynamicLayout(mDisplayContent,
                 textPaint, viewWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, true);
         if (textLayout.getLineCount() > 1) {
             content.setGravity(Gravity.CENTER_VERTICAL);
