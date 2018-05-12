@@ -1240,8 +1240,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             if (index < 0 || index >= textArray.length) {
                 return;
             }
-            DialogFactory.getConvEmptyDescribestionDialog(this, textArray[index]);
-            finish();
+            DialogFactory.getConvEmptyDescribestionDialog(this, textArray[index]).show();
         } else {
             //Get conversation at first.
             WalkArroundMsgManager.getInstance(getApplicationContext()).getConversation(listDO.getContact(), null);

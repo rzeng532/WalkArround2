@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.example.walkarround.R;
+import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.base.view.PhotoView;
 import com.example.walkarround.main.activity.AppMainActivity;
@@ -44,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO: description
+ * 评价对方
  * Date: 2016-08-12
  *
  * @author Administrator
@@ -79,10 +80,10 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
         @Override
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
-            myLogger.d("EvaluateFriend done." + (String)object);
+            myLogger.d("EvaluateFriend done." + (String) object);
             if (HttpTaskBase.TaskResult.SUCCEESS == resultCode
                     && (requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH)
-                        || requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH2))
+                    || requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_EVALUATE_EACH2))
                     && mFriend != null) {
                 myLogger.d("EvaluateFriend success, next step is add friend");
 
@@ -203,7 +204,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 //Get status & Get TO user.
                 String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
                 myLogger.d("Query speed date id response success: " + strSpeedDateId);
-                if(!TextUtils.isEmpty(strSpeedDateId)) {
+                if (!TextUtils.isEmpty(strSpeedDateId)) {
                     startEvaluateBetweenNoFriends(strSpeedDateId);
                 }
             } else {
@@ -219,7 +220,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
     };
 
     private void startEvaluateBetweenNoFriends(String speedDataId) {
-        if(!TextUtils.isEmpty(speedDataId)) {
+        if (!TextUtils.isEmpty(speedDataId)) {
             //Send impression value to server
             ThreadPoolManager.getPoolManager().addAsyncTask(new EvaluateFriendTask(getApplicationContext(),
                     mEvaluateFriendTaskListener,
@@ -236,7 +237,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
     }
 
     private void startEvaluateBetweenOldFriends() {
-        if(!TextUtils.isEmpty(mFriendId)) {
+        if (!TextUtils.isEmpty(mFriendId)) {
             AVAnalytics.onEvent(this, AppConstant.ANA_EVENT_EVALUATE);
             ThreadPoolManager.getPoolManager().addAsyncTask(new EvaluateFriendTask(getApplicationContext(),
                     mEvaluateFriendTaskListener,
@@ -268,10 +269,12 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         }
 
         @Override
-        public void onPreTask(String requestCode) { }
+        public void onPreTask(String requestCode) {
+        }
 
         @Override
-        public void onProgress(final int progress, String requestCode) { }
+        public void onProgress(final int progress, String requestCode) {
+        }
     };
 
     private static final int MSG_EVALUATE_SUCCESS = 1;
@@ -319,7 +322,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         initView();
 
         //Cancel notification while jump to this UI page.
-        if(mFriend != null) {
+        if (mFriend != null) {
             MessageUtil.cancelNotification(getApplicationContext(), mFriend.getObjectId(), MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
         }
     }
@@ -353,7 +356,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
             if (!TextUtils.isEmpty(mFriendId)) {
                 mFriend = ContactsManager.getInstance(this).getContactByUsrObjId(mFriendId);
-                if(mFriend == null) {
+                if (mFriend == null) {
                     ContactsManager.getInstance(this).getContactFromServer(mFriendId);
                 }
 
@@ -361,16 +364,16 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 recipient.add(mFriendId);
                 mThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
                         recipient);
-                if(mThreadId > -1l) {
+                if (mThreadId > -1l) {
                     int oldState = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(mThreadId);
-                    if(oldState == MessageUtil.WalkArroundState.STATE_END
+                    if (oldState == MessageUtil.WalkArroundState.STATE_END
                             || oldState == MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
                         mNewThreadState = MessageUtil.WalkArroundState.STATE_END_IMPRESSION;
-                    } else if(oldState == MessageUtil.WalkArroundState.STATE_POP
-                                || oldState == MessageUtil.WalkArroundState.STATE_POP_IMPRESSION
-                                || oldState == MessageUtil.WalkArroundState.STATE_INIT) {
+                    } else if (oldState == MessageUtil.WalkArroundState.STATE_POP
+                            || oldState == MessageUtil.WalkArroundState.STATE_POP_IMPRESSION
+                            || oldState == MessageUtil.WalkArroundState.STATE_INIT) {
                         mNewThreadState = MessageUtil.WalkArroundState.STATE_POP_IMPRESSION;
-                    } else if(oldState == MessageUtil.WalkArroundState.STATE_IM
+                    } else if (oldState == MessageUtil.WalkArroundState.STATE_IM
                             || oldState == MessageUtil.WalkArroundState.STATE_WALK
                             || oldState == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
                         //End speed date
@@ -415,7 +418,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
         if (mFriend != null) {
             String friendName = mFriend.getUsername();
-            if(friendName.length() > AppConstant.SHORTNAME_LEN) {
+            if (friendName.length() > AppConstant.SHORTNAME_LEN) {
                 friendName = friendName.substring(0, AppConstant.SHORTNAME_LEN) + "...";
             }
             mTvDescription.setText(getString(R.string.evaluate_hint, friendName));
@@ -434,8 +437,20 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                     && mRbTemperament.getRating() > 0.0f) {
                 //Get speed data id -> evaluate friend -> finish;
                 showCircleDialog();
+                if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mFriendId)) {
+                    // 评价走走助手
+                    WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(mThreadId, MessageUtil.WalkArroundState.STATE_END);
 
-                if(mNewThreadState == MessageUtil.WalkArroundState.STATE_END_IMPRESSION
+                    ThreadPoolManager.getPoolManager().addAsyncTask(
+                            new AsyncTaskLoadFriendsSession(getApplicationContext(),
+                                    MessageConstant.MSG_OPERATION_LOAD_FRIENDS, mLoadFriendsResultListener, mInActiveFriendTaskListener)
+                    );
+
+                    mUIHandler.sendEmptyMessageDelayed(MSG_EVALUATE_SUCCESS, 1000);
+                    return;
+                }
+
+                if (mNewThreadState == MessageUtil.WalkArroundState.STATE_END_IMPRESSION
                         || mNewThreadState == MessageUtil.WalkArroundState.STATE_POP_IMPRESSION) {
                     startEvaluateBetweenOldFriends();
                 } else {

@@ -39,6 +39,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewStub;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.EditText;
@@ -936,6 +938,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
 //            tvSelectPos.setText(getString(R.string.msg_select_walkarround_place_ex));
 //            tvSelectPos.setBackgroundResource(R.color.cor3);
 //        }
+        if (isAssistantFriend && AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_IM_SEND_LOC)) {
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake_anim);
+            tvSelectPos.startAnimation(animation);
+        }
     }
 
     @Override
@@ -1610,6 +1616,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 mMessageDetailAdapter.notifyDataSetChanged();
                 break;
             case R.id.tv_select_position:
+                view.clearAnimation();
                 Intent intent = new Intent(this, LocationActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_MAP);
                 break;
@@ -1875,6 +1882,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener, T
                 updateLastSendMessageToList(messageId, false);
                 // 标记位改变
                 AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
+
+                TextView tvSelectPos = (TextView) findViewById(R.id.tv_select_position);
+                Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake_anim);
+                tvSelectPos.startAnimation(animation);
             }
         }
     }

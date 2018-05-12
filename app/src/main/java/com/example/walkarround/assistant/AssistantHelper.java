@@ -84,7 +84,7 @@ public class AssistantHelper {
      * @param mask
      */
     public void updateStepState(int mask) {
-        int curValue = AppSharedPreference.getInt(AppSharedPreference.APP_GUIDE_STATE, 0);
+        int curValue = AppSharedPreference.getInt(AppSharedPreference.APP_GUIDE_STATE, STATE_FROM_REGISTER);
         if(curValue != 0) {
             curValue = curValue & mask;
             AppSharedPreference.putInt(AppSharedPreference.APP_GUIDE_STATE, curValue);
@@ -97,7 +97,7 @@ public class AssistantHelper {
      * @return
      */
     public boolean validateStepState(int stepValue) {
-        int curValue = AppSharedPreference.getInt(AppSharedPreference.APP_GUIDE_STATE, 0);
+        int curValue = AppSharedPreference.getInt(AppSharedPreference.APP_GUIDE_STATE, STATE_FROM_REGISTER);
         return (curValue & stepValue) == (stepValue);
     }
 
