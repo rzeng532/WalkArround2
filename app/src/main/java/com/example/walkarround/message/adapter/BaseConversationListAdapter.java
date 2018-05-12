@@ -55,6 +55,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
     private int mFriendMode = ConversationActivity.CONV_TYPE_CUR_FRIEND;
     // 显示内容数据
     private List<MessageSessionBaseModel> mListData = new ArrayList<MessageSessionBaseModel>();
+    private boolean isLoadingData = true;
     // 选中的项目位置
     private HashMap<Long, MessageSessionBaseModel> mChosenPositionList = new HashMap<Long, MessageSessionBaseModel>();
     // 点击事件监听
@@ -72,6 +73,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
      * @param list
      */
     public void setListData(List<MessageSessionBaseModel> list) {
+        isLoadingData = false;
         mListData.clear();
         if (list == null || list.size() == 0) {
             return;
@@ -84,16 +86,17 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
     }
 
     public void addListData(List<MessageSessionBaseModel> list) {
+        isLoadingData = false;
         if (list != null && list.size() > 0) {
-
+            mListData.addAll(list);
         }
-        mListData.addAll(list);
     }
 
     public void addListData(MessageSessionBaseModel item) {
         if (item == null) {
             return;
         }
+        isLoadingData = false;
         mListData.add(item);
     }
 
@@ -155,6 +158,9 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
 
     @Override
     public int getCount() {
+        if (isLoadingData) {
+            return 0;
+        }
 //        return mListData.size();
         boolean hasMappingFriend = mListData.size() > 0 && mListData.get(0).status < MessageUtil.WalkArroundState.STATE_END;
         return hasMappingFriend ? DEFAULT_ITEM_COUNT + 1 : DEFAULT_ITEM_COUNT;
@@ -204,6 +210,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
 
             holder.rlConversation.setTag(holder);
             holder.rlConversation.setOnClickListener(this);
+            convertView.setOnClickListener(this);
 
             convertView.setTag(holder);
 //            convertView.setOnClickListener(this);
@@ -522,13 +529,14 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 //Set width
                 ViewGroup.LayoutParams para1 = holder.rlFilfullArea.getLayoutParams();
                 para1.width = rlWidth;
-                holder.rlFilfullArea.setLayoutParams(para1);
                 //ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.rlConversation.getLayoutParams();
                 //int marginLeft = -holder.ivPortrait.getWidth() / 2;
                 //p.setMargins((int)(6 * density), 0, 0 ,0);
                 //Set color
                 int color = MessageUtil.getFriendColor(listDO == null ? position : listDO.colorIndex);
                 holder.rlFilfullArea.setBackgroundColor(mContext.getResources().getColor(color));
+                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.rlConversation.getLayoutParams();
+                p.setMargins(0, 0, 0, 0);
             } else {
                 int headMargin = (int) (20 * density);
 
@@ -537,7 +545,6 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.rlConversation.getLayoutParams();
                 //int marginLeft = -holder.ivPortrait.getWidth() / 2;
                 p.setMargins(-headMargin, 0, 0, 0);
-                holder.rlConversation.setLayoutParams(p);
             }
         } else {
             holder.rlFilfullArea.setVisibility(View.GONE);
@@ -588,6 +595,8 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             if (view.getId() == R.id.conversation_item_del_icon) {
                 mItemListener.onDeleteConversationItem(item);
             } else if (view.getId() == R.id.conv_rl) {
+                mItemListener.conversationItemOnClick(holder.position, item);
+            } else {
                 mItemListener.conversationItemOnClick(holder.position, item);
             }
         }

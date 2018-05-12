@@ -482,7 +482,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         getAllContacts();
 
         //There is user id and there is NO speed date id. We get speed date here and set value to profile.
-        if (!TextUtils.isEmpty(ProfileManager.getInstance().getCurUsrObjId()) && TextUtils.isEmpty(ProfileManager.getInstance().getSpeedDateId())) {
+        if (!TextUtils.isEmpty(ProfileManager.getInstance().getCurUsrObjId())
+                && TextUtils.isEmpty(ProfileManager.getInstance().getSpeedDateId())) {
             //Check speed date id
             ThreadPoolManager.getPoolManager().addAsyncTask(new QuerySpeedDateIdTask(getApplicationContext(),
                     mGetSpeedIdTaskListener,
@@ -556,8 +557,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         AVAnalytics.onResume(this);
         // 加载数据
         ThreadPoolManager.getPoolManager().addAsyncTask(
-                new AsyncTaskLoadSession(mContext,
-                        MessageConstant.MSG_OPERATION_LOAD, 0, Integer.MAX_VALUE, mAsysResultListener)
+                new AsyncTaskLoadSession(mContext, MessageConstant.MSG_OPERATION_LOAD,
+                        0, Integer.MAX_VALUE, mAsysResultListener)
         );
 
         mConversationAdapter.clearCacheDisplayName();
