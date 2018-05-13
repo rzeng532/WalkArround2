@@ -484,7 +484,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
             mFriendGeoData = new GeoData(latitude, longtitude, null);
             updateDistanceBetweenFriends();
 
-            mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REQ_START_2_WALK, 3000);
+            mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REQ_START_2_WALK, 5000);
             return;
         }
         //Start mRealCountdownTask to get friend dynamic data, like distance, online or not...
