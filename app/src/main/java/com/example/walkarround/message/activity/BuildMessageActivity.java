@@ -619,11 +619,12 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                 messageInfo.setData(getString(R.string.assistant_date_3));
                 messageId = justSaveMessageToDb(messageInfo);
                 updateLastSendMessageToList(messageId, false);
+
                 AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
-                WalkArroundMsgManager.getInstance(getApplicationContext())
-                        .updateConversationStatus(mRecipientInfo.getThreadId(), MessageUtil.WalkArroundState.STATE_WALK);
-                messageInfo.setMsgType(MessageType.MSG_TYPE_NOTIFICATION);
                 int colorIndex = MessageUtil.getFriendColorIndex(mRecipientInfo.getThreadId());
+                WalkArroundMsgManager.getInstance(getApplicationContext())
+                        .updateConversationStatusAndColor(mRecipientInfo.getThreadId(), MessageUtil.WalkArroundState.STATE_WALK, colorIndex);
+                messageInfo.setMsgType(MessageType.MSG_TYPE_NOTIFICATION);
                 logger.d("send agreement, the color index is " + colorIndex);
                 String extraInfor = MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND +
                         MessageUtil.EXTRA_INFOR_SPLIT + colorIndex;

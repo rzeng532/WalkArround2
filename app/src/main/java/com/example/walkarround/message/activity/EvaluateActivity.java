@@ -440,12 +440,10 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mFriendId)) {
                     // 评价走走助手
                     WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(mThreadId, MessageUtil.WalkArroundState.STATE_END);
-
-                    ThreadPoolManager.getPoolManager().addAsyncTask(
-                            new AsyncTaskLoadFriendsSession(getApplicationContext(),
-                                    MessageConstant.MSG_OPERATION_LOAD_FRIENDS, mLoadFriendsResultListener, mInActiveFriendTaskListener)
-                    );
-
+//                    ThreadPoolManager.getPoolManager().addAsyncTask(
+//                            new AsyncTaskLoadFriendsSession(getApplicationContext(),
+//                                    MessageConstant.MSG_OPERATION_LOAD_FRIENDS, mLoadFriendsResultListener, mInActiveFriendTaskListener)
+//                    );
                     mUIHandler.sendEmptyMessageDelayed(MSG_EVALUATE_SUCCESS, 1000);
                     return;
                 }

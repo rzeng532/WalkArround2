@@ -741,6 +741,9 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         if (mFriendList == null || mFriendList.size() <= 0) {
             if (list != null && list.size() > 0) {
                 for (MessageSessionBaseModel item : list) {
+                    if (AssistantHelper.ASSISTANT_OBJ_ID.equalsIgnoreCase(item.getContact())) {
+                        continue;
+                    }
                     if (item.status == MessageUtil.WalkArroundState.STATE_END
                             || item.status == MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
                         removeThreadIdList.add(item.getThreadId());
@@ -773,11 +776,21 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                         if (model != null && friendUsrId.equalsIgnoreCase(model.getContact())) {
                             addThreadIdList.remove(friend);
                             removedModelList.remove(model);
+                            break;
 //                                if(model.msgStatus != MessageUtil.WalkArroundState.STATE_END) {
 //                                    updateThreadIdList.add(model.getThreadId());
 //                                }
                         }
                     }
+                }
+            }
+
+            //  助手不删除
+            for (MessageSessionBaseModel model : list) {
+                if (model != null && AssistantHelper.ASSISTANT_OBJ_ID
+                        .equalsIgnoreCase(model.getContact())) {
+                    removedModelList.remove(model);
+                    break;
                 }
             }
 
