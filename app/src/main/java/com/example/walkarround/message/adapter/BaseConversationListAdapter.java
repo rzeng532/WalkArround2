@@ -533,7 +533,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
                 //int marginLeft = -holder.ivPortrait.getWidth() / 2;
                 //p.setMargins((int)(6 * density), 0, 0 ,0);
                 //Set color
-                int color = MessageUtil.getFriendColor(listDO == null ? position : listDO.colorIndex);
+                int color = MessageUtil.getFriendColor(listDO == null ? (position + 1) : listDO.colorIndex);
                 holder.rlFilfullArea.setBackgroundColor(mContext.getResources().getColor(color));
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.rlConversation.getLayoutParams();
                 p.setMargins(0, 0, 0, 0);
