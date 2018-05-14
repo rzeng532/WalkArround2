@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.example.walkarround.R;
+import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.base.view.DialogFactory;
 import com.example.walkarround.login.manager.LoginManager;
 import com.example.walkarround.util.AppConstant;
@@ -79,7 +80,7 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
             } else if (msg.what == REGISTERSUCCESS) {
                 //TODO: set register account to local
                 LoginManager.getInstance().setCurrentUser();
-                //TODO: start login activity or goto main activity?
+                //start login activity
                 Intent intent = new Intent(CheckSMSCodeActivity.this, LoginActivity.class);
                 startActivity(intent);
                 setResult(FINISHTHIS, getIntent());
@@ -91,6 +92,8 @@ public class CheckSMSCodeActivity extends Activity implements View.OnClickListen
     AsyncTaskListener mGetSMSCodeListener = new AsyncTaskListener() {
         @Override
         public void onSuccess(Object data) {
+            // show guide for new user
+            AssistantHelper.getInstance().forkRegisterState();
             Toast.makeText(getApplicationContext(), getString(R.string.register_signup_success), Toast.LENGTH_SHORT).show();
             Message msg = Message.obtain();
             myLogger.d("Get SMS code success.");

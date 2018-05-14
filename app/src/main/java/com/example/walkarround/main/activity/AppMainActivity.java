@@ -51,6 +51,7 @@ import com.example.walkarround.myself.activity.PersonInformationActivity;
 import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.model.MyDynamicInfo;
 import com.example.walkarround.myself.model.MyProfileInfo;
+import com.example.walkarround.setting.activity.AppSettingActivity;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
@@ -665,11 +666,10 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.rl_slide_setting://goto setting activity
                 //Test code, will not merge
-//                if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
-//                    mDrawerLayout.closeDrawers();
-//                }
-//                startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
-                AssistantHelper.getInstance().forkRegisterState();
+                if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
+                    mDrawerLayout.closeDrawers();
+                }
+                startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
                 break;
             case R.id.rl_slide_feedback://goto setting activity
                 doFeedback();
