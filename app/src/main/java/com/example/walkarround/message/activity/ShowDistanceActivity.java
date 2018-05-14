@@ -402,6 +402,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                     @Override
                     public void onConfirmDialogConfirmClick() {
                         if (isAssistantFriend) {
+                            mUiHandler.removeMessages(MSG_FRIEND_REQ_START_2_WALK);
                             mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REPLY_OK, 2000);
                             return;
                         }
@@ -468,6 +469,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                 }
 
 
+                AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_SEND_LOC_MASK);
                 Intent intent = new Intent(ShowDistanceActivity.this, CountdownActivity.class);
                 intent.putExtra(CountdownActivity.PARAMS_FRIEND_OBJ_ID, mStrFriendId);
                 ShowDistanceActivity.this.startActivity(intent);

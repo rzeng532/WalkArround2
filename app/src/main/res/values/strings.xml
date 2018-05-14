@@ -218,6 +218,8 @@
     <string name="shut_video">关闭</string>
     <string name="load_fail_notice">加载失败，轻触屏幕重新加载</string>
     <string name="image_load_fail">图片加载错误</string>
+    <string name="search_around">去附近找找</string>
+    <string name="understand">明白了</string>
     <!-- download string -->
     <string name="pause">暂停</string>
     <string name="resume_download">继续下载</string>
@@ -335,7 +337,7 @@
     <string name="walk_rule_i_see_no_countdown">知道了</string>
     <string name="walk_rule_start2walk">一起走走</string>
     <string name="walk_rule_wait_for_response">等待%1$s的回应...</string>
-    <string name="walk_rule_please_click_portrait">如果和%1$s见面了，请点击头像</string>
+    <string name="walk_rule_please_click_portrait">如果和%1$s见面了\n请点击头像</string>
 
     <!-- Evaluate strings -->
     <string name="evaluate_honest">诚信</string>

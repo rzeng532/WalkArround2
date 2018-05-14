@@ -152,6 +152,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
     /* 收信人信息 */
     private MessageRecipientInfo mRecipientInfo = new MessageRecipientInfo();
     private boolean isAssistantFriend = false;
+    private int mOldState;
 
     /* 通知会话列表刷新*/
     public static final String ACTION_NOTIFY_CONVERSATION_REFRESH = "notify_conversation_refresh";
@@ -632,9 +633,13 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                 updateHeaderAreaOnRecMsg(messageInfo);
             }
         } else if (requestCode == REQUEST_CODE_SHOW_DATE) {
+            if (!isAssistantFriend) {
+                return;
+            }
             // 模拟走走结束
-            int status = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(mRecipientInfo.getThreadId());
-            if (status < MessageUtil.WalkArroundState.STATE_IMPRESSION) {
+            int status = WalkArroundMsgManager.getInstance(getApplicationContext())
+                    .getConversationStatus(mRecipientInfo.getThreadId());
+            if (mOldState == status || status < MessageUtil.WalkArroundState.STATE_IMPRESSION) {
                 return;
             }
             ChatMsgBaseInfo messageInfo = generateAssistantMsg(mRecipientInfo);
@@ -659,7 +664,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
             }
             WalkArroundMsgManager.getInstance(getApplicationContext())
                     .updateConversationStatus(mRecipientInfo.getThreadId(), MessageUtil.WalkArroundState.STATE_IMPRESSION);
-            mImvDistance.setVisibility(View.GONE);
+//            mImvDistance.setVisibility(View.GONE);
         } else if (requestCode == REQUEST_CODE_PICTURE_CHOOSE) {
             // 选择了要发送的图片
             if (resultCode != RESULT_OK) {
@@ -931,7 +936,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
 //            tvSelectPos.setText(getString(R.string.msg_select_walkarround_place_ex));
 //            tvSelectPos.setBackgroundResource(R.color.cor3);
 //        }
-        if (isAssistantFriend && AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_IM_SEND_LOC)) {
+        if (isAssistantFriend && AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_IM_SEND_LOC)
+                && !AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_IM_CLICK_COLOR)) {
             Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake_anim);
             tvSelectPos.startAnimation(animation);
         }
@@ -1476,6 +1482,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                 break;
             case R.id.iv_show_distance:
                 if (isAssistantFriend) {
+                    mOldState = WalkArroundMsgManager.getInstance(getApplicationContext())
+                            .getConversationStatus(mRecipientInfo.getThreadId());
                     AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_CLICK_COLOR_MASK);
                 }
                 Intent intentShowDistance = new Intent(BuildMessageActivity.this, ShowDistanceActivity.class);

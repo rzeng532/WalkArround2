@@ -1043,7 +1043,16 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             if (index < 0 || index >= textArray.length) {
                 return;
             }
-            DialogFactory.getConvEmptyDescribestionDialog(this, textArray[index]).show();
+            int iconResId = R.drawable.byebye_gesture;
+            Dialog dialog = DialogFactory.getConvEmptyDescriptionDialog(this, textArray[index], iconResId,
+                    new DialogFactory.ConfirmDialogClickListener() {
+
+                        @Override
+                        public void onConfirmDialogConfirmClick() {
+                            ConversationActivity.this.finish();
+                        }
+                    });
+            dialog.show();
         } else {
             //Get conversation at first.
             WalkArroundMsgManager.getInstance(getApplicationContext()).getConversation(listDO.getContact(), null);

@@ -1,66 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="320dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="-20dp"
                 android:background="@color/transparent">
 
     <!-- Rules -->
     <RelativeLayout
-            android:id="@+id/rl_walk_rule"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/countdown_2_background_bg">
+        android:id="@+id/rl_walk_rule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingBottom="25dp"
+        android:background="@drawable/countdown_2_background_bg">
 
-        <TextView android:id="@+id/tv_walk_title"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentTop="true"
-                  android:layout_marginTop="39dp"
-                  android:layout_marginLeft="35dp"
-                  android:layout_marginRight="35dp"
-                  android:layout_centerHorizontal="true"
-                  android:gravity="center"
-                  android:text="@string/countdown_complete_bye"
-                  android:textColor="@color/fontcor3"
-                  android:textSize="@dimen/font_size2"/>
+        <TextView
+            android:id="@+id/tv_walk_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="39dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/countdown_complete_bye"
+            android:textColor="@color/fontcor3"
+            android:textSize="@dimen/font_size2"/>
 
         <ImageView
-                android:id="@+id/iv_bye_icon"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                android:layout_below="@+id/tv_walk_title"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:src="@drawable/byebye_gesture"/>
+            android:id="@+id/iv_bye_icon"
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="25dp"
+            android:layout_below="@id/tv_walk_title"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:src="@drawable/byebye_gesture"/>
 
-        <TextView android:id="@+id/tv_start2evaluate"
-                  android:layout_width="216dp"
-                  android:layout_height="48dp"
-                  android:layout_below="@+id/iv_bye_icon"
-                  android:layout_marginTop="10dp"
-                  android:layout_marginLeft="20dp"
-                  android:layout_marginRight="20dp"
-                  android:paddingTop="10dp"
-                  android:paddingBottom="10dp"
-                  android:layout_centerHorizontal="true"
-                  android:gravity="center"
-                  android:text="@string/evaluate_eachother"
-                  android:textColor="@color/fontcor3"
-                  android:textSize="@dimen/font_size2_dp"
-                  android:background="@drawable/btn_countdown_finish_enable"/>
+        <TextView
+            android:id="@+id/tv_start2evaluate"
+            android:layout_width="216dp"
+            android:layout_height="48dp"
+            android:layout_below="@id/iv_bye_icon"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/evaluate_eachother"
+            android:textColor="@color/fontcor3"
+            android:textSize="@dimen/font_size2_dp"
+            android:background="@drawable/btn_countdown_finish_enable"/>
 
-        <View
-                android:id="@+id/line"
-                android:layout_width="0.5dp"
-                android:layout_height="20dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/tv_start2evaluate"
-                android:background="@color/transparent"/>
+        <TextView
+            android:id="@+id/close_tv"
+            android:layout_width="216dp"
+            android:layout_height="48dp"
+            android:layout_below="@id/tv_start2evaluate"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/understand"
+            android:textColor="@color/fontcor3"
+            android:textSize="@dimen/font_size2_dp"
+            android:background="@drawable/btn_circle_white_line"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <!-- X button

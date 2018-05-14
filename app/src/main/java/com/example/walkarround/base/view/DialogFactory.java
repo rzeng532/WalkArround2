@@ -284,13 +284,36 @@ public class DialogFactory {
      * @param explanation
      * @return
      */
-    public static Dialog getConvEmptyDescribestionDialog(Context context, String explanation) {
+    public static Dialog getConvEmptyDescriptionDialog(Context context, String explanation,int iconResId,
+                                                       final ConfirmDialogClickListener listener) {
         final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_countdown_2_evaluate, null);
         TextView textView = (TextView) dialogView.findViewById(R.id.tv_walk_title);
-        dialogView.findViewById(R.id.tv_start2evaluate).setVisibility(View.GONE);
+        TextView closeView = (TextView) dialogView.findViewById(R.id.close_tv);
+        closeView.setVisibility(View.VISIBLE);
+        closeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        TextView searchAroundView = (TextView) dialogView.findViewById(R.id.tv_start2evaluate);
+        searchAroundView.setText(R.string.search_around);
+        searchAroundView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                if (listener != null) {
+                    listener.onConfirmDialogConfirmClick();
+                }
+
+            }
+        });
         textView.setText(explanation);
+
+        ImageView iconView = (ImageView) dialogView.findViewById(R.id.iv_bye_icon);
+        iconView.setImageResource(iconResId);
         dialog.setContentView(dialogView);
 
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
