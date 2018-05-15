@@ -1,65 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bgcor2">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bgcor2">
 
-    <include
+    <com.example.walkarround.base.view.KeyboardLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/build_message_keyboard_layout">
+
+        <include
             android:id="@+id/message_header_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/title_height"
             layout="@layout/message_detail_header"/>
 
-    <TextView
-        android:id="@+id/network_status_notice_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/message_header_layout"
-        android:background="#faeb6d"
-        android:text="@string/msg_network_notice"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:textColor="@color/fontcor2"
-        android:textSize="@dimen/font_size6"
-        android:visibility="gone"/>
-    <!-- 信息列表展示 -->
-    <com.example.walkarround.handmark.PullToRefreshListView
-        android:id="@+id/message_list_xlv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/message_bottom_layout"
-        android:layout_below="@id/network_status_notice_tv"
-        android:cacheColorHint="#00000000"
-        android:divider="@null"
-        android:listSelector="#00000000"
-        android:scrollbarSize="4dp"
-        android:scrollbarThumbVertical="@drawable/scrollbar_thumb_vertical"
-        android:scrollbars="vertical"
-        android:splitMotionEvents="false"
-        android:transcriptMode="alwaysScroll"/>
-    <!-- 信息编辑区域 -->
-    <include
-        android:id="@+id/message_bottom_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        layout="@layout/message_build_area"/>
-    <!-- 定时发送时间设定
-    <ViewStub
-        android:id="@+id/select_time_vs"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout="@layout/select_time_view"/>
-    信息批量操作：删除、收藏等 -->
-    <ViewStub
-        android:id="@+id/message_batch_operation_vs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout="@layout/message_batch_operation"/>
-    <View android:id="@+id/build_message_mask_v"
+        <TextView
+            android:id="@+id/network_status_notice_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/message_header_layout"
+            android:background="#faeb6d"
+            android:text="@string/msg_network_notice"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/fontcor2"
+            android:textSize="@dimen/font_size6"
+            android:visibility="gone"/>
+        <!-- 信息列表展示 -->
+        <com.example.walkarround.handmark.PullToRefreshListView
+            android:id="@+id/message_list_xlv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:cacheColorHint="#00000000"
+            android:divider="@null"
+            android:listSelector="#00000000"
+            android:scrollbarSize="4dp"
+            android:scrollbarThumbVertical="@drawable/scrollbar_thumb_vertical"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false"
+            android:transcriptMode="alwaysScroll"/>
+        <!-- 信息编辑区域 -->
+        <include
+            android:id="@+id/message_bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            layout="@layout/message_build_area"/>
+
+        <View
+            android:id="@+id/soft_input_v"
+            android:layout_width="fill_parent"
+            android:layout_height="226dp"
+            android:visibility="gone"/>
+    </com.example.walkarround.base.view.KeyboardLayout>
+
+    <View
+        android:id="@+id/build_message_mask_v"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"

@@ -67,7 +67,6 @@
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:background="#faeb6d"
-            android:drawableRight="@drawable/public_icon_content_right"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:gravity="center_vertical"

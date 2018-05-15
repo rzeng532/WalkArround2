@@ -481,6 +481,9 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
         if (isAssistantFriend) {
             // 小助手
             GeoData geoData = ProfileManager.getInstance().getMyProfile().getLocation();
+            if (geoData == null) {
+                return;
+            }
             double latitude = geoData.getLatitude();
             double longtitude = geoData.getLongitude();
             mFriendGeoData = new GeoData(latitude, longtitude, null);

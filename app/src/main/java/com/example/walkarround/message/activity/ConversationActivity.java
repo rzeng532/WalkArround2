@@ -3,13 +3,6 @@
  */
 package com.example.walkarround.message.activity;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -65,6 +58,13 @@ import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpUtil;
 import com.example.walkarround.util.http.ThreadPoolManager;
 import com.example.walkarround.util.network.NetWorkManager;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
 
 import static com.example.walkarround.util.http.HttpTaskBase.TaskResult;
 import static com.example.walkarround.util.http.HttpTaskBase.onResultListener;
@@ -839,7 +839,6 @@ public class ConversationActivity extends Activity implements ConversationItemLi
 
         // 网络提示
         mNetStatusView = findViewById(R.id.network_status_rl);
-        mNetStatusView.setOnClickListener(this);
 
         // 查找框
         initSearchEditText();

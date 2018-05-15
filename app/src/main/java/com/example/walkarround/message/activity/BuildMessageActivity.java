@@ -1,14 +1,5 @@
 package com.example.walkarround.message.activity;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -18,6 +9,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -34,10 +26,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewStub;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -55,6 +49,7 @@ import com.example.walkarround.R;
 import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.base.task.TaskUtil;
 import com.example.walkarround.base.view.DialogFactory;
+import com.example.walkarround.base.view.KeyboardLayout;
 import com.example.walkarround.base.view.PhotoView;
 import com.example.walkarround.handmark.PullToRefreshBase;
 import com.example.walkarround.handmark.PullToRefreshBase.OnRefreshListener2;
@@ -92,15 +87,23 @@ import com.example.walkarround.util.http.ThreadPoolManager;
 import com.example.walkarround.util.image.ImageBrowserActivity;
 import com.example.walkarround.util.network.NetWorkManager;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-
 public class BuildMessageActivity extends Activity implements OnClickListener,
-        MessageItemListener, MessageLoadListener, VoiceManager,
+        MessageItemListener, MessageLoadListener, VoiceManager,KeyboardLayout.onKybdsChangeListener,
         OnRefreshListener2<ListView>, SensorEventListener, LoadSearchResultMessageTask.SearchMessageLoadListener,
         DialogFactory.ConfirmDialogClickListener {
 
@@ -138,13 +141,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
     private static final int MESSAGE_EDIT_STATE_DEFAULT = 0;
     private static final int MESSAGE_EDIT_STATE_HAS_INPUT = 1;
     private static final int MESSAGE_EDIT_STATE_VOICE = 2;
+    private static final int MESSAGE_EDIT_STATE_SOFT_INPUT = 3;
     private static final int MESSAGE_EDIT_STATE_BURN_AFTER = 5;
     private static final int MESSAGE_EDIT_STATE_BURN_HAS_INPUT = 6;
     private static final int MESSAGE_EDIT_STATE_BURN_VOICE = 7;
-
-    /* 更多操作：查看联系人、查看友圈、加入黑名单 */
-    private static final int MORE_TYPE_LOOK_CONTACT = 0;
-    private static final int MORE_TYPE_TO_BLACK = 2;
 
     /* 发送方发送阅后即焚后消息消息间隔 */
     public static final int MSG_BURN_AFTER_READ_DURATION = 5000;
@@ -171,12 +171,12 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
     private ImageView mBottomLeftView;
     /* 发送和语音区域 */
     private View mBottomRightView;
+    /* 输入法占位View */
+    private View mSoftInputBgView;
 
     /* 语音面板 */
     private View mVoicePanel;
     private PressTalkTouchListener mVoiceListener;
-    /* 批量操作面板：删除、收藏等 */
-    private View mSelectModelPanel;
 
     /* 当前编辑状态 */
     private int mCurrentMessageEditState;
@@ -484,6 +484,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        switchInputMethod(false, null);
         sCurrentReceiverNum = null;
         try {
             unregisterReceiver(mMessageReceiver);
@@ -719,17 +720,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mSelectModelPanel != null && mSelectModelPanel.getVisibility() == View.VISIBLE) {
-                // 取消选择模式
-                if (mMessageListView != null) {
-                    mMessageListView.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
-                }
-                mMessageDetailAdapter.setInSelectMode(false);
-                mMessageDetailAdapter.notifyDataSetChanged();
-                return true;
-            }
-        }
         return super.onKeyDown(keyCode, event);
     }
 
@@ -845,6 +835,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
      * 初始化底部消息编辑区域
      */
     private void initMessageEditArea() {
+        mSoftInputBgView = findViewById(R.id.soft_input_v);
+        KeyboardLayout keyboardLayout = (KeyboardLayout) findViewById(R.id.build_message_keyboard_layout);
+        keyboardLayout.setOnkbdStateListener(this);
         mMessageBottomView = findViewById(R.id.message_bottom_layout);
         // 左侧语音等按钮
         mBottomLeftView = (ImageView) findViewById(R.id.left_change_iv);
@@ -881,7 +874,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
 
             @Override
             public void onClick(View v) {
-                switchBottomPanelView();
+                mCurrentMessageEditState = MESSAGE_EDIT_STATE_SOFT_INPUT;
+                switchBottomPanelView(MESSAGE_EDIT_STATE_SOFT_INPUT);
             }
         });
 
@@ -1261,28 +1255,24 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
          * if(!NetworkUtil.isNetworkAvailable(getBaseContext())){ leftViewResId =
          * R.drawable.public_btn_enterbar_voice_disable; }
          */
-        int rightViewResId = R.drawable.message_btn_open_more;
-        int emojiVisibility = View.GONE;
-        int toolsPanelVisibility = View.GONE;
         int voicePanelVisibility = View.GONE;
         boolean canSend = false;
-        //ImageView emjio = (ImageView) mMessageBottomView.findViewById(R.id.emoji_iv);
+        boolean isShowSoft = false;
         switch (currentState) {
             case MESSAGE_EDIT_STATE_DEFAULT:
                 mSendMessageEditView.setHint("");
                 mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.VISIBLE);
-                //emjio.setImageResource(R.drawable.message_btn_smile);
                 break;
             case MESSAGE_EDIT_STATE_HAS_INPUT:
                 //emjio.setImageResource(R.drawable.message_btn_smile);
                 canSend = true;
                 break;
-
+            case MESSAGE_EDIT_STATE_SOFT_INPUT:
+                isShowSoft = true;
+                break;
             case MESSAGE_EDIT_STATE_VOICE:
                 mVoiceListener.setAudioStatusIcon(R.drawable.public_btn_enterbar_voicebtn,
                         R.drawable.public_btn_enterbar_voicebtn2, R.drawable.progress_voice_duration);
-                //emjio.setImageResource(R.drawable.message_btn_smile);
-                hideSoftInput();
                 mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.GONE);
                 voicePanelVisibility = View.VISIBLE;
                 leftViewResId = R.drawable.message_btn_keybroad;
@@ -1296,9 +1286,94 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
         mVoicePanel.setVisibility(voicePanelVisibility);
         voicePanelVisibility = voicePanelVisibility == View.VISIBLE ? View.GONE : View.VISIBLE;
         mMessageBottomView.findViewById(R.id.message_edit_ll).setVisibility(voicePanelVisibility);
-        voicePanelVisibility = currentState == MESSAGE_EDIT_STATE_BURN_HAS_INPUT ? View.GONE : voicePanelVisibility;
-        //emjio.setVisibility(voicePanelVisibility);
+        switchInputMethod(isShowSoft, voicePanelVisibility == View.GONE ? mVoicePanel : null);
+    }
 
+    /**
+     * 键盘和面板切换
+     * @param isShowInputMethod
+     * @param operateView
+     */
+    private void switchInputMethod(boolean isShowInputMethod, final View operateView) {
+        Window window = getWindow();
+        if (isShowInputMethod) {
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                    | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (operateView != null) {
+                operateView.setVisibility(View.GONE);
+            }
+            mSoftInputBgView.setVisibility(View.INVISIBLE);
+
+            mSendMessageEditView.setFocusable(true);
+            mSendMessageEditView.setFocusableInTouchMode(true);
+            mSendMessageEditView.requestFocus();
+
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(mSendMessageEditView, InputMethodManager.SHOW_FORCED);
+        } else {
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                    | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+            try {
+                Thread.sleep(80);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (operateView != null) {
+                operateView.setVisibility(View.VISIBLE);
+            }
+            mSoftInputBgView.setVisibility(View.GONE);
+
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mSendMessageEditView.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public void onKeyBoardStateChange(int state) {
+        switch (state) {
+            case KeyboardLayout.KEYBOARD_STATE_INIT:
+                if (mSoftInputBgView.getVisibility() == View.INVISIBLE) {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                            | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    mSoftInputBgView.setVisibility(View.GONE);
+                }
+                break;
+            case KeyboardLayout.KEYBOARD_STATE_SHOW:
+                if (mSoftInputBgView.getTag() == null) {
+                    int[] location = new int[2];
+                    mMessageBottomView.getLocationOnScreen(location);
+                    int y = location[1];
+                    int bottomY = y + mMessageBottomView.getHeight();
+                    Rect frame = new Rect();
+                    getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+                    int statusBarHeight = frame.top;
+                    DisplayMetrics dm = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(dm);
+                    int softInputHeight = dm.heightPixels - bottomY - statusBarHeight;
+                    mSoftInputBgView.setMinimumHeight(softInputHeight);
+                    mSoftInputBgView.setTag(softInputHeight);
+                }
+                break;
+            case KeyboardLayout.KEYBOARD_STATE_HIDE:
+                mSoftInputBgView.setVisibility(View.GONE);
+                if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_SOFT_INPUT) {
+                    mCurrentMessageEditState = MESSAGE_EDIT_STATE_DEFAULT;
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -1424,8 +1499,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                 // 消息编辑左侧按钮
                 if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_VOICE
                         || mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_VOICE) {
-                    showSoftInput();
-                    switchBottomPanelView();
+                    mCurrentMessageEditState = MESSAGE_EDIT_STATE_SOFT_INPUT;
+                    switchBottomPanelView(MESSAGE_EDIT_STATE_SOFT_INPUT);
                 } else if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER) {
                     mCurrentMessageEditState = MESSAGE_EDIT_STATE_BURN_VOICE;
                     switchBottomPanelView(mCurrentMessageEditState);
@@ -1586,58 +1661,10 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
 
     @Override
     public void onSelectModeChange(boolean isSelectMode) {
-        // 选择模式
-        if (mSelectModelPanel == null) {
-            ViewStub selectModeView = (ViewStub) findViewById(R.id.message_batch_operation_vs);
-            selectModeView.inflate();
-            mSelectModelPanel = findViewById(R.id.message_batch_panel_ll);
-            // 全选
-            mSelectModelPanel.findViewById(R.id.select_all_rl).setOnClickListener(this);
-            mSelectModelPanel.findViewById(R.id.msg_mark_collect_tv).setOnClickListener(this);
-            mSelectModelPanel.findViewById(R.id.msg_detail_delete_tv).setOnClickListener(this);
-            mSelectModelPanel.findViewById(R.id.msg_mark_foward_tv).setOnClickListener(this);
-            mSelectModelPanel.findViewById(R.id.msg_mark_copy_tv).setOnClickListener(this);
-        }
-        if (mMessageListView != null) {
-            mMessageListView.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
-        }
-        if (isSelectMode) {
-            hideSoftInput();
-            switchBottomPanelView(MESSAGE_EDIT_STATE_DEFAULT, false);
-            mSelectModelPanel.setVisibility(View.VISIBLE);
-        } else {
-            mSelectModelPanel.setVisibility(View.GONE);
-        }
     }
 
     @Override
     public void onSelectCountChange(int selectCount, int oldCount) {
-        if (selectCount == oldCount) {
-            return;
-        }
-        int totalCount = mMessageDetailAdapter.getCount();
-        if (oldCount == totalCount && selectCount < totalCount) {
-            // 显示全选
-            TextView selectBtn = (TextView) mSelectModelPanel.findViewById(R.id.select_all_tv);
-            selectBtn.setText(R.string.message_mark_select_all);
-            mSelectModelPanel.findViewById(R.id.select_all_rl).setTag(true);
-        } else if (selectCount == totalCount && oldCount < totalCount) {
-            // 显示取消
-            TextView selectBtn = (TextView) mSelectModelPanel.findViewById(R.id.select_all_tv);
-            selectBtn.setText(R.string.message_mark_clear_all);
-            mSelectModelPanel.findViewById(R.id.select_all_rl).setTag(false);
-        }
-        if (oldCount == 0 && selectCount > 0) {
-            mSelectModelPanel.findViewById(R.id.msg_mark_collect_tv).setEnabled(true);
-            mSelectModelPanel.findViewById(R.id.msg_detail_delete_tv).setEnabled(true);
-            mSelectModelPanel.findViewById(R.id.msg_mark_foward_tv).setEnabled(true);
-            mSelectModelPanel.findViewById(R.id.msg_mark_copy_tv).setEnabled(true);
-        } else if (selectCount == 0) {
-            mSelectModelPanel.findViewById(R.id.msg_mark_collect_tv).setEnabled(false);
-            mSelectModelPanel.findViewById(R.id.msg_detail_delete_tv).setEnabled(false);
-            mSelectModelPanel.findViewById(R.id.msg_mark_foward_tv).setEnabled(false);
-            mSelectModelPanel.findViewById(R.id.msg_mark_copy_tv).setEnabled(false);
-        }
     }
 
     @Override
