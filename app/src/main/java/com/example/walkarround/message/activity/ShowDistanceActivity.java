@@ -480,15 +480,18 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     private void start2GetFriendCoordinate() {
         if (isAssistantFriend) {
             // 小助手
-            GeoData geoData = ProfileManager.getInstance().getMyProfile().getLocation();
-            if (geoData == null) {
-                return;
-            }
-            double latitude = geoData.getLatitude();
-            double longtitude = geoData.getLongitude();
-            mFriendGeoData = new GeoData(latitude, longtitude, null);
-            updateDistanceBetweenFriends();
+            mPriorDistance = 500;
+            mUiHandler.removeMessages(MSG_UPDATE_DISTANCE);
+            Message msg = mUiHandler.obtainMessage();
+            msg.what = MSG_UPDATE_DISTANCE;
+            msg.arg1 = mPriorDistance;
+            mUiHandler.sendMessage(msg);
 
+            mPriorDistance = 88;
+            msg = mUiHandler.obtainMessage();
+            msg.what = MSG_UPDATE_DISTANCE;
+            msg.arg1 = mPriorDistance;
+            mUiHandler.sendMessageDelayed(msg, 5000);
 //            mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REQ_START_2_WALK, 5000);
             return;
         }
