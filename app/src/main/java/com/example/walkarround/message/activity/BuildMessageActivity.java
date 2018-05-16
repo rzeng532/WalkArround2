@@ -1185,14 +1185,16 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
 
             if (contact != null) {
                 photoView.setBaseData(contact.getUsername(), contact.getPortrait().getUrl(), null,
-                        R.drawable.default_profile_portrait);
+                        contact.getPortrait().getId());
                 mRecipientInfo.setDisplayName(contact.getUsername());
                 receiverNameStr = contact.getUsername();
                 receiverNumStr = contact.getMobilePhoneNumber();
             }
 
             //Update contact information from server while user enter bld msg UI.
-            ContactsManager.getInstance(getApplicationContext()).getContactFromServer(mRecipientInfo.getRecipientList().get(0));
+            if (!isAssistantFriend) {
+                ContactsManager.getInstance(getApplicationContext()).getContactFromServer(mRecipientInfo.getRecipientList().get(0));
+            }
         }
 
         TextView receiverName = (TextView) detailHeaderView.findViewById(R.id.message_title_name_tv);
@@ -2120,6 +2122,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                         if (color > 0) {
                             mImvDistance.setVisibility(View.VISIBLE);
                             start2PlayDistanceBtn(color);
+                        } else {
+                            mImvDistance.setVisibility(View.GONE);
                         }
                     }
                 }
@@ -2201,7 +2205,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
      * 产生模拟聊天消息
      * @param recipientInfo
      */
-    private ChatMsgBaseInfo generateAssistantMsg(MessageRecipientInfo recipientInfo) {
+    public static ChatMsgBaseInfo generateAssistantMsg(MessageRecipientInfo recipientInfo) {
         ChatMsgBaseInfo msgInfo = new ChatMessageInfo();
         msgInfo.setContact(ProfileManager.getInstance().getCurUsrObjId());
         msgInfo.setReceiver(recipientInfo.getRecipientList());

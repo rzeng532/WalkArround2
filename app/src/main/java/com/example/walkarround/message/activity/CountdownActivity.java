@@ -7,14 +7,10 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
@@ -30,7 +26,6 @@ import com.example.walkarround.base.view.RoundProgressBar;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
-import com.example.walkarround.message.receiver.AlarmReceiver;
 import com.example.walkarround.message.receiver.MediaAlarmReceiver;
 import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
@@ -228,7 +223,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 //            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
 //            backGround.setColor(getResources().getColor(R.color.transparent));
             mPvPortrait.setBaseData(friendName, mFriend.getPortrait().getUrl(), null,
-                    R.drawable.default_profile_portrait);
+                    mFriend.getPortrait().getId());
         }
     }
 

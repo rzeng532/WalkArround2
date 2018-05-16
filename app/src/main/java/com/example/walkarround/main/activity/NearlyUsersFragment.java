@@ -33,9 +33,13 @@ import com.example.walkarround.main.adapter.NearlyUserListAdapter;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.example.walkarround.main.task.LikeSomeOneTask;
+import com.example.walkarround.message.activity.BuildMessageActivity;
 import com.example.walkarround.message.activity.ConversationActivity;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.message.manager.WalkArroundMsgManager;
+import com.example.walkarround.message.model.ChatMsgBaseInfo;
+import com.example.walkarround.message.model.MessageRecipientInfo;
+import com.example.walkarround.message.util.MessageConstant;
 import com.example.walkarround.message.util.MessageUtil;
 import com.example.walkarround.message.util.MsgBroadcastConstants;
 import com.example.walkarround.myself.manager.ProfileManager;
@@ -443,9 +447,18 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                     //Assistant's searching step is completed.
                     AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_SEARCHING_MASK);
                     //Generate a msg record
-                    WalkArroundMsgManager.getInstance(getActivity()
-                                                        .getApplicationContext())
-                                                        .sendAssistantTextMsg(AssistantHelper.ASSISTANT_OBJ_ID, getString(R.string.msg_say_hello), null);
+                    WalkArroundMsgManager.getInstance(getActivity().getApplicationContext())
+                            .sendAssistantTextMsg(AssistantHelper.ASSISTANT_OBJ_ID, getString(R.string.msg_say_hello), null);
+                    List<String> receipient = new ArrayList<String>();
+                    receipient.add(AssistantHelper.ASSISTANT_OBJ_ID);
+                    MessageRecipientInfo recipientInfo = WalkArroundMsgManager.getInstance(getActivity().getApplicationContext())
+                            .abstractReceiptInfo(receipient, MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
+                    ChatMsgBaseInfo messageInfo = BuildMessageActivity.generateAssistantMsg(recipientInfo);
+                    messageInfo.setData(getString(R.string.assistant_hi, ProfileManager.getInstance().getMyContactInfo().getUsername()));
+                    WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).saveChatmsg(messageInfo);
+                    WalkArroundMsgManager.getInstance(getActivity().getApplicationContext())
+                            .addMsgUnreadCountByThreadId(recipientInfo.getThreadId());
+
                 }
 
                 int curState = ProfileManager.getInstance().getCurUsrDateState();

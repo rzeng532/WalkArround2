@@ -1098,7 +1098,7 @@ public class WalkArroundMsgManager {
         }).start();
     }
 
-    public MessageRecipientInfo abstractReceiptInfo(List<String> addrList, int chatType) throws Exception {
+    public MessageRecipientInfo abstractReceiptInfo(List<String> addrList, int chatType) {
         MessageRecipientInfo recipientInfo = new MessageRecipientInfo();
         ArrayList<String> numList = new ArrayList<String>();
         numList.addAll(addrList);

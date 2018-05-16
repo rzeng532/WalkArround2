@@ -5,6 +5,7 @@ import com.example.walkarround.base.WalkArroundApp;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.util.AppSharedPreference;
+import com.example.walkarround.util.CommonUtils;
 
 /**
  * Created by Richard on 2018-05-08.
@@ -30,6 +31,7 @@ public class AssistantHelper {
 
     public static final String ASSISTANT_OBJ_ID = "assistant_obj_id";
     public static final String ASSISTANT_USR_NAME = WalkArroundApp.getInstance().getString(R.string.assistant_usr_name);
+    public static final String ASSISTANT_SIGNATURE = WalkArroundApp.getInstance().getString(R.string.assistant_signature);
 
 
     public static final int STATE_FROM_REGISTER = STEP_INTRODUCE_MYSELF
@@ -105,6 +107,9 @@ public class AssistantHelper {
         ContactInfo assistant = new ContactInfo();
         assistant.setObjectId(ASSISTANT_OBJ_ID);
         assistant.setUsername(ASSISTANT_USR_NAME);
+        assistant.setGender(CommonUtils.PROFILE_GENDER_FEMALE);
+        assistant.setSignature(ASSISTANT_SIGNATURE);
+        assistant.getPortrait().setId(R.drawable.asstant);
 
         ContactsManager.getInstance(WalkArroundApp.getInstance().getApplicationContext()).addContactInfo(assistant);
 

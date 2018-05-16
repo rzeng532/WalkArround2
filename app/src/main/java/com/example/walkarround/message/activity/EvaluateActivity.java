@@ -424,7 +424,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
             mTvDescription.setText(getString(R.string.evaluate_hint, friendName));
 
             mPvPortrait.setBaseData(friendName, mFriend.getPortrait().getUrl(), null,
-                    R.drawable.default_profile_portrait);
+                    mFriend.getPortrait().getId());
         }
     }
 

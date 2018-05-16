@@ -33,6 +33,7 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
     private String mAge;
     private String mSignature;
     private String mPortraitUrl;
+    private int mPortraitResId;
 
     private String mUsrObjId;
 
@@ -110,10 +111,10 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
 //        if(!TextUtils.isEmpty(mName) && !TextUtils.isEmpty(mPortraitUrl)) {
         if (!TextUtils.isEmpty(mName)) {
             mIvPortrait.setBaseData(mName, mPortraitUrl,
-                    mName.substring(0, 1), -1);
+                    mName.substring(0, 1), mPortraitResId);
 
             mIvSmallPortrait.setBaseData(mName, mPortraitUrl,
-                    mName.substring(0, 1), -1);
+                    mName.substring(0, 1), mPortraitResId);
         }
     }
 
@@ -144,6 +145,7 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
 
                 mSignature = contact.getSignature();
                 mPortraitUrl = (contact.getPortrait() != null ? contact.getPortrait().getUrl() : null);
+                mPortraitResId = (contact.getPortrait() != null ? contact.getPortrait().getId() : -1);
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.example.walkarround.main.model;
 
+import com.example.walkarround.R;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -171,7 +173,7 @@ public class ContactInfo implements Serializable {
     public class PortraitEntity {
         //@com.google.gson.annotations.SerializedName("__type")
         private String type;
-        private String id;
+        private int id = R.drawable.default_profile_portrait;
         private String name;
         private String url;
 
@@ -179,7 +181,7 @@ public class ContactInfo implements Serializable {
             this.type = type;
         }
 
-        public void setId(String id) {
+        public void setId(int id) {
             this.id = id;
         }
 
@@ -195,7 +197,7 @@ public class ContactInfo implements Serializable {
             return type;
         }
 
-        public String getId() {
+        public int getId() {
             return id;
         }
 

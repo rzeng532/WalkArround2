@@ -93,8 +93,8 @@
             </RelativeLayout>
 
             <ImageView android:id="@+id/iv_arrow"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:scaleType="centerInside"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/msg_item_text_layout"

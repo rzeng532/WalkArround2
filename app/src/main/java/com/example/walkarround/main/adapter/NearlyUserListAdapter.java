@@ -1,23 +1,17 @@
 package com.example.walkarround.main.adapter;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-//import com.bumptech.glide.Glide;
+
 import com.example.walkarround.R;
-import com.example.walkarround.base.view.DialogFactory;
+import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.flingswipe.RotateTextImageView;
-import com.example.walkarround.main.activity.AppMainActivity;
 import com.example.walkarround.main.model.ContactInfo;
-import com.example.walkarround.message.activity.ConversationActivity;
-import com.example.walkarround.message.util.MessageUtil;
-import com.example.walkarround.myself.manager.ProfileManager;
 import com.example.walkarround.myself.util.ProfileUtil;
 import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.CommonUtils;
@@ -72,10 +66,8 @@ public class NearlyUserListAdapter extends BaseAdapter {
 //                .load(mUserList.get(position).getPortrait().getUrl())
 //                .into(holder.mCardImageView);
         //We will user UILImageLoader here rather than Glide. Glide is familiar with Picasso.
-        String userPortraitUrl = mUserList.get(position).getPortrait().getUrl();
-        if(!TextUtils.isEmpty(userPortraitUrl)) {
-            ImageLoaderManager.displayImage(mUserList.get(position).getPortrait().getUrl(), -1, holder.mCardImageView);
-        }
+        ImageLoaderManager.displayImage(mUserList.get(position).getPortrait().getUrl(),
+                mUserList.get(position).getPortrait().getId(), holder.mCardImageView);
 
         String friendName = mUserList.get(position).getUsername();
         if(friendName.length() > AppConstant.SHORTNAME_LEN) {
@@ -92,8 +84,13 @@ public class NearlyUserListAdapter extends BaseAdapter {
         }
 
         //有数据时显示距离
-        String distance = (mUserList.get(position).getDistance() != null && mUserList.get(position).getDistance().size() > 0)
-                ? CommonUtils.getDistanceStr((int)(mUserList.get(position).getDistance().get(0) * 1000)) : "";
+        String distance = null;
+        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(mUserList.get(position).getObjectId())) {
+            distance = "88" + mContext.getResources().getString(R.string.common_distance_unit_meter);
+        } else {
+            distance = (mUserList.get(position).getDistance() != null && mUserList.get(position).getDistance().size() > 0)
+                    ? CommonUtils.getDistanceStr((int) (mUserList.get(position).getDistance().get(0) * 1000)) : "";
+        }
         holder.mCardImageNum.setText(distance);
 
         return convertView;

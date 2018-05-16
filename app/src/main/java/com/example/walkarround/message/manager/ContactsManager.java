@@ -66,12 +66,11 @@ public class ContactsManager {
     public ContactInfo getContactByUsrObjId(String userId) {
         ContactInfo userInfo = null;
 
-        if(mInstance.mUserMap != null && !TextUtils.isEmpty(userId)) {
+        if (AssistantHelper.ASSISTANT_OBJ_ID.equals(userId)) {
+            userInfo = AssistantHelper.getInstance().genAssitantContact();
+        } else if (mInstance.mUserMap != null && !TextUtils.isEmpty(userId)) {
             userInfo = mInstance.mUserMap.get(userId);
             mLogger.d("getContactByUsrObjId: contact is " + (userInfo == null ? "NULL" : "Not NULL"));
-        }
-        if (userInfo == null && AssistantHelper.ASSISTANT_OBJ_ID.equals(userId)) {
-            userInfo = AssistantHelper.getInstance().genAssitantContact();
         }
 
         return userInfo;

@@ -9,9 +9,26 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.view.*;
-import android.widget.*;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckedTextView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.walkarround.R;
+import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.main.model.ContactInfo;
 import com.example.walkarround.message.manager.ContactsManager;
 import com.example.walkarround.util.AppConstant;
@@ -363,7 +380,7 @@ public class DialogFactory {
         PortraitView portrait = (PortraitView)dialogView.findViewById(R.id.pv_start2walk);
         final ContactInfo usr = ContactsManager.getInstance(context).getContactByUsrObjId(usrObjId);
         portrait.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
-                usr.getUsername().substring(0, 1), -1);
+                usr.getUsername().substring(0, 1), usr.getPortrait().getId());
 
         String name = usr.getUsername();
         if(name.length() > AppConstant.SHORTNAME_LEN) {
@@ -387,9 +404,15 @@ public class DialogFactory {
             }
         });
 
-        dialogView.findViewById(R.id.tv_start2walk).setOnClickListener(new View.OnClickListener() {
+        View confirmView = dialogView.findViewById(R.id.tv_start2walk);
+        if (AssistantHelper.ASSISTANT_OBJ_ID.equalsIgnoreCase(usrObjId)) {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.shake_anim);
+            confirmView.startAnimation(animation);
+        }
+        confirmView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.clearAnimation();
                 dialogView.findViewById(R.id.tv_start2walk).setVisibility(View.GONE);
                 dialogView.findViewById(R.id.tv_wait_response).setVisibility(View.VISIBLE);
                 Toast.makeText(context, R.string.msg_walk_req_time_indicate, Toast.LENGTH_SHORT).show();
@@ -416,7 +439,7 @@ public class DialogFactory {
         PortraitView portrait = (PortraitView)dialogView.findViewById(R.id.pv_start2walk);
         final ContactInfo usr = ContactsManager.getInstance(context).getContactByUsrObjId(usrObjId);
         portrait.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
-                usr.getUsername().substring(0, 1), -1);
+                usr.getUsername().substring(0, 1), usr.getPortrait().getId());
 
         String name = usr.getUsername();
         if(name.length() > AppConstant.SHORTNAME_LEN) {

@@ -365,7 +365,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                     .getContactByUsrObjId(mStrFriendId);
             if (usr != null) {
                 mPvFriend.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
-                        usr.getUsername().substring(0, 1), -1);
+                        usr.getUsername().substring(0, 1), usr.getPortrait().getId());
 
                 //Init bottom indication text
                 String friendName = usr.getUsername();
@@ -402,7 +402,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                     @Override
                     public void onConfirmDialogConfirmClick() {
                         if (isAssistantFriend) {
-                            mUiHandler.removeMessages(MSG_FRIEND_REQ_START_2_WALK);
+//                            mUiHandler.removeMessages(MSG_FRIEND_REQ_START_2_WALK);
                             mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REPLY_OK, 2000);
                             return;
                         }
@@ -489,7 +489,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
             mFriendGeoData = new GeoData(latitude, longtitude, null);
             updateDistanceBetweenFriends();
 
-            mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REQ_START_2_WALK, 5000);
+//            mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REQ_START_2_WALK, 5000);
             return;
         }
         //Start mRealCountdownTask to get friend dynamic data, like distance, online or not...

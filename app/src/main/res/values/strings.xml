@@ -282,6 +282,7 @@
     <string name="walk_friend_remove_notices">最后一个走伴将会被从列表删除</string>
 
     <string name="msg_conv_default_content">See you again</string>
+    <string name="assistant_hi">%1$s久违了：）；欢迎来到走走！\n在这里，让我们保持简单，诚信，有效交友。\n废话少说，先让我带你玩一遍吧！：）</string>
     <string name="assistant_hi_1">亲，你可以发送文字或语音给我一起沟通了解</string>
     <string name="assistant_hi_2">也可以直接点击红色按钮，约定走走地点，准备走起</string>
     <string name="assistant_hi_3">现在请点击走走地点，我们约起吧</string>
@@ -378,6 +379,7 @@
     <string name="mapping_tencent">腾讯地图</string>
     <string name="mapping_navi_start_indicate">导航完成后\r\n请记得回来用色块碰头</string>
 
-    <string name="assistant_usr_name">走走助手</string>
+    <string name="assistant_usr_name">走走小伴</string>
+    <string name="assistant_signature">走走，相信相信的力量，让交友更简单</string>
 
 </resources>

@@ -93,14 +93,15 @@
             android:visibility="gone"/>
     </LinearLayout>
 
-    <ImageView android:id="@+id/iv_arrow"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+    <ImageView
+        android:id="@+id/iv_arrow"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_below="@id/msg_send_time_tv"
         android:scaleType="centerInside"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
         android:src="@drawable/public_icon_content_right"/>
 
 </RelativeLayout>
