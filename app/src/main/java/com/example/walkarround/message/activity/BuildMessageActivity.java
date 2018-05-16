@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -173,6 +174,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
     private View mBottomRightView;
     /* 输入法占位View */
     private View mSoftInputBgView;
+    /* 发送按钮 */
+    View mSendBtn;
 
     /* 语音面板 */
     private View mVoicePanel;
@@ -222,6 +225,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
     private long mSearchMsgId = -1;
 
     private static final int UI_WHAT_SCROLL = 1;
+    private static final int UI_ADD_MESSAGE = 2;
     private Handler mUiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -236,6 +240,17 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                             newMsg.arg2 = 0;
                             mUiHandler.sendMessageDelayed(newMsg, 100);
                         }
+                    }
+                    break;
+                case UI_ADD_MESSAGE:
+                    List<Long> msgList = (List<Long>) msg.obj;
+                    updateLastSendMessageToList(msgList.get(0), false);
+                    msgList.remove(0);
+                    if (msgList.size() > 0) {
+                        Message newMsg = Message.obtain();
+                        newMsg.what = UI_ADD_MESSAGE;
+                        newMsg.obj = msgList;
+                        mUiHandler.sendMessageDelayed(newMsg, 2000);
                     }
                     break;
                 default:
@@ -609,18 +624,27 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
             switchBottomPanelView(false);
             if (isAssistantFriend) {
                 // 回应约会地点事件
+                List<Long> msgList = new ArrayList<>();
                 ChatMsgBaseInfo messageInfo = generateAssistantMsg(mRecipientInfo);
                 messageInfo.setData(getString(R.string.assistant_date_1));
                 messageId = justSaveMessageToDb(messageInfo);
-                updateLastSendMessageToList(messageId, false);
+//                updateLastSendMessageToList(messageId, false);
+                msgList.add(messageId);
 
                 messageInfo.setData(getString(R.string.assistant_date_2));
                 messageId = justSaveMessageToDb(messageInfo);
-                updateLastSendMessageToList(messageId, false);
+//                updateLastSendMessageToList(messageId, false);
+                msgList.add(messageId);
 
                 messageInfo.setData(getString(R.string.assistant_date_3));
                 messageId = justSaveMessageToDb(messageInfo);
-                updateLastSendMessageToList(messageId, false);
+//                updateLastSendMessageToList(messageId, false);
+                msgList.add(messageId);
+
+                Message newMsg = Message.obtain();
+                newMsg.what = UI_ADD_MESSAGE;
+                newMsg.obj = msgList;
+                mUiHandler.sendMessageDelayed(newMsg, 1000);
 
                 AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
                 int colorIndex = MessageUtil.getFriendColorIndex(mRecipientInfo.getThreadId());
@@ -634,12 +658,15 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                 updateHeaderAreaOnRecMsg(messageInfo);
             }
         } else if (requestCode == REQUEST_CODE_SHOW_DATE) {
+            Log.e("mass", "REQUEST_CODE_SHOW_DATE");
             if (!isAssistantFriend) {
                 return;
             }
             // 模拟走走结束
             int status = WalkArroundMsgManager.getInstance(getApplicationContext())
                     .getConversationStatus(mRecipientInfo.getThreadId());
+            Log.e("mass", "mOldState=" + mOldState);
+            Log.e("mass", "status=" + status);
             if (mOldState == status || status < MessageUtil.WalkArroundState.STATE_IMPRESSION) {
                 return;
             }
@@ -649,15 +676,24 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
             long messageId = justSaveMessageToDb(messageInfo);
             updateLastSendMessageToList(messageId, false);
 
+            List<Long> msgList = new ArrayList<>();
             messageInfo.setMsgType(MessageType.MSG_TYPE_TEXT);
             messageInfo.setData(getString(R.string.assistant_end_1,
                     ProfileManager.getInstance().getMyContactInfo().getUsername()));
             messageId = justSaveMessageToDb(messageInfo);
-            updateLastSendMessageToList(messageId, false);
+//            updateLastSendMessageToList(messageId, false);
+            msgList.add(messageId);
 
             messageInfo.setData(getString(R.string.assistant_end_2));
             messageId = justSaveMessageToDb(messageInfo);
-            updateLastSendMessageToList(messageId, false);
+//            updateLastSendMessageToList(messageId, false);
+            msgList.add(messageId);
+
+            Message newMsg = Message.obtain();
+            newMsg.what = UI_ADD_MESSAGE;
+            newMsg.obj = msgList;
+            mUiHandler.sendMessageDelayed(newMsg, 2000);
+
             AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
             if (status == MessageUtil.WalkArroundState.STATE_END) {
                 // 评价完成
@@ -850,13 +886,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
         //View rightBtn = mBottomRightView.findViewById(R.id.right_change_iv);
         //rightBtn.setOnClickListener(this);
         //mBottomRightView.setTag(R.id.right_change_iv, rightBtn);
-        View sendBtn = mBottomRightView.findViewById(R.id.send_message_tv);
-        sendBtn.setOnClickListener(this);
-        // Check if there is recipients or not.
-        if (mRecipientInfo.getRecipientList() == null || mRecipientInfo.getRecipientList().size() <= 0) {
-            sendBtn.setEnabled(false);
-        }
-        mBottomRightView.setTag(R.id.send_message_tv, sendBtn);
+        mSendBtn = mBottomRightView.findViewById(R.id.send_message_tv);
+        mSendBtn.setOnClickListener(this);
 
         // 语音
         mVoicePanel = mMessageBottomView.findViewById(R.id.press_to_speak_ll);
@@ -1263,19 +1294,21 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
         switch (currentState) {
             case MESSAGE_EDIT_STATE_DEFAULT:
                 mSendMessageEditView.setHint("");
-                mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.VISIBLE);
+                mSendBtn.setVisibility(View.VISIBLE);
                 break;
             case MESSAGE_EDIT_STATE_HAS_INPUT:
                 //emjio.setImageResource(R.drawable.message_btn_smile);
                 canSend = true;
+                mSendBtn.setVisibility(View.VISIBLE);
                 break;
             case MESSAGE_EDIT_STATE_SOFT_INPUT:
                 isShowSoft = true;
+                mSendBtn.setVisibility(View.VISIBLE);
                 break;
             case MESSAGE_EDIT_STATE_VOICE:
                 mVoiceListener.setAudioStatusIcon(R.drawable.public_btn_enterbar_voicebtn,
                         R.drawable.public_btn_enterbar_voicebtn2, R.drawable.progress_voice_duration);
-                mBottomRightView.findViewById(R.id.send_message_tv).setVisibility(View.GONE);
+                mSendBtn.setVisibility(View.GONE);
                 voicePanelVisibility = View.VISIBLE;
                 leftViewResId = R.drawable.message_btn_keybroad;
                 break;
@@ -1759,18 +1792,27 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
         if (isAssistantFriend) {
             // 走走助手
             if (AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_IM)) {
+                List<Long> msgList = new ArrayList<>();
                 ChatMsgBaseInfo messageInfo = generateAssistantMsg(mRecipientInfo);
                 messageInfo.setData(getString(R.string.assistant_hi_1));
                 long messageId = justSaveMessageToDb(messageInfo);
-                updateLastSendMessageToList(messageId, false);
+//                updateLastSendMessageToList(messageId, false);
+                msgList.add(messageId);
 
                 messageInfo.setData(getString(R.string.assistant_hi_2));
                 messageId = justSaveMessageToDb(messageInfo);
-                updateLastSendMessageToList(messageId, false);
+//                updateLastSendMessageToList(messageId, false);
+                msgList.add(messageId);
 
                 messageInfo.setData(getString(R.string.assistant_hi_3));
                 messageId = justSaveMessageToDb(messageInfo);
-                updateLastSendMessageToList(messageId, false);
+//                updateLastSendMessageToList(messageId, false);
+                msgList.add(messageId);
+
+                Message newMsg = Message.obtain();
+                newMsg.what = UI_ADD_MESSAGE;
+                newMsg.obj = msgList;
+                mUiHandler.sendMessageDelayed(newMsg, 3000);
                 // 标记位改变
                 AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_IM_MASK);
 

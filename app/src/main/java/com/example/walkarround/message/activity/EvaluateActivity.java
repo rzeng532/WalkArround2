@@ -297,7 +297,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                     break;
                 case MSG_EVALUATE_FAILED:
                     Toast.makeText(EvaluateActivity.this, R.string.evaluate_send_impression2server_fail, Toast.LENGTH_LONG).show();
-                    goToMainActivity();
+//                    goToMainActivity();
                     break;
                 default:
                     break;
@@ -307,9 +307,10 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
     private void goToMainActivity() {
         dismissCircleDialog();
-        Intent target = new Intent(getApplicationContext(), AppMainActivity.class);
-        target.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(target);
+//        Intent target = new Intent(getApplicationContext(), AppMainActivity.class);
+//        target.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        startActivity(target);
+        finish();
     }
 
     @Override

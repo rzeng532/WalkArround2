@@ -455,10 +455,11 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                             .abstractReceiptInfo(receipient, MessageConstant.ChatType.CHAT_TYPE_ONE2ONE);
                     ChatMsgBaseInfo messageInfo = BuildMessageActivity.generateAssistantMsg(recipientInfo);
                     messageInfo.setData(getString(R.string.assistant_hi, ProfileManager.getInstance().getMyContactInfo().getUsername()));
-                    WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).saveChatmsg(messageInfo);
+                    WalkArroundMsgManager.getInstance(getActivity().getApplicationContext())
+                            .saveChatmsg(messageInfo);
                     WalkArroundMsgManager.getInstance(getActivity().getApplicationContext())
                             .addMsgUnreadCountByThreadId(recipientInfo.getThreadId());
-
+                    mIvUnreadIcon.setVisibility(View.VISIBLE);
                 }
 
                 int curState = ProfileManager.getInstance().getCurUsrDateState();

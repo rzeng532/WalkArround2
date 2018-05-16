@@ -1015,7 +1015,8 @@ public class WalkArroundMsgManager {
 
     public int getConversationColor(long threadId) {
         try {
-            return MessageUtil.getFriendColor(getConversationColorIndex(threadId));
+            int index = getConversationColorIndex(threadId);
+            return index == -1 ? -1 : MessageUtil.getFriendColor(index);
         } catch (Exception e) {
             logger.e("getConversationColor Exception:" + e.getMessage());
         }

@@ -403,7 +403,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                     public void onConfirmDialogConfirmClick() {
                         if (isAssistantFriend) {
 //                            mUiHandler.removeMessages(MSG_FRIEND_REQ_START_2_WALK);
-                            mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REPLY_OK, 2000);
+                            mUiHandler.sendEmptyMessageDelayed(MSG_FRIEND_REPLY_OK, 5000);
                             return;
                         }
                         //Send walk invitation to friend.
