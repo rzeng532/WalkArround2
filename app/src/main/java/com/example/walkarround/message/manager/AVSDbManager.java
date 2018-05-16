@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.text.TextUtils;
+
+import com.example.walkarround.assistant.AssistantHelper;
 import com.example.walkarround.base.WalkArroundApp;
 import com.example.walkarround.message.model.ChatMessageInfo;
 import com.example.walkarround.message.model.ChatMsgBaseInfo;
@@ -1199,9 +1201,21 @@ public class AVSDbManager {
 
     public int deleteMappingConversation() {
 
+        StringBuilder where = new StringBuilder();
+        where.append(Conversation._CONVERSATION_STATUS)
+                .append(" < ? AND ")
+                .append(Conversation._CONVERSATION_STATUS)
+                .append(" >= ? AND ")
+                .append(Conversation._RECIPIENT_ADDRESS)
+                .append(" <> ?");
+
+
         Cursor cursor = mContext.getContentResolver().query(Conversation.CONTENT_URI,
-                new String[]{Conversation._ID}, Conversation._CONVERSATION_STATUS + " < ? AND " + Conversation._CONVERSATION_STATUS + " >= ?",
-                new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_END), String.valueOf(MessageUtil.WalkArroundState.STATE_IM)}, null);
+                new String[]{Conversation._ID}, where.toString(),
+                new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_END),
+                        String.valueOf(MessageUtil.WalkArroundState.STATE_IM),
+                        AssistantHelper.ASSISTANT_OBJ_ID},
+                null);
 
         List<Long> threadIdList = new ArrayList<>();
         if (cursor != null) {
