@@ -445,6 +445,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                         && AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_SEARCHING)
                         && !TextUtils.isEmpty(mStrToUsrId) && mStrToUsrId.equals(AssistantHelper.ASSISTANT_OBJ_ID)) {
                     //Assistant's searching step is completed.
+                    AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_INTRODUCE_MYSELF_MASK);
                     AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_SEARCHING_MASK);
                     //Generate a msg record
                     WalkArroundMsgManager.getInstance(getActivity().getApplicationContext())

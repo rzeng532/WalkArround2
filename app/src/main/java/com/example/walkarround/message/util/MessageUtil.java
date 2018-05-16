@@ -342,7 +342,8 @@ public class MessageUtil {
     }
 
     public static int getFriendColorIndex(long threadId) {
-        int colIndex = (int)threadId % 7;
+        long index = threadId > 0 ? threadId - 1 : 0;
+        int colIndex = (int) index % 7;
         logger.d("colIndex = " + colIndex);
         return colIndex;
     }

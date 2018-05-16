@@ -102,6 +102,9 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                         mWalkRequestDialog = null;
                     }
 
+                    if (isAssistantFriend) {
+                        AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_COUNT_DOWN_MASK);
+                    }
                     Intent intentShowDistance = new Intent(ShowDistanceActivity.this, CountdownActivity.class);
                     intentShowDistance.putExtra(CountdownActivity.PARAMS_FRIEND_OBJ_ID, mStrFriendId);
                     startActivity(intentShowDistance);
@@ -479,6 +482,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
 
     private void start2GetFriendCoordinate() {
         if (isAssistantFriend) {
+            AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_SHOW_DISTANCE_MASK);
             // 小助手
             mPriorDistance = 500;
             mUiHandler.removeMessages(MSG_UPDATE_DISTANCE);
