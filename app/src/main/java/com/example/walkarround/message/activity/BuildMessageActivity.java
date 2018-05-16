@@ -1401,8 +1401,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
         }
 
         transferToDetailView(lastMessageId, false);
-        mCurrentMessageEditState = MESSAGE_EDIT_STATE_DEFAULT;
-        switchBottomPanelView(mCurrentMessageEditState);
+//        mCurrentMessageEditState = MESSAGE_EDIT_STATE_DEFAULT;
+//        switchBottomPanelView(mCurrentMessageEditState);
     }
 
     /*
