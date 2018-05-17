@@ -1527,9 +1527,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                 // 发送
                 onSend();
                 break;
-            case R.id.emoji_iv:
-                // 表情/阅后即焚图片按钮
-                break;
             case R.id.left_change_iv:
                 // 消息编辑左侧按钮
                 if (mCurrentMessageEditState == MESSAGE_EDIT_STATE_VOICE
@@ -1550,27 +1547,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                 // titleContactsMore(view);
                 //showChatDetail();
                 break;
-            case R.id.select_all_rl:
-                // 全选或取消全选
-                if (view.getTag() == null || (Boolean) view.getTag()) {
-                    // 全选
-                    mMessageDetailAdapter.setSelectForAll(true);
-                } else {
-                    mMessageDetailAdapter.setSelectForAll(false);
-                }
-                break;
-            case R.id.msg_detail_delete_tv:
-                // 删除
-                List<ChatMsgBaseInfo> delMsgList = mMessageDetailAdapter.getSelectedMsgList();
-                WalkArroundMsgManager.getInstance(getApplicationContext()).deleteMessages(this, delMsgList);
-                if (!WalkArroundMsgManager.getInstance(getApplicationContext()).isConversationExist(mRecipientInfo.getThreadId())) {
-                    mRecipientInfo.setThreadId(-1);
-                }
-                mMessageDetailAdapter.deleteSelectedMessage();
-                mMessageDetailAdapter.setInSelectMode(false);
-                mMessageDetailAdapter.notifyDataSetChanged();
-                break;
-
             case R.id.msg_mark_copy_tv:
                 // 拷贝
                 List<ChatMsgBaseInfo> msgList = mMessageDetailAdapter.getSelectedMsgList();
