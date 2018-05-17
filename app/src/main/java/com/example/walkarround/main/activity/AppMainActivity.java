@@ -56,6 +56,7 @@ import com.example.walkarround.util.AppConstant;
 import com.example.walkarround.util.AsyncTaskListener;
 import com.example.walkarround.util.Logger;
 import com.example.walkarround.util.ToastUtils;
+import com.example.walkarround.util.UniversalWebView;
 import com.example.walkarround.util.http.HttpTaskBase;
 import com.example.walkarround.util.http.HttpTaskBase.onResultListener;
 import com.example.walkarround.util.http.HttpUtil;
@@ -78,12 +79,6 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     private ActionBarDrawerToggle mDrawerToggle;
     private int mCurFragmentPage = -1;
 
-    /*
-     * UI elements on main activity
-     */
-    private View mViewSetting;
-    private View mViewFeedback;
-    private RelativeLayout mViewPortrait;
     private LinearLayout mViewLeftMenu;
     private PortraitView mPvPortrait;
     private TextView mTvUserName;
@@ -578,15 +573,16 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     }
 
     private void initView() {
-        mViewSetting = (RelativeLayout) findViewById(R.id.rl_slide_setting);
+        View mViewSetting = (RelativeLayout) findViewById(R.id.rl_slide_setting);
         mViewSetting.setOnClickListener(this);
-        mViewFeedback = (RelativeLayout) findViewById(R.id.rl_slide_feedback);
+        View mViewFeedback = (RelativeLayout) findViewById(R.id.rl_slide_feedback);
         mViewFeedback.setOnClickListener(this);
+        findViewById(R.id.rl_zouzou_instructions).setOnClickListener(this);
 
         mViewLeftMenu = (LinearLayout) findViewById(R.id.left_drawer);
         //mViewLeftMenu.setOnClickListener(this);
 
-        mViewPortrait = (RelativeLayout) findViewById(R.id.menu_portrait);
+        RelativeLayout mViewPortrait = (RelativeLayout) findViewById(R.id.menu_portrait);
         mPvPortrait = (PortraitView) mViewPortrait.findViewById(R.id.iv_portrait);
         mTvUserName = (TextView) mViewPortrait.findViewById(R.id.tv_username);
         mViewPortrait.setOnClickListener(this);
@@ -665,14 +661,22 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_slide_setting://goto setting activity
-                //Test code, will not merge
                 if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
                     mDrawerLayout.closeDrawers();
                 }
                 startActivity(new Intent(AppMainActivity.this, AppSettingActivity.class));
                 break;
             case R.id.rl_slide_feedback://goto setting activity
+                if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
+                    mDrawerLayout.closeDrawers();
+                }
                 doFeedback();
+                break;
+            case R.id.rl_zouzou_instructions://goto instructions activity
+                if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
+                    mDrawerLayout.closeDrawers();
+                }
+                viewInstructions();
                 break;
             case R.id.menu_portrait://goto setting activity
                 if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mViewLeftMenu)) {
@@ -865,5 +869,13 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             // 未安装手Q或安装的版本不支持
             return false;
         }
+    }
+
+    private void viewInstructions() {
+        Intent intent = new Intent(this, UniversalWebView.class);
+        intent.putExtra(UniversalWebView.INTENT_URL, AppConstant.INSTRUCTIONS_URL);
+        intent.putExtra(UniversalWebView.INTENT_TITLE, getString(R.string.setting_instructions));
+
+        startActivity(intent);
     }
 }

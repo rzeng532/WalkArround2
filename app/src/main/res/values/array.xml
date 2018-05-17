@@ -79,12 +79,12 @@
         <item>Boar</item>
     </string-array>
     <string-array name="conversation_empty_explain">
-        <item>你现在联系热度最高的，保持这种热情，让友谊升温吧!</item>
-        <item>排在热度第二名，看来感情应该还不错哟。</item>
-        <item>我猜你还记得上次和他|她聊天的话题吧。</item>
-        <item>和他|她一直这样不冷不热吗？</item>
-        <item>这个位置，似乎比楼下的他|她强一些。</item>
-        <item>应该有一小段时间没联系了。</item>
-        <item>如有新朋友进来，他|她要跟你说拜拜了(눈_눈)</item>
+        <item>Ta处于与你联系热度最高的位置</item>
+        <item>Ta排在第二，互动还不错哟</item>
+        <item>第三的Ta联系也不少</item>
+        <item>和Ta互动多一点，可以跻身前三</item>
+        <item>看起来Ta比楼下的强一些</item>
+        <item>应该有一小段时间没联系了</item>
+        <item>如有新朋友进来，最后位置的Ta要跟你说拜拜了(눈_눈)</item>
     </string-array>
 </resources>

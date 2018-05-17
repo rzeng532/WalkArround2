@@ -115,18 +115,6 @@
             android:paddingTop="7dp"
             android:orientation="vertical" >
 
-            <!-- 表示消息类型的小图标（ 如阅后即焚、定时发送等）以及定时消息的时间文本 -->
-
-            <TextView
-                android:id="@+id/special_message_ahead_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="2dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:textColor="@color/fontcor4"
-                android:textSize="@dimen/font_size3"
-                android:visibility="gone" />
             <!-- 文本消息输入框 -->
 
             <EditText
@@ -176,7 +164,9 @@
             android:id="@+id/edit_message_right_rl"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" >
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/left_change_iv"
+            android:layout_alignBottom="@id/left_change_iv">
 
             <!--
             <ImageView
@@ -194,6 +184,7 @@
                 android:id="@+id/send_message_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"

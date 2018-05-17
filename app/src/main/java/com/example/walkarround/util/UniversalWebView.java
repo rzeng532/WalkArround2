@@ -21,6 +21,9 @@ import com.example.walkarround.base.view.DialogFactory;
 
 public class UniversalWebView extends Activity implements View.OnClickListener {
 
+    public static final String INTENT_TITLE = "TITLE";
+    public static final String INTENT_URL = "URL";
+
     private WebView mWebView;
     //private ProgressBar pg;
     private String mShareUrl;

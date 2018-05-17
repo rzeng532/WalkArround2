@@ -150,16 +150,16 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
 
     private void checkUserProtocol() {
         Intent intent = new Intent(this, UniversalWebView.class);
-        intent.putExtra("URL", "http://mp.weixin.qq.com/s/Ex96oOUTGHRrdR5Z9OVPBQ");
-        intent.putExtra("TITLE", getString(R.string.setting_user_protocol));
+        intent.putExtra(UniversalWebView.INTENT_URL, "http://mp.weixin.qq.com/s/Ex96oOUTGHRrdR5Z9OVPBQ");
+        intent.putExtra(UniversalWebView.INTENT_TITLE, getString(R.string.setting_user_protocol));
 
         startActivity(intent);
     }
 
     private void checkAboutApp() {
         Intent intent = new Intent(this, UniversalWebView.class);
-        intent.putExtra("URL", "http://mp.weixin.qq.com/s/Ng-75ZyyM2VXBniPJ_K7iw");
-        intent.putExtra("TITLE", getString(R.string.setting_about_app));
+        intent.putExtra(UniversalWebView.INTENT_URL, "http://mp.weixin.qq.com/s/Ng-75ZyyM2VXBniPJ_K7iw");
+        intent.putExtra(UniversalWebView.INTENT_TITLE, getString(R.string.setting_about_app));
 
         startActivity(intent);
     }

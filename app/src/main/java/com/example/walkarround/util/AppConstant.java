@@ -3,6 +3,8 @@
  */
 package com.example.walkarround.util;
 
+import java.net.URL;
+
 /**
  * TODO: description
  * Date: 2015-11-26
@@ -28,7 +30,7 @@ public class AppConstant {
 
     public static final String CAMERA_TAKE_PIC_PATH = "/picture/";
     public static final String LOCATION_PIC_PATH = CAMERA_TAKE_PIC_PATH;
-    public static final String APP_DATA_ROOT_PATH = "/com.example.prcs";
+    public static final String APP_DATA_ROOT_PATH = "/com.awalk.walkaround";
 
     /* 收藏信息文件存储位置 */
     public static final String FAVORITE_MSG_FILE_PATH = "/msg/collect/";
@@ -39,13 +41,8 @@ public class AppConstant {
     /* 视频消息文件路径 */
     public static final String VIDEO_FILE_PATH = "/msg/video/";
 
-    /* 发送地图时产生的位置图片 */
-
     /* 消息下载信息目录 */
     public static final String MSG_DOWNLOAD_PATH = "/msg/message/";
-
-    /* 公众号消息下载信息目录 */
-    public static final String PA_MSG_DOWNLOAD_PATH = "/msg/paMsg/";
 
 
     // A switcher to enable message method sending map picture
@@ -100,4 +97,6 @@ public class AppConstant {
 
     public static final String ANA_TAG_RET_OK = "operation_ok";
     public static final String ANA_TAG_RET_FAIL = "operation_fail";
+
+    public static final String INSTRUCTIONS_URL = "https://mp.weixin.qq.com/s?__biz=MzA5OTI5MzQwOA==&mid=310514624&idx=1&sn=86fe5433544a901bda61a3f2f0d3112e&chksm=07f2324f3085bb596d5cfdd0c18a5bfb5b6ab3672ce151319e42935af312bad1b42a96aae4e1&mpshare=1&scene=1&srcid=0517Qz4GmvAOpXRIBZzuBFIn#rd";
 }
