@@ -497,6 +497,12 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
     }
 
     @Override
+    public void finish() {
+        switchInputMethod(false, null);
+        super.finish();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         switchInputMethod(false, null);
