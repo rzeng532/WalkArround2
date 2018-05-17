@@ -30,8 +30,8 @@
 
         <ImageView
             android:id="@+id/iv_bye_icon"
-            android:layout_width="128dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
             android:adjustViewBounds="true"
             android:layout_marginTop="25dp"
             android:layout_below="@id/tv_walk_title"

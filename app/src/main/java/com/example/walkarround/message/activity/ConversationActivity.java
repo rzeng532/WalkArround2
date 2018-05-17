@@ -1042,7 +1042,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             if (index < 0 || index >= textArray.length) {
                 return;
             }
-            int iconResId = R.drawable.byebye_gesture;
+            int iconResId = getConversationEmptyImage(index);
             Dialog dialog = DialogFactory.getConvEmptyDescriptionDialog(this, textArray[index], iconResId,
                     new DialogFactory.ConfirmDialogClickListener() {
 
@@ -1252,6 +1252,24 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             mSearchResultListView.setEmptyView(mSearchEmptyView);
             mSearchResultListView.setAdapter(mSearchResultAdapter);
         }
+    }
+
+    private int getConversationEmptyImage(int position) {
+        int resId = R.drawable.conversation_empty_1;
+        if (position == 1) {
+            resId = R.drawable.conversation_empty_2;
+        } else if (position == 2) {
+            resId = R.drawable.conversation_empty_3;
+        } else if (position == 3) {
+            resId = R.drawable.conversation_empty_4;
+        } else if (position == 4) {
+            resId = R.drawable.conversation_empty_5;
+        } else if (position == 5) {
+            resId = R.drawable.conversation_empty_6;
+        } else if (position == 6) {
+            resId = R.drawable.conversation_empty_7;
+        }
+        return resId;
     }
 
 }
