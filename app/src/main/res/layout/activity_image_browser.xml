@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <com.example.walkarround.base.view.photoview.HackyViewPager
+    <com.awalk.walkarround.base.view.photoview.HackyViewPager
         android:id="@+id/xx_browser"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

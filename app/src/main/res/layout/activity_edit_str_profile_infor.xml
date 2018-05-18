@@ -19,7 +19,7 @@
             android:paddingRight="@dimen/padding_left_common"
             android:layout_below="@id/title">
 
-        <com.example.walkarround.base.view.EditTextWithDel
+        <com.awalk.walkarround.base.view.EditTextWithDel
                 android:id="@+id/input"
                 android:layout_width="match_parent"
                 android:layout_height="49dp"

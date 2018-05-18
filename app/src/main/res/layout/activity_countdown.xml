@@ -21,7 +21,7 @@
               android:textSize="@dimen/font_size3"/>
 
     <!-- Portrait -->
-    <com.example.walkarround.base.view.PhotoView
+    <com.awalk.walkarround.base.view.PhotoView
             android:id="@+id/pv_countdown"
             android:layout_width="56dp"
             android:layout_height="56dp"
@@ -78,7 +78,7 @@
                   android:textSize="@dimen/font_size12"/>
     </LinearLayout>
 
-    <com.example.walkarround.base.view.RoundProgressBar
+    <com.awalk.walkarround.base.view.RoundProgressBar
             android:id="@+id/iv_countdown"
             android:layout_height="204dp"
             android:layout_width="204dp"
@@ -91,7 +91,7 @@
             android_custom:textColor="@color/transparent"
             android:visibility="gone"/>
 
-    <com.example.walkarround.base.view.RoundProgressBar
+    <com.awalk.walkarround.base.view.RoundProgressBar
             android:id="@+id/iv_countdown_2"
             android:layout_height="230dp"
             android:layout_width="230dp"
@@ -102,7 +102,7 @@
             android_custom:roundWidth="1dp"
             android:visibility="gone"/>
 
-    <com.example.walkarround.base.view.RoundProgressBar
+    <com.awalk.walkarround.base.view.RoundProgressBar
             android:id="@+id/iv_countdown_3"
             android:layout_height="258dp"
             android:layout_width="258dp"

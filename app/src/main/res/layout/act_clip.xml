@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <com.example.walkarround.util.image.ClipImageView
+    <com.awalk.walkarround.util.image.ClipImageView
         android:id="@+id/ivPic"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
-    <com.example.walkarround.util.image.ClipView
+    <com.awalk.walkarround.util.image.ClipView
         android:id="@+id/clipview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />

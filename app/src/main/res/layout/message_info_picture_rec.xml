@@ -33,7 +33,7 @@
             android:background="@drawable/check_selecte_bg"
             android:visibility="gone" />
 
-        <com.example.walkarround.base.view.PhotoView
+        <com.awalk.walkarround.base.view.PhotoView
             android:id="@+id/msg_contact_profile_pv"
             android:layout_width="41dp"
             android:layout_height="41dp"

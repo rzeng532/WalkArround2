@@ -27,7 +27,7 @@
             android:background="@color/bgcor1"
             android:gravity="center_vertical">
 
-        <com.example.walkarround.base.view.PortraitView
+        <com.awalk.walkarround.base.view.PortraitView
                 android:id="@+id/iv_title_portrait"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
@@ -81,7 +81,7 @@
             android:layout_height="match_parent"
             android:background="@color/bgcor1">
 
-        <com.example.walkarround.flingswipe.SwipeFlingAdapterView
+        <com.awalk.walkarround.flingswipe.SwipeFlingAdapterView
                 android:id="@+id/userFrame"
                 android:paddingTop="20dp"
                 android:layout_width="match_parent"
@@ -115,12 +115,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp">
-            <com.example.walkarround.base.view.RippleView
+            <com.awalk.walkarround.base.view.RippleView
                     android:id="@+id/searchingView"
                     android:layout_width="match_parent"
                     android:layout_height="360dp"/>
 
-            <com.example.walkarround.base.view.PortraitView
+            <com.awalk.walkarround.base.view.PortraitView
                     android:id="@+id/searching_center_portrait"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="130dp"

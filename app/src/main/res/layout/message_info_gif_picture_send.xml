@@ -60,7 +60,7 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="16dp"
                 android:scaleType="centerInside" />
-            <com.example.walkarround.base.view.gifview.GifView
+            <com.awalk.walkarround.base.view.gifview.GifView
                 android:id="@+id/msg_picture_gv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                 android:layout_marginRight="16dp"
                 android:scaleType="centerInside"/>
         </LinearLayout>
-        <com.example.walkarround.base.view.PhotoView
+        <com.awalk.walkarround.base.view.PhotoView
             android:id="@+id/msg_contact_profile_pv"
             android:layout_width="41dp"
             android:layout_height="41dp"

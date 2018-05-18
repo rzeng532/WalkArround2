@@ -4,7 +4,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/bgcor2">
 
-    <com.example.walkarround.base.view.KeyboardLayout
+    <com.awalk.walkarround.base.view.KeyboardLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -31,7 +31,7 @@
             android:textSize="@dimen/font_size6"
             android:visibility="gone"/>
         <!-- 信息列表展示 -->
-        <com.example.walkarround.handmark.PullToRefreshListView
+        <com.awalk.walkarround.handmark.PullToRefreshListView
             android:id="@+id/message_list_xlv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -57,7 +57,7 @@
             android:layout_width="fill_parent"
             android:layout_height="226dp"
             android:visibility="gone"/>
-    </com.example.walkarround.base.view.KeyboardLayout>
+    </com.awalk.walkarround.base.view.KeyboardLayout>
 
     <View
         android:id="@+id/build_message_mask_v"

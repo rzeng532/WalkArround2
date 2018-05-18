@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.walkarround.message.activity.VideoRelativeLayout
+<com.awalk.walkarround.message.activity.VideoRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/com.example.walkarround"
     android:id="@+id/movie_view"

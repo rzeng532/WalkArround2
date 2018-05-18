@@ -13,7 +13,7 @@
         android:textColor="@color/fontcor3"
         android:textSize="@dimen/font_size1" />
 
-    <com.example.walkarround.base.view.photoview.RoundImageView
+    <com.awalk.walkarround.base.view.photoview.RoundImageView
         android:id="@+id/photo_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

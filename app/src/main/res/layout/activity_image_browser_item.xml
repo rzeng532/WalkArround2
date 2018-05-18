@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@null" >
-    <com.example.walkarround.base.view.photoview.PhotoView
+    <com.awalk.walkarround.base.view.photoview.PhotoView
         android:id="@+id/iv_browser"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

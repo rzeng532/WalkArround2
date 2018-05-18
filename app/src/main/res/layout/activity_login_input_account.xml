@@ -21,7 +21,7 @@
             android:id="@+id/signin_input_rl"
             android:background="@drawable/signin_inputbg">
 
-        <com.example.walkarround.base.view.EditTextWithDel
+        <com.awalk.walkarround.base.view.EditTextWithDel
                 android:id="@+id/account_edit"
                 android:layout_width="match_parent"
                 android:layout_height="49dp"
@@ -37,7 +37,7 @@
                 android:textSize="@dimen/font_size3"
                 android:textColor="@color/fontcor1"/>
 
-        <com.example.walkarround.base.view.EditTextWithDel
+        <com.awalk.walkarround.base.view.EditTextWithDel
                 android:id="@+id/password_edit"
                 android:layout_width="match_parent"
                 android:layout_height="49dp"

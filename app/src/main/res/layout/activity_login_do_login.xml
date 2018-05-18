@@ -20,7 +20,7 @@
             android:id="@+id/signin_input_rl"
             android:background="@drawable/signin_inputbg">
 
-        <com.example.walkarround.base.view.EditTextWithDel
+        <com.awalk.walkarround.base.view.EditTextWithDel
                 android:id="@+id/signin_input_username"
                 android:layout_width="match_parent"
                 android:layout_height="49dp"
@@ -45,7 +45,7 @@
                 android:src="#14ffff"/>
          -->
 
-        <com.example.walkarround.base.view.EditTextWithDel
+        <com.awalk.walkarround.base.view.EditTextWithDel
                 android:id="@+id/signin_input_password"
                 android:layout_width="match_parent"
                 android:layout_height="49dp"

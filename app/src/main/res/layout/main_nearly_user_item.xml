@@ -14,7 +14,7 @@
         android:background="@drawable/photocard_large"
         android:orientation="vertical">
 
-        <com.example.walkarround.flingswipe.RotateTextImageView
+        <com.awalk.walkarround.flingswipe.RotateTextImageView
             android:id="@+id/helloText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

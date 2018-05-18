@@ -16,7 +16,7 @@
             android:layout_marginLeft="15dp"
             android:background="@drawable/walk_rules_bg">
 
-        <com.example.walkarround.base.view.PortraitView
+        <com.awalk.walkarround.base.view.PortraitView
                 android:id="@+id/pv_start2walk"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"

@@ -17,12 +17,12 @@
             android:layout_height="360dp"
             android:layout_below="@+id/title"
             android:layout_marginTop="25dp">
-        <com.example.walkarround.base.view.RippleView
+        <com.awalk.walkarround.base.view.RippleView
                 android:id="@+id/searchingView"
                 android:layout_width="match_parent"
                 android:layout_height="360dp"/>
 
-        <com.example.walkarround.base.view.photoview.RoundImageView
+        <com.awalk.walkarround.base.view.photoview.RoundImageView
                 android:id="@+id/iv_tv_backgroup"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -48,7 +48,7 @@
          -->
     </RelativeLayout>
 
-    <com.example.walkarround.base.view.PortraitView
+    <com.awalk.walkarround.base.view.PortraitView
             android:id="@+id/pv_friend_portrait"
             android:layout_centerHorizontal="true"
             android:layout_width="60dp"

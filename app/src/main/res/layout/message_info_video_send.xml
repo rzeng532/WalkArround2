@@ -66,7 +66,7 @@
                     android:scaleType="centerCrop" />
             </LinearLayout>
 
-            <com.example.walkarround.base.view.RoundProgressBar
+            <com.awalk.walkarround.base.view.RoundProgressBar
                 android:id="@+id/message_video_progressBar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -93,7 +93,7 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/videoplay"/>
         </RelativeLayout>
-        <com.example.walkarround.base.view.PhotoView
+        <com.awalk.walkarround.base.view.PhotoView
             android:id="@+id/msg_contact_profile_pv"
             android:layout_marginLeft="5dp"
             android:layout_width="41dp"
