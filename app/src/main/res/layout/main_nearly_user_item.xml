@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:MsgRoundedImageView="http://schemas.android.com/apk/res/com.example.walkarround"
-    android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:layout_marginLeft="7dp"
-    android:layout_marginRight="7dp"
-    android:layout_marginTop="6dp">
+             xmlns:MsgRoundedImageView="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="fill_parent"
+             android:layout_marginLeft="7dp"
+             android:layout_marginRight="7dp"
+             android:layout_marginTop="6dp">
 
     <RelativeLayout
         android:layout_width="match_parent"

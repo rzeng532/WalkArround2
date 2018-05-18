@@ -1,15 +1,10 @@
 apply plugin: 'com.android.application'
 
+String VERSION_NAME = "1.0.0"
+
 android {
     signingConfigs {
-        myConfig {
-            //签名暂时用debug签名，后续要替换
-            storeFile file("debug.keystore")
-            storePassword("android")
-            keyAlias("androiddebugkey")
-            keyPassword("android")
-        }
-        release {
+        config {
             keyAlias 'walkarround'
             keyPassword 'w123456'
             storeFile file("walkarround.keystore")
@@ -21,13 +16,15 @@ android {
     compileSdkVersion 19
     buildToolsVersion "25.0.0"
     defaultConfig {
-        applicationId "com.example.walkarround"
+        applicationId "com.awalk.walkarround"
         minSdkVersion 17
         targetSdkVersion 18
+        versionCode 100000 // versionCode规则： 前三位固定212，中间4位固定 0000，由于目前升级版本速度太快，末３位不再对应VERSION_NAME，而是每次固定末位＋１
+        versionName VERSION_NAME
         jackOptions {
             enabled true
         }
-        signingConfig signingConfigs.myConfig
+        signingConfig signingConfigs.config
         ndk {
             //设置支持的SO库架构
             abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
@@ -37,10 +34,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.config
         }
         debug {
-            signingConfig signingConfigs.myConfig
+            signingConfig signingConfigs.config
         }
     }
     compileOptions {

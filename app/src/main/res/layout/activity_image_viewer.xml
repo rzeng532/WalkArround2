@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:android_custom="http://schemas.android.com/apk/res/com.example.walkarround"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/root_view_layout"
-    android:background="@color/transparent0.9" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:android_custom="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/root_view_layout"
+                android:background="@color/transparent0.9">
 
     <com.awalk.walkarround.base.view.photoview.PhotoView
         android:id="@+id/msg_iv_pic_viewer"
