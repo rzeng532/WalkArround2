@@ -25,7 +25,7 @@
     <string name="err_connection_failed">无法连接服务器</string>
     <string name="err_username_password_mismatch">用户名密码不匹配</string>
     <string name="err_username_donot_exist">该手机号未注册</string>
-    <string name="err_unknow">未知错误</string>
+    <string name="err_register_unknow">注册失败，请稍后重试</string>
     <string name="err_loc_unknow">无法获取当前定位信息，请帮忙检查网络或相关权限</string>
     <string name="err_login_infor_cannot_empty">用户名和密码不能为空</string>
     <string name="err_login_infor_is_illegal">用户名不合法</string>

@@ -100,7 +100,7 @@ public class LoginManager {
      * String <--> error code
      */
     public String getErrStringViaErrorCode(Context context, int errCode) {
-        int strId = R.string.err_unknow;
+        int strId = R.string.err_register_unknow;
         switch (errCode) {
             case AVException.ACCOUNT_ALREADY_LINKED:
             case AVException.USER_MOBILE_PHONENUMBER_TAKEN:
@@ -114,7 +114,8 @@ public class LoginManager {
                 strId = R.string.err_username_donot_exist;
                 break;
             default:
-                strId = R.string.err_unknow;
+                strId = R.string.err_register_unknow;
+                break;
         }
 
         return context.getString(strId);

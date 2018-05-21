@@ -54,7 +54,7 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
                 String tip = (String) msg.obj;
                 String oldTip = getString(R.string.register_user_exist);
                 if (tip.equals(oldTip)) {
-                    tip = getString(R.string.register_user_exist);
+                    tip = oldTip;
                 }
                 Toast.makeText(getApplicationContext(), tip, Toast.LENGTH_SHORT).show();
             }
@@ -75,7 +75,7 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
     };
 
     private void setNextButtonVisibleOrNot() {
-        if(mTelView != null && mTelView.getText().length() > 0
+        if (mTelView != null && mTelView.getText().length() > 0
                 && mPassView != null && mPassView.getText().length() > 0) {
             btnNext.setVisibility(View.VISIBLE);
         } else {
@@ -98,7 +98,7 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
             AVAnalytics.onEvent(PhoneAndPasswordActivity.this, AppConstant.ANA_EVENT_GEN_SMS, AppConstant.ANA_TAG_RET_FAIL);
             Message msg = Message.obtain();
             msg.what = ERROR;
-            msg.obj = LoginManager.getInstance().getErrStringViaErrorCode(getApplicationContext(), e != null ? e.getCode() : R.string.err_unknow);
+            msg.obj = LoginManager.getInstance().getErrStringViaErrorCode(getApplicationContext(), e != null ? e.getCode() : R.string.err_register_unknow);
             mHandler.sendMessage(msg);
         }
     };
@@ -131,7 +131,7 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
         View title = findViewById(R.id.title);
         title.findViewById(R.id.back_rl).setOnClickListener(this);
         title.findViewById(R.id.more_rl).setVisibility(View.GONE);
-        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.register_create_account);
+        ((TextView) (title.findViewById(R.id.display_name))).setText(R.string.register_create_account);
 
         mTelView = (EditText) findViewById(R.id.account_edit);
         mTelView.addTextChangedListener(mContentWatcher);
@@ -205,7 +205,7 @@ public class PhoneAndPasswordActivity extends Activity implements View.OnClickLi
     }
 
     private void dismissLoadingDialog() {
-        if(!PhoneAndPasswordActivity.this.isFinishing()
+        if (!PhoneAndPasswordActivity.this.isFinishing()
                 && !PhoneAndPasswordActivity.this.isDestroyed()
                 && mLoadingDialog.isShowing()) {
             mLoadingDialog.dismiss();

@@ -1,7 +1,12 @@
 package com.awalk.walkarround.login.manager;
 
 import android.text.TextUtils;
-import com.avos.avoscloud.*;
+
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogInCallback;
+import com.avos.avoscloud.SignUpCallback;
 import com.awalk.walkarround.base.WalkArroundApp;
 import com.awalk.walkarround.base.task.TaskUtil;
 import com.awalk.walkarround.login.task.CheckIfVerifiedTask;
@@ -22,6 +27,7 @@ import com.awalk.walkarround.util.http.ThreadPoolManager;
 public class CleanCloudLoginApiImpl extends LoginApiAbstract {
 
     private AsyncTaskListener mInvokerListener = null;
+    private AVException mException;
     private static Logger logger = Logger.getLogger(CleanCloudLoginApiImpl.class.getSimpleName());
 
     private HttpTaskBase.onResultListener mRegisteTaskListener = new HttpTaskBase.onResultListener() {
@@ -59,7 +65,7 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
                 }
             } else {
                 logger.e("Code : " + resultCode + ", String: " + threadId);
-                mInvokerListener.onFailed((AVException) object);
+                mInvokerListener.onFailed(mException);
             }
         }
 
@@ -122,6 +128,7 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
     public void doRegister(final String phoneNum, final String password, final String userName, String gender, AsyncTaskListener listener) {
 
         mInvokerListener = listener;
+        mException = null;
 
         AVUser user = new AVUser();
         user.setUsername(LoginManager.getInstance().getUserName());
@@ -135,16 +142,17 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
                     mInvokerListener.onSuccess(null);
                     //setCurrentAccount(userName, phoneNum,  password);
                 } else {
-                    if((e.getCode() == AVException.ACCOUNT_ALREADY_LINKED
+                    if ((e.getCode() == AVException.ACCOUNT_ALREADY_LINKED
                             || e.getCode() == AVException.USER_MOBILE_PHONENUMBER_TAKEN)
                             && user.isMobilePhoneVerified() == false) {
                         //Check if there is a unverified user with the same phone number on server.
+                        mException = e;
                         ThreadPoolManager.getPoolManager().addAsyncTask(
                                 new CheckIfVerifiedTask(WalkArroundApp.getInstance(),
                                         mRegisteTaskListener,
                                         HttpUtil.HTTP_FUNC_REGISTE,
                                         HttpUtil.HTTP_TASK_REGISTE,
-                                        CheckIfVerifiedTask.getParams(userName,password, gender, phoneNum),
+                                        CheckIfVerifiedTask.getParams(userName, password, gender, phoneNum),
                                         TaskUtil.getTaskHeader()));
                     } else {
                         mInvokerListener.onFailed(e);
