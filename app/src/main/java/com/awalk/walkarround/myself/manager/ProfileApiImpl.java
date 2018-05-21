@@ -195,6 +195,9 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     public void updateDynamicData(MyDynamicInfo dynamicInfo, AsyncTaskListener listener) throws Exception {
         if (dynamicInfo == null) {
             mLogger.w("updateDynamicData infor is NULL.");
+            if (listener != null) {
+                listener.onFailed(new AVException(-1, "updateDynamicData dynamicInfo is NULL."));
+            }
             return;
         }
 
@@ -219,6 +222,9 @@ public class ProfileApiImpl extends ProfileApiAbstract {
             }
         } else {
             mLogger.w("updateDynamicData fail: there is no MAP information from MAP SDK.");
+            if (listener != null) {
+                listener.onFailed(new AVException(-1, "updateDynamicData here is no MAP information from MAP SDK."));
+            }
         }
     }
 

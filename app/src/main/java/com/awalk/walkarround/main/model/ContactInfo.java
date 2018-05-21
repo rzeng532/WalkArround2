@@ -17,7 +17,7 @@ public class ContactInfo implements Serializable {
      * portrait : {"__type":"File","id":"567d642500b0cff56c29cd79","name":"18867102890","url":"http://ac-nddk6udk.clouddn.com/8Upn3VarPAkm5JMWuJFIhoFQjv5L7q3Ry7PVtN92"}
      * signature : 哈哈哈
      * username : 曾瑞锦
-     * birthday : 1985/1/27
+     * birthday : 1985-1-27
      * emailVerified : false
      * mobilePhoneNumber : 18867102890
      * gender : 0

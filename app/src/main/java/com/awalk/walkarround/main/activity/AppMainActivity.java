@@ -318,8 +318,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
             amLogger.d("Get loc infor done.");
             if (mMyGeo != null) {
                 //Update user dynamic data - online state & GEO.
-                ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(mMyGeo, true, 1), mDynUpdateListener);
                 ProfileManager.getInstance().getMyProfile().setLocation(mMyGeo);
+                ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(mMyGeo, true, 1), mDynUpdateListener);
             }
         }
 
