@@ -160,7 +160,7 @@
          -->
         <receiver android:name="com.awalk.walkarround.message.receiver.MessageReceiver">
             <intent-filter>
-                <action android:name="com.example.walkarround.ACTION_UI_SHOW_MESSAGE_NOTIFY"/>
+                <action android:name="com.awalk.walkarround.ACTION_UI_SHOW_MESSAGE_NOTIFY"/>
             </intent-filter>
         </receiver>
 

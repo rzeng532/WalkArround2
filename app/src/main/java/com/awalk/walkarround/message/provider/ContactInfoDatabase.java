@@ -10,7 +10,7 @@ import android.net.Uri;
  * Created by Richard on 16/3/13.
  */
 public class ContactInfoDatabase extends SQLiteOpenHelper {
-    public static final String AUTHORITY = "com.example.walkarround.provider.contactinfo";
+    public static final String AUTHORITY = "com.awalk.walkarround.provider.contactinfo";
     public static Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
 
     public static final String _ID_BASE = "_id";

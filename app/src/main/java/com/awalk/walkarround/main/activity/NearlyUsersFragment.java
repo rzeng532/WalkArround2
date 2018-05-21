@@ -443,10 +443,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
                 if(AssistantHelper.isThereGuideStep()
                         && AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_SEARCHING)
-                        && !TextUtils.isEmpty(mStrToUsrId) && mStrToUsrId.equals(AssistantHelper.ASSISTANT_OBJ_ID)) {
-                    //Assistant's searching step is completed.
-                    AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_INTRODUCE_MYSELF_MASK);
-                    AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_SEARCHING_MASK);
+                        && AssistantHelper.ASSISTANT_OBJ_ID.equals(mStrToUsrId)) {
                     //Generate a msg record
                     WalkArroundMsgManager.getInstance(getActivity().getApplicationContext())
                             .sendAssistantTextMsg(AssistantHelper.ASSISTANT_OBJ_ID, getString(R.string.msg_say_hello), null);
@@ -461,6 +458,9 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                     WalkArroundMsgManager.getInstance(getActivity().getApplicationContext())
                             .addMsgUnreadCountByThreadId(recipientInfo.getThreadId());
                     mIvUnreadIcon.setVisibility(View.VISIBLE);
+                    //Assistant's searching step is completed.
+                    AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_INTRODUCE_MYSELF_MASK);
+                    AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_SEARCHING_MASK);
                 }
 
                 int curState = ProfileManager.getInstance().getCurUsrDateState();

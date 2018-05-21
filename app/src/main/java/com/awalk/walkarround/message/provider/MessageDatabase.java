@@ -16,7 +16,7 @@ import com.awalk.walkarround.message.util.MessageConstant.MessageState;
  */
 public class MessageDatabase extends SQLiteOpenHelper {
 
-    public static final String AUTHORITY = "com.example.walkarround.provider.message";
+    public static final String AUTHORITY = "com.awalk.walkarround.provider.message";
     public static Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
 
     public static final String _ID_BASE = "_id";
