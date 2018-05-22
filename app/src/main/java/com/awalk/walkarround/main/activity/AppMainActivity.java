@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.awalk.walkarround.Location.manager.LocationManager;
@@ -315,11 +316,11 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         @Override
         public void onSuccess(Object data) {
             mMyGeo = LocationManager.getInstance(getApplicationContext()).getCurrentLoc();
-            amLogger.d("Get loc infor done.");
+            amLogger.d("Get loc infor done." + JSON.toJSONString(mMyGeo));
             if (mMyGeo != null) {
                 //Update user dynamic data - online state & GEO.
-                ProfileManager.getInstance().getMyProfile().setLocation(mMyGeo);
                 ProfileManager.getInstance().updateDynamicData(new MyDynamicInfo(mMyGeo, true, 1), mDynUpdateListener);
+                ProfileManager.getInstance().getMyProfile().setLocation(mMyGeo);
             }
         }
 
