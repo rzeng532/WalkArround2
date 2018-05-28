@@ -161,9 +161,12 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         if (isLoadingData) {
             return 0;
         }
-//        return mListData.size();
-        boolean hasMappingFriend = mListData.size() > 0 && mListData.get(0).status < MessageUtil.WalkArroundState.STATE_END;
-        return hasMappingFriend ? DEFAULT_ITEM_COUNT + 1 : DEFAULT_ITEM_COUNT;
+        if (mFriendMode == ConversationActivity.CONV_TYPE_CUR_FRIEND) {
+            boolean hasMappingFriend = mListData.size() > 0 && mListData.get(0).status < MessageUtil.WalkArroundState.STATE_END;
+            return hasMappingFriend ? DEFAULT_ITEM_COUNT + 1 : DEFAULT_ITEM_COUNT;
+        } else {
+            return mListData.size();
+        }
     }
 
     public boolean hasMappingFriend() {
