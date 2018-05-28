@@ -206,7 +206,8 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         myProfileInfo = ProfileManager.getInstance().getMyProfile();
 
         if (myProfileInfo != null) {
-            mMyPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(), myProfileInfo.getUsrName().substring(0, 1), -1);
+            mMyPortrait.setBaseData(myProfileInfo.getUsrName(), myProfileInfo.getPortraitPath(),
+                    myProfileInfo.getUsrName().substring(0, 1), -1);
             mTvUserName.setText(myProfileInfo.getUsrName());
             mTvMobile.setText(myProfileInfo.getMobileNum());
             mTvSignature.setText(myProfileInfo.getSignature());

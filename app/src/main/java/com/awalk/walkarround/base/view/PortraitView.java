@@ -75,7 +75,7 @@ public class PortraitView extends LinearLayout implements View.OnClickListener{
             } else {
                 mImageView.clearColorFilter();
             }
-            ImageLoaderManager.displayImage(cachPhotoKey, resId, mImageView);
+            ImageLoaderManager.displayImage(getContext(), cachPhotoKey, resId, mImageView);
         }
 //        else if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(namePinyin)) {
 //            // 显示名字最后一个字
@@ -100,7 +100,7 @@ public class PortraitView extends LinearLayout implements View.OnClickListener{
             } else {
                 mImageView.clearColorFilter();
             }
-            ImageLoaderManager.displayImage(null, resId, mImageView);
+            ImageLoaderManager.displayImage(getContext(), null, resId, mImageView);
         }
     }
 

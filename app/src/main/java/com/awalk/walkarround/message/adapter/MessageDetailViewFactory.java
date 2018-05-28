@@ -351,8 +351,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
         } else {
             imagePath = message.getThumbpath();
         }
-        ImageLoaderManager.displayImage(imagePath, message.getThumbUrlPath(),
-                R.drawable.default_image, viewHolder.msgImageView);
+        ImageLoaderManager.displayImage(context, imagePath, R.drawable.default_image, viewHolder.msgImageView);
         viewHolder.msgImageView.setTag(message.getThumbUrlPath());
 
         return convertView;
@@ -398,8 +397,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
                 && message.getDownStatus() != ChatMsgBaseInfo.LOADED
                 && !MessageUtil.isGifFile(message.getThumbpath())) {
             viewHolder.msgImageView.setVisibility(View.VISIBLE);
-            ImageLoaderManager.displayImage(message.getThumbpath(), message.getThumbUrlPath(),
-                    viewHolder.msgImageView);
+            ImageLoaderManager.displayImage(context, message.getThumbUrlPath(), viewHolder.msgImageView);
             viewHolder.gifView.setGifImage((InputStream) null);
             viewHolder.gifView.setVisibility(View.GONE);
         } else {
@@ -493,7 +491,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
         } else {
             viewHolder = (VideoViewHolder) convertView.getTag();
         }
-        ImageLoaderManager.displayImage(message.getThumbpath(), message.getThumbUrlPath(),
+        ImageLoaderManager.displayImage(context, message.getThumbUrlPath(),
                 R.drawable.downvideoerror, viewHolder.thumbView);
         return convertView;
     }

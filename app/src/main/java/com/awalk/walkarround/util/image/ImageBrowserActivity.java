@@ -236,7 +236,7 @@ public class ImageBrowserActivity extends Activity implements View.OnClickListen
             PhotoView photoView = (PhotoView) view.findViewById(R.id.iv_browser);
 
             String imagePath = mDisplayImageList.get(position);
-            ImageLoaderManager.displayImage(imagePath, R.drawable.default_image, photoView);
+            ImageLoaderManager.displayImage(ImageBrowserActivity.this, imagePath, R.drawable.default_profile_portrait, photoView);
             container.addView(view);
 
             return view;

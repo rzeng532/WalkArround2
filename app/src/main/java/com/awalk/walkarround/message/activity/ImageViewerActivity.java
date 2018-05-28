@@ -88,7 +88,7 @@ public class ImageViewerActivity extends Activity implements OnClickListener {
                             logger.e("ImageViewerActivity initView, FileNotFoundException: " + e.getMessage());
                         }
                     } else {
-                        ImageLoaderManager.displayImage(filePath, photoView);
+                        ImageLoaderManager.displayImage(ImageViewerActivity.this, filePath, photoView);
                     }
                     picProgress.setVisibility(View.GONE);
                 }
@@ -208,8 +208,7 @@ public class ImageViewerActivity extends Activity implements OnClickListener {
                     logger.e("ImageViewerActivity initView, Thumb FileNotFoundException: " + e.getMessage());
                 }
             } else {
-                ImageLoaderManager.displayImage(mMessageInfo.getThumbpath(),
-                        mMessageInfo.getThumbUrlPath(), photoView);
+                ImageLoaderManager.displayImage(this, mMessageInfo.getThumbUrlPath(), photoView);
             }
             if (mMessageInfo.getMsgState() == MessageState.MSG_STATE_RECEIVING) {
                 // 已经开始下载 do nothing
@@ -242,9 +241,9 @@ public class ImageViewerActivity extends Activity implements OnClickListener {
                 }
             } else {
                 if (new File(mMessageInfo.getFilepath()).exists()) {
-                    ImageLoaderManager.displayImage(mMessageInfo.getFilepath(), photoView);
+                    ImageLoaderManager.displayImage(this, mMessageInfo.getFilepath(), photoView);
                 } else if (mMessageInfo.getFileUrlPath() != null) {
-                    ImageLoaderManager.displayImage(mMessageInfo.getFileUrlPath(), photoView);
+                    ImageLoaderManager.displayImage(this, mMessageInfo.getFileUrlPath(), photoView);
                 } else {
                     Toast.makeText(this, R.string.msg_pic_deleted_notices, Toast.LENGTH_SHORT).show();
                 }

@@ -170,7 +170,7 @@ public class VideoPlayLayout extends RelativeLayout implements OnClickListener {
         mVideoPath = videoPath;
         mVideoThumb = videoThumb;
         mVideoThumbUrl = videoThumbUrl;
-        ImageLoaderManager.displayImage(mVideoThumb, mVideoThumbUrl, R.drawable.downvideoerror, mThumbView);
+        ImageLoaderManager.displayImage(mContext, mVideoThumb, R.drawable.downvideoerror, mThumbView);
         if (mMediaPlayer != null) {
             initVideo();
         }

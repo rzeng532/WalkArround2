@@ -66,7 +66,7 @@ public class NearlyUserListAdapter extends BaseAdapter {
 //                .load(mUserList.get(position).getPortrait().getUrl())
 //                .into(holder.mCardImageView);
         //We will user UILImageLoader here rather than Glide. Glide is familiar with Picasso.
-        ImageLoaderManager.displayImage(mUserList.get(position).getPortrait().getUrl(),
+        ImageLoaderManager.displayImage(mContext, mUserList.get(position).getPortrait().getUrl(),
                 mUserList.get(position).getPortrait().getDefaultId(), holder.mCardImageView);
 
         String friendName = mUserList.get(position).getUsername();

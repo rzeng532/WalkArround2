@@ -14,6 +14,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
+
 import com.avos.avoscloud.AVException;
 import com.awalk.walkarround.R;
 import com.awalk.walkarround.main.model.ContactInfo;
@@ -28,6 +29,13 @@ import com.awalk.walkarround.util.CommonUtils;
 import com.awalk.walkarround.util.Logger;
 import com.awalk.walkarround.util.TimeFormattedUtil;
 import com.awalk.walkarround.util.image.ImageLoaderManager;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+
+import static android.R.attr.height;
+import static android.R.attr.width;
 
 /**
  * Listener for message.
@@ -98,24 +106,25 @@ public class MessageReceiver extends BroadcastReceiver {
         ContactInfo contact = ContactsManager.getInstance(context).getContactByUsrObjId(userId);
         if (contact != null) {
             //Get portrait and display notification.
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Bitmap srcPhoto = null;
-                    if(contact != null) {
-                        srcPhoto = ImageLoaderManager.getSyncImage(contact.getPortrait().getUrl());
-                    }
-                    Bundle data = new Bundle();
-                    Message msg = mNotifyHandler.obtainMessage();
-                    msg.what = MSG_UPDATE_NOTIFICATION;
-                    data.putLong(MSG_UPDATE_NOTIFICATION_MSG_ID, msgId);
-                    if (srcPhoto != null) {
-                        msg.obj = (Object) srcPhoto;
-                    }
-                    msg.setData(data);
-                    mNotifyHandler.sendMessage(msg);
-                }
-            }).start();
+            Glide.with(context)
+                    .load(contact.getPortrait().getUrl())
+                    .asBitmap()
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(new SimpleTarget<Bitmap>(width, height) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            Bundle data = new Bundle();
+                            Message msg = mNotifyHandler.obtainMessage();
+                            msg.what = MSG_UPDATE_NOTIFICATION;
+                            data.putLong(MSG_UPDATE_NOTIFICATION_MSG_ID, msgId);
+                            if (resource != null) {
+                                msg.obj = resource;
+                            }
+                            msg.setData(data);
+                            mNotifyHandler.sendMessage(msg);
+                        }
+                    });
         } else if(!TextUtils.isEmpty(userId)) {
             //Get contact infor from server.
             ContactsManager.getInstance(context).getContactFromServer(userId, new AsyncTaskListener() {

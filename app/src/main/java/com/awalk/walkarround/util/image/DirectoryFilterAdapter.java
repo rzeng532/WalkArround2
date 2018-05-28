@@ -1,8 +1,5 @@
 package com.awalk.walkarround.util.image;
 
-import java.util.List;
-import java.util.Map;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.awalk.walkarround.R;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Richard on 2015/12/12.
@@ -81,7 +81,7 @@ public class DirectoryFilterAdapter extends BaseAdapter {
         Map<String, String> tempItem = (Map<String, String>) getItem(position);
         holder.firstImage = (ImageView) convertView.findViewById(to[0]);
 
-        ImageLoaderManager.displayImage(tempItem.get(from[0]).toString(),R.drawable.default_image, holder.firstImage);
+        ImageLoaderManager.displayImage(context, tempItem.get(from[0]).toString(),R.drawable.default_image, holder.firstImage);
         //ImageManager.from(context).displayImage(holder.firstImage, tempItem.get(from[0]).toString(),
         //        R.drawable.mail_picture_attachfile_icon);
         holder.nameTextView = (TextView) convertView.findViewById(to[1]);

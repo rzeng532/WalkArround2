@@ -98,7 +98,7 @@ public class PlayVideoActivity extends Activity {
             mMyPlayVideoLayout.setVideoPathAndThumb(message.getFilepath(), mThumbPath, mThumbUrlPath);
         } else if (videoDownStatus == ChatMsgBaseInfo.WAIT_DOWNLOAD) {
             // 下载
-            ImageLoaderManager.displayImage(mThumbPath, mThumbUrlPath, R.drawable.default_image, mVideoThumbView);
+            ImageLoaderManager.displayImage(this, mThumbUrlPath, R.drawable.default_image, mVideoThumbView);
             if (message.getMsgState() == MessageState.MSG_STATE_RECEIVING) {
                 // 已经开始下载 do nothing
             } else if (!TextUtils.isEmpty(message.getFileUrlPath())) {

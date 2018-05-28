@@ -1,7 +1,6 @@
 package com.awalk.walkarround.util.image;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import com.awalk.walkarround.R;
 import com.awalk.walkarround.util.CommonUtils;
 import com.awalk.walkarround.util.Logger;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,8 +32,6 @@ public class ImageListAdapter extends BaseAdapter implements View.OnClickListene
     private boolean bShowCheckBox;
     private ImageItemListener mImageListener;
     private int mMaxNum;
-    private DisplayImageOptions imageOptions;
-    private DisplayImageOptions defaultOptions;
 
     public class ViewHolder {
         public ImageView imgView;
@@ -116,15 +111,6 @@ public class ImageListAdapter extends BaseAdapter implements View.OnClickListene
         mImageViewWidth = imageViewWidth;
         mImageListener = imageListener;
         mMaxNum = maxNum;
-        imageOptions = ImageLoaderManager.getDisplayImageOptions(R.drawable.default_picture_icon);
-
-        defaultOptions = new DisplayImageOptions.Builder().imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-                .showImageOnLoading(R.drawable.image_cam)
-                .showImageOnFail(R.drawable.image_cam)
-                .showImageForEmptyUri(R.drawable.image_cam)
-                .considerExifParams(true)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
     }
 
     public void setImageListInfo(List<String> paths) {
@@ -175,7 +161,7 @@ public class ImageListAdapter extends BaseAdapter implements View.OnClickListene
             String imagePath = getItem(position);
             if (null != imagePath && !imagePath.toLowerCase().startsWith("http")) {
                 String url = "file://"+imagePath;
-                ImageLoader.getInstance().displayImage(url, holder.imgView, imageOptions);
+                ImageLoaderManager.displayImage(mContext, url, holder.imgView);
             }
             holder.imgView.setPadding(0, 0, 0, 0);
             if (bShowCheckBox) {
@@ -191,7 +177,7 @@ public class ImageListAdapter extends BaseAdapter implements View.OnClickListene
         } else {
             //gridview中第一个item设为点击拍照的入口
             String imagePath = "drawable://" + R.drawable.image_cam;
-            ImageLoader.getInstance().displayImage(imagePath, holder.imgView, defaultOptions);
+            ImageLoaderManager.displayImage(mContext, imagePath, holder.imgView);
             int paddingTop = CommonUtils.dip2px(convertView.getContext(), 40);
             holder.imgView.setPadding(paddingTop, paddingTop, paddingTop,
                     CommonUtils.dip2px(convertView.getContext(), 50));
