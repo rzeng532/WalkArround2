@@ -145,7 +145,7 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
 
                 mSignature = contact.getSignature();
                 mPortraitUrl = (contact.getPortrait() != null ? contact.getPortrait().getUrl() : null);
-                mPortraitResId = (contact.getPortrait() != null ? contact.getPortrait().getId() : -1);
+                mPortraitResId = (contact.getPortrait() != null ? contact.getPortrait().getDefaultId() : -1);
             }
         }
     }

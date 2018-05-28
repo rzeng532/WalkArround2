@@ -173,16 +173,13 @@ public class ContactInfo implements Serializable {
     public class PortraitEntity {
         //@com.google.gson.annotations.SerializedName("__type")
         private String type;
-        private int id = R.drawable.default_profile_portrait;
+        private String id;
+        private int defaultId = R.drawable.default_profile_portrait;
         private String name;
         private String url;
 
         public void setType(String type) {
             this.type = type;
-        }
-
-        public void setId(int id) {
-            this.id = id;
         }
 
         public void setName(String name) {
@@ -197,16 +194,28 @@ public class ContactInfo implements Serializable {
             return type;
         }
 
-        public int getId() {
-            return id;
-        }
-
         public String getName() {
             return name;
         }
 
         public String getUrl() {
             return url;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public int getDefaultId() {
+            return defaultId;
+        }
+
+        public void setDefaultId(int defaultId) {
+            this.defaultId = defaultId;
         }
     }
 }

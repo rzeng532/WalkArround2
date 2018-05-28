@@ -109,7 +109,7 @@ public class AssistantHelper {
         assistant.setUsername(ASSISTANT_USR_NAME);
         assistant.setGender(CommonUtils.PROFILE_GENDER_FEMALE);
         assistant.setSignature(ASSISTANT_SIGNATURE);
-        assistant.getPortrait().setId(R.drawable.asstant);
+        assistant.getPortrait().setDefaultId(R.drawable.asstant);
         assistant.setBirthday("1998-1-1");
 
         ContactsManager.getInstance(WalkArroundApp.getInstance().getApplicationContext()).addContactInfo(assistant);

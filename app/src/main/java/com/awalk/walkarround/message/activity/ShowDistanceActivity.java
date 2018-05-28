@@ -368,7 +368,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
                     .getContactByUsrObjId(mStrFriendId);
             if (usr != null) {
                 mPvFriend.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
-                        usr.getUsername().substring(0, 1), usr.getPortrait().getId());
+                        usr.getUsername().substring(0, 1), usr.getPortrait().getDefaultId());
 
                 //Init bottom indication text
                 String friendName = usr.getUsername();

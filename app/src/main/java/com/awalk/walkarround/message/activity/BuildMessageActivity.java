@@ -1222,7 +1222,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
 
             if (contact != null) {
                 photoView.setBaseData(contact.getUsername(), contact.getPortrait().getUrl(), null,
-                        contact.getPortrait().getId());
+                        contact.getPortrait().getDefaultId());
                 mRecipientInfo.setDisplayName(contact.getUsername());
                 receiverNameStr = contact.getUsername();
                 receiverNumStr = contact.getMobilePhoneNumber();

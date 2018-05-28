@@ -181,7 +181,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
-            amLogger.d("Query nearly user done.");
+            amLogger.d("Query nearly user done. result:" + (String) object);
 
             //Check if user use our app at the first time.
             if(AssistantHelper.isThereGuideStep()) {

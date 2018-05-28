@@ -223,7 +223,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 //            GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
 //            backGround.setColor(getResources().getColor(R.color.transparent));
             mPvPortrait.setBaseData(friendName, mFriend.getPortrait().getUrl(), null,
-                    mFriend.getPortrait().getId());
+                    mFriend.getPortrait().getDefaultId());
         }
     }
 

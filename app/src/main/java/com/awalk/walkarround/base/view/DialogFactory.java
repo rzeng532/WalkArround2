@@ -380,7 +380,7 @@ public class DialogFactory {
         PortraitView portrait = (PortraitView)dialogView.findViewById(R.id.pv_start2walk);
         final ContactInfo usr = ContactsManager.getInstance(context).getContactByUsrObjId(usrObjId);
         portrait.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
-                usr.getUsername().substring(0, 1), usr.getPortrait().getId());
+                usr.getUsername().substring(0, 1), usr.getPortrait().getDefaultId());
 
         String name = usr.getUsername();
         if(name.length() > AppConstant.SHORTNAME_LEN) {
@@ -439,7 +439,7 @@ public class DialogFactory {
         PortraitView portrait = (PortraitView)dialogView.findViewById(R.id.pv_start2walk);
         final ContactInfo usr = ContactsManager.getInstance(context).getContactByUsrObjId(usrObjId);
         portrait.setBaseData(usr.getUsername(), usr.getPortrait().getUrl(),
-                usr.getUsername().substring(0, 1), usr.getPortrait().getId());
+                usr.getUsername().substring(0, 1), usr.getPortrait().getDefaultId());
 
         String name = usr.getUsername();
         if(name.length() > AppConstant.SHORTNAME_LEN) {
