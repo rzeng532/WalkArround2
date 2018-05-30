@@ -11,6 +11,7 @@ import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.awalk.walkarround.BuildConfig;
 import com.awalk.walkarround.Location.manager.LocationManager;
 import com.awalk.walkarround.message.handler.WrDefaultMsgHandler;
 import com.awalk.walkarround.message.handler.WrTypedMsgHandler;
@@ -31,6 +32,10 @@ public class WalkArroundApp extends Application {
     private static WalkArroundApp mWorkArroundApp = null;
     private static Logger logger = Logger.getLogger(WalkArroundApp.class.getSimpleName());
     public static String MTC_DATA_PATH = null;
+
+    static {
+        AppConstant.BUGLY_APP_ID = BuildConfig.BUGLY_APP_ID;
+    }
 
     @Override
     public void onCreate() {

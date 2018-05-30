@@ -59,14 +59,12 @@ public class PortraitView extends LinearLayout implements View.OnClickListener{
     }
 
     public void setBaseData(String name, String cachPhotoKey, String namePinyin, int defaultResId, final boolean toGray) {
-        mImageView.setTag(null);
         int resId = defaultResId > 0 ? defaultResId : R.drawable.default_profile_portrait;
 
         if (!TextUtils.isEmpty(cachPhotoKey)) {
             // 头像
             mTextView.setVisibility(GONE);
             mImageView.setVisibility(VISIBLE);
-            mImageView.setTag(cachPhotoKey);
             if (toGray) {
                 ColorMatrix matrix = new ColorMatrix();
                 matrix.setSaturation(0);

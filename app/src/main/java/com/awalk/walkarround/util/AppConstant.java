@@ -67,7 +67,7 @@ public class AppConstant {
     /**
      * Bugly APP ID
      */
-    public static final String BUGLY_APP_ID = "ae216a3c1d";
+    public static String BUGLY_APP_ID = "ae216a3c1d";
 
     /**
      * 名字缩写长度
