@@ -17,16 +17,17 @@
         android:id="@+id/iv_portrait"
         android:layout_width="240dp"
         android:layout_height="240dp"
-        android:scaleType="centerCrop"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/default_profile_portrait"/>
+        android:layout_marginTop="30dp"/>
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
         android:layout_below="@+id/iv_portrait"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
@@ -53,24 +54,33 @@
         android:layout_marginTop="20dp"
         android:background="@color/emerald_green">
 
-        <com.awalk.walkarround.base.view.PortraitView
-            android:id="@+id/iv_small_portrait"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="centerCrop"
-            android:layout_alignParentLeft="true"
+        <!--<com.awalk.walkarround.base.view.PortraitView-->
+            <!--android:id="@+id/iv_small_portrait"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="36dp"-->
+            <!--android:src="@drawable/default_profile_portrait"/>-->
+
+        <TextView android:id="@+id/signature_notices_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="36dp"
-            android:src="@drawable/default_profile_portrait"/>
+            android:text="@string/signature"
+            android:textColor="@color/fontcor3"
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/tv_signature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/iv_small_portrait"
+            android:layout_toRightOf="@+id/signature_notices_tv"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
-            android:text="my signature"
+            android:text="@string/assistant_signature"
             android:textColor="@color/fontcor3"
             android:textSize="16dp" />
 

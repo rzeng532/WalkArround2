@@ -104,6 +104,7 @@
     <string name="profile_infor_update_ok">个人信息成功更新</string>
     <string name="profile_infor_update_fail">人信息更新失败</string>
     <string name="profile_infor_location">位置</string>
+    <string name="signature">签名：</string>
 
     <!-- image utils string -->
     <string name="img_select_at_most_pic">您最多只能选择%1$d张照片</string>
@@ -381,6 +382,6 @@
     <string name="mapping_navi_start_indicate">导航完成后\r\n请记得回来用色块碰头</string>
 
     <string name="assistant_usr_name">走走小伴</string>
-    <string name="assistant_signature">走走，相信相信的力量，让交友更简单</string>
+    <string name="assistant_signature">走走，相信相信的力量，让交友更简单。</string>
 
 </resources>

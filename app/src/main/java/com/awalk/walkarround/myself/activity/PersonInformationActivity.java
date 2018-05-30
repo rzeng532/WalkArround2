@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVAnalytics;
@@ -23,7 +24,7 @@ import com.awalk.walkarround.util.AppConstant;
 public class PersonInformationActivity extends Activity implements View.OnClickListener  {
 
     private PortraitView mIvPortrait;
-    private PortraitView mIvSmallPortrait;
+//    private PortraitView mIvSmallPortrait;
     private TextView mTvName;
     private TextView mTvAgeAndGender;
     private TextView mTvSignature;
@@ -73,17 +74,20 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
 //        TextView titleTv = (TextView)(findViewById(R.id.title).findViewById(R.id.display_name));
 //        titleTv.setText(R.string.profile_activity_title);
         findViewById(R.id.title).findViewById(R.id.line).setVisibility(View.GONE);
+        View rightClickView = findViewById(R.id.title).findViewById(R.id.more_rl);
         if(mUsrObjId != null
                 && mUsrObjId.equalsIgnoreCase(ProfileManager.getInstance().getCurUsrObjId())) {
-            findViewById(R.id.title).findViewById(R.id.more_rl).setVisibility(View.VISIBLE);
-            findViewById(R.id.title).findViewById(R.id.more_rl).setOnClickListener(this);
+            rightClickView.setVisibility(View.VISIBLE);
+            rightClickView.setOnClickListener(this);
+            ImageView moreView = (ImageView) rightClickView.findViewById(R.id.more_iv);
+            moreView.setImageResource(R.drawable.info_edit_icon);
         } else {
-            findViewById(R.id.title).findViewById(R.id.more_rl).setVisibility(View.GONE);
+            rightClickView.setVisibility(View.GONE);
         }
 
         //UI elements
         mIvPortrait = (PortraitView) findViewById(R.id.iv_portrait);
-        mIvSmallPortrait = (PortraitView) findViewById(R.id.iv_small_portrait);
+//        mIvSmallPortrait = (PortraitView) findViewById(R.id.iv_small_portrait);
         mTvName = (TextView) findViewById(R.id.tv_name);
         mTvAgeAndGender = (TextView) findViewById(R.id.tv_infor);
         mTvSignature = (TextView) findViewById(R.id.tv_signature);
@@ -112,9 +116,9 @@ public class PersonInformationActivity extends Activity implements View.OnClickL
         if (!TextUtils.isEmpty(mName)) {
             mIvPortrait.setBaseData(mName, mPortraitUrl,
                     mName.substring(0, 1), mPortraitResId);
-
-            mIvSmallPortrait.setBaseData(mName, mPortraitUrl,
-                    mName.substring(0, 1), mPortraitResId);
+//
+//            mIvSmallPortrait.setBaseData(mName, mPortraitUrl,
+//                    mName.substring(0, 1), mPortraitResId);
         }
     }
 
