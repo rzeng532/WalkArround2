@@ -97,26 +97,11 @@
                 android:background="@drawable/public_icon_list_top"
                 android:visibility="gone"/>
 
-        <RelativeLayout
-            android:id="@+id/conversation_item_del_icon"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true">
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/public_icon_searchbar_delete"/>
-        </RelativeLayout>
-
         <RelativeLayout android:id="@+id/conversation_content_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:minHeight="80dp"
                         android:layout_toRightOf="@id/photo_layout"
-                        android:layout_toLeftOf="@id/conversation_item_del_icon"
                         android:gravity="center_vertical"
                         android:layout_marginLeft="6dp"
                         android:paddingRight="10dp"
@@ -148,6 +133,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/conv_name"
+                    android:layout_toLeftOf="@+id/conversation_item_del_icon"
                     android:drawablePadding="5dp"
                     android:paddingTop="2dp"
                     android:gravity="center_vertical"
@@ -155,6 +141,17 @@
                     android:singleLine="true"
                     android:textColor="@color/fontcor4"
                     android:textSize="@dimen/font_size4" />
+
+            <ImageView
+                android:id="@+id/conversation_item_del_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="26dp"
+                android:paddingLeft="8dp"
+                android:adjustViewBounds="true"
+                android:layout_below="@id/conv_name"
+                android:layout_alignParentRight="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/public_icon_searchbar_delete"/>
         </RelativeLayout>
     </RelativeLayout>
 
