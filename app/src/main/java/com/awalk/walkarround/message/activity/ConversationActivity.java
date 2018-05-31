@@ -60,6 +60,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         OnClickListener {
 
     /* 批操作event */
+    private static final int MSG_OPERATION_REMOVE_SUCCESS = 0;
     private static final int MSG_OPERATION_LOAD_SUCCESS = 5;
     private static final int MSG_OPERATION_NOT_SUCCEED = 101;
 
@@ -228,6 +229,11 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 case MSG_OPERATION_NOT_SUCCEED:
                     queryConversationList();
                     break;
+                case MSG_OPERATION_REMOVE_SUCCESS:
+                    // 删除成功
+                    mConversationAdapter.deleteSelectedDeletedItem();
+                    mConversationAdapter.notifyDataSetChanged();
+                    break;
                 case MSG_OPERATION_LOAD_SUCCESS:
                     List<MessageSessionBaseModel> conversationList = (List<MessageSessionBaseModel>) data.getSerializable(MSG_EVENT_EXTRA_LIST);
                     mConversationAdapter.setListData(conversationList);
@@ -278,7 +284,9 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     what = MSG_OPERATION_NOT_SUCCEED;
                 }
             } else {
-                if (requestCode.equals(MessageConstant.MSG_OPERATION_LOAD)) {
+                if (requestCode.equals(MessageConstant.MSG_OPERATION_REMOVE)) {
+                    what = MSG_OPERATION_REMOVE_SUCCESS;
+                } else if (requestCode.equals(MessageConstant.MSG_OPERATION_LOAD)) {
                     what = MSG_OPERATION_LOAD_SUCCESS;
                     List<MessageSessionBaseModel> conversationMsgList = (List<MessageSessionBaseModel>) object;
 
@@ -287,8 +295,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     while (it.hasNext()) {
                         MessageSessionBaseModel item = it.next();
 
-                        if (item.getContact().equals(AssistantHelper.ASSISTANT_OBJ_ID)) {
-                            ;
+                        if (mConvType == CONV_TYPE_OLD_FRIEND && item.getContact().equals(AssistantHelper.ASSISTANT_OBJ_ID)) {
+                            it.remove();
                         } else if (mConvType == CONV_TYPE_OLD_FRIEND
                                 && (item.status > MessageUtil.WalkArroundState.STATE_INIT && item.status <= MessageUtil.WalkArroundState.STATE_END_IMPRESSION)) {
                             //Current UI need old friends, so we remove !Old friends.
