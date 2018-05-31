@@ -3,10 +3,13 @@ package com.awalk.walkarround.message.util;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.text.TextUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
-import com.avos.avoscloud.im.v2.messages.*;
+import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.awalk.walkarround.R;
 import com.awalk.walkarround.base.WalkArroundApp;
 import com.awalk.walkarround.main.model.ContactInfo;
@@ -20,20 +23,20 @@ import com.awalk.walkarround.util.AppConstant;
 import com.awalk.walkarround.util.AppSharedPreference;
 import com.awalk.walkarround.util.Logger;
 import com.awalk.walkarround.util.http.HttpUtil;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * 消息相关的工具类
@@ -308,37 +311,55 @@ public class MessageUtil {
         if (TextUtils.isEmpty(urlSite) || TextUtils.isEmpty(localFilePath)) {
             return false;
         }
-        boolean success = false;
-        HttpClient client = new DefaultHttpClient();
-        HttpGet get = new HttpGet(urlSite);
-        HttpResponse response;
+        InputStream inputStream = null;
+        RandomAccessFile outputStream = null;
+        HttpURLConnection connection = null;
+        File file = new File(localFilePath);
         try {
-            response = client.execute(get);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                HttpEntity entity = response.getEntity();
-                InputStream is = entity.getContent();
-                if (is != null) {
-                    File file = new File(localFilePath);
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    byte[] buf = new byte[1024];
-                    int ch = -1;
-                    while ((ch = is.read(buf)) != -1) {
-                        fileOutputStream.write(buf, 0, ch);
-                    }
-                    fileOutputStream.flush();
-                    success = true;
-                    fileOutputStream.close();
-                    is.close();
+            URL url = new URL(urlSite);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(20000);
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Charset", "UTF-8");
+            connection.setRequestProperty("Connection", "Keep-Alive");
+            connection.setAllowUserInteraction(true);
+            connection.setRequestProperty("Range", "bytes=" + 0 + "-");
+            //使用java中的RandomAccessFile对文件进行随机读写操作
+            outputStream = new RandomAccessFile(file, "rw");
+            int code = connection.getResponseCode();
+            inputStream = connection.getInputStream();
+            byte[] buffer = new byte[1024 * 8];
+            int len = -1;
+            if (code >= 400 && code < 500) {
+                return false;
+            }
+            while ((len = inputStream.read(buffer)) != -1) {
+                // 下载数据的过程。
+                outputStream.write(buffer, 0, len);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-        } catch (ClientProtocolException e) {
-            logger.e("downloadFile ClientProtocolException:" + e.getMessage());
-            success = false;
-        } catch (IOException e) {
-            logger.e("downloadFile IOException:" + e.getMessage());
-            success = false;
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
-        return success;
+        return true;
     }
 
     public static int getFriendColorIndex(long threadId) {

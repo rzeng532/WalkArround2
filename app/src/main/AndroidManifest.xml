@@ -124,15 +124,9 @@
         />
         <activity android:name="com.awalk.walkarround.message.activity.ConversationActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name="com.awalk.walkarround.message.activity.ImageViewerActivity"
-            android:screenOrientation="portrait"/>
         <activity android:name="com.awalk.walkarround.message.activity.ShowLocationActivity"
             android:screenOrientation="portrait"/>
         <activity android:name="com.awalk.walkarround.message.activity.PlaintTextDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name="com.awalk.walkarround.message.activity.PlayVideoActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name="com.awalk.walkarround.message.activity.TakeVideoActivity"
             android:screenOrientation="portrait"/>
         <activity android:name="com.awalk.walkarround.message.activity.ShowDistanceActivity"
             android:screenOrientation="portrait"/>

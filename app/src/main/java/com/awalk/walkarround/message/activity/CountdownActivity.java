@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVAnalytics;
 import com.awalk.walkarround.R;
 import com.awalk.walkarround.base.view.DialogFactory;
-import com.awalk.walkarround.base.view.PhotoView;
+import com.awalk.walkarround.base.view.PortraitView;
 import com.awalk.walkarround.base.view.RoundProgressBar;
 import com.awalk.walkarround.main.model.ContactInfo;
 import com.awalk.walkarround.message.manager.ContactsManager;
@@ -56,7 +56,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
     private TextView mTvCountdownTime;
     private TextView mTvPreCountdownTime;
     private TextView mTvCountdownHint;
-    private PhotoView mPvPortrait;
+    private PortraitView mPvPortrait;
     private ImageView mIvCountdown;
     private RoundProgressBar timeProgress;
     private RoundProgressBar timeProgress2;
@@ -194,7 +194,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         mTvDescription = (TextView) findViewById(R.id.tv_walk_description);
         mTvComplete = (TextView) findViewById(R.id.tv_complete_walk);
         mTvComplete.setOnClickListener(this);
-        mPvPortrait = (PhotoView) findViewById(R.id.pv_countdown);
+        mPvPortrait = (PortraitView) findViewById(R.id.pv_countdown);
 
         //Init countdown time text.
         mTvCountdownTime = (TextView) findViewById(R.id.tv_countdown_time);

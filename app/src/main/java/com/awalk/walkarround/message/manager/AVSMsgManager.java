@@ -24,7 +24,6 @@ import com.awalk.walkarround.message.model.ChatMessageInfo;
 import com.awalk.walkarround.message.model.ChatMsgBaseInfo;
 import com.awalk.walkarround.message.model.MessageRecipientInfo;
 import com.awalk.walkarround.message.model.MessageSessionBaseModel;
-import com.awalk.walkarround.message.task.FileDownLoadAsyncTask;
 import com.awalk.walkarround.message.util.MessageConstant.MessageState;
 import com.awalk.walkarround.message.util.MessageConstant.MessageType;
 import com.awalk.walkarround.message.util.MessageUtil;
@@ -518,7 +517,7 @@ public class AVSMsgManager extends MessageAbstractManger {
      * @param msgId
      * @param content
      */
-    private void sendMessage(MessageRecipientInfo recipientInfo, long msgId, AVIMTypedMessage content,
+    private void sendMessage(MessageRecipientInfo recipientInfo, final long msgId, final AVIMTypedMessage content,
                              boolean isBurnAfter, String extraInfo) {
 
         //If conversation is NULL or conversation is incorrect, we should find conversation before sending message.
@@ -549,7 +548,7 @@ public class AVSMsgManager extends MessageAbstractManger {
         }
     }
 
-    private void sendMsgViaAVSSdk(AVIMTypedMessage content, long msgId) {
+    private void sendMsgViaAVSSdk(AVIMTypedMessage content, final long msgId) {
 
         if(mCurConversation == null) {
             return;
@@ -665,15 +664,6 @@ public class AVSMsgManager extends MessageAbstractManger {
         messageDbManager.updateAllSendingMsgStatusFail();
     }
 
-    public boolean interruptDownloadVideo(ChatMsgBaseInfo message) throws Exception {
-        return false;
-    }
-
-    public void acceptFile(ChatMsgBaseInfo message, boolean isCollectMsg) throws Exception {
-        FileDownLoadAsyncTask task = new FileDownLoadAsyncTask(mContext, messageDbManager, isCollectMsg);
-        task.execute(message);
-    }
-
     /**
      * 阅后即焚
      *
@@ -742,12 +732,6 @@ public class AVSMsgManager extends MessageAbstractManger {
      */
     public int setMessageRead(long messageId) throws Exception {
         return messageDbManager.setMessageRead(messageId);
-    }
-
-    @Override
-    public boolean isMessageAttachDownload(ChatMsgBaseInfo message) throws Exception {
-        return !TextUtils.isEmpty(message.getFilepath())
-                && message.getMsgState() == MessageState.MSG_STATE_RECEIVED;
     }
 
     /**
@@ -875,31 +859,10 @@ public class AVSMsgManager extends MessageAbstractManger {
         return messageDbManager.isConversationTop(getConversationId(chatType, numList));
     }
 
-    //@Override
-    //public List<GroupInvitationBaseInfo> getGroupInvitationList(long beginId, int count) throws Exception {
-    //    return messageDbManager.getGroupInvitationList(beginId, count);
-    //}
-
-    @Override
-    public int getUnreadInvitationCount() throws Exception {
-        return 0;
-        //return messageDbManager.getUnreadInvitationCount();
-    }
-
-    @Override
-    public int setInvitationRead() throws Exception {
-        return 0;
-        //return messageDbManager.setInvitationRead();
-    }
 
     @Override
     public List<ChatMsgBaseInfo> getMessageByExtraInfo(String extraKey) throws Exception {
         return messageDbManager.getMessageByExtraInfo(extraKey);
-    }
-
-    @Override
-    public void updateConversationMsgNotifyFlag() throws Exception {
-        messageDbManager.updateConversationMsgNotifyFlag();
     }
 
     @Override

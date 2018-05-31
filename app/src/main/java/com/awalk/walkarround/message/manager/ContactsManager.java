@@ -80,7 +80,7 @@ public class ContactsManager {
         getContactFromServer(userId, mGetContactListener);
     }
 
-    public void getContactFromServer(String userId, AsyncTaskListener listener) {
+    public void getContactFromServer(String userId, final AsyncTaskListener listener) {
         if(TextUtils.isEmpty(userId)) {
             return;
         }

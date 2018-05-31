@@ -101,7 +101,7 @@ public class MessageReceiver extends BroadcastReceiver {
         }
     }
 
-    private void notification(Context context, String userId, long msgId) {
+    private void notification(final Context context, final String userId, final long msgId) {
         //Get contact infor from server if local data doesn't contain this user.
         ContactInfo contact = ContactsManager.getInstance(context).getContactByUsrObjId(userId);
         if (contact != null) {

@@ -19,7 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.awalk.walkarround.R;
-import com.awalk.walkarround.base.view.PhotoView;
+import com.awalk.walkarround.base.view.PortraitView;
 import com.awalk.walkarround.main.model.ContactInfo;
 import com.awalk.walkarround.message.activity.ConversationActivity;
 import com.awalk.walkarround.message.listener.ConversationItemListener;
@@ -194,7 +194,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
             holder = new ViewHolder();
             holder.rlConversation = (RelativeLayout) convertView.findViewById(R.id.conv_rl);
             holder.rlFilfullArea = (RelativeLayout) convertView.findViewById(R.id.filfull_area);
-            holder.ivPortrait = (PhotoView) convertView.findViewById(R.id.conv_portrait);
+            holder.ivPortrait = (PortraitView) convertView.findViewById(R.id.conv_portrait);
             holder.ivDelIcon = convertView.findViewById(R.id.conversation_item_del_icon);
             //holder.ivPortrait.setCheckBoxResId(R.drawable.public_icon_list_checkbox_on,
             //        R.drawable.public_icon_list_checkbox_off);
@@ -636,7 +636,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
 
     public class ViewHolder {
         public int position;
-        public PhotoView ivPortrait;
+        public PortraitView ivPortrait;
         RelativeLayout rlConversation;
         RelativeLayout rlFilfullArea;
         ImageView ivTopSign;

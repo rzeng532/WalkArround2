@@ -19,13 +19,13 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVAnalytics;
 import com.awalk.walkarround.R;
 import com.awalk.walkarround.assistant.AssistantHelper;
+import com.awalk.walkarround.base.task.TaskUtil;
 import com.awalk.walkarround.base.view.DialogFactory;
-import com.awalk.walkarround.base.view.PhotoView;
+import com.awalk.walkarround.base.view.PortraitView;
 import com.awalk.walkarround.main.model.ContactInfo;
 import com.awalk.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.awalk.walkarround.main.task.AddFriendTask;
 import com.awalk.walkarround.main.task.QuerySpeedDateIdTask;
-import com.awalk.walkarround.base.task.TaskUtil;
 import com.awalk.walkarround.message.manager.ContactsManager;
 import com.awalk.walkarround.message.manager.WalkArroundMsgManager;
 import com.awalk.walkarround.message.task.AsyncTaskLoadFriendsSession;
@@ -65,7 +65,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 
     private ContactInfo mFriend = null;
     private String mFriendId = null;
-    private PhotoView mPvPortrait;
+    private PortraitView mPvPortrait;
 
     private Dialog mLoadingDialog;
     private long mThreadId = -1l;
@@ -402,7 +402,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
         GradientDrawable backGround = (GradientDrawable) mTvComplete.getBackground();
         backGround.setColor(getResources().getColor(R.color.transparent));
 
-        mPvPortrait = (PhotoView) findViewById(R.id.pv_evaluate);
+        mPvPortrait = (PortraitView) findViewById(R.id.pv_evaluate);
 
         mRbHonest = (RatingBar) findViewById(R.id.rating_honest);
         mRbHonest.setOnRatingBarChangeListener(this);

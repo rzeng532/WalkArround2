@@ -129,7 +129,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
     private onResultListener mAsysResultListener = new onResultListener() {
         @Override
-        public void onResult(Object object, TaskResult resultCode, String requestCode, String threadId) {
+        public void onResult(final Object object, TaskResult resultCode, String requestCode, String threadId) {
             Bundle dataBundle = new Bundle();
             int what = -1;
 

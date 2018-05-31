@@ -17,7 +17,7 @@
               android:textSize="@dimen/font_size3"/>
 
     <!-- Portrait -->
-    <com.awalk.walkarround.base.view.PhotoView
+    <com.awalk.walkarround.base.view.PortraitView
             android:id="@+id/pv_evaluate"
             android:layout_width="55dp"
             android:layout_height="55dp"

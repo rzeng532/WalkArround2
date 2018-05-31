@@ -75,7 +75,7 @@
                 android:visibility="gone"
                 android:textSize="@dimen/font_size7" />
         </LinearLayout>
-        <com.awalk.walkarround.base.view.PhotoView
+        <com.awalk.walkarround.base.view.PortraitView
             android:id="@+id/msg_contact_profile_pv"
             android:layout_marginLeft="5dp"
             android:layout_width="41dp"

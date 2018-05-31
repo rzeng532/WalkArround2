@@ -28,7 +28,7 @@
              android:layout_marginRight="8dp"
              android:background="@drawable/check_selecte_bg"
              android:visibility="gone"/>
-        <com.awalk.walkarround.base.view.PhotoView
+        <com.awalk.walkarround.base.view.PortraitView
             android:id="@+id/msg_contact_profile_pv"
             android:layout_marginRight="5dp"
             android:layout_width="41dp"

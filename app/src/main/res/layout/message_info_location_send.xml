@@ -84,7 +84,7 @@
                     android:textSize="@dimen/font_size6" />
         </RelativeLayout>
 
-        <com.awalk.walkarround.base.view.PhotoView
+        <com.awalk.walkarround.base.view.PortraitView
             android:id="@+id/msg_contact_profile_pv"
             android:layout_marginLeft="5dp"
             android:layout_width="41dp"

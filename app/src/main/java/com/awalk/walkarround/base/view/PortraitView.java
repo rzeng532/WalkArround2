@@ -54,6 +54,15 @@ public class PortraitView extends LinearLayout implements View.OnClickListener{
         mCheckBox.setOnClickListener(this);
     }
 
+    public void setGrayPortrait() {
+        if(mImageView != null) {
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(0);
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+            mImageView.setColorFilter(filter);
+        }
+    }
+
     public void setBaseData(String name, String cachPhotoKey, String namePinyin, int defaultResId) {
         setBaseData(name, cachPhotoKey, namePinyin, defaultResId, false);
     }

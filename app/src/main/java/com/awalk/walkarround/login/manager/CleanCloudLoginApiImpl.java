@@ -125,12 +125,12 @@ public class CleanCloudLoginApiImpl extends LoginApiAbstract {
     }
 
     @Override
-    public void doRegister(final String phoneNum, final String password, final String userName, String gender, AsyncTaskListener listener) {
+    public void doRegister(final String phoneNum, final String password, final String userName, final String gender, AsyncTaskListener listener) {
 
         mInvokerListener = listener;
         mException = null;
 
-        AVUser user = new AVUser();
+        final AVUser user = new AVUser();
         user.setUsername(LoginManager.getInstance().getUserName());
         user.setPassword(LoginManager.getInstance().getPassword());
         user.setMobilePhoneNumber(LoginManager.getInstance().getPhoneNum());

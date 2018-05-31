@@ -13,22 +13,22 @@ android {
             v2SigningEnabled true
         }
     }
-    compileSdkVersion 19
-    buildToolsVersion "25.0.0"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.awalk.walkarround"
         minSdkVersion 17
         targetSdkVersion 18
         versionCode 100000 // versionCode规则： 前三位固定212，中间4位固定 0000，由于目前升级版本速度太快，末３位不再对应VERSION_NAME，而是每次固定末位＋１
         versionName VERSION_NAME
-        jackOptions {
-            enabled true
-        }
+//        jackOptions {
+//            enabled true
+//        }
         signingConfig signingConfigs.config
-        ndk {
-            //设置支持的SO库架构
-            abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
-        }
+//        ndk {
+//            //设置支持的SO库架构
+//            abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+//        }
         buildConfigField "String", "BUGLY_APP_ID", "\"3ea0b67d30\""
     }
     buildTypes {
@@ -43,17 +43,17 @@ android {
             buildConfigField "String", "BUGLY_APP_ID", "\"3ea0b67d30\""
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
     productFlavors {
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:support-v4:19.1.0'
+    compile 'com.android.support:support-v4:25.0.0'
     compile 'com.google.protobuf:protobuf-java:2.6.1'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
     // LeanCloud 基础包
@@ -71,5 +71,5 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxjava:2.0.1'
     compile 'com.android.support:support-annotations:26.0.0-alpha1'
     compile 'com.github.bumptech.glide:glide:3.8.0'
-    compile 'net.zetetic:android-database-sqlcipher:3.5.7@aar'
+//    compile 'net.zetetic:android-database-sqlcipher:3.5.7@aar'
 }

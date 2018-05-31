@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="36dp"
+            android:layout_marginLeft="16dp"
             android:text="@string/signature"
             android:textColor="@color/fontcor3"
             android:textSize="16dp" />
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/signature_notices_tv"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="2dp"
             android:layout_centerVertical="true"
             android:text="@string/assistant_signature"
             android:textColor="@color/fontcor3"

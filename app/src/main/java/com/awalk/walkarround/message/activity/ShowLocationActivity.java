@@ -385,8 +385,8 @@ public class ShowLocationActivity extends Activity implements View.OnClickListen
     private void startNavi(double lat, double lng) {
 
         ArrayList<String> mapList = new ArrayList<>();
-        ArrayList<String> toastList = new ArrayList<>();
-        ArrayList<Intent> startList = new ArrayList<>();
+        final ArrayList<String> toastList = new ArrayList<>();
+        final ArrayList<Intent> startList = new ArrayList<>();
         String curLat = null;
         String curLng = null;
         double[] gps = NaviMapUtil.gcj02_To_Gps84(lat, lng);

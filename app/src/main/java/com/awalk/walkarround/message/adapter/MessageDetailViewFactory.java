@@ -10,19 +10,29 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.view.*;
+import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.CheckedTextView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
 import com.awalk.walkarround.R;
 import com.awalk.walkarround.base.view.DialogFactory;
 import com.awalk.walkarround.base.view.DialogFactory.NoticeDialogClickListener;
-import com.awalk.walkarround.base.view.PhotoView;
+import com.awalk.walkarround.base.view.PortraitView;
 import com.awalk.walkarround.base.view.RoundProgressBar;
 import com.awalk.walkarround.base.view.gifview.GifView;
 import com.awalk.walkarround.base.view.gifview.GifView.GifImageType;
@@ -108,12 +118,12 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
     }
 
     public View getMessageView(View convertView, ChatMsgBaseInfo messageInfo, int msgType,
-                               boolean isSelectMode, boolean isShowPhotoView) {
-        return getMessageView(convertView, messageInfo, msgType, isSelectMode, isShowPhotoView, false);
+                               boolean isSelectMode, boolean isShowPortraitView) {
+        return getMessageView(convertView, messageInfo, msgType, isSelectMode, isShowPortraitView, false);
     }
 
     public View getMessageView(View convertView, ChatMsgBaseInfo messageInfo, int msgType,
-                               boolean isSelectMode, boolean isShowPhotoView, boolean isShowNickName) {
+                               boolean isSelectMode, boolean isShowPortraitView, boolean isShowNickName) {
         switch (msgType) {
             case MessageDetailListAdapter.MESSAGE_TYPE_PLAIN_TEXT_SEND:
             case MessageDetailListAdapter.MESSAGE_TYPE_PLAIN_TEXT_REC:
@@ -151,7 +161,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
         convertView.setClickable(isSelectMode);
         convertView.setTag(R.id.msg_item_bg_layout, messageInfo);
         BaseViewHolder viewHolder = (BaseViewHolder) convertView.getTag();
-        initMsgCommonView(mContext, messageInfo, viewHolder, isSelectMode, isShowPhotoView, isShowNickName);
+        initMsgCommonView(mContext, messageInfo, viewHolder, isSelectMode, isShowPortraitView, isShowNickName);
 
         return convertView;
     }
@@ -163,7 +173,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
 
             viewHolder = new SysMsgViewHolder();
             viewHolder.checkedTextView = (CheckedTextView) convertView.findViewById(R.id.select_check_ctv);
-            viewHolder.photoView = (PhotoView) convertView.findViewById(R.id.msg_contact_profile_pv);
+            viewHolder.PortraitView = (PortraitView) convertView.findViewById(R.id.msg_contact_profile_pv);
             viewHolder.sendTimeTv = (TextView) convertView.findViewById(R.id.msg_send_time_tv);
             viewHolder.sendNameTv = (TextView) convertView.findViewById(R.id.msg_contact_name_tv);
             viewHolder.msgTextTv = (TextView) convertView.findViewById(R.id.msg_content_tv);
@@ -250,7 +260,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             }
             viewHolder = new PlaintTextViewHolder();
             viewHolder.checkedTextView = (CheckedTextView) convertView.findViewById(R.id.select_check_ctv);
-            viewHolder.photoView = (PhotoView) convertView.findViewById(R.id.msg_contact_profile_pv);
+            viewHolder.PortraitView = (PortraitView) convertView.findViewById(R.id.msg_contact_profile_pv);
             viewHolder.sendTimeTv = (TextView) convertView.findViewById(R.id.msg_send_time_tv);
             viewHolder.sendNameTv = (TextView) convertView.findViewById(R.id.msg_contact_name_tv);
             viewHolder.msgTextTv = (TextView) convertView.findViewById(R.id.msg_content_tv);
@@ -313,7 +323,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             }
             viewHolder = new PictureViewHolder();
             viewHolder.checkedTextView = (CheckedTextView) convertView.findViewById(R.id.select_check_ctv);
-            viewHolder.photoView = (PhotoView) convertView.findViewById(R.id.msg_contact_profile_pv);
+            viewHolder.PortraitView = (PortraitView) convertView.findViewById(R.id.msg_contact_profile_pv);
             viewHolder.sendTimeTv = (TextView) convertView.findViewById(R.id.msg_send_time_tv);
             viewHolder.sendNameTv = (TextView) convertView.findViewById(R.id.msg_contact_name_tv);
             viewHolder.msgImageView = (ImageView) convertView.findViewById(R.id.msg_picture_iv);
@@ -374,7 +384,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             }
             viewHolder = new PictureViewHolder();
             viewHolder.checkedTextView = (CheckedTextView) convertView.findViewById(R.id.select_check_ctv);
-            viewHolder.photoView = (PhotoView) convertView.findViewById(R.id.msg_contact_profile_pv);
+            viewHolder.PortraitView = (PortraitView) convertView.findViewById(R.id.msg_contact_profile_pv);
             viewHolder.sendTimeTv = (TextView) convertView.findViewById(R.id.msg_send_time_tv);
             viewHolder.sendNameTv = (TextView) convertView.findViewById(R.id.msg_contact_name_tv);
             viewHolder.msgImageView = (ImageView) convertView.findViewById(R.id.msg_picture_iv);
@@ -433,7 +443,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             }
             viewHolder = new MapLocationViewHolder();
             viewHolder.checkedTextView = (CheckedTextView) convertView.findViewById(R.id.select_check_ctv);
-            viewHolder.photoView = (PhotoView) convertView.findViewById(R.id.msg_contact_profile_pv);
+            viewHolder.PortraitView = (PortraitView) convertView.findViewById(R.id.msg_contact_profile_pv);
             viewHolder.sendTimeTv = (TextView) convertView.findViewById(R.id.msg_send_time_tv);
             viewHolder.sendNameTv = (TextView) convertView.findViewById(R.id.msg_contact_name_tv);
             viewHolder.contentShowTv = (TextView) convertView.findViewById(R.id.msg_content_tv);
@@ -481,7 +491,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             viewHolder.checkedTextView = (CheckedTextView) convertView.findViewById(R.id.select_check_ctv);
             viewHolder.sendTimeTv = (TextView) convertView.findViewById(R.id.msg_send_time_tv);
             viewHolder.sendNameTv = (TextView) convertView.findViewById(R.id.msg_contact_name_tv);
-            viewHolder.photoView = (PhotoView) convertView.findViewById(R.id.msg_contact_profile_pv);
+            viewHolder.PortraitView = (PortraitView) convertView.findViewById(R.id.msg_contact_profile_pv);
             viewHolder.msgStatusIv = (ImageView) convertView.findViewById(R.id.msg_status_fail_iv);
             viewHolder.clickAreaView = convertView.findViewById(R.id.msg_item_bg_layout);
             viewHolder.clickAreaView.setOnClickListener(this);
@@ -515,7 +525,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
             }
             convertView = LayoutInflater.from(context).inflate(inflateResource, null, false);
             viewHolder = new AudioViewHolder();
-            viewHolder.photoView = (PhotoView) convertView.findViewById(R.id.msg_contact_profile_pv);
+            viewHolder.PortraitView = (PortraitView) convertView.findViewById(R.id.msg_contact_profile_pv);
             viewHolder.checkedTextView = (CheckedTextView) convertView.findViewById(R.id.select_check_ctv);
             viewHolder.sendTimeTv = (TextView) convertView.findViewById(R.id.msg_send_time_tv);
             viewHolder.sendNameTv = (TextView) convertView.findViewById(R.id.msg_contact_name_tv);
@@ -636,17 +646,17 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
         }
         // 头像
         if (isShowPhoto) {
-            if (viewHolder.photoView.getTag() == null) {
-                viewHolder.photoView.setOnClickListener(this);
+            if (viewHolder.PortraitView.getTag() == null) {
+                viewHolder.PortraitView.setOnClickListener(this);
             }
-            viewHolder.photoView.setTag(photoNum);
-            viewHolder.photoView.setBaseData(message.getDisplayName(), message.getProfileKey(),
+            viewHolder.PortraitView.setTag(photoNum);
+            viewHolder.PortraitView.setBaseData(message.getDisplayName(), message.getProfileKey(),
                     message.getNamePinyin(), R.drawable.default_profile_portrait);
-            viewHolder.photoView.setVisibility(View.VISIBLE);
+            viewHolder.PortraitView.setVisibility(View.VISIBLE);
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) viewHolder.checkedTextView.getLayoutParams();
             lp.topMargin = context.getResources().getDimensionPixelSize(R.dimen.public_padding_10);
-        } else if (viewHolder.photoView != null) {
-            viewHolder.photoView.setVisibility(View.GONE);
+        } else if (viewHolder.PortraitView != null) {
+            viewHolder.PortraitView.setVisibility(View.GONE);
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) viewHolder.checkedTextView.getLayoutParams();
             lp.topMargin = 0;
         }
@@ -698,7 +708,7 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
      */
     public class BaseViewHolder {
         CheckedTextView checkedTextView;
-        PhotoView photoView;
+        PortraitView PortraitView;
         TextView sendTimeTv;
         TextView sendNameTv;
         ImageView msgStatusIv;
@@ -759,16 +769,6 @@ public class MessageDetailViewFactory implements OnClickListener, OnLongClickLis
     public class PictureViewHolder extends BaseViewHolder {
         ImageView msgImageView;
         GifView gifView;
-    }
-
-    /**
-     * 图文消息
-     */
-    public class MixedViewHolder  extends BaseViewHolder {
-        TextView msgTitle;
-        ImageView msgImageIv;
-        TextView msgContentTv;
-        TextView msgCreateTimeTv;
     }
 
     @Override

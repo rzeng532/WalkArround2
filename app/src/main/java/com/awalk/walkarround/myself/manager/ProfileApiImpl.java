@@ -112,7 +112,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     }
 
     @Override
-    public void updateSignature(String newSignature, AsyncTaskListener listener) throws Exception {
+    public void updateSignature(String newSignature, final AsyncTaskListener listener) throws Exception {
         AVUser user = AVUser.getCurrentUser();
         user.setFetchWhenSave(true);
         user.put(ProfileUtil.REG_KEY_SIGNATURE, newSignature);
@@ -140,7 +140,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     }
 
     @Override
-    public void updateUsername(final String username, AsyncTaskListener listener) throws Exception {
+    public void updateUsername(final String username, final AsyncTaskListener listener) throws Exception {
         AVUser user = AVUser.getCurrentUser();
 
         user.put(ProfileUtil.REG_KEY_USER_NAME, username);
@@ -266,7 +266,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     }
 
     @Override
-    public void updatePortrait(String path, AsyncTaskListener listener) throws Exception {
+    public void updatePortrait(String path, final AsyncTaskListener listener) throws Exception {
         AVUser user = AVUser.getCurrentUser();
         if (null == user) {
             return;
@@ -298,12 +298,12 @@ public class ProfileApiImpl extends ProfileApiAbstract {
     /*
      * Refresh current user data.
      */
-    private void refreshLocationData(GeoData input, AsyncTaskListener listener) {
+    private void refreshLocationData(final GeoData input,final AsyncTaskListener listener) {
         if (input == null) {
             return;
         }
 
-        AVUser user = AVUser.getCurrentUser();
+        final AVUser user = AVUser.getCurrentUser();
         AVObject origLocation = (AVObject) user.get(ProfileUtil.REG_KEY_LOCATION_EX);
 
         if (origLocation != null) {
@@ -312,7 +312,7 @@ public class ProfileApiImpl extends ProfileApiAbstract {
 
                 @Override
                 public void done(AVObject avObject, AVException e) {
-                    AVObject post = avObject;
+                    final AVObject post = avObject;
                     if (post != null) {
                         post.put(ProfileUtil.REG_KEY_LOCATION, new AVGeoPoint(input.getLatitude(), input.getLongitude()));
                         post.put(ProfileUtil.REG_KEY_LOCATION_ADDR, input.getAddrInfor());
@@ -353,15 +353,15 @@ public class ProfileApiImpl extends ProfileApiAbstract {
      * Upload location data
      */
 
-    private void newLocationData(GeoData input, AsyncTaskListener listener) {
+    private void newLocationData(GeoData input, final AsyncTaskListener listener) {
         if (input == null) {
             return;
         }
 
-        AVUser user = AVUser.getCurrentUser();
+        final AVUser user = AVUser.getCurrentUser();
 
         //Create a new location data if there is no original data
-        AVObject objLocation = new AVObject(AppConstant.TABLE_LOCATION_INFOR);
+        final AVObject objLocation = new AVObject(AppConstant.TABLE_LOCATION_INFOR);
         AVGeoPoint geoInfor = new AVGeoPoint(input.getLatitude(), input.getLongitude());
         objLocation.setFetchWhenSave(true);
         objLocation.put(ProfileUtil.REG_KEY_LOCATION, geoInfor);

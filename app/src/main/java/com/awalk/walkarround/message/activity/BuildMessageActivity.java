@@ -51,7 +51,7 @@ import com.awalk.walkarround.assistant.AssistantHelper;
 import com.awalk.walkarround.base.task.TaskUtil;
 import com.awalk.walkarround.base.view.DialogFactory;
 import com.awalk.walkarround.base.view.KeyboardLayout;
-import com.awalk.walkarround.base.view.PhotoView;
+import com.awalk.walkarround.base.view.PortraitView;
 import com.awalk.walkarround.handmark.PullToRefreshBase;
 import com.awalk.walkarround.handmark.PullToRefreshBase.OnRefreshListener2;
 import com.awalk.walkarround.handmark.PullToRefreshListView;
@@ -85,7 +85,6 @@ import com.awalk.walkarround.util.Logger;
 import com.awalk.walkarround.util.http.HttpTaskBase;
 import com.awalk.walkarround.util.http.HttpUtil;
 import com.awalk.walkarround.util.http.ThreadPoolManager;
-import com.awalk.walkarround.util.image.ImageBrowserActivity;
 import com.awalk.walkarround.util.network.NetWorkManager;
 
 import java.io.File;
@@ -125,14 +124,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
 
     /* 发送位置信息 */
     private static final int REQUEST_CODE_MAP = 4;
-    /* 发送图片 */
-    private static final int REQUEST_CODE_PICTURE_CHOOSE = 5;
-    /* 下载/浏览图片 */
-    private static final int REQUEST_CODE_PREVIEW_IMAGE = 7;
-    /* 聊天详情 */
-    public static final int REQUEST_CODE_CHAT_DETAIL = 8;
-    /* 打开相机拍摄图片 */
-    private static final int REQUEST_CODE_CAMERA = 9;
     /* 查看发送的地图 */
     private static final int REQUEST_CODE_SHOW_LOCATION = 11;
     /* 查看约会地点 */
@@ -214,9 +205,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
 
     /* 是否黑名单聊天人 */
     private boolean isBlackContact = false;
-
-    /* 利用相机刚拍图片 */
-    private String mPhotoImagePath;
 
     private Dialog mStart2walkDialog = null;
 
@@ -708,40 +696,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
             WalkArroundMsgManager.getInstance(getApplicationContext())
                     .updateConversationStatus(mRecipientInfo.getThreadId(), MessageUtil.WalkArroundState.STATE_IMPRESSION);
 //            mImvDistance.setVisibility(View.GONE);
-        } else if (requestCode == REQUEST_CODE_PICTURE_CHOOSE) {
-            // 选择了要发送的图片
-            if (resultCode != RESULT_OK) {
-                return;
-            }
-            @SuppressWarnings("unchecked")
-            HashSet<String> fullSizedMap = (HashSet<String>) data
-                    .getSerializableExtra(ImageBrowserActivity.INTENT_IMAGE_FULLSIZED);
-            ArrayList<String> pathList = data.getExtras()
-                    .getStringArrayList(ImageBrowserActivity.INTENT_CHOSE_PATHLIST);
-            boolean isBurnAfter = mCurrentMessageEditState == MESSAGE_EDIT_STATE_BURN_AFTER;
-            onSelectedPictures(pathList, fullSizedMap, isBurnAfter);
-            switchBottomPanelView(false);
-        } else if (requestCode == REQUEST_CODE_PREVIEW_IMAGE) {
-            if (resultCode != RESULT_OK) {
-                mMessageDetailAdapter.notifyDataSetChanged();
-                return;
-            }
-            long msgId = data.getLongExtra(ImageViewerActivity.MESSAGE_ID, -1);
-            mMessageDetailAdapter.deleteRcsMessage(msgId);
-            mMessageDetailAdapter.notifyDataSetChanged();
-        } else if (requestCode == REQUEST_CODE_CAMERA) {
-            if (resultCode != RESULT_OK || TextUtils.isEmpty(mPhotoImagePath)) {
-                return;
-            }
-            Intent intent = new Intent(this, ImageBrowserActivity.class);
-            ArrayList<String> originFilePath = new ArrayList<String>();
-            originFilePath.add(mPhotoImagePath);
-            intent.putExtra(ImageBrowserActivity.INTENT_ORIGIN_PATHLIST, originFilePath);
-            intent.putExtra(ImageBrowserActivity.INTENT_CHOSE_PATHLIST, originFilePath);
-            intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_FROM_TYPE, ImageBrowserActivity._TYPE_FROM_CAMERA);
-            intent.putExtra(ImageBrowserActivity.INTENT_IMAGE_MAX_NUM, 1);
-            startActivityForResult(intent, REQUEST_CODE_PICTURE_CHOOSE);
-            mPhotoImagePath = null;
         } else if (requestCode == REQUEST_CODE_SHOW_LOCATION) {
             //There are two results from show location activity: normal finish & goto another
             if (resultCode == RESULT_CANCELED) {
@@ -1172,11 +1126,11 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
     private void initMessageDetailHeader() {
 
         //Title
-        View detailHeaderView = findViewById(R.id.message_header_layout);
+        final View detailHeaderView = findViewById(R.id.message_header_layout);
         //Left, back
         detailHeaderView.findViewById(R.id.back_iv).setOnClickListener(this);
         //Miffle, portrait
-        PhotoView photoView = (PhotoView) detailHeaderView.findViewById(R.id.message_title_profile_pv);
+        PortraitView photoView = (PortraitView) detailHeaderView.findViewById(R.id.message_title_profile_pv);
         photoView.setOnClickListener(this);
         //Right, more
         View moreView = detailHeaderView.findViewById(R.id.message_title_more_iv);
@@ -1651,10 +1605,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                     onStartAudio(clickedMessage);
                 }
                 break;
-            case MessageType.MSG_TYPE_IMAGE:
-                // 图片消息;
-                onStartPicture(clickedMessage);
-                break;
             case MessageType.MSG_TYPE_MAP:
                 // 定位消息
                 onStartMapActivity(clickedMessage);
@@ -1895,23 +1845,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
      */
     private void onPlainTextClick(ChatMsgBaseInfo cmiMsg) {
 
-    }
-
-    /**
-     * @param message
-     * @方法名：onStartPicture
-     * @描述：打开浏览图片的Activity
-     * @输出：void
-     * @作者：史卓君
-     */
-    private void onStartPicture(ChatMsgBaseInfo message) {
-        Intent intent = new Intent(this, ImageViewerActivity.class);
-        intent.putExtra(ImageViewerActivity.MESSAGE_ID, message.getMsgId());
-        if (message.getDownStatus() == ChatMsgBaseInfo.LOADED) {
-            startActivity(intent);
-        } else {
-            startActivityForResult(intent, REQUEST_CODE_PREVIEW_IMAGE);
-        }
     }
 
     /**

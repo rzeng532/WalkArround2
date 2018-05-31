@@ -56,7 +56,7 @@
                         android:layout_marginLeft="6dp"
                         android:paddingBottom="2dp"
                         android:paddingTop="2dp">
-            <com.awalk.walkarround.base.view.PhotoView
+            <com.awalk.walkarround.base.view.PortraitView
                     android:id="@+id/conv_portrait"
                     android:layout_width="60dp"
                     android:layout_height="60dp"

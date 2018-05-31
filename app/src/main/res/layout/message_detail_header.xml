@@ -31,7 +31,7 @@
                 android:layout_centerVertical="true"
                 android:background="@drawable/distance_playing"/>
 
-        <com.awalk.walkarround.base.view.PhotoView
+        <com.awalk.walkarround.base.view.PortraitView
                 android:id="@+id/message_title_profile_pv"
                 android:layout_width="36dp"
                 android:layout_height="36dp"

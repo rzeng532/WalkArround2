@@ -275,7 +275,7 @@ public class WalkArroundMsgManager {
         }
     }
 
-    public void getConversation(final String memberId, AsyncTaskListener listener) {
+    public void getConversation(final String memberId, final AsyncTaskListener listener) {
 
         //Find cache conversation at first.
         if(mConversationMap.size() > 0 && mConversationMap.containsKey(memberId)) {
@@ -372,17 +372,6 @@ public class WalkArroundMsgManager {
             mInstance.mMsgManager.deleteMessage(messageId);
         } catch (Exception e) {
             logger.e("delMsgById Exception: " + e.getMessage());
-        }
-    }
-
-    /**
-     * 下载视频，支持断点续传
-     */
-    public void acceptFile(ChatMsgBaseInfo message, boolean isCollectMsg) {
-        try {
-            mInstance.mMsgManager.acceptFile(message, isCollectMsg);
-        } catch (Exception e) {
-            logger.e("acceptFile Exception: " + e.getMessage());
         }
     }
 
@@ -1041,7 +1030,7 @@ public class WalkArroundMsgManager {
         return 0;
     }
 
-    public void updateConversationColor(long threadId, int newColor) {
+    public void updateConversationColor(final long threadId, final int newColor) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -1055,7 +1044,7 @@ public class WalkArroundMsgManager {
         }).start();
     }
 
-    public void updateConversationStatus(long threadId, int newStatus) {
+    public void updateConversationStatus(final long threadId, final int newStatus) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -1069,7 +1058,7 @@ public class WalkArroundMsgManager {
         }).start();
     }
 
-    public void updateConversationStatusAndColor(long threadId, int newStatus, int newColor) {
+    public void updateConversationStatusAndColor(final long threadId, final int newStatus, final int newColor) {
 
         new Thread(new Runnable() {
             @Override

@@ -238,7 +238,7 @@ public class LoginManager {
         });
     }
 
-    public void updatePassword(String oldPsw, String newPsw, AsyncTaskListener listener) {
+    public void updatePassword(String oldPsw, String newPsw, final AsyncTaskListener listener) {
         AVUser user = AVUser.getCurrentUser();
 
         if(user != null) {

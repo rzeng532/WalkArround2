@@ -54,7 +54,7 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
     }
 
     @Override
-    public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
+    public void onMessage(final AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
 
         try {
             AVUser avUser = AVUser.getCurrentUser();

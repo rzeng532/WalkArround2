@@ -370,7 +370,7 @@ public class DialogFactory {
         return dialog;
     }
 
-    public static Dialog getStart2WalkDialog(Context context, String usrObjId, final ConfirmDialogClickListener listener) {
+    public static Dialog getStart2WalkDialog(final Context context, String usrObjId, final ConfirmDialogClickListener listener) {
         final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);

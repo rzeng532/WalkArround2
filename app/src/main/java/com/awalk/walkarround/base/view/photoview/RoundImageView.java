@@ -29,7 +29,9 @@ public class RoundImageView extends ImageView {
     }
 
     private final RectF roundRect = new RectF();
-    private float rect_adius = 90;
+//    private float rect_adius = 90;
+    private float xRradius;
+    private float yRradius;
     private final Paint maskPaint = new Paint();
     private final Paint zonePaint = new Paint();
 
@@ -41,21 +43,21 @@ public class RoundImageView extends ImageView {
         zonePaint.setColor(Color.WHITE);
 
         float density = getResources().getDisplayMetrics().density;
-        rect_adius = rect_adius * density;
+//        rect_adius = rect_adius * density;
     }
 
-    public void setRectAdius(float adius) {
-        rect_adius = adius;
-        invalidate();
-    }
-
-    public float getRect_adius() {
-        return rect_adius;
-    }
-
-    public void setRect_adius(float rect_adius) {
-        this.rect_adius = rect_adius;
-    }
+//    public void setRectAdius(float adius) {
+//        rect_adius = adius;
+//        invalidate();
+//    }
+//
+//    public float getRect_adius() {
+//        return rect_adius;
+//    }
+//
+//    public void setRect_adius(float rect_adius) {
+//        this.rect_adius = rect_adius;
+//    }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -63,12 +65,14 @@ public class RoundImageView extends ImageView {
         int w = getWidth();
         int h = getHeight();
         roundRect.set(0, 0, w, h);
+        xRradius = w / 2;
+        yRradius = h / 2;
     }
 
     @Override
     public void draw(Canvas canvas) {
         canvas.saveLayer(roundRect, zonePaint, Canvas.ALL_SAVE_FLAG);
-        canvas.drawRoundRect(roundRect, rect_adius, rect_adius, zonePaint);
+        canvas.drawRoundRect(roundRect, xRradius, yRradius, zonePaint);
 
         canvas.saveLayer(roundRect, maskPaint, Canvas.ALL_SAVE_FLAG);
         super.draw(canvas);

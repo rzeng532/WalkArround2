@@ -28,8 +28,6 @@ public abstract class MessageAbstractManger {
     public abstract long sendAssistantPlainMessage(MessageRecipientInfo recipientInfo, String text, boolean isBurnAfter,
                                           int burnTime, String extraInfo) throws Exception;
 
-
-
     /**
      * 发送定时消息
      *
@@ -37,15 +35,6 @@ public abstract class MessageAbstractManger {
      * @param text
      */
     public abstract long sendTimePlainMessage(MessageRecipientInfo recipientInfo, String text, long time) throws Exception;
-
-    /**
-     * 发送联系人名片
-     *
-     * @param recipientInfo
-     * @param vcardFilePath
-     */
-    //public abstract long sendVcardFile(MessageRecipientInfo recipientInfo, String vcardFilePath, String vCardDisplayName)
-    //        throws Exception;
 
     /**
      * 发送图片(包括照片)
@@ -175,10 +164,6 @@ public abstract class MessageAbstractManger {
 
     public abstract void setAllSendingMsgStatusFail() throws Exception;
 
-    public abstract boolean interruptDownloadVideo(ChatMsgBaseInfo message) throws Exception;
-
-    public abstract void acceptFile(ChatMsgBaseInfo message, boolean isCollectMsg) throws Exception;
-
     /**
      * 阅后即焚
      *
@@ -200,14 +185,6 @@ public abstract class MessageAbstractManger {
      * @throws Exception
      */
     public abstract int setMessageRead(long messageId) throws Exception;
-
-    /**
-     * 设置消息为已读状态
-     *
-     * @return
-     * @throws Exception
-     */
-    public abstract boolean isMessageAttachDownload(ChatMsgBaseInfo message) throws Exception;
 
     /**
      * 将当前消息置顶或取消置顶
@@ -270,23 +247,8 @@ public abstract class MessageAbstractManger {
 
     public abstract Uri saveMessage(ChatMsgBaseInfo message);
 
-    //public List<GroupInvitationBaseInfo> getGroupInvitationList(long beginId, int count) throws Exception {
-    //    return null;
-    //}
-
-    public int getUnreadInvitationCount() throws Exception {
-        return 0;
-    }
-
-    public int setInvitationRead() throws Exception {
-        return 0;
-    }
-
     public List<ChatMsgBaseInfo> getMessageByExtraInfo(String extraKey) throws Exception {
         return null;
-    }
-
-    public void updateConversationMsgNotifyFlag() throws Exception {
     }
 
     public void updateConversationStatus(long threadid, int status) throws Exception {
@@ -314,9 +276,5 @@ public abstract class MessageAbstractManger {
     public int getAllNotifyMsgUnreadCount() throws Exception {
         return 0;
     }
-
-//    public Uri saveMessage(ChatMsgBaseInfo message){
-//        return null;
-//    }
 
 }
