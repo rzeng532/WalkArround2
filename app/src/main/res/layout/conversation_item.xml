@@ -132,6 +132,7 @@
                     android:id="@+id/conv_note"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="26dp"
                     android:layout_below="@id/conv_name"
                     android:layout_toLeftOf="@+id/conversation_item_del_icon"
                     android:drawablePadding="5dp"

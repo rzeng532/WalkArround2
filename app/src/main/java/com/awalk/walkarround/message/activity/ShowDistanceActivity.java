@@ -58,6 +58,7 @@ import com.awalk.walkarround.util.http.ThreadPoolManager;
  */
 public class ShowDistanceActivity extends Activity implements View.OnClickListener {
 
+    public static String sCurrentReceiverNum = null;
     private Logger logger = Logger.getLogger(ShowDistanceActivity.class.getSimpleName());
     private RippleView mSearchingView;
     private View mFulfillView;
@@ -258,6 +259,8 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
 
         initData();
 
+        sCurrentReceiverNum = mStrFriendId;
+
         initRegisterforNewMsg();
 
         //Start to update current user location information.
@@ -292,6 +295,7 @@ public class ShowDistanceActivity extends Activity implements View.OnClickListen
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        sCurrentReceiverNum = null;
 
         mPriorDistance = -1;
         LocationManager.getInstance(WalkArroundApp.getInstance()).stopContinueLocate();
