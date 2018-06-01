@@ -28,9 +28,6 @@ public class AppConstant {
     public static final String LOCATION_PIC_PATH = CAMERA_TAKE_PIC_PATH;
     public static final String APP_DATA_ROOT_PATH = "/com.awalk.walkaround";
 
-    /* 收藏信息文件存储位置 */
-    public static final String FAVORITE_MSG_FILE_PATH = "/msg/collect/";
-
     /* 语音消息文件路径 */
     public static final String AUDIO_FILE_PATH = "/msg/audio/";
 

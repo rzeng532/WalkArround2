@@ -807,9 +807,9 @@ public class WalkArroundMsgManager {
      * @param count  获取个数
      * @return
      */
-    public List<MessageSessionBaseModel> getConversationList(boolean isNotify, int offset, int count) {
+    public List<MessageSessionBaseModel> getConversationList(int offset, int count) {
         try {
-            return mInstance.mMsgManager.getMessageSessionList(isNotify, offset, count);
+            return mInstance.mMsgManager.getMessageSessionList(offset, count);
         } catch (Exception e) {
             logger.e("getConversationList Exception:" + e.getMessage());
         }
@@ -932,34 +932,6 @@ public class WalkArroundMsgManager {
     public Map<String, String> queryMsgSession(Context context, String key) {
         Map<String, String> map = mInstance.mMsgManager.queryMessageSession(key);
         return map;
-    }
-
-    /**
-     * 获取最新的一条通知消息内容
-     *
-     * @return
-     */
-    public MessageSessionBaseModel getLatestNotifySession() {
-        try {
-            return mInstance.mMsgManager.getLatestNotifySession();
-        } catch (Exception e) {
-            logger.e("getLatestNotifySession Exception:" + e.getMessage());
-        }
-        return null;
-    }
-
-    /**
-     * 获取所有未读通知消息数
-     *
-     * @return
-     */
-    public int getAllNotifyMsgUnreadCount() {
-        try {
-            return mInstance.mMsgManager.getAllNotifyMsgUnreadCount();
-        } catch (Exception e) {
-            logger.e("getAllNotifyMsgUnreadCount Exception:" + e.getMessage());
-        }
-        return 0;
     }
 
     /**
@@ -1131,10 +1103,8 @@ public class WalkArroundMsgManager {
      */
     public void onLoadMsgResult(ChatMsgBaseInfo msgInfo, List<Long> idList,boolean isSuccess) {
         // 下载消息成功
-        if (isSuccess) {
-            String action = msgInfo.getChatType() == MessageConstant.ChatType.CHAT_TYPE_GROUP ?
-                    MsgBroadcastConstants.ACTION_GROUP_MESSAGE_NEW_RECEIVED
-                    : MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED;
+        if (isSuccess && msgInfo.getChatType() == MessageConstant.ChatType.CHAT_TYPE_ONE2ONE) {
+            String action = MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED;
             Intent intent = new Intent();
             intent.setAction(action);
             intent.putExtra(MsgBroadcastConstants.BC_VAR_MSG_ID, msgInfo.getMsgId());

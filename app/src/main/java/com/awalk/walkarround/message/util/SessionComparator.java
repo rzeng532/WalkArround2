@@ -16,8 +16,6 @@ public class SessionComparator implements Comparator<MessageSessionBaseModel> {
     /* 按置顶降序 */
     public static final int TOP_DESC = 3;
 
-    public static final int PA_DESC = 4;/*public account 降序排列*/
-
     public static final int STATUS_DESC = 5;/*Conv 状态降序排列*/
 
     private int sortOrder = TIME_DESC;
@@ -28,13 +26,10 @@ public class SessionComparator implements Comparator<MessageSessionBaseModel> {
 
     @Override
     public int compare(MessageSessionBaseModel lhs, MessageSessionBaseModel rhs) {
-        if (sortOrder == PA_DESC) {
-            return Boolean.valueOf(isPubOrSysItem(rhs.getItemType()))
-                    .compareTo(isPubOrSysItem(lhs.getItemType()));
-        } else if (sortOrder == TOP_DESC) {
+        if (sortOrder == TOP_DESC) {
             return Integer.compare(rhs.getTop(), lhs.getTop());
         } else if (sortOrder == STATUS_DESC) {
-            return Integer.compare(rhs.status, lhs.status);
+            return Integer.compare(lhs.status, rhs.status);
         } else {
             if (sortOrder == TIME_ASC) {
                 return Long.compare(lhs.getLastTime(), rhs.getLastTime());
@@ -45,8 +40,4 @@ public class SessionComparator implements Comparator<MessageSessionBaseModel> {
 
     }
 
-    private boolean isPubOrSysItem(int itemType) {
-        return itemType == ConversationType.PUBLIC_ACCOUNT
-                || itemType == ConversationType.SYSTEM;
-    }
 }

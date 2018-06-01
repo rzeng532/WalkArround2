@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.awalk.walkarround.R;
 import com.awalk.walkarround.base.view.PortraitView;
 import com.awalk.walkarround.main.model.ContactInfo;
+import com.awalk.walkarround.message.activity.BuildMessageActivity;
 import com.awalk.walkarround.message.activity.ConversationActivity;
 import com.awalk.walkarround.message.listener.ConversationItemListener;
 import com.awalk.walkarround.message.manager.ContactsManager;
@@ -137,14 +138,6 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
      */
     public boolean getBatchOperation() {
         return mIsBatchOperation;
-    }
-
-    public void clearCacheDisplayName() {
-        for (MessageSessionBaseModel sessionModel : mListData) {
-            if (sessionModel.getItemType() == ConversationType.GENERAL) {
-                sessionModel.name = null;
-            }
-        }
     }
 
     /**
@@ -329,9 +322,7 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
      * @param listDO
      */
     private void setItemTime(ViewHolder holder, MessageSessionBaseModel listDO) {
-        if (listDO == null
-                || listDO.getItemType() == ConversationType.PUBLIC_ACCOUNT
-                || listDO.getItemType() == ConversationType.SYSTEM) {
+        if (listDO == null) {
             holder.tvTime.setVisibility(View.GONE);
         } else {
             holder.tvTime.setVisibility(View.VISIBLE);

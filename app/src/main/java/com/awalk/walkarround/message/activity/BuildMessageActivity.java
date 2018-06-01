@@ -343,8 +343,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
         commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
         commandFilter.addAction(AlarmReceiver.ACTION_TIME_MSG_SEND);
         // 群聊通知消息
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_MESSAGE_NEW_RECEIVED);
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_INFO_CHANGED);
         commandFilter.addAction(MsgBroadcastConstants.ACTION_CONTACT_COMPOSING_INFO);
         registerReceiver(mMessageReceiver, commandFilter);
 
@@ -393,8 +391,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
         commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
         commandFilter.addAction(AlarmReceiver.ACTION_TIME_MSG_SEND);
         // 群聊通知消息
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_MESSAGE_NEW_RECEIVED);
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_INFO_CHANGED);
         commandFilter.addAction(MsgBroadcastConstants.ACTION_CONTACT_COMPOSING_INFO);
         getBaseContext().registerReceiver(mMessageReceiver, commandFilter);
         initMessageDetailHeader();
@@ -593,6 +589,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
         if (mMessageListView != null) {
             mMessageListView.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED);
         }
+
+        WalkArroundMsgManager.getInstance(getApplicationContext())
+                .setMsgReadByThreadId(mRecipientInfo.getThreadId());
     }
 
     @Override
@@ -813,7 +812,6 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                         mRecipientInfo.getRecipientList());
             }
 
-            WalkArroundMsgManager.getInstance(getApplicationContext()).setMsgReadByThreadId(threadId);
             mRecipientInfo.setThreadId(threadId);
             String displayName = intent.getStringExtra(INTENT_CONVERSATION_DISPLAY_NAME);
             mRecipientInfo.setDisplayName(displayName);

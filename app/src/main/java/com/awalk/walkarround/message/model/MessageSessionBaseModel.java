@@ -23,7 +23,7 @@ public abstract class MessageSessionBaseModel {
     public int status; //会话状态, IM, 走走，评价等
     public int colorIndex;  //颜色索引
 
-    private int conversationType = ConversationType.GENERAL;
+//    private int conversationType = ConversationType.GENERAL;
 
 
     public abstract void setSessionModel(Object sessionModel);
@@ -51,15 +51,5 @@ public abstract class MessageSessionBaseModel {
 
     public abstract boolean isBurnAfterMsg();
     public abstract void setIsBurnAfterMsg(boolean isBurbAfter);
-
-    public abstract boolean isNotifyConversation();
-    public abstract void setNotifyConversation(boolean isNotify);
-
-    public void setItemType(int type) {
-        conversationType = type;
-    }
-    public int getItemType() {
-        return conversationType;
-    }
 
 }

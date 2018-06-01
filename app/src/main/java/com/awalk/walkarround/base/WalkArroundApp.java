@@ -35,6 +35,7 @@ public class WalkArroundApp extends Application {
 
     static {
         AppConstant.BUGLY_APP_ID = BuildConfig.BUGLY_APP_ID;
+        AppConstant.LOG_OUTPUT = "debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE);
     }
 
     @Override

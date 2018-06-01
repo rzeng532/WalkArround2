@@ -755,8 +755,8 @@ public class AVSMsgManager extends MessageAbstractManger {
     }
 
     @Override
-    public List<MessageSessionBaseModel> getMessageSessionList(boolean isNotifyMsg, int offset, int count) throws Exception {
-        return messageDbManager.getMsgSession(isNotifyMsg, offset, count);
+    public List<MessageSessionBaseModel> getMessageSessionList(int offset, int count) throws Exception {
+        return messageDbManager.getMsgSession(offset, count);
     }
 
     @Override
@@ -888,16 +888,6 @@ public class AVSMsgManager extends MessageAbstractManger {
     @Override
     public int getIntentConversationColor(long threadid) throws Exception {
         return messageDbManager.getConversationColor(threadid);
-    }
-
-    @Override
-    public MessageSessionBaseModel getLatestNotifySession() throws Exception {
-        return messageDbManager.getLatestNotifySession();
-    }
-
-    @Override
-    public int getAllNotifyMsgUnreadCount() throws Exception {
-        return messageDbManager.getAllNotifyMsgUnreadCount();
     }
 
     @Override

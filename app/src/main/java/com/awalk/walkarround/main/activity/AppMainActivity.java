@@ -256,8 +256,7 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
 
                 // 加载数据
                 ThreadPoolManager.getPoolManager().addAsyncTask(
-                        new AsyncTaskLoadSession(getApplicationContext(),
-                                MessageConstant.MSG_OPERATION_LOAD, 0, Integer.MAX_VALUE, mAsysResultListener));
+                        new AsyncTaskLoadSession(getApplicationContext(),0, Integer.MAX_VALUE, mAsysResultListener));
 
                 amLogger.d("There is friend: " + (String) object);
             }

@@ -356,7 +356,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
             mPrepareCountdownTimer.cancel();
 
             //Test code
-            startMediaDelayTask();
+//            startMediaDelayTask();
         } else if(mRuleDialog != null) {
             ((TextView)mRuleDialog.findViewById(R.id.tv_i_see))
                     .setText(getString(R.string.walk_rule_i_see, PREPARE_COUNTDOWN_TOTOL_TIME - mCurTime));
@@ -374,6 +374,11 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
         mCurTime++;
 
         if (mCurTime > COUNTDOWN_TOTOL_TIME) {
+            // 响起音乐提醒
+            Intent intent = new Intent();
+            intent.setAction(MediaAlarmReceiver.ACTION_START_MEDIA_TASK);
+            sendBroadcast(intent);
+
             logger.d("Set time as 0 ");
             timeProgress.setProgress(100);
             setTvCountdownTimeUI(0);

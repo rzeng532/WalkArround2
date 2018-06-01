@@ -173,7 +173,7 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="16dp"
                 android:gravity="center_vertical"
-                android:src="@drawable/icon_slide_feedback"/>
+                android:src="@drawable/about_zouzou"/>
 
             <TextView
                 android:layout_width="wrap_content"

@@ -106,8 +106,6 @@ public class MessageDatabase extends SQLiteOpenHelper {
         public static final int NOT_HIDE = Message.NOT_HIDE;
         public static final int HIDE = Message.HIDE;
 
-        public static final String NOTIFY_MSG = "notify";
-        public static final String COMMON_MSG = "common";
     }
 
 //    public static class Group {
@@ -239,7 +237,7 @@ public class MessageDatabase extends SQLiteOpenHelper {
                 + Conversation._CONVERSATION_STATUS + " INTEGER DEFAULT 2, " //Default: MessageUtil.WalkArroundState.STATE_IM
                 + Conversation._COLOR + " INTEGER DEFAULT -1, "
                 + Conversation._DATE + " INTEGER DEFAULT 0, "
-                + Conversation._DATA1 + " TEXT DEFAULT " + Conversation.COMMON_MSG + ", "
+                + Conversation._DATA1 + " TEXT, "
                 + Conversation._DATA2 + " TEXT, "
                 + Conversation._DATA3 + " TEXT, "
                 + Conversation._DATA4 + " TEXT, "

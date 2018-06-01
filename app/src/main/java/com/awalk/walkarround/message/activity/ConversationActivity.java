@@ -109,11 +109,20 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             String action = intent.getAction();
             if (MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED.equals(action)) {
                 // 新到消息
-                onReceiverRscMsg(context, intent);
+                String contact = intent.getStringExtra(MsgBroadcastConstants.BC_VAR_CONTACT);
+                if (BuildMessageActivity.sCurrentReceiverNum == null
+                        || !BuildMessageActivity.sCurrentReceiverNum.equals(contact)) {
+                    // 不在与此人到聊天页面
+                    onReceiverRscMsg(context, intent);
+                }
             } else if (BuildMessageActivity.ACTION_NOTIFY_CONVERSATION_REFRESH.equals(action)) {
                 // 进入了聊天页面，更新item信息
                 long threadId = intent.getLongExtra(BuildMessageActivity.CONVERSATION_REFRESH_ID,
                         BuildMessageActivity.CONVERSATION_DEFAULT_THREAD_ID);
+                MessageSessionBaseModel item = mConversationAdapter.findItemData(threadId);
+                if (item != null) {
+                    item.unReadCount = 0;
+                }
                 sessionInfoChanged(threadId);
             } else if (MsgBroadcastConstants.ACTION_MESSAGE_STATUS_CHANGED.equals(action)) {
                 // 消息状态变化
@@ -406,12 +415,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         super.onResume();
         AVAnalytics.onResume(this);
         // 加载数据
-        ThreadPoolManager.getPoolManager().addAsyncTask(
-                new AsyncTaskLoadSession(mContext, MessageConstant.MSG_OPERATION_LOAD,
-                        0, Integer.MAX_VALUE, mAsysResultListener)
-        );
-
-        mConversationAdapter.notifyDataSetChanged();
+        queryConversationList();
 
         View maskView = findViewById(R.id.page_mask_v);
         if (maskView.getVisibility() == View.VISIBLE) {
@@ -465,14 +469,8 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         // 收到新的message消息
         IntentFilter commandFilter = new IntentFilter();
         commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_NEW_RECEIVED);
-        // 群聊通知消息
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_MESSAGE_NEW_RECEIVED);
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_INFO_CHANGED);
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_CREATE_ERROR);
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_CREATE);
         commandFilter.addAction(BuildMessageActivity.ACTION_NOTIFY_CONVERSATION_REFRESH);
         commandFilter.addAction(MsgBroadcastConstants.ACTION_MESSAGE_STATUS_CHANGED);
-        commandFilter.addAction(MsgBroadcastConstants.ACTION_GROUP_INVITATION);
 
         registerReceiver(mMessageReceiver, commandFilter);
 
@@ -483,12 +481,11 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     }
 
     /**
-     * 查询非通知会话
+     * 查询会话
      */
     private void queryConversationList() {
         ThreadPoolManager.getPoolManager().addAsyncTask(
-                new AsyncTaskLoadSession(mContext,
-                        MessageConstant.MSG_OPERATION_LOAD, 0, 0, mAsysResultListener)
+                new AsyncTaskLoadSession(mContext,0, Integer.MAX_VALUE, mAsysResultListener)
         );
     }
 
@@ -506,62 +503,18 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             BaseConversationListAdapter adapter = mConversationAdapter;
             MessageSessionBaseModel item = adapter.findItemData(result.getThreadId());
             if (item == null) {
-                item = mConversationAdapter.findItemData(result.getThreadId());
-            }
-            if (item == null) {
                 // 新到会话
                 if (mConvType == CONV_TYPE_CUR_FRIEND) {
                     //Update old friend flag & return;
                     mIvOldFriends.setVisibility(View.VISIBLE);
                     mIvOldFriendUnread.setVisibility(View.VISIBLE);
-                    return;
                 }
-
-                if (adapter instanceof ConversationListAdapter) {
-                    adapter.addListData(result);
-                    adapter.sortListData(SessionComparator.TIME_DESC);
-                    adapter.sortListData(SessionComparator.STATUS_DESC);
-                    adapter.sortListData(SessionComparator.TOP_DESC);
-                    adapter.notifyDataSetChanged();
-                }
-            } else if (item.getTop() == result.getTop()) {
+            } else {
                 adapter.updateItemData(item, result);
                 adapter.sortListData(SessionComparator.TIME_DESC);
-                if (adapter instanceof ConversationListAdapter) {
-                    adapter.sortListData(SessionComparator.STATUS_DESC);
-                    adapter.sortListData(SessionComparator.TOP_DESC);
-                }
+                adapter.sortListData(SessionComparator.STATUS_DESC);
+                adapter.sortListData(SessionComparator.TOP_DESC);
                 adapter.notifyDataSetChanged();
-            } else {
-                if (result.getTop() == MessageConstant.TopState.NOT_TOP) {
-                    // 消息消顶
-                    if (item.getItemType() == ConversationType.NOTICES_MSG) {
-                        // 通知消息
-                        mConversationAdapter.deleteItemData(item);
-                        mConversationAdapter.notifyDataSetChanged();
-                    } else {
-                        // 普通消息消顶
-                        adapter.updateItemData(item, result);
-                        adapter.sortListData(SessionComparator.TIME_DESC);
-                        if (adapter instanceof ConversationListAdapter) {
-                            adapter.sortListData(SessionComparator.STATUS_DESC);
-                            adapter.sortListData(SessionComparator.TOP_DESC);
-                        }
-                        adapter.notifyDataSetChanged();
-                    }
-                } else {
-                    // 消息置顶
-                    if (item.getItemType() == ConversationType.NOTICES_MSG) {
-                        // 通知类消息置顶
-                        mConversationAdapter.addListData(result);
-                    } else {
-                        mConversationAdapter.updateItemData(item, result);
-                    }
-                    mConversationAdapter.sortListData(SessionComparator.TIME_DESC);
-                    mConversationAdapter.sortListData(SessionComparator.STATUS_DESC);
-                    mConversationAdapter.sortListData(SessionComparator.TOP_DESC);
-                    mConversationAdapter.notifyDataSetChanged();
-                }
             }
         }
     }

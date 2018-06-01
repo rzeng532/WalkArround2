@@ -758,34 +758,17 @@ public class AVSDbManager {
     /**
      * 获取会话/通知消息列表
      *
-     * @param isNotifyMsg
      * @param offset
      * @param count
      * @return
      */
-    public List<MessageSessionBaseModel> getMsgSession(boolean isNotifyMsg, int offset, int count) {
-        String sortOrder;
-        String where;
-        String[] args;
-        if (isNotifyMsg) {
-            // 通知类消息
-            sortOrder = Conversation._DATE + " DESC";
-            if (count > 0) {
-                sortOrder += " limit " + Integer.toString(count);
-                sortOrder += " offset " + offset ;
-            }
-            where = Conversation._DATA1 + " = ? AND " + Conversation._TOP + " = ?";
-            args = new String[]{Conversation.NOTIFY_MSG, Integer.toString(Conversation.NOT_TOP)};
-        } else {
-            sortOrder = Conversation._TOP + " DESC , " + Conversation._DATE + " DESC";
-            if (count > 0) {
-                sortOrder += " limit " + Integer.toString(count);
-                sortOrder += " offset " + offset;
-            }
-            where = Conversation._DATA1 + " = ? or (" + Conversation._DATA1 + " = ? AND " + Conversation._TOP + " = ?)";
-            args = new String[]{Conversation.COMMON_MSG, Conversation.NOTIFY_MSG, Integer.toString(Conversation.TOP)};
+    public List<MessageSessionBaseModel> getMsgSession(int offset, int count) {
+        String sortOrder = Conversation._TOP + " DESC , " + Conversation._DATE + " DESC";
+        if (count > 0) {
+            sortOrder += " limit " + Integer.toString(count);
+            sortOrder += " offset " + offset;
         }
-        Cursor cur = mContext.getContentResolver().query(Conversation.CONTENT_URI, null, where, args, sortOrder);
+        Cursor cur = mContext.getContentResolver().query(Conversation.CONTENT_URI, null, null, null, sortOrder);
 
         List<MessageSessionBaseModel> list = new ArrayList<MessageSessionBaseModel>();
         if (cur != null) {
@@ -805,12 +788,10 @@ public class AVSDbManager {
         String[] args;
 
         sortOrder = Conversation._DATE + " DESC";
-        where = Conversation._DATA1 + " = ? AND (" +
-                    Conversation._CONVERSATION_STATUS + " = ? OR " +
-                    Conversation._CONVERSATION_STATUS + " = ?)";
-        args = new String[]{Conversation.COMMON_MSG,
-                            String.valueOf(MessageUtil.WalkArroundState.STATE_END),
-                            String.valueOf(MessageUtil.WalkArroundState.STATE_END_IMPRESSION)};
+        where = Conversation._CONVERSATION_STATUS + " = ? OR " +
+                Conversation._CONVERSATION_STATUS + " = ?";
+        args = new String[]{String.valueOf(MessageUtil.WalkArroundState.STATE_END),
+                String.valueOf(MessageUtil.WalkArroundState.STATE_END_IMPRESSION)};
 
         Cursor cur = mContext.getContentResolver().query(Conversation.CONTENT_URI, null, where, args, sortOrder);
 
@@ -832,7 +813,7 @@ public class AVSDbManager {
      * Default value is 24 hours. (24 * 60 * 60 * 1000 ms)s
      */
     public int delOtherConversionsOverParamTime(long time) {
-        if(time <= 0) {
+        if (time <= 0) {
             return -1;
         }
 
@@ -859,7 +840,7 @@ public class AVSDbManager {
             cursor.close();
         }
 
-        if(threadIdList.size() > 0) {
+        if (threadIdList.size() > 0) {
             batchDeleteMsg(threadIdList);
         }
 
@@ -920,11 +901,6 @@ public class AVSDbManager {
 
         MessageSessionModelInfo model = new MessageSessionModelInfo();
         model.setChatType(type);
-        int itemType = ConversationType.GENERAL;
-        if (Conversation.NOTIFY_MSG.equals(itemTypeStr)) {
-            itemType = ConversationType.NOTICES_MSG;
-        }
-        model.setItemType(itemType);
         model.setContact(recipient_address);
         model.setData(msg_content);
         model.setLastTime(date);
@@ -948,34 +924,6 @@ public class AVSDbManager {
         return model;
     }
 
-    /**
-     * 更新数据库中未有是否通知会话标记的会话
-     */
-    public void updateConversationMsgNotifyFlag() {
-        String where = Conversation._DATA1 + " is NULL";
-        Cursor cur = mContext.getContentResolver().query(Conversation.CONTENT_URI, new String[]{Conversation._ID,
-                        Conversation._RECIPIENT_ADDRESS}, where, null, null
-        );
-        if (cur != null) {
-            if (cur.moveToFirst()) {
-                ContentValues values = new ContentValues();
-                where = Conversation._ID + " =?";
-                String[] args = new String[1];
-                do {
-                    String id = cur.getString(cur.getColumnIndex(Conversation._ID));
-                    args[0] = id;
-                    String number = cur.getString(cur.getColumnIndex(Conversation._RECIPIENT_ADDRESS));
-                    values.clear();
-                    //String flag = CommonUtil.isNoticeNum(number) ? Conversation.NOTIFY_MSG : Conversation.COMMON_MSG;
-                    String flag = Conversation.COMMON_MSG;
-                    values.put(Conversation._DATA1, flag);
-                    mContext.getContentResolver().update(Conversation.CONTENT_URI, values, where, args);
-                } while (cur.moveToNext());
-            }
-            cur.close();
-        }
-    }
-
     public void updateConversationStatus(long threadId, int newState) {
 
         if (threadId < 0) {
@@ -985,7 +933,7 @@ public class AVSDbManager {
 
         int oldState = getConversationStatus(threadId);
 
-        if(oldState == newState) {
+        if (oldState == newState) {
             return;
         }
 
@@ -993,7 +941,7 @@ public class AVSDbManager {
         String[] arg = new String[]{threadId + ""};
         ContentValues conversationValues = new ContentValues();
 
-        if(newState < oldState
+        if (newState < oldState
                 && oldState >= MessageUtil.WalkArroundState.STATE_IM
                 && oldState <= MessageUtil.WalkArroundState.STATE_END) {
             return;
@@ -1003,7 +951,7 @@ public class AVSDbManager {
 
         //If conversation state == WalkArroundState.STATE_END
         logger.d("updateConversationStatus, old = " + oldState + ", newState = " + newState);
-        if(newState >= MessageUtil.WalkArroundState.STATE_END) {
+        if (newState >= MessageUtil.WalkArroundState.STATE_END) {
             logger.d("State is END & clear top ");
             conversationValues.put(Conversation._TOP, Conversation.NOT_TOP);
         }
@@ -1040,7 +988,7 @@ public class AVSDbManager {
         ContentValues conversationValues = new ContentValues();
         conversationValues.put(Conversation._COLOR, newColor);
 
-        if(newStatus <= oldState
+        if (newStatus <= oldState
                 && oldState >= MessageUtil.WalkArroundState.STATE_IM
                 && oldState <= MessageUtil.WalkArroundState.STATE_END) {
             newStatus = oldState;
@@ -1050,7 +998,7 @@ public class AVSDbManager {
 
         //If conversation state == WalkArroundState.IMPRESSION
         logger.d("updateConversationStatus, old = " + oldState + ", newState = " + newStatus);
-        if(newStatus >= MessageUtil.WalkArroundState.STATE_END) {
+        if (newStatus >= MessageUtil.WalkArroundState.STATE_END) {
             logger.d("updateConversationStatus, clear top.");
             conversationValues.put(Conversation._TOP, Conversation.NOT_TOP);
         }
@@ -1103,50 +1051,6 @@ public class AVSDbManager {
         }
 
         return result;
-    }
-
-    /**
-     * 最新一条通知消息会话
-     *
-     * @return
-     */
-    public MessageSessionBaseModel getLatestNotifySession() {
-        String sortOrder = Conversation._DATE + " DESC limit 1";
-        String where = Conversation._DATA1 + " = ? AND " + Conversation._TOP + " = ?";
-        String[] args = new String[]{Conversation.NOTIFY_MSG, Integer.toString(Conversation.NOT_TOP)};
-        Cursor cur = mContext.getContentResolver().query(Conversation.CONTENT_URI, null, where, args, sortOrder);
-        MessageSessionModelInfo modelInfo = null;
-        if (cur != null) {
-            if (cur.moveToFirst()) {
-                modelInfo = getSessionByCursor(cur);
-            }
-            cur.close();
-        }
-        return modelInfo;
-    }
-
-    /**
-     * 获取所有通知消息未读个数
-     *
-     * @return
-     */
-    public int getAllNotifyMsgUnreadCount() {
-        String where = Conversation._DATA1 + " = ? AND " + Conversation._TOP + " = ? AND "
-                + Conversation._UNREAD_COUNT + " > 0";
-        String[] args = new String[]{Conversation.NOTIFY_MSG, Integer.toString(Conversation.NOT_TOP)};
-        Cursor cur = mContext.getContentResolver().query(Conversation.CONTENT_URI, new String[]{Conversation._UNREAD_COUNT},
-                where, args, null);
-        int count = 0;
-        if (cur != null) {
-            if (cur.moveToFirst()) {
-                do {
-                    int unreadCount = cur.getInt(cur.getColumnIndex(Conversation._UNREAD_COUNT));
-                    count += unreadCount;
-                } while (cur.moveToNext());
-            }
-            cur.close();
-        }
-        return count;
     }
 
     /**
@@ -1227,7 +1131,7 @@ public class AVSDbManager {
             cursor.close();
         }
 
-        if(threadIdList.size() > 0) {
+        if (threadIdList.size() > 0) {
             batchDeleteMsg(threadIdList);
         }
 
@@ -1374,8 +1278,6 @@ public class AVSDbManager {
             ContentValues values = new ContentValues();
             values.put(Conversation._RECIPIENT_ADDRESS, builder.toString());
             values.put(Conversation._TYPE, chatType);
-            String notifyFlag = Conversation.COMMON_MSG;
-            values.put(Conversation._DATA1, notifyFlag);
 
             // FIX: Receive INVITE from Group, but no message, the
             // conversation should be at the top by time

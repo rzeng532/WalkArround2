@@ -444,6 +444,12 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 if(AssistantHelper.isThereGuideStep()
                         && AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_SEARCHING)
                         && AssistantHelper.ASSISTANT_OBJ_ID.equals(mStrToUsrId)) {
+
+                    Message msg = mFragmentHandler.obtainMessage();
+                    msg.what = SOMEONE_LIKE_YOU;
+                    msg.obj = mStrToUsrId;
+                    mFragmentHandler.sendMessage(msg);
+
                     //Generate a msg record
                     WalkArroundMsgManager.getInstance(getActivity().getApplicationContext())
                             .sendAssistantTextMsg(AssistantHelper.ASSISTANT_OBJ_ID, getString(R.string.msg_say_hello), null);
@@ -458,6 +464,8 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                     WalkArroundMsgManager.getInstance(getActivity().getApplicationContext())
                             .addMsgUnreadCountByThreadId(recipientInfo.getThreadId());
                     mIvUnreadIcon.setVisibility(View.VISIBLE);
+                    WalkArroundMsgManager.getInstance(getActivity().getApplicationContext())
+                            .updateConversationStatus(recipientInfo.getThreadId(), MessageUtil.WalkArroundState.STATE_IM);
                     //Assistant's searching step is completed.
                     AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_INTRODUCE_MYSELF_MASK);
                     AssistantHelper.getInstance().updateStepState(AssistantHelper.STEP_SEARCHING_MASK);

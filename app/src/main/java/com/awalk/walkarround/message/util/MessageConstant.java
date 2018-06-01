@@ -57,8 +57,6 @@ public class MessageConstant {
 
     public interface ConversationType {
         int GENERAL = 0;
-        int PUBLIC_ACCOUNT = 1;
-        int NOTICES_MSG = 2;
         int SYSTEM = 3;
         int OLD_FRIEND = 4;
     }

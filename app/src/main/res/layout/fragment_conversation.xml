@@ -110,7 +110,8 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/iv_old_friends"
         android:layout_alignTop="@id/iv_old_friends"
-        android:paddingRight="3dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
         android:src="@drawable/message_unread_count_bg"/>
 
     <View android:id="@+id/page_mask_v"

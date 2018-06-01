@@ -205,7 +205,7 @@ public abstract class MessageAbstractManger {
 
     public abstract Map<String, String> queryMessageSession(String key);
 
-    public abstract List<MessageSessionBaseModel> getMessageSessionList(boolean isNotifyMsg, int offset, int count) throws Exception;
+    public abstract List<MessageSessionBaseModel> getMessageSessionList(int offset, int count) throws Exception;
 
     public abstract List<MessageSessionBaseModel> getFriendsSessionList() throws Exception;
 
@@ -267,14 +267,6 @@ public abstract class MessageAbstractManger {
 
     public int getIntentConversationColor(long threadid) throws Exception {
         return -1;
-    }
-
-    public MessageSessionBaseModel getLatestNotifySession() throws Exception {
-        return null;
-    }
-
-    public int getAllNotifyMsgUnreadCount() throws Exception {
-        return 0;
     }
 
 }

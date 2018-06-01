@@ -24,7 +24,6 @@ public class MessageSessionModelInfo extends MessageSessionBaseModel {
     private int msgType = MessageConstant.MessageType.MSG_TYPE_TEXT;
     private int chatType = MessageConstant.ChatType.CHAT_TYPE_ONE2ONE;/* 消息类型：一对一、一对多、群聊 */
     private boolean isBurnAfter = false;
-    private boolean isNotifyConversaton = true;
 
     @Override
     public void setSessionModel(Object sessionModel) {
@@ -138,16 +137,6 @@ public class MessageSessionModelInfo extends MessageSessionBaseModel {
     @Override
     public void setIsBurnAfterMsg(boolean isBurnAfter) {
         this.isBurnAfter = isBurnAfter;
-    }
-
-    @Override
-    public boolean isNotifyConversation() {
-        return isNotifyConversaton;
-    }
-
-    @Override
-    public void setNotifyConversation(boolean isNotify) {
-        isNotifyConversaton = isNotify;
     }
 
 }

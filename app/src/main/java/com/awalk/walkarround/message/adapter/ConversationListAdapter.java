@@ -42,45 +42,4 @@ public class ConversationListAdapter extends BaseConversationListAdapter {
         }
     }
 
-    /**
-     * 是否可选中
-     *
-     * @return
-     */
-    @Override
-    protected boolean canSelectable(MessageSessionBaseModel item) {
-        return item.getItemType() == ConversationType.GENERAL || item.getTop() == TopState.TOP;
-    }
-
-    /**
-     * 取消选中的置顶消息
-     *
-     * @return 选中的消息中的通知类消息
-     */
-    public List<MessageSessionBaseModel> cancelTopMsg(List<Long> deleteList) {
-        HashMap<Long, Boolean> deleteIds = new HashMap<Long, Boolean>();
-        if (deleteList != null) {
-            for (long thread : deleteList) {
-                deleteIds.put(thread, true);
-            }
-        }
-        //返回取消置顶的通知消息列表
-        List<Long> choseItems = getChosenItemsThreadId();
-        List<MessageSessionBaseModel> notifyMsgList = new ArrayList<MessageSessionBaseModel>();
-        for (Long item : choseItems) {
-            MessageSessionBaseModel msgITem = getChosenItems(item);
-            if (deleteIds.containsKey(msgITem.getThreadId())) {
-                continue;
-            }
-            msgITem.setTop(TopState.NOT_TOP);
-            if (msgITem.getItemType() == ConversationType.NOTICES_MSG) {
-                notifyMsgList.add(msgITem);
-            } else {
-                removeFromChosenPositionList(item);
-            }
-        }
-        deleteSelectedItem();
-        return notifyMsgList;
-    }
-
 }
