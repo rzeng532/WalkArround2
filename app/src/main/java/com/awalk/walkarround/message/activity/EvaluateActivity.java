@@ -87,9 +87,10 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                 myLogger.d("EvaluateFriend success, next step is add friend");
 
                 //Get colorIndex
-                if (mThreadId >= 0) {
+                if (mThreadId > -1) {
                     int colorIndex = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationColorIndex(mThreadId);
-                    WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(mThreadId, MessageUtil.WalkArroundState.STATE_END);
+                    WalkArroundMsgManager.getInstance(getApplicationContext())
+                            .updateConversationStatus(mThreadId, MessageUtil.WalkArroundState.STATE_END);
 
                     myLogger.d("AddFriendTask, color index is: " + colorIndex);
 
@@ -132,6 +133,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                                 MessageConstant.MSG_OPERATION_LOAD_FRIENDS, mLoadFriendsResultListener, mInActiveFriendTaskListener)
                 );
 
+                ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_END);
                 mUIHandler.sendEmptyMessageDelayed(MSG_EVALUATE_SUCCESS, 1000);
             } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_ADD_FRIEND)) {
                 mUIHandler.sendEmptyMessage(MSG_EVALUATE_FAILED);
@@ -290,7 +292,6 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
                     //Send I agree to walk arround.
                     //Use RESULT_FIRST_USER as agreement for prior activity.
                     //setResult(RESULT_FIRST_USER);
-                    ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_END);
                     Toast.makeText(EvaluateActivity.this, R.string.evaluate_send_impression2server_suc, Toast.LENGTH_LONG).show();
                     goToMainActivity();
                     break;
@@ -444,6 +445,7 @@ public class EvaluateActivity extends Activity implements View.OnClickListener, 
 //                            new AsyncTaskLoadFriendsSession(getApplicationContext(),
 //                                    MessageConstant.MSG_OPERATION_LOAD_FRIENDS, mLoadFriendsResultListener, mInActiveFriendTaskListener)
 //                    );
+                    ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_END);
                     mUIHandler.sendEmptyMessageDelayed(MSG_EVALUATE_SUCCESS, 1000);
                     return;
                 }
