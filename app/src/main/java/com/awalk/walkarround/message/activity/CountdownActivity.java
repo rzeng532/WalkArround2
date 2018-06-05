@@ -243,10 +243,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 
         switch (v.getId()) {
             case R.id.tv_complete_walk:
-                if (mRealCountdownTimer != null) {
-                    mRealCountdownTimer.cancel();
-                    mRealCountdownTimer = null;
-                }
+                stopCountdownTimer();
 
                 //We need a popup here
                 jump2EvaluatePage();
@@ -318,6 +315,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 
     private void jump2EvaluatePage() {
         //Start Evaluate activity
+        mCountdownStartTime = 0;
         if (mFriend != null) {
             Intent intent = new Intent(CountdownActivity.this, EvaluateActivity.class);
             intent.putExtra(EvaluateActivity.PARAMS_FRIEND_OBJ_ID, mFriend.getObjectId());
@@ -387,7 +385,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
                 @Override
                 public void onConfirmDialogConfirmClick() {
                     jump2EvaluatePage();
-                    //CountdownActivity.this.finish();
+                    CountdownActivity.this.finish();
                 }
             }).show();
         } else {

@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
+import com.awalk.walkarround.main.parser.WalkArroundJsonResultParser;
+import com.awalk.walkarround.retrofit.trace.HttpTrace;
+
 
 public class HttpTask extends HttpTaskBase {
 
@@ -44,14 +47,22 @@ public class HttpTask extends HttpTaskBase {
             bufferedReader.close();
             conn.disconnect();
             if (TextUtils.isEmpty(sb.toString())) {
+                HttpTrace.handleHttpTraceInfor(mUrlString, "fail", "result empty");
                 doResultCallback(null, TaskResult.FAILED);
                 return;
+            }
+            String result = sb.toString();
+            String returnCode = WalkArroundJsonResultParser.parseReturnCode(result);
+            if (!HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(returnCode)) {
+                // 非200错误
+                HttpTrace.handleHttpTraceInfor(mUrlString, returnCode, result);
             }
             doResultCallback(sb.toString(),TaskResult.SUCCEESS);
         } catch (IOException e) {
             e.printStackTrace();
 
             Log.v("", e.toString());
+            HttpTrace.handleHttpTraceInfor(mUrlString, "IOException", e.toString());
 
             doResultCallback(null, TaskResult.ERROR);
         }

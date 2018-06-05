@@ -4,17 +4,16 @@
 package com.awalk.walkarround.message.provider;
 
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+
+import com.awalk.walkarround.message.provider.base.BaseSqliteOpenHelper;
 import com.awalk.walkarround.message.util.MessageConstant.MessageState;
 
 /**
  * 消息数据库
  * Date:
  */
-public class MessageDatabase extends SQLiteOpenHelper {
+public class MessageDatabase extends BaseSqliteOpenHelper {
 
     public static final String AUTHORITY = "com.awalk.walkarround.provider.message";
     public static Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
@@ -108,79 +107,13 @@ public class MessageDatabase extends SQLiteOpenHelper {
 
     }
 
-//    public static class Group {
-//        // group is key words
-//        public static final String TABLE_NAME = "groups";
-//
-//        public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, TABLE_NAME);
-//
-//        public static final String _ID = _ID_BASE;
-//        public static final String _GROUP_ID = "_group_id";
-//        public static final String _CONVERSATION_ID = "_conversation_id";
-//        public static final String _GROUP_NAME = "_group_name";
-//        public static final String _DESCRIPTION = "_description";
-//        public static final String _SUBJECT = "_subject";
-//        public static final String _MEMBERS = "_members";
-//        public static final String _CHAIRMAN = "_chairman";
-//        public static final String _WEATHER_ACCEPT_MESSAGE_NOTIFICATION = "_weather_accept_message_notification";
-//
-//        public static final String _PORTRAIT = "_portrait";
-//        public static final String _QUIT = "_quit";
-//
-//        /*冗余字段便于以后扩充*/
-//        public static final String _DATA1 = "_data1";
-//        public static final String _DATA2 = "_data2";
-//        public static final String _DATA3 = "_data3";
-//        public static final String _DATA4 = "_data4";
-//        public static final String _DATA5 = "_data5";
-//
-//        public static final int NOT_QUIT = 0;// 有效的群
-//        public static final int QUIT = 1;// 已退出的群，暂指被动退出，主动退出一般是直接删除数据不需要标识
-//    }
-
-//    public static class GroupInvitationMsg {
-//        // group invitation message is key words
-//        public static final String TABLE_NAME = "invitationMsg";
-//
-//        public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, TABLE_NAME);
-//
-//        public static final String _ID = _ID_BASE;
-//        public static final String _GROUP_ID = "_group_id";
-//        public static final String _GROUP_NAME = "_group_name";
-//        public static final String _DESCRIPTION = "_description";
-//        public static final String _SUBJECT = "_subject";
-//        public static final String _PORTRAIT = "_portrait";
-//        public static final String _INVITER = "_inviter";
-//        public static final String _JOIN_STATUS = "_join_status";
-//        public static final String _TIME = "_time";
-//        public static final String _CONVERSATION_STATUS = "_status";// 已读未读
-//
-//        /*冗余字段便于以后扩充*/
-//        public static final String _DATA1 = "_data1";
-//        public static final String _DATA2 = "_data2";
-//        public static final String _DATA3 = "_data3";
-//        public static final String _DATA4 = "_data4";
-//        public static final String _DATA5 = "_data5";
-//
-//        public static final int MSG_READ = 1;// 已读
-//        public static final int MSG_UNREAD = 0;// 未读
-//    }
-
     public MessageDatabase(Context context, String databaseName, int databaseVersion) {
         super(context, databaseName, null, databaseVersion);
     }
 
-    public MessageDatabase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
-    }
-
-    public MessageDatabase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, DatabaseErrorHandler errorHandler) {
-        super(context, name, factory, version, errorHandler);
-    }
-
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + Message.TABLE_NAME + "("
+    protected String[] getExecSQLStr() {
+        String messageSql = "CREATE TABLE " + Message.TABLE_NAME + "("
                 + Message._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + Message._CONVERSATION_ID + " LONG NOT NULL, "
                 + Message._PACKET_ID + " TEXT, "
@@ -212,9 +145,8 @@ public class MessageDatabase extends SQLiteOpenHelper {
                 + Message._DATA3 + " TEXT, "
                 + Message._DATA4 + " TEXT, "
                 + Message._DATA5 + " TEXT"
-                + " );");
-
-        sqLiteDatabase.execSQL("CREATE TABLE "
+                + " );";
+        String conversationSql = "CREATE TABLE "
                 + Conversation.TABLE_NAME + "("
                 + Conversation._ID + " INTEGER PRIMARY KEY, "
                 + Conversation._MSG_ID + " INTEGER DEFAULT 0, "
@@ -229,7 +161,7 @@ public class MessageDatabase extends SQLiteOpenHelper {
                 + Conversation._DRAFT_MSG_TIME + " INTEGER, "
                 + Conversation._MSG_CONTENT_TYPE + " INTEGER, "
                 + Conversation._MSG_CONTENT + " TEXT, "
-                + Conversation._MSG_STATUS + " INTEGER DEFAULT "+ MessageState.MSG_STATE_SENT + ", "
+                + Conversation._MSG_STATUS + " INTEGER DEFAULT " + MessageState.MSG_STATE_SENT + ", "
                 + Conversation._MSG_SEND_RECV + " INTEGER, "
                 + Conversation._TOTAL_COUNT + " INTEGER DEFAULT 0, "
                 + Conversation._READ + " INTEGER DEFAULT " + Message.MSG_READ + ", "
@@ -242,23 +174,8 @@ public class MessageDatabase extends SQLiteOpenHelper {
                 + Conversation._DATA3 + " TEXT, "
                 + Conversation._DATA4 + " TEXT, "
                 + Conversation._DATA5 + " TEXT"
-                + " );");
-
-        // sqLiteDatabase.execSQL("CREATE TABLE " + Conversation.TABLE_NAME + "("
-        // + Conversation._CONVERSATION_ID + " INTEGER, "
-        // + Conversation._CHAT_TYPE + " INTEGER, "
-        // + Conversation._ADDRESS + " TEXT, "
-        // + Conversation._UNREAD_COUNT + " INTEGER DEFAULT 0, "
-        // + Conversation._READ + " INTEGER DEFAULT 0, "
-        // + Conversation._DATE + " INTEGER DEFAULT 0 "
-        // + " );");
-
-        // ============================= TRIGGERS
-        // =============================//
-        /**
-         * update conversation after insert message
-         */
-        sqLiteDatabase.execSQL("CREATE TRIGGER update_conversation_after_insert_message AFTER INSERT ON "
+                + " );";
+        String addUpdateSql = "CREATE TRIGGER update_conversation_after_insert_message AFTER INSERT ON "
                 + Message.TABLE_NAME
                 + " BEGIN "
                 +
@@ -273,11 +190,9 @@ public class MessageDatabase extends SQLiteOpenHelper {
                 + Conversation._HIDE + " = new." + Message._HIDE
                 + " WHERE " + Conversation._ID + " = new." + Message._CONVERSATION_ID
                 + " AND (" + Conversation._DATE + " is null OR " + Conversation._DATE + " < new." + Message._SEND_TIME + ")"
-                + " ; END;");
-        /**
-         * update conversation after delete message
-         */
-        sqLiteDatabase.execSQL("CREATE TRIGGER update_conversation_after_delete_message AFTER DELETE ON "
+                + " ; END;";
+
+        String deleteUpdateSql = "CREATE TRIGGER update_conversation_after_delete_message AFTER DELETE ON "
                 + Message.TABLE_NAME + " BEGIN  UPDATE " + Conversation.TABLE_NAME
                 + " SET "
                 //expr
@@ -310,63 +225,13 @@ public class MessageDatabase extends SQLiteOpenHelper {
                 " SELECT " + Message.TABLE_NAME + "." + Message._CONTENT_TYPE + " FROM " + Message.TABLE_NAME
                 + " WHERE " + Message._CONVERSATION_ID + " = old." + Message._CONVERSATION_ID
                 + " ORDER BY " + Message._SEND_TIME + " DESC LIMIT 1 OFFSET 0)"
-                + " WHERE " + Conversation._ID + " = old." + Message._CONVERSATION_ID + " ; END;");
-
-        /**
-         * delete conversation after delete entire message
-         */
-        sqLiteDatabase.execSQL("CREATE TRIGGER delete_conversation_after_delete_entire_message AFTER DELETE ON " + Message.TABLE_NAME
+                + " WHERE " + Conversation._ID + " = old." + Message._CONVERSATION_ID + " ; END;";
+        String deleteAllUpdateSql = "CREATE TRIGGER delete_conversation_after_delete_entire_message AFTER DELETE ON " + Message.TABLE_NAME
                 + " WHEN ( SELECT COUNT ( " + Message._ID + " ) FROM " + Message.TABLE_NAME + " WHERE " + Message._CONVERSATION_ID + " = old." + Message._CONVERSATION_ID + " ) = 0"
                 + " BEGIN  DELETE FROM " + Conversation.TABLE_NAME
                 + " WHERE " + Conversation._ID + " = old." + Message._CONVERSATION_ID + " AND " + Conversation._TOP + " = " + Conversation.NOT_TOP
-                + " AND ( " + Conversation._TYPE + " = 0 " + " OR " + Conversation._TYPE + " = 2 " + " ) ; END;");
-
-//        sqLiteDatabase.execSQL("CREATE TABLE " + Group.TABLE_NAME + "("
-//                + Group._ID + " INTEGER PRIMARY KEY, "
-//                + Group._CONVERSATION_ID + " LONG NOT NULL, "
-//                + Group._GROUP_ID + " TEXT NOT NULL, "
-//                + Group._GROUP_NAME + " TEXT NOT NULL, "
-//                + Group._DESCRIPTION + " TEXT, "
-//                + Group._SUBJECT + " TEXT, "
-//                + Group._MEMBERS + " TEXT NOT NULL, "
-//                + Group._CHAIRMAN + " TEXT, "
-//                + Group._WEATHER_ACCEPT_MESSAGE_NOTIFICATION + " INTEGER DEFAULT 1, "
-//                + Group._QUIT + " INTEGER DEFAULT 0, "
-//                + Group._PORTRAIT + " BLOB, "
-//                + Group._DATA1 + " TEXT, "
-//                + Group._DATA2 + " TEXT, "
-//                + Group._DATA3 + " TEXT, "
-//                + Group._DATA4 + " TEXT, "
-//                + Group._DATA5 + " TEXT, "
-//                + " UNIQUE ( " + Group._GROUP_ID + " ) );");
-
-        /* delete conversation after delete group*/
-//        sqLiteDatabase.execSQL("CREATE TRIGGER update_conversation_after_delete_group BEFORE DELETE ON "+ Group.TABLE_NAME +
-//                " BEGIN  DELETE FROM " + Conversation.TABLE_NAME
-//                + " WHERE " + Conversation._ID + " = old." + Group._CONVERSATION_ID + " AND "+ Conversation._TYPE +" = 1 ; END;");
-//
-//        sqLiteDatabase.execSQL("CREATE TABLE " + GroupInvitationMsg.TABLE_NAME + "("
-//                + GroupInvitationMsg._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-//                + GroupInvitationMsg._GROUP_ID + " TEXT NOT NULL, "
-//                + GroupInvitationMsg._GROUP_NAME + " TEXT, "
-//                + GroupInvitationMsg._SUBJECT + " TEXT, "
-//                + GroupInvitationMsg._DESCRIPTION + " TEXT, "
-//                + GroupInvitationMsg._INVITER + " TEXT NOT NULL, "
-//                + GroupInvitationMsg._JOIN_STATUS + " INTEGER NOT NULL, "
-//                + GroupInvitationMsg._PORTRAIT + " TEXT, "
-//                + GroupInvitationMsg._STATUS + " INTEGER NOT NULL, "
-//                + GroupInvitationMsg._TIME + " INTEGER NOT NULL, "
-//                + GroupInvitationMsg._DATA1 + " TEXT, "
-//                + GroupInvitationMsg._DATA2 + " TEXT, "
-//                + GroupInvitationMsg._DATA3 + " TEXT, "
-//                + GroupInvitationMsg._DATA4 + " TEXT, "
-//                + GroupInvitationMsg._DATA5 + " TEXT"
-//                + " );");
-    }
-
-    @Override
-
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+                + " AND ( " + Conversation._TYPE + " = 0 " + " OR " + Conversation._TYPE + " = 2 " + " ) ; END;";
+        return new String[]{messageSql, conversationSql, addUpdateSql, deleteUpdateSql, deleteAllUpdateSql};
     }
 
 }

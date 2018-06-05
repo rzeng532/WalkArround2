@@ -344,7 +344,8 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
         public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
 
             //Task success.
-            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE)) {
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode
+                    && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE)) {
                 //Get status & Get TO user.
                 String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
                 String strUser = MessageUtil.getFriendIdFromServerData((String) object);
@@ -361,29 +362,36 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                     ProfileManager.getInstance().setSpeedDateId(strSpeedDateId);
 
                     //Add contact infor if local DB does not contain this friend
-                    ContactInfo friend = ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactByUsrObjId(strUser);
+                    ContactInfo friend = ContactsManager.getInstance(AppMainActivity.this.getApplicationContext())
+                            .getContactByUsrObjId(strUser);
                     if (friend == null) {
-                        ContactsManager.getInstance(AppMainActivity.this.getApplicationContext()).getContactFromServer(strUser);
+                        ContactsManager.getInstance(AppMainActivity.this.getApplicationContext())
+                                .getContactFromServer(strUser);
                     }
                     //Check local chatting IM record and create chat record if there is no record on local DB.
-                    long chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
+                    long chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext())
+                            .getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
                             lRecipientList);
                     int localThreadStatus = iStatus;
                     if (chattingThreadId < 0) {
-                        chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext()).createConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, lRecipientList);
+                        chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext())
+                                .createConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, lRecipientList);
                         if (chattingThreadId >= 0) {
                             //Update conversation color & state.
-                            WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatusAndColor(chattingThreadId, iStatus, (TextUtils.isEmpty(strColor) ? -1 : Integer.parseInt(strColor)));
+                            WalkArroundMsgManager.getInstance(getApplicationContext())
+                                    .updateConversationStatusAndColor(chattingThreadId, iStatus, (TextUtils.isEmpty(strColor) ? -1 : Integer.parseInt(strColor)));
                             amLogger.d("update conversation color index: " + (TextUtils.isEmpty(strColor) ? -1 : Integer.parseInt(strColor)) + ", status : " + iStatus);
                         }
                     } else {
-                        localThreadStatus = WalkArroundMsgManager.getInstance(getApplicationContext()).getConversationStatus(chattingThreadId);
+                        localThreadStatus = WalkArroundMsgManager.getInstance(getApplicationContext())
+                                .getConversationStatus(chattingThreadId);
                         localThreadStatus = (iStatus > localThreadStatus) ? iStatus : localThreadStatus;
                     }
 
                     ProfileManager.getInstance().setCurUsrDateState(localThreadStatus);
 
-                    if (localThreadStatus == MessageUtil.WalkArroundState.STATE_IM || localThreadStatus == MessageUtil.WalkArroundState.STATE_WALK) {
+                    if (localThreadStatus == MessageUtil.WalkArroundState.STATE_IM
+                            || localThreadStatus == MessageUtil.WalkArroundState.STATE_WALK) {
                         //Go to build message && Start IM directly:
 //                        Intent imItent = new Intent(AppMainActivity.this, BuildMessageActivity.class);
 //                        imItent.putExtra(BuildMessageActivity.INTENT_CONVERSATION_RECEIVER, strUser);

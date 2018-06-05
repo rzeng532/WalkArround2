@@ -6,6 +6,8 @@ package com.awalk.walkarround.base;
 import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
@@ -28,7 +30,7 @@ import com.tencent.bugly.Bugly;
  *
  * @author Richard
  */
-public class WalkArroundApp extends Application {
+public class WalkArroundApp extends MultiDexApplication {
     private static WalkArroundApp mWorkArroundApp = null;
     private static Logger logger = Logger.getLogger(WalkArroundApp.class.getSimpleName());
     public static String MTC_DATA_PATH = null;
@@ -36,6 +38,12 @@ public class WalkArroundApp extends Application {
     static {
         AppConstant.BUGLY_APP_ID = BuildConfig.BUGLY_APP_ID;
         AppConstant.LOG_OUTPUT = "debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     @Override

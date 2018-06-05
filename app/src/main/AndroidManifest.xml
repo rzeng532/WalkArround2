@@ -44,6 +44,10 @@
                 android:name="com.awalk.walkarround.message.provider.MessageProvider"
                 android:authorities="com.awalk.walkarround.provider.message"
                 android:exported="false"/>
+        <provider
+                android:name="com.awalk.walkarround.message.provider.ContactProvider"
+                android:authorities="com.awalk.walkarround.provider.contactinfo"
+                android:exported="false"/>
 
         <!-- Activity list -->
         <activity

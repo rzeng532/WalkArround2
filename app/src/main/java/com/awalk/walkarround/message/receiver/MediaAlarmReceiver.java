@@ -18,7 +18,7 @@ public class MediaAlarmReceiver extends BroadcastReceiver {
     public final static String ACTION_STOP_MEDIA_TASK = "MediaAlarmReceiver_STOP";
 
     Logger logger = Logger.getLogger(MediaAlarmReceiver.class.getSimpleName());
-    private MediaPlayer mMediaPlayer;
+    private static MediaPlayer mMediaPlayer;
 
     @Override
     public void onReceive(Context context, Intent intent) {

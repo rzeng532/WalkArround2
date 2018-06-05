@@ -5,10 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+
 import com.avos.avoscloud.*;
 import com.awalk.walkarround.assistant.AssistantHelper;
 import com.awalk.walkarround.main.model.ContactInfo;
-import com.awalk.walkarround.message.provider.ContactInfoDatabase;
+import com.awalk.walkarround.message.provider.ContactDatabase;
 import com.awalk.walkarround.myself.util.ProfileUtil;
 import com.awalk.walkarround.util.AsyncTaskListener;
 import com.awalk.walkarround.util.Logger;
@@ -26,15 +27,12 @@ public class ContactsManager {
     private static ContactsManager mInstance;
     private HashMap<String, ContactInfo> mUserMap = new HashMap<>();
     private Logger mLogger = Logger.getLogger(ContactsManager.class.getSimpleName());
-    private static final int DATABASE_VERSION = 1;
     private Context mContext;
-
-    SQLiteDatabase dbContactInfo;
 
     AsyncTaskListener mGetContactListener = new AsyncTaskListener() {
         @Override
         public void onSuccess(Object data) {
-            if(data != null) {
+            if (data != null) {
                 //Insert contact to DB and hashmap.
                 addContactInfo((ContactInfo) data);
             }
@@ -47,14 +45,14 @@ public class ContactsManager {
     };
 
     private ContactsManager(Context context) {
-        this.dbContactInfo = (new ContactInfoDatabase(context, ContactInfoDatabase.Contact.TABLE_NAME, DATABASE_VERSION)).getWritableDatabase();
+        mContext = context;
         initHashMap();
     }
 
     public static ContactsManager getInstance(Context context) {
-        if(mInstance == null) {
-            synchronized(ContactsManager.class) {
-                if(mInstance == null) {
+        if (mInstance == null) {
+            synchronized (ContactsManager.class) {
+                if (mInstance == null) {
                     mInstance = new ContactsManager(context);
                 }
             }
@@ -81,7 +79,7 @@ public class ContactsManager {
     }
 
     public void getContactFromServer(String userId, final AsyncTaskListener listener) {
-        if(TextUtils.isEmpty(userId)) {
+        if (TextUtils.isEmpty(userId)) {
             return;
         }
         mLogger.d("getContactFromServer.");
@@ -92,7 +90,7 @@ public class ContactsManager {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 mLogger.d("getContactFromServer callback done.");
-                if(list != null && list.size() > 0) {
+                if (list != null && list.size() > 0) {
                     //There is only one result on list since obj id is unique on service "_User" table.
                     mLogger.d("getContactFromServer callback list is NOT empty.");
                     ContactInfo contact = convertAVUser2Contact(list.get(0));
@@ -111,46 +109,48 @@ public class ContactsManager {
      *       Then latest contact infor will not be displayed.
      */
     public void addContactInfo(ContactInfo addOne) {
-        if(addOne != null && mInstance.mUserMap != null) {
+        if (addOne != null && mInstance.mUserMap != null) {
 
             ContactInfo curOne = mInstance.mUserMap.get(addOne.getObjectId());
             mInstance.mUserMap.put(addOne.getObjectId(), addOne);
 
             //Insert item to DB
             ContentValues values = new ContentValues();
-            values.put(ContactInfoDatabase.Contact.OBJECTID, addOne.getObjectId());
-            values.put(ContactInfoDatabase.Contact.USERNAME, addOne.getUsername());
-            values.put(ContactInfoDatabase.Contact.GENDER, addOne.getGender());
-            values.put(ContactInfoDatabase.Contact.SIGNATURE, addOne.getSignature());
-            values.put(ContactInfoDatabase.Contact.BIRTHDAY, addOne.getBirthday());
-            values.put(ContactInfoDatabase.Contact.CREATEDAT, addOne.getCreatedAt());
-            values.put(ContactInfoDatabase.Contact.UPDATEAT, addOne.getUpdatedAt());
-            values.put(ContactInfoDatabase.Contact.MOBILEPHONENUMBER, addOne.getMobilePhoneNumber());
-            if(addOne.getPortrait() != null) {
-                values.put(ContactInfoDatabase.Contact.PORTRAIT, addOne.getPortrait().getUrl());
+            values.put(ContactDatabase.Contact.OBJECTID, addOne.getObjectId());
+            values.put(ContactDatabase.Contact.USERNAME, addOne.getUsername());
+            values.put(ContactDatabase.Contact.GENDER, addOne.getGender());
+            values.put(ContactDatabase.Contact.SIGNATURE, addOne.getSignature());
+            values.put(ContactDatabase.Contact.BIRTHDAY, addOne.getBirthday());
+            values.put(ContactDatabase.Contact.CREATEDAT, addOne.getCreatedAt());
+            values.put(ContactDatabase.Contact.UPDATEAT, addOne.getUpdatedAt());
+            values.put(ContactDatabase.Contact.MOBILEPHONENUMBER, addOne.getMobilePhoneNumber());
+            if (addOne.getPortrait() != null) {
+                values.put(ContactDatabase.Contact.PORTRAIT, addOne.getPortrait().getUrl());
             }
 
-            if(curOne == null) {
+            if (curOne == null) {
                 //Add a record
-                dbContactInfo.insert(ContactInfoDatabase.Contact.TABLE_NAME, null, values);
+                mContext.getContentResolver().insert(ContactDatabase.Contact.CONTENT_URI, values);
             } else {
                 //Update record
-                dbContactInfo.update(ContactInfoDatabase.Contact.TABLE_NAME, values, ContactInfoDatabase.Contact.OBJECTID + " = ?", new String[]{curOne.getObjectId()});
+                mContext.getContentResolver().update(ContactDatabase.Contact.CONTENT_URI, values,
+                        ContactDatabase.Contact.OBJECTID + " = ?", new String[]{curOne.getObjectId()});
             }
         }
     }
 
     public void deleteContact(String usrObjId) {
-        if(TextUtils.isEmpty(usrObjId)) {
+        if (TextUtils.isEmpty(usrObjId)) {
             return;
         }
 
         ContactInfo curOne = mInstance.mUserMap.get(usrObjId);
-        if(curOne != null) {
+        if (curOne != null) {
             mInstance.mUserMap.remove(usrObjId);
         }
 
-        dbContactInfo.delete(ContactInfoDatabase.Contact.TABLE_NAME, ContactInfoDatabase.Contact.OBJECTID + " = ?", new String[]{usrObjId});
+        mContext.getContentResolver().delete(ContactDatabase.Contact.CONTENT_URI,
+                ContactDatabase.Contact.OBJECTID + " = ?", new String[]{usrObjId});
     }
 
     //Get all contacts
@@ -163,45 +163,43 @@ public class ContactsManager {
      * Init hashmap from DB
      */
     private void initHashMap() {
-        //Check environment
-        if(dbContactInfo == null) {
-            return;
-        }
-
         //Query from DB
         ContactInfo tempContact = null;
-        Cursor cursor = dbContactInfo.query(ContactInfoDatabase.Contact.TABLE_NAME, null, null, null, null, null, null);
-        if(cursor != null && cursor.moveToFirst()) {
+        Cursor cursor = mContext.getContentResolver().query(ContactDatabase.Contact.CONTENT_URI, null, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
             //Convert DB data to ContactInfo
-            do{
+            do {
                 //Get object ID
                 tempContact = convertCursor2ContactInfo(cursor);
-                if(tempContact != null && !TextUtils.isEmpty(tempContact.getObjectId())) {
+                if (tempContact != null && !TextUtils.isEmpty(tempContact.getObjectId())) {
                     mUserMap.put(tempContact.getObjectId(), tempContact);
                 }
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
         }
     }
 
     private ContactInfo convertCursor2ContactInfo(Cursor cursor) {
-        if(cursor == null) {
+        if (cursor == null) {
             return null;
         }
 
         ContactInfo contact = new ContactInfo();
 
-        String objId = cursor.getString(cursor.getColumnIndex(ContactInfoDatabase.Contact.OBJECTID));
-        if(TextUtils.isEmpty(objId)) {
+        String objId = cursor.getString(cursor.getColumnIndex(ContactDatabase.Contact.OBJECTID));
+        if (TextUtils.isEmpty(objId)) {
             //We should confirm object id is NOT null.
             return null;
         }
-        String name = cursor.getString(cursor.getColumnIndex(ContactInfoDatabase.Contact.USERNAME));
-        String signature = cursor.getString(cursor.getColumnIndex(ContactInfoDatabase.Contact.SIGNATURE));
-        String birth = cursor.getString(cursor.getColumnIndex(ContactInfoDatabase.Contact.BIRTHDAY));
-        String mobile = cursor.getString(cursor.getColumnIndex(ContactInfoDatabase.Contact.MOBILEPHONENUMBER));
-        String createTime = cursor.getString(cursor.getColumnIndex(ContactInfoDatabase.Contact.CREATEDAT));
-        String updateTime = cursor.getString(cursor.getColumnIndex(ContactInfoDatabase.Contact.UPDATEAT));
-        String portrait = cursor.getString(cursor.getColumnIndex(ContactInfoDatabase.Contact.PORTRAIT));
+        String name = cursor.getString(cursor.getColumnIndex(ContactDatabase.Contact.USERNAME));
+        String signature = cursor.getString(cursor.getColumnIndex(ContactDatabase.Contact.SIGNATURE));
+        String birth = cursor.getString(cursor.getColumnIndex(ContactDatabase.Contact.BIRTHDAY));
+        String mobile = cursor.getString(cursor.getColumnIndex(ContactDatabase.Contact.MOBILEPHONENUMBER));
+        String createTime = cursor.getString(cursor.getColumnIndex(ContactDatabase.Contact.CREATEDAT));
+        String updateTime = cursor.getString(cursor.getColumnIndex(ContactDatabase.Contact.UPDATEAT));
+        String portrait = cursor.getString(cursor.getColumnIndex(ContactDatabase.Contact.PORTRAIT));
 
         contact.setObjectId(objId);
         contact.setUsername(name);
@@ -218,11 +216,11 @@ public class ContactsManager {
     }
 
     private ContactInfo convertAVUser2Contact(AVObject user) {
-        if(user == null) {
+        if (user == null) {
             return null;
         }
 
-        AVUser avUser = ((AVUser)user);
+        AVUser avUser = ((AVUser) user);
 
         ContactInfo contact = new ContactInfo();
 
@@ -237,8 +235,8 @@ public class ContactsManager {
 
         //Set portrait
         ContactInfo.PortraitEntity entry = contact.getPortrait();
-        AVFile portraitURL = ((AVUser)user).getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
-        if(portraitURL != null && !TextUtils.isEmpty(portraitURL.getUrl())) {
+        AVFile portraitURL = ((AVUser) user).getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
+        if (portraitURL != null && !TextUtils.isEmpty(portraitURL.getUrl())) {
             entry.setUrl(portraitURL.getUrl());
         } else {
             entry.setUrl("");

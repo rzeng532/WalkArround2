@@ -21,10 +21,9 @@ android {
         targetSdkVersion 18
         versionCode 100000 // versionCode规则： 前三位固定212，中间4位固定 0000，由于目前升级版本速度太快，末３位不再对应VERSION_NAME，而是每次固定末位＋１
         versionName VERSION_NAME
-//        jackOptions {
-//            enabled true
-//        }
         signingConfig signingConfigs.config
+        // Enabling multidex support.
+        multiDexEnabled true
 //        ndk {
 //            //设置支持的SO库架构
 //            abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
@@ -33,7 +32,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
             buildConfigField "String", "BUGLY_APP_ID", "\"31bfddbabb\""
@@ -43,16 +42,16 @@ android {
             buildConfigField "String", "BUGLY_APP_ID", "\"3ea0b67d30\""
         }
     }
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
     productFlavors {
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:support-v4:25.0.0'
     compile 'com.google.protobuf:protobuf-java:2.6.1'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
@@ -67,9 +66,17 @@ dependencies {
     // avoscloud-sns：LeanCloud 第三方登录包
     compile 'cn.leancloud.android:avoscloud-sns:v4.4.4@aar'
     compile 'com.alibaba:fastjson:1.2.46'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
     compile 'com.android.support:support-annotations:26.0.0-alpha1'
     compile 'com.github.bumptech.glide:glide:3.8.0'
-//    compile 'net.zetetic:android-database-sqlcipher:3.5.7@aar'
+    compile 'net.zetetic:android-database-sqlcipher:3.5.7@aar'
+
+    //RxJava
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+//    compile 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
+//    compile 'com.trello.rxlifecycle2:rxlifecycle:2.1.0'
+//    compile 'com.trello.rxlifecycle2:rxlifecycle-components:2.1.0'
 }

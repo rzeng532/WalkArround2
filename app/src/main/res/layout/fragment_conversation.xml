@@ -102,6 +102,7 @@
                android:padding="10dp"
                android:layout_marginRight="40dp"
                android:layout_marginBottom="40dp"
+               android:visibility="gone"
                android:src="@drawable/grey_diag"/>
 
     <ImageView
@@ -112,6 +113,7 @@
         android:layout_alignTop="@id/iv_old_friends"
         android:layout_marginRight="8dp"
         android:layout_marginTop="4dp"
+        android:visibility="gone"
         android:src="@drawable/message_unread_count_bg"/>
 
     <View android:id="@+id/page_mask_v"
