@@ -374,6 +374,9 @@ public class AVSDbManager {
         int burn = cursor.getInt(cursor.getColumnIndex(Message._HIDE));
         message.setIsBurnAfter(burn == Message.HIDE);
 
+        int isExpire = cursor.getInt(cursor.getColumnIndex(Message._EXPIRE));
+        message.setExpire(isExpire == 1);
+
         int type = cursor.getInt(cursor.getColumnIndex(Message._CONTENT_TYPE));
         message.setMsgType(type);
 
@@ -972,6 +975,20 @@ public class AVSDbManager {
         conversationValues.put(Conversation._COLOR, newColor);
 
         mContext.getContentResolver().update(Conversation.CONTENT_URI, conversationValues, where, arg);
+    }
+
+
+    public void updateMsgExpireInfo(long msgId, boolean isExpire) {
+        if (msgId < 0) {
+            return;
+        }
+
+        String where = Message._ID + "=?";
+        String[] arg = new String[]{msgId + ""};
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Message._EXPIRE, isExpire ? 1 : 0);
+
+        mContext.getContentResolver().update(Message.CONTENT_URI, contentValues, where, arg);
     }
 
     public void updateConversationStatusAndColor(long threadId, int newStatus, int newColor) {

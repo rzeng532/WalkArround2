@@ -21,6 +21,7 @@ import com.awalk.walkarround.message.manager.ContactsManager;
 import com.awalk.walkarround.message.manager.WalkArroundMsgManager;
 import com.awalk.walkarround.util.AppConstant;
 import com.awalk.walkarround.util.Logger;
+import com.awalk.walkarround.util.http.HttpUtil;
 import com.awalk.walkarround.util.network.NetWorkManager;
 import com.tencent.bugly.Bugly;
 
@@ -38,6 +39,7 @@ public class WalkArroundApp extends MultiDexApplication {
     static {
         AppConstant.BUGLY_APP_ID = BuildConfig.BUGLY_APP_ID;
         AppConstant.LOG_OUTPUT = "debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE);
+        HttpUtil.SERVER_BASE_URL = BuildConfig.SERVER_BASE_URL;
     }
 
     @Override

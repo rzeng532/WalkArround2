@@ -1016,6 +1016,15 @@ public class WalkArroundMsgManager {
         }).start();
     }
 
+    /**
+     * 更新消息状态，是否过期
+     * @param messageId
+     * @param isExpire
+     */
+    public void updateMsgExpireInfo(final long messageId, boolean isExpire) {
+        mInstance.mMsgManager.updateMsgExpireInfo(messageId, isExpire);
+    }
+
     public void updateConversationStatus(final long threadId, final int newStatus) {
         new Thread(new Runnable() {
             @Override

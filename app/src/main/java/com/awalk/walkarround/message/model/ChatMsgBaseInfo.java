@@ -219,4 +219,8 @@ public abstract class ChatMsgBaseInfo implements Serializable{
     public abstract void setMsgCreateTime(long time);
     public abstract long getMsgCreateTime();
 
+    public abstract boolean isExpire();
+
+    public abstract void setExpire(boolean expire);
+
 }

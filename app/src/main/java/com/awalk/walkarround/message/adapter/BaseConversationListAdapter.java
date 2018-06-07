@@ -206,6 +206,9 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
 
             holder.rlConversation.setTag(holder);
             holder.rlConversation.setOnClickListener(this);
+            if (mFriendMode == ConversationActivity.CONV_TYPE_OLD_FRIEND) {
+                holder.rlConversation.setPadding(CommonUtils.dip2px(mContext, 10), 0, 0, 0);
+            }
             convertView.setOnClickListener(this);
 
             convertView.setTag(holder);

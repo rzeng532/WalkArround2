@@ -881,6 +881,11 @@ public class AVSMsgManager extends MessageAbstractManger {
     }
 
     @Override
+    public void updateMsgExpireInfo(long msgId, boolean isExpire) {
+        messageDbManager.updateMsgExpireInfo(msgId, isExpire);
+    }
+
+    @Override
     public void updateConversationStatusAndColor(long threadid, int state, int color) throws Exception {
         messageDbManager.updateConversationStatusAndColor(threadid, state, color);
     }

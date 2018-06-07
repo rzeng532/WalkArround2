@@ -52,6 +52,8 @@ public class MessageDatabase extends BaseSqliteOpenHelper {
         public static final String _LONGITUDE = "_longitude";
         public static final String _LOCATION_ADDRESS = "_location_address";
         public static final String _EXTRA_INFO = "_extra_info";
+        public static final String _EXPIRE = "_expire";
+
 
         /*冗余字段便于以后扩充*/
         public static final String _DATA1 = "_data1";
@@ -140,6 +142,7 @@ public class MessageDatabase extends BaseSqliteOpenHelper {
                 + Message._LATITUDE + " TEXT, "
                 + Message._LONGITUDE + " TEXT, "
                 + Message._LOCATION_ADDRESS + " TEXT, "
+                + Message._EXPIRE + " INTEGER DEFAULT 0, "
                 + Message._DATA1 + " TEXT, "
                 + Message._DATA2 + " TEXT, "
                 + Message._DATA3 + " TEXT, "

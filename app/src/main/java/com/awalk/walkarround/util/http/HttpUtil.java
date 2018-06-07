@@ -8,6 +8,8 @@ import java.net.URLEncoder;
  */
 public class HttpUtil {
 
+    public static String SERVER_BASE_URL = "";
+
     //Base URL elements
     private static final String HTTP_BASE_SPLIT_SYM = "/";
 

@@ -1955,11 +1955,14 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                         long msgTime = chat.getTime();
                         long curTime = System.currentTimeMillis();
                         //Validate time is : current time - msg time <= 60s
-                        if (curTime - msgTime > 60 * 1000) {
+                        if (chat.isExpire()) {
+                            // 已经取消过消息
+                            Toast.makeText(this, R.string.msg_walk_req_cancel, Toast.LENGTH_SHORT).show();
+                        } else if (curTime - msgTime > 60 * 1000) {
                             Toast.makeText(this, R.string.msg_walk_req_time_out, Toast.LENGTH_SHORT).show();
                         } else {
                             if (mWalkReplyDialog == null) {
-                                createWalkReplyDialog();
+                                createWalkReplyDialog(chat.getMsgId());
                                 mWalkReplyDialog.show();
                             }
                         }
@@ -2063,7 +2066,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                     if (extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REQUEST)) {
                         //Show dialog directly if activity on foreground
                         if (mWalkReplyDialog == null && isActivityOnForground) {
-                            createWalkReplyDialog();
+                            createWalkReplyDialog(msg.getMsgId());
                             mWalkReplyDialog.show();
                         }
                     } else if (extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_OK)) {
@@ -2089,7 +2092,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
     /*
      * Create a dialog for user to select.
      */
-    private void createWalkReplyDialog() {
+    private void createWalkReplyDialog(final long messageId) {
         mWalkReplyDialog = DialogFactory.getStart2WalkReplyDialog(this, mRecipientInfo.getRecipientList().get(0),
                 new DialogFactory.NoticeDialogCancelClickListener() {
             @Override
@@ -2100,6 +2103,8 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                 WalkArroundMsgManager.getInstance(getApplicationContext())
                         .sendTextMsg(mRecipientInfo.getRecipientList().get(0),
                         getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
+
+                WalkArroundMsgManager.getInstance(getApplicationContext()).updateMsgExpireInfo(messageId, true);
 
                 mWalkReplyDialog.dismiss();
                 mWalkReplyDialog = null;

@@ -272,6 +272,7 @@
     <string name="msg_conversation_unkown_friends">其他信息</string>
     <string name="msg_walk_req_time_indicate">请求一分钟内有效，请耐心等待。</string>
     <string name="msg_walk_req_time_out">一分钟内有效，该见面请求已过期</string>
+    <string name="msg_walk_req_cancel">该见面请求已过期</string>
     <string name="msg_walk_req_sender_text">你发起了一个碰面请求</string>
     <string name="msg_walk_req_receiver_text">你收到了一个碰面请求\r\n可点击回复该请求</string>
     <string name="msg_walk_reply_receiver_ok">对方已经同意碰面请求</string>

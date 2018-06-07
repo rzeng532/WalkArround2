@@ -39,6 +39,7 @@ public class ChatMessageInfo extends ChatMsgBaseInfo {
     private long msgCreateTime;
     private List<String> receiverList;
     private boolean isBurnAfter;
+    private boolean isExpire;
     private String title;
 
     private int imageWidth;
@@ -362,4 +363,11 @@ public class ChatMessageInfo extends ChatMsgBaseInfo {
         return msgCreateTime;
     }
 
+    public boolean isExpire() {
+        return isExpire;
+    }
+
+    public void setExpire(boolean expire) {
+        isExpire = expire;
+    }
 }

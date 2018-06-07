@@ -91,5 +91,5 @@ public class AppConstant {
     public static final String ANA_TAG_RET_OK = "operation_ok";
     public static final String ANA_TAG_RET_FAIL = "operation_fail";
 
-    public static final String INSTRUCTIONS_URL = "https://mp.weixin.qq.com/s?__biz=MzA5OTI5MzQwOA==&mid=310514624&idx=1&sn=86fe5433544a901bda61a3f2f0d3112e&chksm=07f2324f3085bb596d5cfdd0c18a5bfb5b6ab3672ce151319e42935af312bad1b42a96aae4e1&mpshare=1&scene=1&srcid=0517Qz4GmvAOpXRIBZzuBFIn#rd";
+    public static final String INSTRUCTIONS_URL = "https://mp.weixin.qq.com/s/_kAuqmtURw6YimtSpS0GTA";
 }

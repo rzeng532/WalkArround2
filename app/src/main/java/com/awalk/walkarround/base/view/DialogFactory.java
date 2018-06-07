@@ -433,6 +433,7 @@ public class DialogFactory {
         final Dialog dialog = new Dialog(context, R.style.Theme_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_start_2_walk_reply, null);
         dialog.setContentView(dialogView);
 

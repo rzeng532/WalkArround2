@@ -260,6 +260,7 @@ public abstract class MessageAbstractManger {
 
     public void updateConversationColor(long threadid, int color) throws Exception {
     }
+    public abstract void updateMsgExpireInfo(long msgId, boolean isExpire);
 
     public void updateConversationStatusAndColor(long threadid, int state, int color) throws Exception {
     }
