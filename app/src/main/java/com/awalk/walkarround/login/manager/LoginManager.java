@@ -161,8 +161,8 @@ public class LoginManager {
         if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(password) && CommonUtils.validatePhoneNum(phone)) {
             try {
                 if (mLoginApi != null) {
-                    mLoginApi.doLogin(phone, password, listener);
                     setCurrentAccount(null, phone, password);
+                    mLoginApi.doLogin(phone, password, listener);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

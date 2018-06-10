@@ -75,7 +75,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             Message msg = Message.obtain();
             loginLogger.d("Do login success.");
 
-            ProfileManager.getInstance().getMyProfile();
+            ProfileManager.onDestroy();
             LoginManager.getInstance().setCurrentUser();
 
             msg.what = LOGIN_OK;

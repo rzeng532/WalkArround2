@@ -9,6 +9,8 @@ import com.awalk.walkarround.main.model.ContactInfo;
 import com.awalk.walkarround.myself.model.MyDynamicInfo;
 import com.awalk.walkarround.myself.model.MyProfileInfo;
 import com.awalk.walkarround.myself.util.ProfileUtil;
+import com.awalk.walkarround.retrofit.trace.HttpTrace;
+import com.awalk.walkarround.util.AppSharedPreference;
 import com.awalk.walkarround.util.AsyncTaskListener;
 
 /**
@@ -50,6 +52,11 @@ public class ProfileManager {
             myProfileInfo.setUsrName(avUser.getUsername());
         }
 
+        String storeAccount = AppSharedPreference.getString(AppSharedPreference.ACCOUNT_PHONE, "");
+        if (!storeAccount.equals(avUser.getMobilePhoneNumber())) {
+            HttpTrace.handleHttpTraceInfor("login exception", "account_error",
+                    "storeAccount:" + storeAccount+", AVUser.getMobilePhoneNumber:" + avUser.getMobilePhoneNumber());
+        }
         //Set mobile number
         myProfileInfo.setMobileNum(avUser.getMobilePhoneNumber());
 
