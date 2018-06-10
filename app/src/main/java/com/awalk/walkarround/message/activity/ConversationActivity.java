@@ -655,6 +655,13 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     @Override
                     public void onNoticeDialogConfirmClick(boolean isChecked, Object value) {
                         if (mConversationAdapter != null) {
+                            if (AssistantHelper.ASSISTANT_OBJ_ID.equals(listDO.getContact())) {
+                                mConversationAdapter.put2ChoosenList(listDO);
+                                deleteConvMsg(listDO);
+                                // 重置助手状态；搜索只能搜索到助手
+                                AssistantHelper.getInstance().forkRegisterState();
+                                return;
+                            }
                             String speedDateId = ProfileManager.getInstance().getMyProfile().getSpeedDateId();
                             if (!TextUtils.isEmpty(speedDateId) && mNetStatusView.getVisibility() == View.GONE) {
                                 //There is speed date id and there is network.
