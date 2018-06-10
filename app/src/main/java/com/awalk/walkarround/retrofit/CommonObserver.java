@@ -12,16 +12,13 @@ import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 
 /**
- * Author: zhou
- * Email: zhougaofeng@chinamobile.com
- * Time: 2017/8/31
- * Description:
+ * 拦截
  */
-public abstract class ZCommonObserver<T> extends DisposableObserver<T> {
+public abstract class CommonObserver<T> extends DisposableObserver<T> {
 
     protected String mUrl;
 
-    public ZCommonObserver(String url) {
+    public CommonObserver(String url) {
         mUrl = url;
     }
 

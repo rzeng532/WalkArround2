@@ -25,7 +25,7 @@ import okio.BufferedSource;
 import static okhttp3.internal.platform.Platform.INFO;
 
 /**
- * Created by sweetdaimin on 2017-10-27.
+ * 接口拦截器，输出request和response
  */
 
 public class CommonHttpLoggingInterceptor implements Interceptor {

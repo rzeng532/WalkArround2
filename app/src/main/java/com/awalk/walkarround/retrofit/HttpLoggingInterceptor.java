@@ -146,7 +146,6 @@ public class HttpLoggingInterceptor implements Interceptor {
         logger.log(requestStartMessage);
 
         if (logHeaders) {
-
             if (!logBody || !hasRequestBody) {
                 logger.log("--> END " + request.method());
             } else if (bodyEncoded(request.headers())) {
@@ -161,10 +160,7 @@ public class HttpLoggingInterceptor implements Interceptor {
                 if (contentType != null) {
                     contentType.charset(UTF8);
                 }
-
                 logger.log(buffer.readString(UTF8));
-
-//                logger.log(request.method() + " (" + requestBody.contentLength() + "-byte body)");
             }
         }
 
@@ -172,9 +168,6 @@ public class HttpLoggingInterceptor implements Interceptor {
         Response response = chain.proceed(request);
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
         logger.log("code: " + response.code() + "    message: " + response.message() + " (" + tookMs + "ms" + ')');
-       //Are you reading the response body 2x? You can only call string() once.
-        //go string() more will meet java.lang.IllegalStateException: closed
-//        logger.log(response.body().string());
         return response;
     }
 

@@ -12,7 +12,6 @@ import okhttp3.Response;
 
 /**
  * http interceptor to set header
- * Created by bingbing on 2016/6/28.
  */
 public class HttpHeaderInterceptor implements Interceptor {
 
