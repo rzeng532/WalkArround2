@@ -391,8 +391,8 @@ public class LocationActivity extends Activity implements AMapLocationListener, 
             dataBundle.putString(ADDRESS, temp.getTitle() + MessageUtil.MAP_DETAIL_INFOR_SPLIT + temp.getSubtitle());
             dataBundle.putString(IMAGE_PATH, filePath);
             //dataBundle.putString(MAP_SCREEN_SHOT_URL, mapScreenShotUrl);
-            dataBundle.putDouble(LATITUDE, temp.getLatitude());
-            dataBundle.putDouble(LONGITUDE, temp.getLongitude());
+            dataBundle.putDouble(LATITUDE, marker.getPosition().latitude);
+            dataBundle.putDouble(LONGITUDE, marker.getPosition().longitude);
             resultIntent.putExtras(dataBundle);
             setResult(RESULT_OK, resultIntent);
             finish();
