@@ -7,6 +7,8 @@ import java.net.URL;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.awalk.walkarround.retrofit.trace.HttpTrace;
+
 
 public class HttpTaskGet extends HttpTask {
 
@@ -37,6 +39,7 @@ public class HttpTaskGet extends HttpTask {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            HttpTrace.handleHttpTraceInfor(mUrlString, "IOException", e.toString());
             doResultCallback(null,TaskResult.ERROR);
         }
 

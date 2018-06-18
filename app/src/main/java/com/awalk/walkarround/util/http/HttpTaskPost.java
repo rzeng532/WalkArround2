@@ -11,6 +11,8 @@ import java.util.Map;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.awalk.walkarround.retrofit.trace.HttpTrace;
+
 
 public class HttpTaskPost extends HttpTask {
 
@@ -99,6 +101,7 @@ public class HttpTaskPost extends HttpTask {
             super.run();
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            HttpTrace.handleHttpTraceInfor(mUrlString, "IOException", e.toString());
             doResultCallback(null, TaskResult.ERROR);
             e.printStackTrace();
         }
