@@ -22,12 +22,12 @@ import com.awalk.walkarround.util.Logger;
 import com.awalk.walkarround.util.UniversalWebView;
 
 /**
- * TODO: description
+ * 设置页面
  * Date: 2015-12-07
  *
  * @author Administrator
  */
-public class AppSettingActivity extends Activity implements View.OnClickListener{
+public class AppSettingActivity extends Activity implements View.OnClickListener {
 
     private static final Logger logger = Logger.getLogger(AppSettingActivity.class.getSimpleName());
     //private CheckSwitchButton csbNewMsgNotifyReceive;
@@ -38,23 +38,12 @@ public class AppSettingActivity extends Activity implements View.OnClickListener
     //    private TextView tvFeedback;
     private TextView tvLogout;
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-
-                default:
-                    break;
-            }
-        }
-    };
-
     private void initView() {
         //Title
         View title = findViewById(R.id.title);
         title.findViewById(R.id.back_rl).setOnClickListener(this);
         title.findViewById(R.id.more_rl).setVisibility(View.GONE);
-        ((TextView)(title.findViewById(R.id.display_name))).setText(R.string.setting_title);
+        ((TextView) (title.findViewById(R.id.display_name))).setText(R.string.setting_title);
 
         tvResetPasswordApp = (TextView) findViewById(R.id.tv_reset_password);
         tvResetPasswordApp.setOnClickListener(this);

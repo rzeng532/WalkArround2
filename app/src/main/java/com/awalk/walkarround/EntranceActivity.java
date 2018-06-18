@@ -3,6 +3,7 @@ package com.awalk.walkarround;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.awalk.walkarround.main.activity.AppMainActivity;
 import com.awalk.walkarround.myself.manager.ProfileManager;
 import com.awalk.walkarround.myself.task.OnlineStateTask;
@@ -40,7 +41,6 @@ public class EntranceActivity extends Activity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        // TODO Auto-generated method stub
         super.onNewIntent(intent);
         //退出
         if ((Intent.FLAG_ACTIVITY_CLEAR_TOP & intent.getFlags()) != 0) {
