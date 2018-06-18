@@ -189,7 +189,6 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                 mUIHandler.sendEmptyMessage(MSG_CANCEL_SPEED_DATE_OK);
             } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_CANCEL_SPEED_DATE)) {
                 mUIHandler.sendEmptyMessage(MSG_CANCEL_SPEED_DATE_FAIL);
-                Toast.makeText(ConversationActivity.this, R.string.err_del_speed_date_fail, Toast.LENGTH_LONG).show();
             }
         }
 
@@ -266,6 +265,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     break;
                 case MSG_CANCEL_SPEED_DATE_FAIL:
                     logger.d("Cancel speed date fail");
+                    Toast.makeText(ConversationActivity.this, R.string.err_del_speed_date_fail, Toast.LENGTH_LONG).show();
                     break;
                 default:
                     break;
@@ -485,7 +485,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
      */
     private void queryConversationList() {
         ThreadPoolManager.getPoolManager().addAsyncTask(
-                new AsyncTaskLoadSession(mContext,0, Integer.MAX_VALUE, mAsysResultListener)
+                new AsyncTaskLoadSession(mContext, 0, Integer.MAX_VALUE, mAsysResultListener)
         );
     }
 
@@ -505,9 +505,18 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             if (item == null) {
                 // 新到会话
                 if (mConvType == CONV_TYPE_CUR_FRIEND) {
-                    //Update old friend flag & return;
-                    mIvOldFriends.setVisibility(View.VISIBLE);
-                    mIvOldFriendUnread.setVisibility(View.VISIBLE);
+                    if (result.status > MessageUtil.WalkArroundState.STATE_INIT
+                            && result.status <= MessageUtil.WalkArroundState.STATE_END_IMPRESSION) {
+                        adapter.addListData(result);
+                        adapter.sortListData(SessionComparator.TIME_DESC);
+                        adapter.sortListData(SessionComparator.STATUS_DESC);
+                        adapter.sortListData(SessionComparator.TOP_DESC);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        //Update old friend flag & return;
+                        mIvOldFriends.setVisibility(View.VISIBLE);
+                        mIvOldFriendUnread.setVisibility(View.VISIBLE);
+                    }
                 }
             } else {
                 adapter.updateItemData(item, result);

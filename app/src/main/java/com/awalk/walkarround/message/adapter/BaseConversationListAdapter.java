@@ -241,6 +241,12 @@ public class BaseConversationListAdapter extends BaseAdapter implements OnClickL
         setItemMessage(holder, listDO);
         setItemFlag(holder, listDO, position, isPriorItemMapping);
         setFilfullArea(holder, listDO, position, isThereMappingOnList);
+
+        if (listDO != null && listDO.status < MessageUtil.WalkArroundState.STATE_END) {
+            holder.rlConversation.setPadding(CommonUtils.dip2px(mContext, 10), 0, 0, 0);
+        } else {
+            holder.rlConversation.setPadding(0, 0, 0, 0);
+        }
     }
 
     /**

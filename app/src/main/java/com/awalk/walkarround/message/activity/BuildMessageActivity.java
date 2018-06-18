@@ -2106,6 +2106,7 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                         .sendTextMsg(mRecipientInfo.getRecipientList().get(0),
                         getString(R.string.agree_2_walk_face_2_face_req), extraInfor);
 
+                mMessageDetailAdapter.updateMessageStatus(messageId, true);
                 WalkArroundMsgManager.getInstance(getApplicationContext()).updateMsgExpireInfo(messageId, true);
 
                 mWalkReplyDialog.dismiss();

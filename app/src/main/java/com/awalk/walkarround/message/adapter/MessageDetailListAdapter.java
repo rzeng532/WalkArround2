@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
 import com.awalk.walkarround.message.activity.BuildMessageActivity;
 import com.awalk.walkarround.message.listener.MessageItemListener;
 import com.awalk.walkarround.message.model.ChatMsgBaseInfo;
@@ -216,6 +217,26 @@ public class MessageDetailListAdapter extends BaseAdapter implements MessageDeta
                         }
                     }, BuildMessageActivity.MSG_BURN_AFTER_READ_DURATION);
                 }
+                break;
+            }
+        }
+    }
+
+    /**
+     * 更新消息状态
+     *
+     * @param messageId
+     * @param isExpire  是否过期
+     */
+    public void updateMessageStatus(long messageId, boolean isExpire) {
+        int messageCount = mMessageInfoList.size();
+        if (messageCount < 1) {
+            return;
+        }
+        for (int i = messageCount - 1; i >= 0; i--) {
+            ChatMsgBaseInfo message = mMessageInfoList.get(i);
+            if (message.getMsgId() == messageId && !message.isTimeSendMsg()) {
+                message.setExpire(isExpire);
                 break;
             }
         }
