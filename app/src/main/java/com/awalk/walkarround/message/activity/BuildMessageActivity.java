@@ -2070,7 +2070,9 @@ public class BuildMessageActivity extends Activity implements OnClickListener,
                             mWalkReplyDialog.show();
                         }
                     } else if (extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_OK)) {
-
+                        Intent intentShowDistance = new Intent(BuildMessageActivity.this, CountdownActivity.class);
+                        intentShowDistance.putExtra(CountdownActivity.PARAMS_FRIEND_OBJ_ID, mRecipientInfo.getRecipientList().get(0));
+                        startActivity(intentShowDistance);
                     } else if (extraArray[1].equalsIgnoreCase(MessageUtil.EXTRA_START_2_WALK_REPLY_NEXT_TIME)) {
 
                     } else if (extraArray[0].equalsIgnoreCase(MessageUtil.EXTRA_AGREEMENT_2_WALKARROUND)) {
