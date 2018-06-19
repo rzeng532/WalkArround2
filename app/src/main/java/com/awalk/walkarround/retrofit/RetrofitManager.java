@@ -2,6 +2,8 @@ package com.awalk.walkarround.retrofit;
 
 import java.util.concurrent.TimeUnit;
 
+import com.awalk.walkarround.util.http.HttpUtil;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -22,6 +24,7 @@ public class RetrofitManager {
     protected HttpLoggingInterceptor mHttpLoggingInterceptor;
 
     protected HttpHeaderInterceptor mHttpHeaderInterceptor;
+    private Retrofit mRetrofit;
 
     protected RetrofitManager() {
         mHttpLoggingInterceptor = new HttpLoggingInterceptor();
@@ -70,6 +73,20 @@ public class RetrofitManager {
                 .client(client)
                 .build();
         return retrofit.create(service);
+    }
+
+    public final ApiService getServices() {
+        if (mRetrofit == null) {
+            //httpClient request config
+            OkHttpClient client = getOkHttpClient();
+            mRetrofit = new Retrofit.Builder()
+                    .baseUrl(HttpUtil.SERVER_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(client)
+                    .build();
+        }
+        return mRetrofit.create(ApiService.class);
     }
 
 }
