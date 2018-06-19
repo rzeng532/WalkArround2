@@ -1,5 +1,8 @@
 package com.awalk.walkarround.myself.activity;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -8,8 +11,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -19,33 +20,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
-import com.awalk.walkarround.Location.activity.LocationActivity;
-import com.awalk.walkarround.Location.model.GeoData;
 import com.awalk.walkarround.R;
 import com.awalk.walkarround.base.view.DialogFactory;
 import com.awalk.walkarround.base.view.PortraitView;
 import com.awalk.walkarround.base.view.wheelpicker.core.AbstractWheelPicker;
-import com.awalk.walkarround.message.util.MessageUtil;
+import com.awalk.walkarround.myself.iview.DetailInformationView;
 import com.awalk.walkarround.myself.manager.ProfileManager;
 import com.awalk.walkarround.myself.model.MyProfileInfo;
+import com.awalk.walkarround.myself.presenter.DetailInformationPresenter;
 import com.awalk.walkarround.myself.util.ProfileUtil;
 import com.awalk.walkarround.util.AppConstant;
-import com.awalk.walkarround.util.AsyncTaskListener;
 import com.awalk.walkarround.util.CommonUtils;
 import com.awalk.walkarround.util.Logger;
 import com.awalk.walkarround.util.image.ImageBrowserActivity;
 import com.awalk.walkarround.util.image.ImageChooseActivity;
 
-import java.io.File;
-import java.util.ArrayList;
-
 /**
  * Created by Richard on 2015/12/9.
  */
-public class DetailInformationActivity extends Activity implements View.OnClickListener {
+public class DetailInformationActivity extends Activity implements View.OnClickListener, DetailInformationView {
 
     private TextView mTvTitle;
     private PortraitView mMyPortrait;
@@ -69,7 +64,6 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
 
     private final int REQUEST_CODE_PICTURE_CHOOSE = 100;
     private final int REQUEST_CODE_PICTURE_CUT = 101;
-    private final int REQUEST_CODE_LOCATION = 102;
     private final int REQUEST_CODE_EDIT_STR = 103;
 
     private Logger logger = Logger.getLogger(DetailInformationActivity.class.getSimpleName());
@@ -78,56 +72,10 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     private Uri headUri;
     private File profileheadTemp;
 
-    private final int UPDATE_PORTRAIT_OK = 0;
-    private final int UPDATE_PORTRAIT_FAIL = 1;
-    private final int HANDLER_MSG_DELAY = 1000; //1 second
-
     private Dialog mLoadingDialog;
     private BirthdayDialog dlgBirthday;
     private Dialog mGenderDialog;
-
-    private Handler mUpdateHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == UPDATE_PORTRAIT_OK) {
-                dismissDialog();
-                //Update portrait URL
-                AVUser usr = AVUser.getCurrentUser();
-                try{
-                    AVFile portraitURL = usr.getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
-                    if(portraitURL != null && !TextUtils.isEmpty(portraitURL.getUrl())) {
-                        myProfileInfo.setPortraitPath(portraitURL.getUrl());
-                    }
-                    mMyPortrait.setBaseData(myProfileInfo.getUsrName()
-                                            , myProfileInfo.getPortraitPath()
-                                            , myProfileInfo.getUsrName().substring(0, 1)
-                                            , -1);
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (msg.what == UPDATE_PORTRAIT_FAIL) {
-                dismissDialog();
-                Toast.makeText(getApplicationContext(), getString(R.string.err_img_update_fail), Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
-    private AsyncTaskListener mUpdateListener = new AsyncTaskListener() {
-        @Override
-        public void onSuccess(Object data) {
-            Message msg = Message.obtain();
-            msg.what = UPDATE_PORTRAIT_OK;
-            mUpdateHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
-        }
-
-        @Override
-        public void onFailed(AVException e) {
-            Message msg = Message.obtain();
-            msg.what = UPDATE_PORTRAIT_FAIL;
-            mUpdateHandler.sendMessageDelayed(msg, HANDLER_MSG_DELAY);
-            AVAnalytics.onEvent(DetailInformationActivity.this, AppConstant.ANA_EVENT_CHANGE_PORTRAIT, AppConstant.ANA_TAG_RET_FAIL);
-        }
-    };
+    private DetailInformationPresenter mPresenter = new DetailInformationPresenter();
 
     //Listener for gendle single choice
     private String mProfileGendle;
@@ -137,6 +85,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_information);
         initView();
+        mPresenter.attach(this);
     }
 
     @Override
@@ -167,7 +116,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
     public void initView() {
         //Title
         findViewById(R.id.title).findViewById(R.id.back_rl).setOnClickListener(this);
-        mTvTitle = (TextView)(findViewById(R.id.title).findViewById(R.id.display_name));
+        mTvTitle = (TextView) (findViewById(R.id.title).findViewById(R.id.display_name));
         mTvTitle.setText(R.string.profile_activity_title);
         findViewById(R.id.title).findViewById(R.id.more_rl).setVisibility(View.GONE);
 
@@ -315,7 +264,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
                 headUri = null;
             }
 
-            mUpdateHandler.sendEmptyMessage(UPDATE_PORTRAIT_OK);
+            updatePortraitResult(true);
         } else if (requestCode == REQUEST_CODE_PICTURE_CUT) {
             //if user select cancel, the resule will be 0;
             if (resultCode == 0 || headUri == null || TextUtils.isEmpty(headUri.toString())) {
@@ -323,23 +272,13 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             }
             //TODO: should add listener on update portrait method!!!
             showDialog();
-            ProfileManager.getInstance().updatePortrait(headUri.getPath(), mUpdateListener);
+
+            mPresenter.updatePortrait(this, headUri.getPath());
 
             if (profileheadTemp != null && profileheadTemp.exists()) {
                 profileheadTemp.delete();
                 headUri = null;
             }
-        } else if (requestCode == REQUEST_CODE_LOCATION) {
-            if (resultCode != RESULT_OK || data == null) {
-                return;
-            }
-
-            String[] address = data.getStringExtra(LocationActivity.ADDRESS).split(MessageUtil.MAP_DETAIL_INFOR_SPLIT);
-            GeoData location = new GeoData(data.getDoubleExtra(LocationActivity.LATITUDE, 0),
-                    data.getDoubleExtra(LocationActivity.LONGITUDE, 0),
-                    address[1]);
-
-            ProfileManager.getInstance().updateUserLocation(location, mUpdateListener);
         } else if (requestCode == REQUEST_CODE_EDIT_STR) {
             if (resultCode != RESULT_OK) {
                 return;
@@ -387,12 +326,6 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
             mLoadingDialog.dismiss();
             mLoadingDialog = null;
         }
-    }
-
-    private void startLocationActivity() {
-        Intent intent = new Intent(this, LocationActivity.class);
-
-        startActivityForResult(intent, REQUEST_CODE_LOCATION);
     }
 
     private void showGenderDlg() {
@@ -505,7 +438,7 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         //Init birthday value from prior setting.
         String mStrBirthday = myProfileInfo.getBirthday();
         if (!TextUtils.isEmpty(mStrBirthday)) {
-            try{
+            try {
                 String[] ss = mStrBirthday.split("-");
                 dlgBirthday.setCurrentDate(Integer.valueOf(ss[0]), Integer.valueOf(ss[1]), Integer.valueOf(ss[2]));
             } catch (Exception e) {
@@ -514,5 +447,40 @@ public class DetailInformationActivity extends Activity implements View.OnClickL
         }
 
         dlgBirthday.show();
+    }
+
+    @Override
+    public void updatePortraitResult(final boolean isSuccess) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updatePortrait(isSuccess);
+            }
+        });
+
+    }
+
+    private void updatePortrait(final boolean isSuccess) {
+        if (isSuccess) {
+            dismissDialog();
+            //Update portrait URL
+            AVUser usr = AVUser.getCurrentUser();
+            try {
+                AVFile portraitURL = usr.getAVFile(ProfileUtil.REG_KEY_PORTRAIT);
+                if (portraitURL != null && !TextUtils.isEmpty(portraitURL.getUrl())) {
+                    myProfileInfo.setPortraitPath(portraitURL.getUrl());
+                }
+                mMyPortrait.setBaseData(myProfileInfo.getUsrName()
+                        , myProfileInfo.getPortraitPath()
+                        , myProfileInfo.getUsrName().substring(0, 1)
+                        , -1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            dismissDialog();
+            Toast.makeText(getApplicationContext(), getString(R.string.err_img_update_fail), Toast.LENGTH_SHORT).show();
+            AVAnalytics.onEvent(DetailInformationActivity.this, AppConstant.ANA_EVENT_CHANGE_PORTRAIT, AppConstant.ANA_TAG_RET_FAIL);
+        }
     }
 }
