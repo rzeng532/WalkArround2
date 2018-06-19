@@ -1,5 +1,7 @@
 package com.awalk.walkarround.message.presenter;
 
+import android.text.TextUtils;
+
 import com.avos.avoscloud.AVException;
 import com.awalk.walkarround.base.BasePresenter;
 import com.awalk.walkarround.message.iview.ConversationView;
@@ -29,6 +31,13 @@ public class ConversationPresenter extends BasePresenter<ConversationView> {
         ApiManager.querySpeedDate(userObjId, new ApiListener<DynamicRecord>() {
             @Override
             public void onSuccess(String code, DynamicRecord data) {
+                if (HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code)
+                        && data != null && data.getResult() != null) {
+                    String strSpeedDateId = data.getResult().getObjectId();
+                    if (!TextUtils.isEmpty(strSpeedDateId)) {
+                        ProfileManager.getInstance().getMyProfile().setSpeedDateId(strSpeedDateId);
+                    }
+                }
                 if (mView != null) {
                     mView.querySpeedDateIdResult(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code), data);
                 }
