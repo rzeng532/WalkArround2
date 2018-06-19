@@ -86,9 +86,9 @@ public class WrTypedMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage>
                             if (msgUri != null) {
                                 msgInfo.setMsgId(ContentUris.parseId(msgUri));
                                 WalkArroundMsgManager.getInstance(mContext).addMsgUnreadCountByThreadId(msgInfo.getMsgThreadId());
-                                WalkArroundMsgManager.getInstance(mContext).onLoadMsgResult(msgInfo, null, true);
-
                                 updateConversationInfor(msgInfo);
+                                // 发送广播通知UI
+                                WalkArroundMsgManager.getInstance(mContext).onLoadMsgResult(msgInfo, null, true);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
