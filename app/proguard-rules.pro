@@ -149,10 +149,11 @@ public <methods>;
 -dontwarn okio.**
 
 #HTTP API model
--keep class com.example.walkarround.myself.model.**{*;}
--keep class com.example.walkarround.message.model.**{*;}
--keep class com.example.walkarround.main.model.**{*;}
--keep class com.example.walkarround.Location.model.**{*;}
+-keep class com.awalk.walkarround.myself.model.**{*;}
+-keep class com.awalk.walkarround.message.model.**{*;}
+-keep class com.awalk.walkarround.main.model.**{*;}
+-keep class com.awalk.walkarround.Location.model.**{*;}
+-keep class com.awalk.walkarround.retrofit.model.**{*;}
 
 #友盟分享start
 -dontusemixedcaseclassnames
