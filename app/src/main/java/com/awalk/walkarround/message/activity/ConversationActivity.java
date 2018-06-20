@@ -341,11 +341,13 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                         if (mConvType == CONV_TYPE_OLD_FRIEND && item.getContact().equals(AssistantHelper.ASSISTANT_OBJ_ID)) {
                             it.remove();
                         } else if (mConvType == CONV_TYPE_OLD_FRIEND
-                                && (item.status > MessageUtil.WalkArroundState.STATE_INIT && item.status <= MessageUtil.WalkArroundState.STATE_END_IMPRESSION)) {
+                                && (item.status > MessageUtil.WalkArroundState.STATE_INIT
+                                && item.status <= MessageUtil.WalkArroundState.STATE_END_IMPRESSION)) {
                             //Current UI need old friends, so we remove !Old friends.
                             it.remove();
                         } else if (mConvType == CONV_TYPE_CUR_FRIEND
-                                && (item.status <= MessageUtil.WalkArroundState.STATE_INIT || item.status > MessageUtil.WalkArroundState.STATE_END_IMPRESSION)) {
+                                && (item.status <= MessageUtil.WalkArroundState.STATE_INIT
+                                || item.status > MessageUtil.WalkArroundState.STATE_END_IMPRESSION)) {
                             //Current UI need cur friend, we remove old one
                             mIsThereOldFriend = true;
                             mOldFriendUnreadCound += item.unReadCount;
