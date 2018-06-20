@@ -3,11 +3,6 @@
  */
 package com.awalk.walkarround.message.activity;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -26,41 +21,53 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVAnalytics;
 import com.awalk.walkarround.R;
 import com.awalk.walkarround.assistant.AssistantHelper;
+import com.awalk.walkarround.base.task.TaskUtil;
 import com.awalk.walkarround.base.view.DialogFactory;
+import com.awalk.walkarround.main.model.ContactInfo;
+import com.awalk.walkarround.main.parser.WalkArroundJsonResultParser;
+import com.awalk.walkarround.main.task.QuerySpeedDateIdTask;
 import com.awalk.walkarround.message.adapter.BaseConversationListAdapter;
 import com.awalk.walkarround.message.adapter.ConversationListAdapter;
-import com.awalk.walkarround.message.iview.ConversationView;
 import com.awalk.walkarround.message.listener.ConversationItemListener;
+import com.awalk.walkarround.message.manager.ContactsManager;
 import com.awalk.walkarround.message.manager.WalkArroundMsgManager;
 import com.awalk.walkarround.message.model.MessageSessionBaseModel;
-import com.awalk.walkarround.message.presenter.ConversationPresenter;
 import com.awalk.walkarround.message.task.AsyncTaskLoadSession;
 import com.awalk.walkarround.message.task.AsyncTaskOperation;
+import com.awalk.walkarround.message.task.CancelSpeedDateTask;
 import com.awalk.walkarround.message.util.MessageConstant;
 import com.awalk.walkarround.message.util.MessageUtil;
 import com.awalk.walkarround.message.util.MsgBroadcastConstants;
 import com.awalk.walkarround.message.util.SessionComparator;
 import com.awalk.walkarround.myself.manager.ProfileManager;
-import com.awalk.walkarround.retrofit.model.DynamicRecord;
-import com.awalk.walkarround.retrofit.model.ResponseInfo;
 import com.awalk.walkarround.util.Logger;
+import com.awalk.walkarround.util.http.HttpTaskBase;
+import com.awalk.walkarround.util.http.HttpUtil;
 import com.awalk.walkarround.util.http.ThreadPoolManager;
 import com.awalk.walkarround.util.network.NetWorkManager;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static com.awalk.walkarround.util.http.HttpTaskBase.TaskResult;
 import static com.awalk.walkarround.util.http.HttpTaskBase.onResultListener;
 
 public class ConversationActivity extends Activity implements ConversationItemListener,
-        OnClickListener, ConversationView {
+        OnClickListener {
 
     /* 批操作event */
     private static final int MSG_OPERATION_REMOVE_SUCCESS = 0;
     private static final int MSG_OPERATION_LOAD_SUCCESS = 5;
     private static final int MSG_OPERATION_NOT_SUCCEED = 101;
+
+    /* cancel speed date event */
+    private static final int MSG_CANCEL_SPEED_DATE_OK = 102;
+    private static final int MSG_CANCEL_SPEED_DATE_FAIL = 103;
 
     private static final String MSG_EVENT_EXTRA_LIST = "listData";
     private static final String MSG_OPERATION_KEY_REQUEST = "msg_operation_key_request";
@@ -93,8 +100,6 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     private int mConvType = CONV_TYPE_CUR_FRIEND;
     private boolean mIsThereOldFriend = false;
     private int mOldFriendUnreadCound = 0;
-
-    private ConversationPresenter mPresenter = new ConversationPresenter();
 
     /**
      * 消息状态监听
@@ -139,6 +144,94 @@ public class ConversationActivity extends Activity implements ConversationItemLi
             }
         }
     };
+
+    private HttpTaskBase.onResultListener mGetSpeedIdTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE)) {
+                String strSpeedDateId = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_OBJECT_ID);
+                if (!TextUtils.isEmpty(strSpeedDateId)) {
+                    ProfileManager.getInstance().getMyProfile().setSpeedDateId(strSpeedDateId);
+                }
+                String strUser = MessageUtil.getFriendIdFromServerData((String) object);
+                String strColor = WalkArroundJsonResultParser.parseRequireCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_COLOR);
+                int iStatus = WalkArroundJsonResultParser.parseRequireIntCode((String) object, HttpUtil.HTTP_RESPONSE_KEY_LIKE_STATUS);
+                if (!TextUtils.isEmpty(strSpeedDateId) && !TextUtils.isEmpty(strUser)) {
+                    List<String> lRecipientList = new ArrayList<>();
+                    lRecipientList.add(strUser);
+                    //Save speed date id
+                    ProfileManager.getInstance().setSpeedDateId(strSpeedDateId);
+
+                    //Add contact infor if local DB does not contain this friend
+                    ContactInfo friend = ContactsManager.getInstance(getApplicationContext()).getContactByUsrObjId(strUser);
+                    if (friend == null) {
+                        ContactsManager.getInstance(getApplicationContext()).getContactFromServer(strUser);
+                    }
+                    //Check local chatting IM record and create chat record if there is no record on local DB.
+                    long chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext())
+                            .getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE,
+                                    lRecipientList);
+                    int localThreadStatus = iStatus;
+                    if (chattingThreadId < 0) {
+                        chattingThreadId = WalkArroundMsgManager.getInstance(getApplicationContext())
+                                .createConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, lRecipientList);
+                        if (chattingThreadId >= 0) {
+                            //Update conversation color & state.
+                            WalkArroundMsgManager.getInstance(getApplicationContext())
+                                    .updateConversationStatusAndColor(chattingThreadId, iStatus, (TextUtils.isEmpty(strColor) ? -1 : Integer.parseInt(strColor)));
+                        }
+                    } else {
+                        localThreadStatus = WalkArroundMsgManager.getInstance(getApplicationContext())
+                                .getConversationStatus(chattingThreadId);
+                        localThreadStatus = (iStatus > localThreadStatus) ? iStatus : localThreadStatus;
+                    }
+
+                    ProfileManager.getInstance().setCurUsrDateState(localThreadStatus);
+                }
+            } else {
+                logger.d("Failed to get speed date id!!!");
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
+
+    /**
+     * 取消Speed data 在服务器中的状态。
+     */
+    private HttpTaskBase.onResultListener mCancelSpeedDateTaskListener = new HttpTaskBase.onResultListener() {
+        @Override
+        public void onPreTask(String requestCode) {
+        }
+
+        @Override
+        public void onResult(Object object, HttpTaskBase.TaskResult resultCode, String requestCode, String threadId) {
+            //Task success.
+            if (HttpTaskBase.TaskResult.SUCCEESS == resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_CANCEL_SPEED_DATE)) {
+                //取消匹配后将自身状态设置为为初始状态
+                ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_INIT);
+                mUIHandler.sendEmptyMessage(MSG_CANCEL_SPEED_DATE_OK);
+            } else if (HttpTaskBase.TaskResult.SUCCEESS != resultCode && requestCode.equalsIgnoreCase(HttpUtil.HTTP_FUNC_CANCEL_SPEED_DATE)) {
+                mUIHandler.sendEmptyMessage(MSG_CANCEL_SPEED_DATE_FAIL);
+            }
+        }
+
+        @Override
+        public void onProgress(int progress, String requestCode) {
+
+        }
+    };
+
 
     /**
      * 收到Rcs信息
@@ -200,6 +293,13 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     }
 
                     mConversationAdapter.notifyDataSetChanged();
+                    break;
+                case MSG_CANCEL_SPEED_DATE_OK:
+                    logger.d("Cancel speed date ok");
+                    break;
+                case MSG_CANCEL_SPEED_DATE_FAIL:
+                    logger.d("Cancel speed date fail");
+                    Toast.makeText(ConversationActivity.this, R.string.err_del_speed_date_fail, Toast.LENGTH_LONG).show();
                     break;
                 default:
                     break;
@@ -285,7 +385,6 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         if (checkIsTherePopImpressionOne()) {
             return;
         }
-        mPresenter.attach(this);
 
         //初始化数据
         initData();
@@ -305,7 +404,12 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         if (!TextUtils.isEmpty(ProfileManager.getInstance().getCurUsrObjId())
                 && TextUtils.isEmpty(ProfileManager.getInstance().getSpeedDateId())) {
             //Check speed date id
-            mPresenter.querySpeedDate(ProfileManager.getInstance().getCurUsrObjId());
+            ThreadPoolManager.getPoolManager().addAsyncTask(new QuerySpeedDateIdTask(getApplicationContext(),
+                    mGetSpeedIdTaskListener,
+                    HttpUtil.HTTP_FUNC_QUERY_SPEED_DATE,
+                    HttpUtil.HTTP_TASK_QUERY_SPEED_DATE,
+                    QuerySpeedDateIdTask.getParams(ProfileManager.getInstance().getCurUsrObjId()),
+                    TaskUtil.getTaskHeader()));
         }
     }
 
@@ -604,7 +708,15 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                             String speedDateId = ProfileManager.getInstance().getMyProfile().getSpeedDateId();
                             if (!TextUtils.isEmpty(speedDateId) && mNetStatusView.getVisibility() == View.GONE) {
                                 //There is speed date id and there is network.
-                                mPresenter.cancelSpeedDate(listDO, speedDateId);
+                                ThreadPoolManager.getPoolManager().addAsyncTask(new CancelSpeedDateTask(getApplicationContext(),
+                                        mCancelSpeedDateTaskListener,
+                                        HttpUtil.HTTP_FUNC_CANCEL_SPEED_DATE,
+                                        HttpUtil.HTTP_TASK_CANCEL_SPEED_DATE,
+                                        CancelSpeedDateTask.getParams(speedDateId),
+                                        TaskUtil.getTaskHeader()));
+
+                                mConversationAdapter.put2ChoosenList(listDO);
+                                deleteConvMsg(listDO);
                             } else {
                                 //There is no network.
                                 Toast.makeText(ConversationActivity.this, R.string.err_network_unavailable, Toast.LENGTH_LONG).show();
@@ -634,24 +746,4 @@ public class ConversationActivity extends Activity implements ConversationItemLi
         return resId;
     }
 
-    @Override
-    public void querySpeedDateIdResult(boolean isSuccess, DynamicRecord speedDateInfo) {
-        if (isSuccess && speedDateInfo != null) {
-            logger.d("Get speed date:" + JSONObject.toJSONString(speedDateInfo));
-        } else {
-            logger.d("Failed to get speed date id!!!");
-        }
-    }
-
-    @Override
-    public void cancelSpeedDateResult(boolean isSuccess, MessageSessionBaseModel listDO, ResponseInfo result) {
-        //Task success.
-        if (isSuccess) {
-            //取消匹配后将自身状态设置为为初始状态
-            mConversationAdapter.put2ChoosenList(listDO);
-            deleteConvMsg(listDO);
-        } else {
-            Toast.makeText(ConversationActivity.this, R.string.err_del_speed_date_fail, Toast.LENGTH_LONG).show();
-        }
-    }
 }

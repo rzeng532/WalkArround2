@@ -2,10 +2,10 @@ package com.awalk.walkarround.util.http;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.awalk.walkarround.main.parser.WalkArroundJsonResultParser;
 import com.awalk.walkarround.retrofit.trace.HttpTrace;
+import com.awalk.walkarround.util.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 
 
 public class HttpTask extends HttpTaskBase {
+    private static final Logger logger = Logger.getLogger(HttpTaskBase.class.getSimpleName());
 
     HttpURLConnection conn;
     BufferedReader bufferedReader;
@@ -57,12 +58,12 @@ public class HttpTask extends HttpTaskBase {
                 // 非200错误
                 HttpTrace.handleHttpTraceInfor(mUrlString, returnCode, result);
             }
-            Log.e("mass", mUrlString + " result: " + sb.toString());
-            doResultCallback(sb.toString(),TaskResult.SUCCEESS);
+            logger.e(mUrlString + " result: " + sb.toString());
+            doResultCallback(sb.toString(), TaskResult.SUCCEESS);
         } catch (IOException e) {
             e.printStackTrace();
 
-            Log.v("", e.toString());
+            logger.v(e.toString());
             HttpTrace.handleHttpTraceInfor(mUrlString, "IOException", e.toString());
 
             doResultCallback(null, TaskResult.ERROR);

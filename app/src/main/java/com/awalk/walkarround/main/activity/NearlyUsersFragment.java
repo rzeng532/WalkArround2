@@ -131,7 +131,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                     msg.obj = strUser;
                     mFragmentHandler.sendMessage(msg);
                     long convThreadId = sayHello(strUser);
-                    if(convThreadId >= 0) {
+                    if (convThreadId >= 0) {
                         WalkArroundMsgManager.getInstance(getActivity().getApplicationContext()).updateConversationStatus(convThreadId, MessageUtil.WalkArroundState.STATE_IM);
                     }
                 }
@@ -183,27 +183,27 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         public void handleMessage(Message msg) {
             if (msg.what == UPDATE_NEARLY_USERS) {
                 showNearyUser();
-            } else if(msg.what == SOMEONE_LIKE_YOU) {
-                if(TextUtils.isEmpty((String)msg.obj)) {
+            } else if (msg.what == SOMEONE_LIKE_YOU) {
+                if (TextUtils.isEmpty((String) msg.obj)) {
                     return;
                 }
                 ContactInfo user = ContactsManager.getInstance(NearlyUsersFragment.this.getActivity().getApplicationContext())
-                        .getContactByUsrObjId((String)msg.obj);
-                if(user == null) {
+                        .getContactByUsrObjId((String) msg.obj);
+                if (user == null) {
                     return;
                 }
 
                 ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_IM);
 
                 String friendName = TextUtils.isEmpty(user.getUsername()) ? user.getMobilePhoneNumber() : user.getUsername();
-                if(friendName.length() > AppConstant.SHORTNAME_LEN) {
+                if (friendName.length() > AppConstant.SHORTNAME_LEN) {
                     friendName = friendName.substring(0, AppConstant.SHORTNAME_LEN) + "...";
                 }
 
                 DialogFactory.getMappingDialog(NearlyUsersFragment.this.getActivity()
                         , getActivity().getString(R.string.mapping_indication, friendName)
                         , null).show();
-            } else if(msg.what == DISPLAY_RADAR) {
+            } else if (msg.what == DISPLAY_RADAR) {
                 mSearchingView.start();
             }
         }
@@ -215,16 +215,16 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             return;
         }
 
-        if(list == null || list.size() <= 0) {
+        if (list == null || list.size() <= 0) {
             return;
         }
 
         synchronized (NearlyUsersFragment.class) {
             mNearlyUserList.clear();
             mDeleletedUserList.clear();
-            for(ContactInfo one : list) {
-                if(TextUtils.isEmpty(one.getUsername())
-                        || one.getPortrait() ==  null) {
+            for (ContactInfo one : list) {
+                if (TextUtils.isEmpty(one.getUsername())
+                        || one.getPortrait() == null) {
                     //没有头像信息 & 没有名字信息，直接略过
                     continue;
                 } else {
@@ -232,7 +232,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                 }
             }
 
-            if(mNearlyUserList.size() > 0) {
+            if (mNearlyUserList.size() > 0) {
                 mStrToUsrId = mNearlyUserList.get(0).getObjectId();
             }
         }
@@ -317,7 +317,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         super.onPause();
         AVAnalytics.onFragmentEnd("NearlyUsersFragment");
 
-        if(mSearchingView != null && mSearchingView.isStarting()) {
+        if (mSearchingView != null && mSearchingView.isStarting()) {
             mSearchingView.stop();
         }
         if (mSearchingNoticeView != null && mSearchingNoticeView.isFlipping()) {
@@ -328,7 +328,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             getActivity().unregisterReceiver(mMessageReceiver);
         }
 
-        if(mFragmentHandler != null) {
+        if (mFragmentHandler != null) {
             mFragmentHandler.removeMessages(UPDATE_NEARLY_USERS);
             mFragmentHandler.removeMessages(DISPLAY_RADAR);
         }
@@ -404,10 +404,10 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
         mSearchingPortrait = (PortraitView) mViewRoot.findViewById(R.id.searching_center_portrait);
         mSearchingView = (RippleView) mViewRoot.findViewById(R.id.searchingView);
 
-        int width =View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-        int height =View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-        mSearchingPortrait.measure(width,height);
-        mSearchingView.measure(width,height);
+        int width = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int height = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        mSearchingPortrait.measure(width, height);
+        mSearchingView.measure(width, height);
 
         mSearchingView.setInitRadiusByPortraitWidth(mSearchingPortrait);
         mSearchingView.start();
@@ -441,7 +441,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
             @Override
             public void onRightCardExit(Object dataObject) {
 
-                if(AssistantHelper.isThereGuideStep()
+                if (AssistantHelper.isThereGuideStep()
                         && AssistantHelper.getInstance().validateStepState(AssistantHelper.STEP_SEARCHING)
                         && AssistantHelper.ASSISTANT_OBJ_ID.equals(mStrToUsrId)) {
 
@@ -473,7 +473,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
                 int curState = ProfileManager.getInstance().getCurUsrDateState();
                 //If user state is mapping, we will skip LIKE step. Just display UI for user.
-                if(!(curState == MessageUtil.WalkArroundState.STATE_IM
+                if (!(curState == MessageUtil.WalkArroundState.STATE_IM
                         || curState == MessageUtil.WalkArroundState.STATE_WALK
                         || curState == MessageUtil.WalkArroundState.STATE_IMPRESSION)) {
                     AVAnalytics.onEvent(getActivity(), AppConstant.ANA_EVENT_LIKE);
@@ -553,8 +553,8 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     }
 
     private void right() {
-        if(mUserFrame != null) {
-            try{
+        if (mUserFrame != null) {
+            try {
                 mUserFrame.getTopCardListener().selectRight();
             } catch (Exception e) {
                 logger.e(" ------ right() exception: ");
@@ -563,8 +563,8 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     }
 
     private void left() {
-        if(mUserFrame != null) {
-            try{
+        if (mUserFrame != null) {
+            try {
                 mUserFrame.getTopCardListener().selectLeft();
             } catch (Exception e) {
                 logger.e(" ------ left() exception: ");
@@ -606,9 +606,9 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
 
 
     private void showMapResultDialog() {
-        if(ProfileManager.getInstance() != null) {
+        if (ProfileManager.getInstance() != null) {
             int curState = ProfileManager.getInstance().getCurUsrDateState();
-            if(curState == MessageUtil.WalkArroundState.STATE_IM || curState == MessageUtil.WalkArroundState.STATE_WALK) {
+            if (curState == MessageUtil.WalkArroundState.STATE_IM || curState == MessageUtil.WalkArroundState.STATE_WALK) {
                 onMappingState();
                 return;
             }
@@ -616,7 +616,7 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
     }
 
     private void onMappingState() {
-        if(mMapDialog == null) {
+        if (mMapDialog == null) {
             mMapDialog = DialogFactory.getMappingDialog(getActivity()
                     , getString(R.string.msg_u_on_map_state)
                     , new DialogFactory.ConfirmDialogClickListener() {
@@ -630,14 +630,14 @@ public class NearlyUsersFragment extends Fragment implements View.OnClickListene
                         }
                     });
             mMapDialog.show();
-        } else if(mMapDialog != null && !mMapDialog.isShowing()) {
+        } else if (mMapDialog != null && !mMapDialog.isShowing()) {
             mMapDialog.show();
         }
     }
 
     private void showMappingToast() {
         int curState = ProfileManager.getInstance().getCurUsrDateState();
-        if(curState == MessageUtil.WalkArroundState.STATE_IM
+        if (curState == MessageUtil.WalkArroundState.STATE_IM
                 || curState == MessageUtil.WalkArroundState.STATE_WALK
                 || curState == MessageUtil.WalkArroundState.STATE_IMPRESSION) {
 //            ToastUtils.show(getActivity(), WalkArroundApp.getInstance().getString(R.string.msg_u_on_map_state));
