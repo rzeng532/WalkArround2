@@ -185,10 +185,6 @@ public class WalkArroundMsgManager {
         recipient.add(receiver);
 
         threadId = mInstance.mMsgManager.getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, recipient);
-        if (threadId > 0) {
-            //If there is already a conversation, we just skip it.
-            return -1;
-        }
 
         //Check current conversation is correct or not
         if(mInstance.mImConversation != null) {
@@ -212,7 +208,7 @@ public class WalkArroundMsgManager {
         sendTextMsg(receiver, content, extraInfor);
 
         //After sent msg, get thread id again and return.
-        return mInstance.mMsgManager.getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, recipient);
+        return threadId > 0 ? threadId : mInstance.mMsgManager.getConversationId(MessageConstant.ChatType.CHAT_TYPE_ONE2ONE, recipient);
     }
 
     /*
