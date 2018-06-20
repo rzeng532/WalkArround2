@@ -43,8 +43,8 @@ public abstract class CommonObserver<T> extends DisposableObserver<T> {
             if (t instanceof CommonHttpResult) {
                 CommonHttpResult body = (CommonHttpResult) t;
                 // 取得消息code值
-                String resultCode = body.getCode();
-                String resultMessage = body.getMessage();
+                String resultCode = body.getResult().getCode();
+                String resultMessage = body.getResult().getMessage();
 
                 if (String.valueOf(CommonHttpResult.SESSION_EXPIRE).equals(resultCode)) {
                     onFailed(resultCode, resultMessage);
@@ -52,7 +52,6 @@ public abstract class CommonObserver<T> extends DisposableObserver<T> {
                 } else if (String.valueOf(CommonHttpResult.HTTP_SUCCESS).equals(resultCode)) {
                     onSuccess(t, resultMessage);
                 } else {
-                    resultMessage = body.getMessage();
                     onFailed(resultCode, resultMessage);
                     HttpTrace.handleHttpTraceInfor(mUrl, resultCode, resultMessage);
                 }
