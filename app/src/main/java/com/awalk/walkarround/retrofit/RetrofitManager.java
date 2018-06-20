@@ -1,8 +1,9 @@
 package com.awalk.walkarround.retrofit;
 
-import java.util.concurrent.TimeUnit;
-
+import com.awalk.walkarround.util.AppConstant;
 import com.awalk.walkarround.util.http.HttpUtil;
+
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -29,6 +30,10 @@ public class RetrofitManager {
     protected RetrofitManager() {
         mHttpLoggingInterceptor = new HttpLoggingInterceptor();
         mHttpHeaderInterceptor = new HttpHeaderInterceptor();
+        addHeader(HttpUtil.HTTP_REQ_HEADER_LC_ID, AppConstant.LEANCLOUD_APP_ID);
+        addHeader(HttpUtil.HTTP_REQ_HEADER_LC_KEY, AppConstant.LEANCLOUD_APP_KEY);
+        addHeader(HttpUtil.HTTP_REQ_HEADER_CONTENT_TYPE, HttpUtil.HTTP_REQ_HEADER_CONTENT_TYPE_JSON);
+        addHeader("Cookie", "");
     }
 
     public static RetrofitManager getInstance() {

@@ -11,9 +11,7 @@ import com.awalk.walkarround.retrofit.model.UserCoordinate;
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 
 /**
  * 接口
@@ -29,7 +27,7 @@ public interface ApiService {
      * @param request
      * @return
      */
-    @POST("/createUserDynamicData")
+    @POST("/1.1/functions/createUserDynamicData")
     Observable<CommonHttpResult<ResponseInfo>> createUserDynamicData(@Body RequestBody request);
 
     /**
@@ -38,7 +36,7 @@ public interface ApiService {
      * @param request
      * @return
      */
-    @POST("/queryUserDynamicData")
+    @POST("/1.1/functions/queryUserDynamicData")
     Observable<CommonHttpResult<DynamicRecord>> queryUserDynamicData(@Body RequestBody request);
 
     /**
@@ -47,7 +45,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/updateUserDynamicData")
+    @POST("/1.1/functions/updateUserDynamicData")
     Observable<CommonHttpResult<DynamicRecord>> updateUserDynamicData(@Body RequestBody body);
 
     /**
@@ -56,7 +54,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/querySpeedDate")
+    @POST("/1.1/functions/querySpeedDate")
     Observable<CommonHttpResult<DynamicRecord>> querySpeedDate(@Body RequestBody body);
 
     /**
@@ -65,7 +63,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/friendList")
+    @POST("/1.1/functions/friendList")
     Observable<CommonHttpResult<FriendsList>> queryFriendList(@Body RequestBody body);
 
     /**
@@ -74,7 +72,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/queryNearlyUsers")
+    @POST("/1.1/functions/queryNearlyUsers")
     Observable<CommonHttpResult<ContactsList>> queryNearlyUsers(@Body RequestBody body);
 
     /**
@@ -83,7 +81,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/addFriend")
+    @POST("/1.1/functions/addFriend")
     Observable<CommonHttpResult<ResponseInfo>> addFriend(@Body RequestBody body);
 
     /**
@@ -92,7 +90,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/likeSomeone")
+    @POST("/1.1/functions/likeSomeone")
     Observable<CommonHttpResult<DynamicRecord>> likeSomeone(@Body RequestBody body);
 
     /**
@@ -101,7 +99,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/goTogether")
+    @POST("/1.1/functions/goTogether")
     Observable<CommonHttpResult<ResponseInfo>> goTogether(@Body RequestBody body);
 
     /**
@@ -110,7 +108,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/endSpeedDate")
+    @POST("/1.1/functions/endSpeedDate")
     Observable<CommonHttpResult<ResponseInfo>> endSpeedDate(@Body RequestBody body);
 
     /**
@@ -119,7 +117,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/cancelSpeedDate")
+    @POST("/1.1/functions/cancelSpeedDate")
     Observable<CommonHttpResult<ResponseInfo>> cancelSpeedDate(@Body RequestBody body);
 
     /**
@@ -128,7 +126,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/friendInActive")
+    @POST("/1.1/functions/friendInActive")
     Observable<CommonHttpResult<ResponseInfo>> friendInActive(@Body RequestBody body);
 
     /**
@@ -137,7 +135,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/setColor")
+    @POST("/1.1/functions/setColor")
     Observable<CommonHttpResult<ResponseInfo>> setColor(@Body RequestBody body);
 
     /**
@@ -146,7 +144,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/evaluationEach")
+    @POST("/1.1/functions/evaluationEach")
     Observable<CommonHttpResult<ResponseInfo>> evaluationEach(@Body RequestBody body);
 
     /**
@@ -155,7 +153,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/evaluationEach2")
+    @POST("/1.1/functions/evaluationEach2")
     Observable<CommonHttpResult<ResponseInfo>> evaluationEach2(@Body RequestBody body);
 
     /**
@@ -164,7 +162,7 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/userCoordinate")
+    @POST("/1.1/functions/userCoordinate")
     Observable<CommonHttpResult<UserCoordinate>> userCoordinate(@Body RequestBody body);
 
     /**
@@ -173,6 +171,6 @@ public interface ApiService {
      * @param body
      * @return
      */
-    @POST("/registe")
+    @POST("/1.1/functions/registe")
     Observable<CommonHttpResult<RegisterInfo>> register(@Body RequestBody body);
 }

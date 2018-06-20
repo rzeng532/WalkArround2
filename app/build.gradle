@@ -29,7 +29,7 @@ android {
 //            abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
 //        }
         buildConfigField "String", "BUGLY_APP_ID", "\"3ea0b67d30\""
-        buildConfigField "String", "SERVER_BASE_URL", "\"https://leancloud.cn/1.1/functions/\""
+        buildConfigField "String", "SERVER_BASE_URL", "\"https://leancloud.cn\""
     }
     buildTypes {
         release {
@@ -37,12 +37,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
             buildConfigField "String", "BUGLY_APP_ID", "\"31bfddbabb\""
-            buildConfigField "String", "SERVER_BASE_URL", "\"https://leancloud.cn/1.1/functions/\""
+            buildConfigField "String", "SERVER_BASE_URL", "\"https://leancloud.cn\""
         }
         debug {
             signingConfig signingConfigs.config
             buildConfigField "String", "BUGLY_APP_ID", "\"3ea0b67d30\""
-            buildConfigField "String", "SERVER_BASE_URL", "\"https://leancloud.cn/1.1/functions/\""
+            buildConfigField "String", "SERVER_BASE_URL", "\"https://leancloud.cn\""
         }
     }
     dexOptions {

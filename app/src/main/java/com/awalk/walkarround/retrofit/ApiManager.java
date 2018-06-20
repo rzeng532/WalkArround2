@@ -1,7 +1,5 @@
 package com.awalk.walkarround.retrofit;
 
-import java.io.UnsupportedEncodingException;
-
 import com.alibaba.fastjson.JSONObject;
 import com.awalk.walkarround.retrofit.model.CommonHttpResult;
 import com.awalk.walkarround.retrofit.model.ContactsList;
@@ -12,8 +10,10 @@ import com.awalk.walkarround.retrofit.model.ResponseInfo;
 import com.awalk.walkarround.retrofit.model.UserCoordinate;
 import com.awalk.walkarround.util.http.HttpUtil;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import java.io.UnsupportedEncodingException;
+
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -48,7 +48,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -97,7 +97,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -135,7 +135,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -175,7 +175,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -217,7 +217,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -255,7 +255,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -292,7 +292,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -329,7 +329,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -365,7 +365,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -401,7 +401,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -437,7 +437,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -484,7 +484,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -531,7 +531,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -577,7 +577,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -615,7 +615,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -649,7 +649,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override
@@ -709,7 +709,7 @@ public class ApiManager {
                         if (apiListener == null) {
                             return;
                         }
-                        apiListener.onSuccess(object.getCode(), object.getData());
+                        apiListener.onSuccess(object.getResult().getCode(), object.getResult().getData());
                     }
 
                     @Override

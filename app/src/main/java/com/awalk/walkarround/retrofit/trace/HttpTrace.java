@@ -1,6 +1,6 @@
 package com.awalk.walkarround.retrofit.trace;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.awalk.walkarround.base.WalkArroundApp;
 import com.awalk.walkarround.retrofit.model.CommonHttpResult;
 import com.awalk.walkarround.util.AppConstant;
@@ -16,7 +16,7 @@ public class HttpTrace {
         try {
             // 上报后的Crash会显示HttpTrace标签
             CrashReport.setUserSceneTag(WalkArroundApp.getInstance(), AppConstant.LOG_OUTPUT ? 77555: 77554);
-            String msg = JSON.toJSONString(httpTraceInfo);
+            String msg = JSONObject.toJSONString(httpTraceInfo);
             CrashReport.postCatchedException(new Exception(msg));
         } catch (Exception e) {
             e.printStackTrace();
@@ -35,7 +35,7 @@ public class HttpTrace {
                     .setMessage(msg)
                     .builder();
 
-            HttpTrace.reportHttpEvent(httpTraceInfo);
+//            HttpTrace.reportHttpEvent(httpTraceInfo);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,12 +47,12 @@ public class HttpTrace {
      * @param result
      */
     public static void reportHttpEvent(String url, CommonHttpResult<?> result) {
-        if (!CommonHttpResult.HTTP_SUCCESS.equals(result.getCode())) {
+        if (!CommonHttpResult.HTTP_SUCCESS.equals(result.getResult().getCode())) {
             HttpTraceInfo.Builder builder = new HttpTraceInfo.Builder();
             HttpTraceInfo httpTraceInfo = builder
-                    .setCode(result.getCode())
+                    .setCode(result.getResult().getCode())
                     .setUrl(url)
-                    .setMessage(result.getMessage())
+                    .setMessage(result.getResult().getMessage())
                     .builder();
             HttpTrace.reportHttpEvent(httpTraceInfo);
 

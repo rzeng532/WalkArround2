@@ -4,13 +4,13 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.awalk.walkarround.main.parser.WalkArroundJsonResultParser;
+import com.awalk.walkarround.retrofit.trace.HttpTrace;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-
-import com.awalk.walkarround.main.parser.WalkArroundJsonResultParser;
-import com.awalk.walkarround.retrofit.trace.HttpTrace;
 
 
 public class HttpTask extends HttpTaskBase {
@@ -57,6 +57,7 @@ public class HttpTask extends HttpTaskBase {
                 // 非200错误
                 HttpTrace.handleHttpTraceInfor(mUrlString, returnCode, result);
             }
+            Log.e("mass", mUrlString + " result: " + sb.toString());
             doResultCallback(sb.toString(),TaskResult.SUCCEESS);
         } catch (IOException e) {
             e.printStackTrace();

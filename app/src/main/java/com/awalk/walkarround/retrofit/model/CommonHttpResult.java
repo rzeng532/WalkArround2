@@ -14,32 +14,61 @@ public class CommonHttpResult<D> implements Serializable {
     public final static String HTTP_NET_ERROR = "net error";
     public static final String SESSION_EXPIRE = "5101001"; // session 过期
 
-    private String code;
-    private D result;
-    private String message;
+    private Result result;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public D getData() {
+    public Result getResult() {
         return result;
     }
 
-    public void setData(D data) {
-        this.result = data;
+    public void setResult(Result result) {
+        this.result = result;
     }
 
-    public String getMessage() {
-        return message;
-    }
+    public class Result {
+        private String code;
+        private D result;
+        private D results;
+        private String message;
 
-    public void setMessage(String message) {
-        this.message = message;
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public D getData() {
+            return result == null ? results : result;
+        }
+
+        public void setData(D data) {
+            this.result = data;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public D getResults() {
+            return results;
+        }
+
+        public void setResults(D results) {
+            this.results = results;
+        }
+
+        public D getResult() {
+            return result;
+        }
+
+        public void setResult(D result) {
+            this.result = result;
+        }
     }
 
 }
