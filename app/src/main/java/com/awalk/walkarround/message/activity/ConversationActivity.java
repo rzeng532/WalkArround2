@@ -693,8 +693,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
     @Override
     public void onDeleteConversationItem(final MessageSessionBaseModel listDO) {
         Dialog deleteConfirmDialog = DialogFactory.getNoticeDialog(
-                ConversationActivity.this, getString(R.string.msg_delete_conversations_confirm,
-                        1),
+                ConversationActivity.this, getString(R.string.msg_delete_conversations_confirm),
                 new DialogFactory.NoticeDialogClickListener() {
 
                     @Override

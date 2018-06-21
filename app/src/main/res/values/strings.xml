@@ -220,7 +220,7 @@
     <string name="shut_video">关闭</string>
     <string name="load_fail_notice">加载失败，轻触屏幕重新加载</string>
     <string name="image_load_fail">图片加载错误</string>
-    <string name="search_around">去附近找找</string>
+    <string name="search_around">去找找ta</string>
     <string name="understand">明白了</string>
     <!-- download string -->
     <string name="pause">暂停</string>
@@ -250,7 +250,7 @@
     <string name="message_search">搜索</string>
     <string name="conversation_no_conversation">没有消息</string>
     <string name="msg_page_batchoperation">批量操作</string>
-    <string name="msg_delete_conversations_confirm">确定要删除所选的%1$d个会话吗？</string>
+    <string name="msg_delete_conversations_confirm">确定取消当前匹配吗？</string>
     <string name="msg_search_to_long_notices">文字输入超出限制</string>
     <string name="session_operation_cancel">取消操作</string>
     <string name="session_operation_ing">正在进行批量处理</string>
