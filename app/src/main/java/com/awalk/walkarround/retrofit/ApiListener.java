@@ -11,7 +11,7 @@ package com.awalk.walkarround.retrofit;
  * A listener for login manager to get SUC or FAIL result.
  */
 public interface ApiListener<T> {
-    public abstract void onSuccess(String code, T data);
+    public abstract void onSuccess(int code, T data);
 
     public abstract void onFailed(Exception e);
 }

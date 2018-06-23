@@ -7,12 +7,12 @@ import java.io.Serializable;
  */
 public class CommonHttpResult<D> implements Serializable {
 
-    public static final String HTTP_SUCCESS = "1000000";// 请求完成，数据解析完成
-    public static final String HTTP_FAILED = "failed";// 请求失败
-    public static final String HTTP_TIMEOUT = "timeout";// 请求超时
-    public static final String HTTP_ERROR = "error";// 请求完成，数据解析失败
-    public final static String HTTP_NET_ERROR = "net error";
-    public static final String SESSION_EXPIRE = "5101001"; // session 过期
+    public static final int HTTP_SUCCESS = 200;// 请求完成，数据解析完成
+    public static final int HTTP_FAILED = 10001;// 请求失败
+    public static final int HTTP_TIMEOUT = 10002;// 请求超时
+    public static final int HTTP_ERROR = 10003;// 请求完成，数据解析失败
+    public final static int HTTP_NET_ERROR = 10004;
+    public static final int SESSION_EXPIRE = 10005; // session 过期
 
     private Result result;
 
@@ -25,16 +25,16 @@ public class CommonHttpResult<D> implements Serializable {
     }
 
     public class Result {
-        private String code;
+        private int code;
         private D result;
         private D results;
         private String message;
 
-        public String getCode() {
+        public int getCode() {
             return code;
         }
 
-        public void setCode(String code) {
+        public void setCode(int code) {
             this.code = code;
         }
 

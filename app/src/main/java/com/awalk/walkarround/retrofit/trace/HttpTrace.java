@@ -15,7 +15,7 @@ public class HttpTrace {
     public static synchronized void reportHttpEvent(HttpTraceInfo httpTraceInfo) {
         try {
             // 上报后的Crash会显示HttpTrace标签
-            CrashReport.setUserSceneTag(WalkArroundApp.getInstance(), AppConstant.LOG_OUTPUT ? 77555: 77554);
+            CrashReport.setUserSceneTag(WalkArroundApp.getInstance(), AppConstant.LOG_OUTPUT ? 77555 : 77554);
             String msg = JSONObject.toJSONString(httpTraceInfo);
             CrashReport.postCatchedException(new Exception(msg));
         } catch (Exception e) {
@@ -26,6 +26,21 @@ public class HttpTrace {
     /**
      *
      */
+    public static void handleHttpTraceInfor(String url, int code, String msg) {
+        try {
+            HttpTraceInfo.Builder builder = new HttpTraceInfo.Builder();
+            HttpTraceInfo httpTraceInfo = builder
+                    .setCode(Integer.toString(code))
+                    .setUrl(url)
+                    .setMessage(msg)
+                    .builder();
+
+            HttpTrace.reportHttpEvent(httpTraceInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void handleHttpTraceInfor(String url, String code, String msg) {
         try {
             HttpTraceInfo.Builder builder = new HttpTraceInfo.Builder();
@@ -35,7 +50,7 @@ public class HttpTrace {
                     .setMessage(msg)
                     .builder();
 
-//            HttpTrace.reportHttpEvent(httpTraceInfo);
+            HttpTrace.reportHttpEvent(httpTraceInfo);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,15 +62,14 @@ public class HttpTrace {
      * @param result
      */
     public static void reportHttpEvent(String url, CommonHttpResult<?> result) {
-        if (!CommonHttpResult.HTTP_SUCCESS.equals(result.getResult().getCode())) {
+        if (CommonHttpResult.HTTP_SUCCESS != result.getResult().getCode()) {
             HttpTraceInfo.Builder builder = new HttpTraceInfo.Builder();
             HttpTraceInfo httpTraceInfo = builder
-                    .setCode(result.getResult().getCode())
+                    .setCode(Integer.toString(result.getResult().getCode()))
                     .setUrl(url)
                     .setMessage(result.getResult().getMessage())
                     .builder();
             HttpTrace.reportHttpEvent(httpTraceInfo);
-
         }
     }
 }

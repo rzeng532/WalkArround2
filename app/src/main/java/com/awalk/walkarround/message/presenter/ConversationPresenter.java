@@ -2,7 +2,6 @@ package com.awalk.walkarround.message.presenter;
 
 import android.text.TextUtils;
 
-import com.avos.avoscloud.AVException;
 import com.awalk.walkarround.base.BasePresenter;
 import com.awalk.walkarround.message.iview.ConversationView;
 import com.awalk.walkarround.message.model.MessageSessionBaseModel;
@@ -30,7 +29,7 @@ public class ConversationPresenter extends BasePresenter<ConversationView> {
     public void querySpeedDate(String userObjId) {
         ApiManager.querySpeedDate(userObjId, new ApiListener<DynamicRecord>() {
             @Override
-            public void onSuccess(String code, DynamicRecord data) {
+            public void onSuccess(int code, DynamicRecord data) {
                 if (HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code)
                         && data != null && data.getResult() != null) {
                     String strSpeedDateId = data.getResult().getObjectId();
@@ -60,7 +59,7 @@ public class ConversationPresenter extends BasePresenter<ConversationView> {
     public void cancelSpeedDate(final MessageSessionBaseModel listDO, String speedDateId) {
         ApiManager.cancelSpeedDate(speedDateId, new ApiListener<ResponseInfo>() {
             @Override
-            public void onSuccess(String code, ResponseInfo data) {
+            public void onSuccess(int code, ResponseInfo data) {
                 if (HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code)) {
                     ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_INIT);
                     ProfileManager.getInstance().setSpeedDateId(null);

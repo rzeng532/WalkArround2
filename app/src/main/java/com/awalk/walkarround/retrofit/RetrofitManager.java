@@ -22,18 +22,9 @@ public class RetrofitManager {
 
     private static RetrofitManager instance;
 
-    protected HttpLoggingInterceptor mHttpLoggingInterceptor;
-
-    protected HttpHeaderInterceptor mHttpHeaderInterceptor;
     private Retrofit mRetrofit;
 
-    protected RetrofitManager() {
-        mHttpLoggingInterceptor = new HttpLoggingInterceptor();
-        mHttpHeaderInterceptor = new HttpHeaderInterceptor();
-        addHeader(HttpUtil.HTTP_REQ_HEADER_LC_ID, AppConstant.LEANCLOUD_APP_ID);
-        addHeader(HttpUtil.HTTP_REQ_HEADER_LC_KEY, AppConstant.LEANCLOUD_APP_KEY);
-        addHeader(HttpUtil.HTTP_REQ_HEADER_CONTENT_TYPE, HttpUtil.HTTP_REQ_HEADER_CONTENT_TYPE_JSON);
-        addHeader("Cookie", "");
+    private RetrofitManager() {
     }
 
     public static RetrofitManager getInstance() {
@@ -50,22 +41,21 @@ public class RetrofitManager {
     }
 
     protected OkHttpClient getOkHttpClient() {
+        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor(new HttpInterceptLogger());
+        logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        HttpHeaderInterceptor headerInterceptor = new HttpHeaderInterceptor();
+        headerInterceptor.addHeader(HttpUtil.HTTP_REQ_HEADER_LC_ID, AppConstant.LEANCLOUD_APP_ID);
+        headerInterceptor.addHeader(HttpUtil.HTTP_REQ_HEADER_LC_KEY, AppConstant.LEANCLOUD_APP_KEY);
+        headerInterceptor.addHeader(HttpUtil.HTTP_REQ_HEADER_CONTENT_TYPE, HttpUtil.HTTP_REQ_HEADER_CONTENT_TYPE_JSON);
         return new OkHttpClient.Builder()
                 .addNetworkInterceptor(new CommonHttpLoggingInterceptor())
-                .addInterceptor(mHttpHeaderInterceptor)
-                .addInterceptor(mHttpLoggingInterceptor)
+                .addInterceptor(headerInterceptor)
+                .addInterceptor(new HttpLoggingInterceptor())
+                .addNetworkInterceptor(logInterceptor)
                 //time out
                 .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
                 .build();
-    }
-
-    /**
-     * @param key
-     * @param value
-     */
-    public void addHeader(String key, String value) {
-        mHttpHeaderInterceptor.addHeader(key, value);
     }
 
     public final <T> T getServices(Class<T> service, String baseUrl) {

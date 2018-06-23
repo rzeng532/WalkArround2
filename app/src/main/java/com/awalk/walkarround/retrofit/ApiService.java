@@ -1,12 +1,14 @@
 package com.awalk.walkarround.retrofit;
 
+import com.awalk.walkarround.main.model.ContactInfo;
 import com.awalk.walkarround.retrofit.model.CommonHttpResult;
-import com.awalk.walkarround.retrofit.model.ContactsList;
 import com.awalk.walkarround.retrofit.model.DynamicRecord;
 import com.awalk.walkarround.retrofit.model.FriendsList;
 import com.awalk.walkarround.retrofit.model.RegisterInfo;
 import com.awalk.walkarround.retrofit.model.ResponseInfo;
 import com.awalk.walkarround.retrofit.model.UserCoordinate;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
@@ -73,7 +75,7 @@ public interface ApiService {
      * @return
      */
     @POST("/1.1/functions/queryNearlyUsers")
-    Observable<CommonHttpResult<ContactsList>> queryNearlyUsers(@Body RequestBody body);
+    Observable<CommonHttpResult<List<ContactInfo>>> queryNearlyUsers(@Body RequestBody body);
 
     /**
      * 添加好友，如果好友已经存在则修改color值，否则新增Friend记录

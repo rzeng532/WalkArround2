@@ -32,7 +32,7 @@ public abstract class CommonObserver<T> extends DisposableObserver<T> {
     /**
      * 失败处理逻辑，可以选择overrider
      */
-    protected void onFailed(String code, String message) {
+    protected void onFailed(int code, String message) {
     }
 
     @Override
@@ -43,7 +43,7 @@ public abstract class CommonObserver<T> extends DisposableObserver<T> {
             if (t instanceof CommonHttpResult) {
                 CommonHttpResult body = (CommonHttpResult) t;
                 // 取得消息code值
-                String resultCode = body.getResult().getCode();
+                int resultCode = body.getResult().getCode();
                 String resultMessage = body.getResult().getMessage();
 
                 if (String.valueOf(CommonHttpResult.SESSION_EXPIRE).equals(resultCode)) {

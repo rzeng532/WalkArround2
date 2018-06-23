@@ -1,8 +1,8 @@
 package com.awalk.walkarround.retrofit;
 
 import com.alibaba.fastjson.JSONObject;
+import com.awalk.walkarround.main.model.ContactInfo;
 import com.awalk.walkarround.retrofit.model.CommonHttpResult;
-import com.awalk.walkarround.retrofit.model.ContactsList;
 import com.awalk.walkarround.retrofit.model.DynamicRecord;
 import com.awalk.walkarround.retrofit.model.FriendsList;
 import com.awalk.walkarround.retrofit.model.RegisterInfo;
@@ -11,6 +11,7 @@ import com.awalk.walkarround.retrofit.model.UserCoordinate;
 import com.awalk.walkarround.util.http.HttpUtil;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -52,7 +53,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -101,7 +102,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -139,7 +140,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -179,7 +180,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -221,7 +222,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -259,7 +260,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -283,12 +284,12 @@ public class ApiManager {
                 param.toString());
         ApiService apiService = RetrofitManager.getInstance().getServices();
 
-        Observable<CommonHttpResult<ContactsList>> observable = apiService.queryNearlyUsers(requestBody);
+        Observable<CommonHttpResult<List<ContactInfo>>> observable = apiService.queryNearlyUsers(requestBody);
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CommonObserver<CommonHttpResult<ContactsList>>("queryNearlyUsers") {
+                .subscribe(new CommonObserver<CommonHttpResult<List<ContactInfo>>>("queryNearlyUsers") {
                     @Override
-                    protected void onSuccess(CommonHttpResult<ContactsList> object, String message) {
+                    protected void onSuccess(CommonHttpResult<List<ContactInfo>> object, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -296,7 +297,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -333,7 +334,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -369,7 +370,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -405,7 +406,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -441,7 +442,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -488,7 +489,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -535,7 +536,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -581,7 +582,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -619,7 +620,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -653,7 +654,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -713,7 +714,7 @@ public class ApiManager {
                     }
 
                     @Override
-                    protected void onFailed(String code, String message) {
+                    protected void onFailed(int code, String message) {
                         if (apiListener == null) {
                             return;
                         }
@@ -730,7 +731,7 @@ public class ApiManager {
      * @param reportedUserId
      * @param code
      */
-    public void report(String userId, String reportedUserId, String code, ApiListener apiListener) {
+    public void report(String userId, String reportedUserId, int code, ApiListener apiListener) {
 
     }
 

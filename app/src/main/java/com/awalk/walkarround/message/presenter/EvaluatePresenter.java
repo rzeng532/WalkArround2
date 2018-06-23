@@ -5,15 +5,12 @@ import android.content.Context;
 import com.awalk.walkarround.base.BasePresenter;
 import com.awalk.walkarround.message.iview.EvaluateView;
 import com.awalk.walkarround.message.manager.WalkArroundMsgManager;
-import com.awalk.walkarround.message.task.AsyncTaskLoadFriendsSession;
-import com.awalk.walkarround.message.util.MessageConstant;
 import com.awalk.walkarround.message.util.MessageUtil;
 import com.awalk.walkarround.myself.manager.ProfileManager;
 import com.awalk.walkarround.retrofit.ApiListener;
 import com.awalk.walkarround.retrofit.ApiManager;
 import com.awalk.walkarround.retrofit.model.ResponseInfo;
 import com.awalk.walkarround.util.http.HttpUtil;
-import com.awalk.walkarround.util.http.ThreadPoolManager;
 
 /**
  * EvaluatePresenter
@@ -39,7 +36,7 @@ public class EvaluatePresenter extends BasePresenter<EvaluateView> {
         ApiManager.evaluationEach(userId, honesty, talkative, temperament, seductive, speedDateId,
                 new ApiListener<ResponseInfo>() {
                     @Override
-                    public void onSuccess(String code, ResponseInfo data) {
+                    public void onSuccess(int code, ResponseInfo data) {
                         if (HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code)) {
                             int colorIndex = WalkArroundMsgManager.getInstance(context).getConversationColorIndex(threadId);
                             WalkArroundMsgManager.getInstance(context).updateConversationStatus(threadId, MessageUtil.WalkArroundState.STATE_END);
@@ -70,7 +67,7 @@ public class EvaluatePresenter extends BasePresenter<EvaluateView> {
     public void addFriend(String userId, String friendId, String color) {
         ApiManager.addFriend(userId, friendId, color, new ApiListener<ResponseInfo>() {
             @Override
-            public void onSuccess(String code, ResponseInfo data) {
+            public void onSuccess(int code, ResponseInfo data) {
                 ProfileManager.getInstance().setCurUsrDateState(MessageUtil.WalkArroundState.STATE_END);
                 if (mView != null) {
                     mView.addFriendResult(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code), data);
@@ -101,7 +98,7 @@ public class EvaluatePresenter extends BasePresenter<EvaluateView> {
         ApiManager.evaluationEach(userId, toUserId, honesty, talkative, temperament, seductive,
                 new ApiListener<ResponseInfo>() {
                     @Override
-                    public void onSuccess(String code, ResponseInfo data) {
+                    public void onSuccess(int code, ResponseInfo data) {
                         if (HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code)) {
                             WalkArroundMsgManager.getInstance(context).updateConversationStatus(threadId, MessageUtil.WalkArroundState.STATE_END_IMPRESSION);
                         }

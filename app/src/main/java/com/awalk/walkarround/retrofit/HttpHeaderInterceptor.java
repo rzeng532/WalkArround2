@@ -37,7 +37,7 @@ public class HttpHeaderInterceptor implements Interceptor {
         Request request = chain.request();
         //set header
         Request.Builder builder = request.newBuilder();
-        builder.addHeader("Content-Type", "application/json;charset=UTF-8");
+//        builder.addHeader("Content-Type", "application/json;charset=UTF-8");
         if (mHeaderMap != null && mHeaderMap.size() > 0) {
             for (Map.Entry<String, String> item : mHeaderMap.entrySet()) {
                 builder.addHeader(item.getKey(), item.getValue());

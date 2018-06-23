@@ -29,7 +29,7 @@ public class ShowDistancePresenter extends BasePresenter<ShowDistanceView> {
     public void queryUsrCoordinate(String usrId) {
         ApiManager.getUserCoordinate(usrId, new ApiListener<UserCoordinate>() {
             @Override
-            public void onSuccess(String code, UserCoordinate data) {
+            public void onSuccess(int code, UserCoordinate data) {
                 if (mView != null) {
                     mView.queryUsrCoordinateResult(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code), data);
                 }

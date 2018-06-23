@@ -1,6 +1,5 @@
 package com.awalk.walkarround.message.presenter;
 
-import com.avos.avoscloud.AVException;
 import com.awalk.walkarround.base.BasePresenter;
 import com.awalk.walkarround.message.iview.BuildMessageView;
 import com.awalk.walkarround.retrofit.ApiListener;
@@ -23,7 +22,7 @@ public class BuildMessagePresenter extends BasePresenter<BuildMessageView> {
     public void updateSpeedDateColor(String speedDateId, String color) {
         ApiManager.setColor(speedDateId, color, new ApiListener<ResponseInfo>() {
             @Override
-            public void onSuccess(String code, ResponseInfo data) {
+            public void onSuccess(int code, ResponseInfo data) {
                 if (mView != null) {
                     mView.updateSpeedDateColorResult(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code), data);
                 }

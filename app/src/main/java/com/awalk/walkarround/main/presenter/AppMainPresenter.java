@@ -1,7 +1,5 @@
 package com.awalk.walkarround.main.presenter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -11,13 +9,12 @@ import com.awalk.walkarround.Location.model.GeoData;
 import com.awalk.walkarround.base.BasePresenter;
 import com.awalk.walkarround.base.WalkArroundApp;
 import com.awalk.walkarround.main.iview.AppMainView;
-import com.awalk.walkarround.main.parser.WalkArroundJsonResultParser;
+import com.awalk.walkarround.main.model.ContactInfo;
 import com.awalk.walkarround.message.model.MessageSessionBaseModel;
 import com.awalk.walkarround.message.task.AsyncTaskLoadSession;
 import com.awalk.walkarround.myself.manager.ProfileManager;
 import com.awalk.walkarround.retrofit.ApiListener;
 import com.awalk.walkarround.retrofit.ApiManager;
-import com.awalk.walkarround.retrofit.model.ContactsList;
 import com.awalk.walkarround.retrofit.model.DynamicRecord;
 import com.awalk.walkarround.retrofit.model.FriendsList;
 import com.awalk.walkarround.util.AppConstant;
@@ -25,6 +22,8 @@ import com.awalk.walkarround.util.AsyncTaskListener;
 import com.awalk.walkarround.util.http.HttpTaskBase;
 import com.awalk.walkarround.util.http.HttpUtil;
 import com.awalk.walkarround.util.http.ThreadPoolManager;
+
+import java.util.List;
 
 /**
  * AppMainPresenter
@@ -127,7 +126,7 @@ public class AppMainPresenter extends BasePresenter<AppMainView> {
         ApiManager.updateDynamicData(userObjId, curGeo.getLatitude(), curGeo.getLongitude(),
                 new ApiListener<DynamicRecord>() {
                     @Override
-                    public void onSuccess(String code, DynamicRecord data) {
+                    public void onSuccess(int code, DynamicRecord data) {
                         if (mView != null) {
                             mView.updateDynamicDataResult(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code), data);
                         }
@@ -149,7 +148,7 @@ public class AppMainPresenter extends BasePresenter<AppMainView> {
     private void queryCurUserDynData(String userObjId) {
         ApiManager.queryUserDynamicData(userObjId, new ApiListener<DynamicRecord>() {
             @Override
-            public void onSuccess(String code, DynamicRecord data) {
+            public void onSuccess(int code, DynamicRecord data) {
                 if (mView != null) {
                     String datingStatus = data.getResult().getDatingStatus();
                     if (TextUtils.isEmpty(datingStatus)) {
@@ -185,7 +184,7 @@ public class AppMainPresenter extends BasePresenter<AppMainView> {
     public void getFriendList(String userObjId, int count) {
         ApiManager.getFriendList(userObjId, count, new ApiListener<FriendsList>() {
             @Override
-            public void onSuccess(String code, FriendsList data) {
+            public void onSuccess(int code, FriendsList data) {
                 if (mView != null) {
                     mView.getFriendListResult(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code), data);
                 }
@@ -208,7 +207,7 @@ public class AppMainPresenter extends BasePresenter<AppMainView> {
     public void querySpeedDate(String userObjId) {
         ApiManager.querySpeedDate(userObjId, new ApiListener<DynamicRecord>() {
             @Override
-            public void onSuccess(String code, DynamicRecord data) {
+            public void onSuccess(int code, DynamicRecord data) {
                 if (mView != null) {
                     mView.querySpeedDateIdResult(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code), data);
                 }
@@ -229,9 +228,9 @@ public class AppMainPresenter extends BasePresenter<AppMainView> {
      * @param dynamicDataId
      */
     public void queryNearlyUsers(String dynamicDataId) {
-        ApiManager.queryNearlyUsers(dynamicDataId, new ApiListener<ContactsList>() {
+        ApiManager.queryNearlyUsers(dynamicDataId, new ApiListener<List<ContactInfo>>() {
             @Override
-            public void onSuccess(String code, ContactsList data) {
+            public void onSuccess(int code, List<ContactInfo> data) {
                 if (mView != null) {
                     mView.queryNearlyUsersResult(HttpUtil.HTTP_RESPONSE_KEY_RESULT_CODE_SUC.equals(code), data);
                 }

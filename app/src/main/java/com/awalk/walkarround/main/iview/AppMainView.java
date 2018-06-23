@@ -1,13 +1,13 @@
 package com.awalk.walkarround.main.iview;
 
-import java.util.List;
-
 import com.awalk.walkarround.base.BaseView;
+import com.awalk.walkarround.main.model.ContactInfo;
 import com.awalk.walkarround.message.model.MessageSessionBaseModel;
-import com.awalk.walkarround.retrofit.model.ContactsList;
 import com.awalk.walkarround.retrofit.model.DynamicRecord;
 import com.awalk.walkarround.retrofit.model.FriendsList;
 import com.awalk.walkarround.util.http.HttpTaskBase.TaskResult;
+
+import java.util.List;
 
 /**
  * AppMainView
@@ -62,6 +62,6 @@ public interface AppMainView extends BaseView {
      * @param isSuccess      成功／失败
      * @param nearlyUserList 结果
      */
-    void queryNearlyUsersResult(boolean isSuccess, ContactsList nearlyUserList);
+    void queryNearlyUsersResult(boolean isSuccess, List<ContactInfo> nearlyUserList);
 
 }
