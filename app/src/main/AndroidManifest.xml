@@ -134,7 +134,9 @@
             android:screenOrientation="portrait"/>
         <activity android:name="com.awalk.walkarround.message.activity.ShowDistanceActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name="com.awalk.walkarround.message.activity.CountdownActivity"
+        <activity
+            android:name="com.awalk.walkarround.message.activity.CountdownActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity android:name="com.awalk.walkarround.message.activity.EvaluateActivity"
             android:screenOrientation="portrait"/>

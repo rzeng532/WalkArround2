@@ -463,6 +463,7 @@ public class DialogFactory {
         dialogView.findViewById(R.id.tv_next_time).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.dismiss();
                 if (listener != null) {
                     listener.onNoticeDialogCancelClick();
                 }
@@ -472,6 +473,7 @@ public class DialogFactory {
         dialogView.findViewById(R.id.tv_agree).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.dismiss();
                 if (listener != null) {
                     listener.onNoticeDialogConfirmClick(true, null);
                 }

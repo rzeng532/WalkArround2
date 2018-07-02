@@ -42,7 +42,7 @@ import java.util.TimerTask;
 
 
 /**
- * TODO: description
+ * 走走10分钟倒计时
  * Date: 2016-07-29
  *
  * @author Administrator
@@ -243,6 +243,7 @@ public class CountdownActivity extends Activity implements View.OnClickListener 
 
         switch (v.getId()) {
             case R.id.tv_complete_walk:
+                v.setEnabled(false);
                 stopCountdownTimer();
 
                 //We need a popup here
