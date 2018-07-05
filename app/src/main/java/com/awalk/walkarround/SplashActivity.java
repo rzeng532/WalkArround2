@@ -5,8 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Window;
-import android.view.WindowManager;
+
 import com.awalk.walkarround.login.activity.LoginOrRegActivity;
 import com.awalk.walkarround.login.manager.LoginManager;
 import com.awalk.walkarround.main.activity.AppMainActivity;
@@ -14,12 +13,10 @@ import com.awalk.walkarround.main.activity.AppMainActivity;
 public class SplashActivity extends Activity {
 
     private static final String TAG = SplashActivity.class.getSimpleName();
-    private final int REQ_CODE_LOGIN = 0;
-    private final int REQ_CODE_MAIN = 1;
 
     private final int SPLASH_STAY_TIME = 2000; //ms
 
-    Handler mSplashHandler = new Handler() {
+    private Handler mSplashHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -28,9 +25,9 @@ public class SplashActivity extends Activity {
                     if (isLogined) {
                         Intent intent = new Intent(SplashActivity.this, AppMainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivityForResult(intent, REQ_CODE_LOGIN);
+                        startActivity(intent);
                     } else {
-                        startActivityForResult(new Intent(SplashActivity.this, LoginOrRegActivity.class), REQ_CODE_MAIN);
+                        startActivity(new Intent(SplashActivity.this, LoginOrRegActivity.class));
                     }
                     SplashActivity.this.finish();
                     break;
@@ -47,17 +44,14 @@ public class SplashActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_splash);
 
-        mSplashHandler.sendEmptyMessageDelayed(0, 2000);
+        mSplashHandler.sendEmptyMessageDelayed(0, SPLASH_STAY_TIME);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onDestroy() {
+        super.onDestroy();
+        mSplashHandler.removeCallbacksAndMessages(null);
     }
 }

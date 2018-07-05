@@ -13,7 +13,6 @@ import com.avos.avoscloud.AVAnalytics;
 import com.awalk.walkarround.EntranceActivity;
 import com.awalk.walkarround.R;
 import com.awalk.walkarround.util.CommonUtils;
-import com.awalk.walkarround.util.Logger;
 
 /**
  * A class for login operations
@@ -26,8 +25,6 @@ public class LoginOrRegActivity extends Activity implements View.OnClickListener
     private Button btnLogin = null;
     private Button btnRegister = null;
 
-    private Logger loginLogger;
-
     //Request code
     private final int REQUEST_CODE_NEXT_PAGE = 1;
 
@@ -36,7 +33,6 @@ public class LoginOrRegActivity extends Activity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_or_register);
         findView();
-        loginLogger = Logger.getLogger(LoginOrRegActivity.class.getSimpleName());
     }
 
     @Override
