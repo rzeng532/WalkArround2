@@ -10,7 +10,6 @@
         android:layout_height="fill_parent" />
 
     <com.awalk.walkarround.util.image.ClipView
-        android:id="@+id/clipview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 

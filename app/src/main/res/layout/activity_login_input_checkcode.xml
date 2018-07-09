@@ -49,8 +49,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-            android:id="@+id/tip_layout"
-            android:layout_width="wrap_content"
+        android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/signin_input_rl"
             android:layout_marginTop="20dp"

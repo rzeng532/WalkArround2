@@ -15,8 +15,7 @@
         android:clickable="false"
         android:focusable="false"/>
 
-    <RelativeLayout 
-        android:id="@+id/desc_layout"
+    <RelativeLayout
         android:layout_height="wrap_content"
         android:layout_width="fill_parent">
         <TextView android:id="@+id/title_textView"

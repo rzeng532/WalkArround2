@@ -20,7 +20,6 @@
         android:visibility="gone">
 
         <EditText
-            android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@+id/bt_cancel_search"

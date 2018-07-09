@@ -45,14 +45,12 @@
             android:paddingBottom="12dp" />
 
         <View
-            android:id="@+id/divider"
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp" />
 
         <Button
-            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:drawablePadding="8dp"

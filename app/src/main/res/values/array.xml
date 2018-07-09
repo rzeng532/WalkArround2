@@ -18,11 +18,6 @@
         <item>bmp</item>
     </array>
 
-    <string-array name="profile_gendle">
-        <item>男</item>
-        <item>女</item>
-    </string-array>
-
     <!-- Wheel picker -->
     <string-array name="WheelArrayDefault">
         <item>AigeStudio</item>
@@ -49,34 +44,6 @@
         <item>αγάπη μου</item>
         <item>a szerelem.</item>
         <item>Amore, fratello.</item>
-    </string-array>
-    <string-array name="WheelArrayConstellation">
-        <item>Aquarius</item>
-        <item>Pisces</item>
-        <item>Aries</item>
-        <item>Taurus</item>
-        <item>Gemini</item>
-        <item>Cancer</item>
-        <item>Leo</item>
-        <item>Virgo</item>
-        <item>Libra</item>
-        <item>Scorpio</item>
-        <item>Sagittarius</item>
-        <item>Capricorn</item>
-    </string-array>
-    <string-array name="WheelArrayZodiac">
-        <item>Rat</item>
-        <item>Ox</item>
-        <item>Tiger</item>
-        <item>Hare</item>
-        <item>Dragon</item>
-        <item>Snake</item>
-        <item>Horse</item>
-        <item>Sheep</item>
-        <item>Monkey</item>
-        <item>Cock</item>
-        <item>Dog</item>
-        <item>Boar</item>
     </string-array>
     <string-array name="conversation_empty_explain">
         <item>Ta处于与你联系热度最高的位置</item>

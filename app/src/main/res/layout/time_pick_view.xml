@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"/>
 
-    <TextView android:id="@+id/year_tv"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
 
-    <TextView android:id="@+id/month_tv"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
 
-    <TextView android:id="@+id/day_tv"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="25dp"
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
 
-    <TextView android:id="@+id/separator_tv"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hour_minute_separator"

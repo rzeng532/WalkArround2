@@ -18,7 +18,6 @@
 
         <!-- Myself information -->
         <TextView
-            android:id="@+id/tv_portrait"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="16dp"
@@ -101,7 +100,6 @@
 
         <!-- Detail information -->
         <TextView
-            android:id="@+id/tv_mobile"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="16dp"
@@ -141,7 +139,6 @@
 
         <!-- Detail information -->
         <TextView
-            android:id="@+id/tv_gendle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="16dp"
@@ -182,7 +179,6 @@
 
         <!-- Detail information -->
         <TextView
-            android:id="@+id/tv_birth"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="16dp"

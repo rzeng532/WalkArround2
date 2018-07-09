@@ -12,7 +12,6 @@
     <dimen name="font_size6">12sp</dimen>
     <dimen name="font_size7">10sp</dimen>
     <dimen name="font_size8">24sp</dimen>
-    <dimen name="font_size9">30sp</dimen>
     <dimen name="font_size10">36sp</dimen>
     <dimen name="font_size11">180sp</dimen>
     <dimen name="font_size12">44sp</dimen>
@@ -20,62 +19,28 @@
     <dimen name="font_size2_dp">18dp</dimen>
     <dimen name="font_size3_dp">16dp</dimen>
     <dimen name="font_size4_dp">15dp</dimen>
-    <dimen name="font_size6_dp">12dp</dimen>
-    <dimen name="font_size8_dp">24dp</dimen>
-    <dimen name="font_size7_dp">10dp</dimen>
-    <dimen name="font_size9_dp">30dp</dimen>
     <dimen name="font_size_40dp">40dp</dimen>
-    <dimen name="font_size_50dp">50dp</dimen>
-    <dimen name="font_size_180dp">50dp</dimen>
 
     <!-- 时间选择view的高度 -->
     <dimen name="time_picker_item_height">55dp</dimen>
-    <dimen name="time_picker_item_half_height">27dp</dimen>
 
     <!-- 标示是第几页的图片宽度 -->
-    <dimen name="page_indicator_width">15dp</dimen>
     <dimen name="title_bar_height">53dp</dimen>
-    <dimen name="bottom_tool_bar_height">49dp</dimen>
-    <dimen name="profile_divider_height">1dp</dimen>
 
-    <!-- 弹出/下拉菜单左右边距 -->
-    <dimen name="popup_widow_small_width">129dp</dimen>
-    <dimen name="popup_widow_big_width">145dp</dimen>
-
-    <!-- ************************以下为菊风定义大小 ****************************** -->
-    <dimen name="size4">16dp</dimen>
-    <dimen name="size5">14dp</dimen>
+    <!-- ************************以下定义大小 ****************************** -->
     <dimen name="size6">12dp</dimen>
-    <dimen name="btn_height">50dp</dimen>
-    <dimen name="contact_item_height">55dp</dimen>
-    <dimen name="page_sides_padding">14dp</dimen>
     <!-- 页面内Padding -->
-    <dimen name="public_padding_6">6dp</dimen>
-    <dimen name="public_padding_8">8dp</dimen>
     <dimen name="public_padding_10">10dp</dimen>
     <dimen name="public_padding_16">16dp</dimen>
-    <dimen name="public_padding_20">20dp</dimen>
-    <dimen name="public_padding_32">32dp</dimen>
-    <!-- ************************以上为菊风定义大小 ****************************** -->
+    <!-- ************************以上为定义大小 ****************************** -->
 
 
-    <!-- padding  height  width -->
-    <dimen name="size_15dp">15dp</dimen>
-    <dimen name="size_20dp">20dp</dimen>
-    <dimen name="size_30dp">30dp</dimen>
-    <dimen name="size_50dp">50dp</dimen>
-    <dimen name="size_80dp">80dp</dimen>
-    <dimen name="size_130dp">130dp</dimen>
-    
-     <!-- 友圈 -->
+    <!-- 友圈 -->
     <dimen name="indicator_right_padding">10dp</dimen>
     <dimen name="indicator_corner_radius">12dp</dimen>
     <dimen name="indicator_internal_padding">4dp</dimen>
     <dimen name="header_footer_left_right_padding">24dp</dimen>
     <dimen name="header_footer_top_bottom_padding">12dp</dimen>
-    <dimen name="header_contact_info_height">283dp</dimen>
-    <dimen name="msg_small_gap">12dp</dimen>
-    <dimen name="msg_big_gap">24dp</dimen>
 
     <dimen name="padding_left_common">16dp</dimen>
     <dimen name="dlg_item_height">44dp</dimen>
@@ -84,6 +49,5 @@
     <dimen name="WheelItemSpace">8dp</dimen>
     <dimen name="WheelPadding">8dp</dimen>
     <dimen name="WheelTextSize">20sp</dimen>
-    <dimen name="WheelLabelTextSize">12sp</dimen>
     <dimen name="divider_width">1px</dimen>
 </resources>

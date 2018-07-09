@@ -68,8 +68,8 @@
                   android:textColor="@color/fontcor3"
                   android:textSize="@dimen/font_size11"/>
 
-        <TextView android:id="@+id/tv_walk_pre_countdown_sec"
-                  android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_alignParentBottom="true"
                   android:paddingLeft="6dp"

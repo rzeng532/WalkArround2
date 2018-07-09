@@ -36,8 +36,8 @@
                     android:layout_alignParentLeft="true"
                     android:background="@color/friend_col_1"
         android:visibility="gone">
-            <TextView android:id="@+id/emtpy_tv"
-                      android:layout_width="match_parent"
+            <TextView
+                android:layout_width="match_parent"
                       android:layout_height="wrap_content"/>
     </RelativeLayout>
 
@@ -97,8 +97,8 @@
                 android:background="@drawable/public_icon_list_top"
                 android:visibility="gone"/>
 
-        <RelativeLayout android:id="@+id/conversation_content_layout"
-                        android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:minHeight="80dp"
                         android:layout_toRightOf="@id/photo_layout"

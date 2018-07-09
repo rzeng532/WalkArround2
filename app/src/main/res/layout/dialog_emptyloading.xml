@@ -9,8 +9,7 @@
             android:layout_height="75dp"
             >
         <ProgressBar
-                android:id="@+id/ani_img"
-                android:layout_width="40dp"
+            android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerInParent="true"
                 style="?android:attr/progressBarStyleLarge"/>
