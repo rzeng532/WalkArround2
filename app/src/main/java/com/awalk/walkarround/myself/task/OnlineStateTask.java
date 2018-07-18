@@ -92,7 +92,7 @@ public class OnlineStateTask {
             if (mTask == null || mCurTaskState == TaskState.RUNNING) {
                 return;
             }
-
+            mCurTaskState = TaskState.RUNNING;
             logger.d("OnlineStateTask start task.");
             mRepeatTask.start();
         }
