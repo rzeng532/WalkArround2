@@ -385,7 +385,10 @@ public class AppMainActivity extends Activity implements View.OnClickListener {
                     } else {
                         localThreadStatus = WalkArroundMsgManager.getInstance(getApplicationContext())
                                 .getConversationStatus(chattingThreadId);
-                        localThreadStatus = (iStatus > localThreadStatus) ? iStatus : localThreadStatus;
+                        if (iStatus != localThreadStatus) {
+                            localThreadStatus = iStatus;
+                            WalkArroundMsgManager.getInstance(getApplicationContext()).updateConversationStatus(chattingThreadId, iStatus);
+                        }
                     }
 
                     ProfileManager.getInstance().setCurUsrDateState(localThreadStatus);

@@ -189,7 +189,7 @@ public class ConversationActivity extends Activity implements ConversationItemLi
                     } else {
                         localThreadStatus = WalkArroundMsgManager.getInstance(getApplicationContext())
                                 .getConversationStatus(chattingThreadId);
-                        localThreadStatus = (iStatus > localThreadStatus) ? iStatus : localThreadStatus;
+                        localThreadStatus = (iStatus != localThreadStatus) ? iStatus : localThreadStatus;
                     }
 
                     ProfileManager.getInstance().setCurUsrDateState(localThreadStatus);
