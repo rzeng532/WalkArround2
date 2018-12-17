@@ -10,7 +10,7 @@ import android.text.style.ImageSpan;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by wanghaozhou on 2015/11/11.
+ * Created  on 2015/11/11.
  */
 public class AlignCenterImageSpan extends ImageSpan {
 
