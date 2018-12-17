@@ -15,10 +15,6 @@ import java.util.List;
 /**
  * 在此写用途
  *
- * @FileName: me.khrystal.widget.WheelPopWindow.java
- * @author: kHRYSTAL
- * @email: 723526676@qq.com
- * @date: 2016-01-13 12:33
  */
 public class WheelPopWindow extends PopupWindow implements AbstractWheelPicker.OnWheelChangeListener {
     private View rootView;
