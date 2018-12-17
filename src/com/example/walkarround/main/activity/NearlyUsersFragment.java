@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by cmcc on 16/1/11.
+ * Created on 16/1/11.
  */
 public class NearlyUsersFragment extends Fragment implements View.OnClickListener {
 
