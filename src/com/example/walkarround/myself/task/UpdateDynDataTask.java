@@ -9,7 +9,7 @@ import com.example.walkarround.util.http.HttpUtil;
 import java.util.Map;
 
 /**
- * Created by cmcc on 16/1/26.
+ * Created on 16/1/26.
  */
 public class UpdateDynDataTask extends HttpTaskPost {
     public UpdateDynDataTask(Context context, onResultListener listener, String requestCode, String urlString, String contentStr, Map<String, String> header) {
