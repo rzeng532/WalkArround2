@@ -18,7 +18,7 @@ import java.util.List;
 
 
 /**
- * Created by cmcc on 16/3/1.
+ * Created on 16/3/1.
  */
 public class ContactsManager {
 
