@@ -10,7 +10,7 @@ import com.example.walkarround.util.http.HttpUtil;
 import java.util.Map;
 
 /**
- * Created by cmcc on 16/1/26.
+ * Created on 16/1/26.
  */
 public class GoTogetherTask extends HttpTaskPost {
     public GoTogetherTask(Context context, HttpTaskBase.onResultListener listener, String requestCode, String urlString, String contentStr, Map<String, String> header) {
