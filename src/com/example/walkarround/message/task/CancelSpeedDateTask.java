@@ -9,7 +9,7 @@ import com.example.walkarround.util.http.HttpUtil;
 import java.util.Map;
 
 /**
- * Created by cmcc on 16/1/26.
+ * Created on 16/1/26.
  */
 public class CancelSpeedDateTask extends HttpTaskPost {
     public CancelSpeedDateTask(Context context, onResultListener listener, String requestCode, String urlString, String contentStr, Map<String, String> header) {
