@@ -9,7 +9,7 @@ import com.example.walkarround.R;
 
 /**
  * 默认为走完进度自动 dismiss dialog,可调用setAutoDismiss(boolean ) 更改
- * Created by sjf on 2015/8/3.
+ * Created on 2015/8/3.
  */
 public class ProgressDialogHorizontal extends AlertDialog {
 
