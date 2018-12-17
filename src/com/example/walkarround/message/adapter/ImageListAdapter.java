@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @author cmcc
+ * @author
  * 
  */
 public class ImageListAdapter extends BaseAdapter implements OnClickListener {
