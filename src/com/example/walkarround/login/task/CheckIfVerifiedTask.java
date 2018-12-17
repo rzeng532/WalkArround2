@@ -10,7 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
- * Created by cmcc on 16/1/26.
+ * Created on 16/1/26.
  */
 public class CheckIfVerifiedTask extends HttpTaskPost {
     public CheckIfVerifiedTask(Context context, onResultListener listener, String requestCode, String urlString, String contentStr, Map<String, String> header) {
